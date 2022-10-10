@@ -1,0 +1,37 @@
+{
+  "name": "activitypub-core",
+  "version": "0.0.21",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michaelcpuckett@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "tsc": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "cookie": "^0.5.0",
+    "firebase-admin": "^11.1.0",
+    "http": "^0.0.1-security",
+    "isomorphic-fetch": "^3.0.0",
+    "jsonld": "^8.1.0",
+    "mongodb": "^4.10.0",
+    "next": "^12.3.1",
+    "superjson": "^1.10.1"
+  },
+  "devDependencies": {
+    "@types/cookie": "^0.5.1",
+    "@types/isomorphic-fetch": "^0.0.36",
+    "@types/jest": "^29.1.2",
+    "@types/jsonld": "^1.5.6",
+    "dotenv": "^16.0.3",
+    "typescript": "^4.8.4"
+  }
+}

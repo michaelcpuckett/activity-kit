@@ -1,0 +1,25 @@
+{
+  "name": "activitypub-core-express",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michaelcpuckett@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "tsc": "tsc --project tsconfig.json",
+    "dev": "node ./lib/index.js"
+  },
+  "dependencies": {
+    "activitypub-core": "^0.0.21",
+    "express": "^4.18.2",
+    "http": "^0.0.1-security",
+    "nunjucks": "^3.2.3"
+  }
+}
