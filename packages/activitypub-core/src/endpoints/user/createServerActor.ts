@@ -3,7 +3,7 @@ import {
   SERVER_ACTOR_USERNAME,
   SHARED_INBOX_ID,
 } from '../../globals';
-import { AP } from '../../types';
+import { AP } from 'activitypub-core-types/src';
 import { generateKeyPair } from '../../utilities/generateKeyPair';
 import { DatabaseService } from '../../DatabaseService';
 

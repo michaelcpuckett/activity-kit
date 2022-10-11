@@ -1,5 +1,5 @@
 import { DeliveryService } from '.';
-import { AP } from '../types';
+import { AP } from 'activitypub-core-types/src';
 
 export async function getRecipientInboxUrls(
   this: DeliveryService,

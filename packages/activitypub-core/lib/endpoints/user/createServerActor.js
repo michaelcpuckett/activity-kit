@@ -2,21 +2,21 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createServerActor = void 0;
 const globals_1 = require("../../globals");
-const types_1 = require("../../types");
+const src_1 = require("activitypub-core-types/src");
 const generateKeyPair_1 = require("../../utilities/generateKeyPair");
 async function createServerActor(databaseService) {
     const { publicKey: botPublicKey, privateKey: botPrivateKey } = await (0, generateKeyPair_1.generateKeyPair)();
     const botInbox = {
         id: new URL(`${globals_1.SERVER_ACTOR_ID}/inbox`),
         url: new URL(`${globals_1.SERVER_ACTOR_ID}/inbox`),
-        type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: src_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
     };
     const botOutbox = {
         id: new URL(`${globals_1.SERVER_ACTOR_ID}/outbox`),
         url: new URL(`${globals_1.SERVER_ACTOR_ID}/outbox`),
-        type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: src_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
     };
@@ -24,7 +24,7 @@ async function createServerActor(databaseService) {
         id: new URL(`${globals_1.SERVER_ACTOR_ID}/followers`),
         url: new URL(`${globals_1.SERVER_ACTOR_ID}/followers`),
         name: 'Followers',
-        type: types_1.AP.CollectionTypes.COLLECTION,
+        type: src_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         items: [],
     };
@@ -32,14 +32,14 @@ async function createServerActor(databaseService) {
         id: new URL(`${globals_1.SERVER_ACTOR_ID}/following`),
         url: new URL(`${globals_1.SERVER_ACTOR_ID}/following`),
         name: 'Following',
-        type: types_1.AP.CollectionTypes.COLLECTION,
+        type: src_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         items: [],
     };
     const botActor = {
         id: new URL(globals_1.SERVER_ACTOR_ID),
         url: new URL(globals_1.SERVER_ACTOR_ID),
-        type: types_1.AP.ActorTypes.APPLICATION,
+        type: src_1.AP.ActorTypes.APPLICATION,
         name: globals_1.SERVER_ACTOR_USERNAME,
         preferredUsername: globals_1.SERVER_ACTOR_USERNAME,
         inbox: botInbox,

@@ -1,4 +1,4 @@
-import { AP } from '../types';
+import { AP } from 'activitypub-core-types/src';
 import * as crypto from 'crypto';
 import {
   CONTENT_TYPE_HEADER,

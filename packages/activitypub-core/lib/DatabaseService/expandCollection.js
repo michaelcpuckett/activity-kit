@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.expandCollection = void 0;
-const types_1 = require("../types");
+const src_1 = require("activitypub-core-types/src");
 const getId_1 = require("../utilities/getId");
 async function expandCollection(collection) {
     const id = (0, getId_1.getId)(collection);
@@ -12,21 +12,21 @@ async function expandCollection(collection) {
     if (!foundThing) {
         return null;
     }
-    if (foundThing.type !== types_1.AP.CollectionTypes.COLLECTION &&
-        foundThing.type !== types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+    if (foundThing.type !== src_1.AP.CollectionTypes.COLLECTION &&
+        foundThing.type !== src_1.AP.CollectionTypes.ORDERED_COLLECTION) {
         return null;
     }
     const items = await this.getCollectionItems(foundThing);
     if (!items) {
         return foundThing;
     }
-    if (foundThing.type === types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+    if (foundThing.type === src_1.AP.CollectionTypes.ORDERED_COLLECTION) {
         return {
             ...foundThing,
             orderedItems: items,
         };
     }
-    if (foundThing.type === types_1.AP.CollectionTypes.COLLECTION) {
+    if (foundThing.type === src_1.AP.CollectionTypes.COLLECTION) {
         return {
             ...foundThing,
             items,

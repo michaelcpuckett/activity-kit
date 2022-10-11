@@ -1,4 +1,4 @@
-import { AP } from '../types';
+import { AP } from 'activitypub-core-types/src';
 import { convertStringsToUrls } from './convertStringsToUrls';
 
 export function cleanProps(entity: AP.Entity) {

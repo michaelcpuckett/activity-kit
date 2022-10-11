@@ -1,5 +1,5 @@
 import { DatabaseService } from '.';
-import { AP } from '../types';
+import { AP } from 'activitypub-core-types/src';
 import { getId } from '../utilities/getId';
 
 export async function expandCollection(

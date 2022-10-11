@@ -1,4 +1,4 @@
-import { AP } from '../types';
+import { AP } from 'activitypub-core-types/src';
 
 export function convertStringsToUrls(originalEntity: { [key: string]: unknown }): AP.Entity {
   const entity: { [key: string]: unknown } = { ...originalEntity };

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findOne = void 0;
-const types_1 = require("../types");
+const src_1 = require("activitypub-core-types/src");
 const convertStringsToUrls_1 = require("../utilities/convertStringsToUrls");
 async function findOne(collection, matchingObject) {
     const value = await this.db.collection(collection).findOne(matchingObject);
@@ -14,7 +14,7 @@ async function findOne(collection, matchingObject) {
         ...foundEntity,
         type: foundEntity.type,
     };
-    for (const type of Object.values(types_1.AP.AllTypes)) {
+    for (const type of Object.values(src_1.AP.AllTypes)) {
         if (type === entityWithType.type) {
             return entityWithType;
         }

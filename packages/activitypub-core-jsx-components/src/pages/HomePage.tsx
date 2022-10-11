@@ -1,5 +1,5 @@
 import React from 'react';
-import { AP } from 'activitypub-core/src/types';
+import { AP } from 'activitypub-core-types/src';
 
 export const HomePage = ({ actor }: { actor: AP.Actor }) => (
   <html>

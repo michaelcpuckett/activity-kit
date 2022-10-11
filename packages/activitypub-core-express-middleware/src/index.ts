@@ -1,7 +1,7 @@
 import type { NextFunction } from 'express';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { userPostHandler, homeGetHandler, entityGetHandler } from 'activitypub-core';
-import { AP } from 'activitypub-core/src/types';
+import { AP } from 'activitypub-core-types/src';
 import type { ServiceAccount } from 'firebase-admin';
 
 export const activityPub = ({

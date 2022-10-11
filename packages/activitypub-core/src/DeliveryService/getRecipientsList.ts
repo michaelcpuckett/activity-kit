@@ -1,4 +1,4 @@
-import { AP } from '../types';
+import { AP } from 'activitypub-core-types/src';
 import { PUBLIC_ACTOR } from '../globals';
 import { DeliveryService } from '.';
 

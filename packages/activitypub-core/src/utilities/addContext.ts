@@ -1,5 +1,5 @@
 import { ACTIVITYSTREAMS_CONTEXT, W3ID_SECURITY_CONTEXT } from '../globals';
-import { AP } from '../types';
+import { AP } from 'activitypub-core-types/src';
 
 export function addContext(entity: AP.Entity): AP.Entity & {
   '@context': unknown;

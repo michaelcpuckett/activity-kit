@@ -1,6 +1,6 @@
 import type { NextFunction } from 'express';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { AP } from 'activitypub-core/src/types';
+import { AP } from 'activitypub-core-types/src';
 import type { ServiceAccount } from 'firebase-admin';
 export declare const activityPub: ({ renderIndex, renderHome, renderEntity, }: {
     renderIndex: () => Promise<string>;

@@ -1,4 +1,4 @@
-import { AP } from '../types';
+import { AP } from 'activitypub-core-types/src';
 
 export const getTypedEntity = (entity: { type: string }) => {
   for (const linkType of Object.values(AP.LinkTypes)) {

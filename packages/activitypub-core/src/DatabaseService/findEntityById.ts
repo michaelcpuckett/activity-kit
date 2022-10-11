@@ -1,5 +1,5 @@
 import { DatabaseService } from '.';
-import { AP } from '../types';
+import { AP } from 'activitypub-core-types/src';
 import { getCollectionNameByUrl } from '../utilities/getCollectionNameByUrl';
 
 export async function findEntityById(

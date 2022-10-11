@@ -1,5 +1,5 @@
 import { DatabaseService } from '.';
-import { AP } from '../types';
+import { AP } from 'activitypub-core-types/src';
 import { ServiceAccount } from 'firebase-admin';
 
 export async function getActorByToken(

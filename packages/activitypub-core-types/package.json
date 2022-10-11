@@ -1,0 +1,22 @@
+{
+  "name": "activitypub-core-types",
+  "version": "0.0.1",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michaelcpuckett@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "tsc": "tsc --project tsconfig.json",
+    "dev": "ts-node ./src/index.ts"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1"
+  }
+}

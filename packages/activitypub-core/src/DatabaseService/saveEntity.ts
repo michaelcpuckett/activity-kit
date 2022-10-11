@@ -1,5 +1,5 @@
 import { DatabaseService } from '.';
-import { AP } from '../types';
+import { AP } from 'activitypub-core-types/src';
 import { cleanProps } from '../utilities/cleanProps';
 import { compressEntity } from '../utilities/compressEntity';
 import { convertUrlsToStrings } from '../utilities/convertUrlsToStrings';

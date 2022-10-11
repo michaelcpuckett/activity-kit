@@ -4,7 +4,7 @@ import { AppOptions, ServiceAccount } from 'firebase-admin';
 import { RESERVED_USERNAMES, SERVER_ACTOR_USERNAME } from '../../globals';
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
-import { AP } from '../../types';
+import { AP } from 'activitypub-core-types/src';
 import type { IncomingMessage, ServerResponse } from 'http';
 
 type Data = {

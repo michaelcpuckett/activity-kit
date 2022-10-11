@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core",
-  "version": "0.0.28",
+  "version": "0.0.30",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -17,8 +17,7 @@
     "tsc": "tsc --project tsconfig.json"
   },
   "dependencies": {
-    "activitypub-core-express-middleware": "^0.0.0",
-    "activitypub-core-jsx-components": "^0.0.1",
+    "activitypub-core-types": "^0.0.1",
     "cookie": "^0.5.0",
     "firebase-admin": "^11.1.0",
     "http": "^0.0.1-security",
