@@ -4,7 +4,7 @@ import { userPostHandler, homeGetHandler, entityGetHandler, outboxHandler, inbox
 import { AP } from 'activitypub-core-types';
 import type { ServiceAccount } from 'firebase-admin';
 import { DeliveryService } from 'activitypub-core-delivery';
-import type { Database } from 'activitypub-core-types/index';
+import type { Database } from 'activitypub-core-types';
 
 export const activityPub = ({
   renderIndex,

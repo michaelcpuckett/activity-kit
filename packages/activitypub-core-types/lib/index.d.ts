@@ -22,10 +22,3 @@ export declare type Database = {
 export interface DatabaseService {
     connect(): Promise<Database>;
 }
-export interface DeliveryService {
-    broadcast: Function;
-    getPrivateKey: Function;
-    getRecipientInboxUrls: Function;
-    getRecipientsList: Function;
-    signAndSendToForeignActorInbox: Function;
-}
