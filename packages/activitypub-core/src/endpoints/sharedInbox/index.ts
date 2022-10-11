@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { IncomingMessage, ServerResponse } from 'http';
 import { DatabaseService } from '../../DatabaseService';
 import { AP } from 'activitypub-core-types';
 import { convertFromJsonLd } from '../../utilities/convertFromJsonLd';
@@ -15,9 +15,9 @@ import { parseStream } from '../../utilities/parseStream';
 import { convertUrlsToStrings } from '../../utilities/convertUrlsToStrings';
 import { stringifyWithContext } from '../../utilities/stringifyWithContext';
 
-export async function handleSharedInboxPost(
-  req: NextApiRequest,
-  res: NextApiResponse,
+export async function sharedInboxPostHandler(
+  req: IncomingMessage,
+  res: ServerResponse,
   providedDatabaseService: DatabaseService,
   providedDeliveryService: DeliveryService,
 ) {

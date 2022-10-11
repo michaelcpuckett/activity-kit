@@ -9,8 +9,8 @@ jest.mock('../../../src/utilities/streamToString', () => {
 import * as data from '../../data';
 import { mockDatabaseService } from '../../DatabaseService/mockDatabaseService';
 import { Db } from 'mongodb';
-import { getServerSideProps } from '../../../src/endpoints/outbox';
-import { NextPageContext } from 'next';
+import { outboxHandler } from '../../../src/endpoints/outbox';
+import { IncomingMessage, ServerResponse } from 'http';
 
 describe('Endpoints', () => {
   describe('Actor Outbox', () => {
@@ -65,20 +65,18 @@ describe('Endpoints', () => {
       const write = jest.fn(() => { });
       const end = jest.fn(() => { });
 
-      const context: NextPageContext = {
-        req: {
-          url: data.actor1OutboxUrl.toString().split('https://test.com')[1],
-          headers: {
-            accept: 'text/html',
-          },
-        },
-        res: {
-          setHeader,
-          write,
-          end,
+      const req: IncomingMessage = {
+        url: data.actor1OutboxUrl.toString().split('https://test.com')[1],
+        headers: {
+          accept: 'text/html',
         },
       };
-      const result = await getServerSideProps(context, databaseService);
+      const res: ServerResponse = {
+        setHeader,
+        write,
+        end,
+      };
+      const result = await outboxHandler(req, res, databaseService);
       expect(result.props).toStrictEqual({
         entity: JSON.parse(JSON.stringify(data.actor1Outbox)),
       });

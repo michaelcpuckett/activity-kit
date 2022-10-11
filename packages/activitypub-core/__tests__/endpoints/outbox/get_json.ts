@@ -8,14 +8,14 @@ jest.mock('../../../src/utilities/streamToString', () => {
 
 import { mockDatabaseService } from '../../DatabaseService/mockDatabaseService';
 import { Db } from 'mongodb';
-import { getServerSideProps } from '../../../src/endpoints/outbox';
-import { NextPageContext } from 'next';
+import { outboxHandler } from '../../../src/endpoints/outbox';
 import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   ACTIVITYSTREAMS_CONTEXT,
   CONTENT_TYPE_HEADER,
 } from '../../../src/globals';
 import * as data from '../../data';
+import { IncomingMessage, ServerResponse } from 'http';
 
 describe('Endpoints', () => {
   describe('Actor Outbox', () => {
@@ -70,20 +70,18 @@ describe('Endpoints', () => {
       const write = jest.fn(() => { });
       const end = jest.fn(() => { });
 
-      const context: NextPageContext = {
-        req: {
-          url: data.actor1OutboxUrl.toString().split('https://test.com')[1],
-          headers: {
-            accept: ACTIVITYSTREAMS_CONTENT_TYPE,
-          },
-        },
-        res: {
-          setHeader,
-          write,
-          end,
+      const req: IncomingMessage = {
+        url: data.actor1OutboxUrl.toString().split('https://test.com')[1],
+        headers: {
+          accept: ACTIVITYSTREAMS_CONTENT_TYPE,
         },
       };
-      await getServerSideProps(context, databaseService);
+      const res: ServerResponse = {
+        setHeader,
+        write,
+        end,
+      };
+      await outboxHandler(req, res, databaseService);
       expect(setHeader).toBeCalledWith(
         CONTENT_TYPE_HEADER,
         ACTIVITYSTREAMS_CONTENT_TYPE,

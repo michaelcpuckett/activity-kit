@@ -1,8 +1,8 @@
 import { AP } from 'activitypub-core-types';
-import type { NextPageContext } from 'next';
+import { IncomingMessage, ServerResponse } from 'http';
 import { DatabaseService } from '../../DatabaseService';
 import { LOCAL_DOMAIN } from '../../globals';
-import { getServerSideProps as getEntityPageServerSideProps } from '../entity';
+import { entityGetHandler } from '../entity';
 import { handleDelete } from './delete';
 import { handleCreate } from './create';
 import { handleUpdate } from './update';
@@ -22,13 +22,12 @@ import { parseStream } from '../../utilities/parseStream';
 import { convertUrlsToStrings } from '../../utilities/convertUrlsToStrings';
 import { stringifyWithContext } from '../../utilities/stringifyWithContext';
 
-export async function getServerSideProps(
-  context: NextPageContext,
+export async function outboxHandler(
+  req: IncomingMessage,
+  res: ServerResponse,
   providedDatabaseService?: DatabaseService,
   providedDeliveryService?: DeliveryService,
 ) {
-  const { req } = context;
-
   if (!req) {
     throw new Error('No request object.');
   }
@@ -39,19 +38,18 @@ export async function getServerSideProps(
     providedDeliveryService ?? new DeliveryService(databaseService);
 
   if (req.method === 'POST') {
-    return await handleOutboxPost(context, databaseService, deliveryService);
+    return await handleOutboxPost(req, res, databaseService, deliveryService);
   }
 
-  return await getEntityPageServerSideProps(context, databaseService);
+  return await entityGetHandler(req, res, databaseService);
 }
 
 async function handleOutboxPost(
-  context: NextPageContext,
+  req: IncomingMessage,
+  res: ServerResponse,
   databaseService: DatabaseService,
   deliveryService: DeliveryService,
 ) {
-  const { req, res } = context;
-
   if (!req || !res) {
     throw new Error('No response object.');
   }

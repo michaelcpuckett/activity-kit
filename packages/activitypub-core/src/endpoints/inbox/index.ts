@@ -1,30 +1,23 @@
-import type { NextPageContext } from 'next';
 import { AP } from 'activitypub-core-types';
 import { LOCAL_DOMAIN } from '../../globals';
 import { DatabaseService } from '../../DatabaseService';
-import { getServerSideProps as getEntityPageServerSideProps } from '../entity';
+import { IncomingMessage, ServerResponse } from 'http';
+import { entityGetHandler } from '../entity';
 import { handleAccept } from './accept';
-import { streamToString } from '../../utilities/streamToString';
 import { handleAnnounce } from './announce';
 import { handleFollow } from './follow';
 import { handleLike } from './like';
 import { shouldForwardActivity } from './shouldForwardActivity';
-import { convertFromJsonLd } from '../../utilities/convertFromJsonLd';
-import { addContext } from '../../utilities/addContext';
-import { cleanProps } from '../../utilities/cleanProps';
 import { DeliveryService } from '../../DeliveryService';
-import { convertStringsToUrls } from '../../utilities/convertStringsToUrls';
 import { stringifyWithContext } from '../../utilities/stringifyWithContext';
 import { parseStream } from '../../utilities/parseStream';
-import { convertUrlsToStrings } from '../../utilities/convertUrlsToStrings';
 
-export async function getServerSideProps(
-  context: NextPageContext,
+export async function inboxHandler(
+  req: IncomingMessage,
+  res: ServerResponse,
   providedDatabaseService?: DatabaseService,
   providedDeliveryService?: DeliveryService,
 ) {
-  const { req } = context;
-
   if (!req) {
     throw new Error('Bad request.');
   }
@@ -35,19 +28,18 @@ export async function getServerSideProps(
     providedDeliveryService ?? new DeliveryService(databaseService);
 
   if (req.method === 'POST') {
-    return await handlePost(context, databaseService, deliveryService);
+    return await handlePost(req, res, databaseService, deliveryService);
   }
 
-  return await getEntityPageServerSideProps(context);
+  return await entityGetHandler(req, res, providedDatabaseService);
 }
 
 async function handlePost(
-  context: NextPageContext,
+  req: IncomingMessage,
+  res: ServerResponse,
   databaseService: DatabaseService,
   deliveryService: DeliveryService,
 ) {
-  const { req, res } = context;
-
   if (!req || !res) {
     throw new Error('No response object.');
   }

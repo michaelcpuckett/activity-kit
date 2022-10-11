@@ -118,6 +118,7 @@ describe('Endpoints', () => {
         request as IncomingMessage,
         response as ServerResponse,
         void 0,
+        void 0,
         databaseService,
       );
       expect(data.props).toStrictEqual(

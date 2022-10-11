@@ -1,6 +1,7 @@
 import { mockDatabaseService } from './mockDatabaseService';
 import { AP } from 'activitypub-core-types';
 import { ACTIVITYSTREAMS_CONTEXT } from '../../src/globals';
+import { RequestOptions } from 'http';
 
 describe('DatabaseService', () => {
   describe('fetchEntityById', () => {
@@ -16,9 +17,9 @@ describe('DatabaseService', () => {
     };
 
     const databaseService = mockDatabaseService({
-      fetchResponder: function (request: Request) {
+      fetchResponder: function (url: string, config: RequestOptions) {
         return async function () {
-          if (request.url === actor1Url) {
+          if (url === actor1Url) {
             return JSON.parse(JSON.stringify(actor1Result));
           }
 

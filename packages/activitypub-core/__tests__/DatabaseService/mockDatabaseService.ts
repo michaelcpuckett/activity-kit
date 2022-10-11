@@ -1,3 +1,4 @@
+import { RequestOptions } from 'http';
 import { Db } from 'mongodb';
 import { DatabaseService } from '../../src/DatabaseService';
 import { findOne } from '../endpoints/box';
@@ -7,7 +8,7 @@ export function mockDatabaseService({
   getPrivateKey,
   db,
   fetch,
-  fetchResponder = function (request: Request) {
+  fetchResponder = function (url: string, config: RequestOptions) {
     return async function () {
       return null;
     };
@@ -17,7 +18,7 @@ export function mockDatabaseService({
   getPrivateKey?: Function;
   db?: Db;
   fetch?: Function;
-  fetchResponder?: (request: Request) => unknown;
+  fetchResponder?: (url: string, config: RequestOptions) => unknown;
 }) {
   const mockDbInstance = {
     collection: jest.fn(
@@ -30,8 +31,8 @@ export function mockDatabaseService({
 
   const fetchMock =
     fetch ??
-    jest.fn(async (request: Request) => ({
-      json: fetchResponder(request),
+    jest.fn(async (url: string, config: RequestOptions) => ({
+      json: fetchResponder(url, config),
     }));
 
   let ExtendedDatabaseService = class extends DatabaseService { };

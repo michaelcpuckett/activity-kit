@@ -1,11 +1,14 @@
 jest.mock('../../src/utilities/streamToString', () => {
   return {
-    streamToString: function streamToString(req) {
+    streamToString: function streamToString(req: IncomingMessage & {
+      body: string;
+    }) {
       return req.body;
     },
   };
 });
 
+import { Socket } from 'net';
 import type { Db } from 'mongodb';
 import { AP } from 'activitypub-core-types';
 import { ACTIVITYSTREAMS_CONTENT_TYPE } from '../../src/globals';
@@ -320,26 +323,19 @@ const handleBox = async (
   const write = jest.fn(() => { });
   const end = jest.fn(() => { });
 
-  const req: Partial<IncomingMessage> = {
-    url,
-    method: 'POST',
-    headers: {
-      accept: ACTIVITYSTREAMS_CONTENT_TYPE,
-    },
-    body: JSON.stringify(activity),
-    on: {
-      event: {
-        end: () => { },
-        data: () => {
-          return JSON.stringify(activity);
-        }
-      }
-    }
+  const req: Partial<IncomingMessage> = new IncomingMessage(new Socket());
+
+  req.method = 'POST';
+  req.url = url;
+  req.headers = {
+    accept: ACTIVITYSTREAMS_CONTENT_TYPE,
   };
+  req.body = JSON.stringify(activity);
+
   const res: Partial<ServerResponse> = {
-    setHeader,
-    write,
-    end,
+    setHeader: setHeader as unknown as typeof ServerResponse.prototype.setHeader,
+    write: write as unknown as typeof ServerResponse.prototype.write,
+    end: end as unknown as typeof ServerResponse.prototype.end,
   };
 
   if (handler) {
@@ -367,7 +363,7 @@ export const inboxHandler = async (
   options?: { [key: string]: unknown },
 ) => {
   return await handleBox(
-    data.actor1OutboxUrl.toString().split('https://test.com')[1],
+    data.actor1InboxUrl.toString().split('https://test.com')[1],
     inbox,
     activity,
     options,
@@ -379,7 +375,7 @@ export const outboxHandler = async (
   options?: { [key: string]: unknown },
 ) => {
   return await handleBox(
-    data.actor1InboxUrl.toString().split('https://test.com')[1],
+    data.actor1OutboxUrl.toString().split('https://test.com')[1],
     outbox,
     activity,
     options,

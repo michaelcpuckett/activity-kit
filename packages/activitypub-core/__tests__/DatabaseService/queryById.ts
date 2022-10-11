@@ -2,6 +2,7 @@ import { mockDatabaseService } from './mockDatabaseService';
 import { AP } from 'activitypub-core-types';
 import { Db } from 'mongodb';
 import { ACTIVITYSTREAMS_CONTEXT } from '../../src/globals';
+import { RequestOptions } from 'http';
 
 describe('DatabaseService', () => {
   describe('queryById', () => {
@@ -18,9 +19,9 @@ describe('DatabaseService', () => {
       db: {
         findOne: jest.fn(() => null),
       } as unknown as Db,
-      fetchResponder: function (request: Request) {
+      fetchResponder: function (url: string, config: RequestOptions) {
         return async function () {
-          if (request.url === object1Url) {
+          if (url === object1Url) {
             return object1Result;
           }
 
