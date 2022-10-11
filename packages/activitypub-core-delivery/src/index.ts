@@ -1,4 +1,4 @@
-import type { Database } from 'activitypub-core-types';
+import type { Database } from 'activitypub-core-types/index';
 import { broadcast } from './broadcast';
 import { getPrivateKey } from './getPrivateKey';
 import { getRecipientInboxUrls } from './getRecipientInboxUrls';

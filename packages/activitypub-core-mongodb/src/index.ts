@@ -22,7 +22,7 @@ import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getAuthenticatedUserIdByToken } from './getAuthenticatedUserIdByToken';
 import { getActorByToken } from './getActorByToken';
-import type { Database, DatabaseService } from 'activitypub-core-types';
+import type { Database, DatabaseService } from 'activitypub-core-types/index';
 
 export class MongoDatabase implements Database {
   db: Db;
