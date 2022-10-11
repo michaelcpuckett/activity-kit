@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-express-jsx",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -24,7 +24,7 @@
   "dependencies": {
     "activitypub-core-express-middleware": "^0.0.5",
     "activitypub-core-jsx-components": "^0.0.1",
-    "activitypub-core-types": "^0.0.32",
+    "activitypub-core-types": "^0.0.33",
     "firebase-admin": "^11.1.0",
     "react": "^16.14.0",
     "react-server": "^0.8.1"

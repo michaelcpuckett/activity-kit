@@ -1,11 +1,11 @@
 39 error Error: Command failed with exit code 1: npm install --package-lock-only --ignore-scripts
 39 error npm ERR! code ETARGET
-39 error npm ERR! notarget No matching version found for activitypub-core-types@^0.0.32.
+39 error npm ERR! notarget No matching version found for activitypub-core-types@^0.0.33.
 39 error npm ERR! notarget In most cases you or one of your dependencies are requesting
 39 error npm ERR! notarget a package version that doesn't exist.
 39 error
 39 error npm ERR! A complete log of this run can be found in:
-39 error npm ERR!     C:\Users\Michael Puckett\AppData\Local\npm-cache\_logs\2022-10-11T01_21_51_056Z-debug.log
+39 error npm ERR!     C:\Users\Michael Puckett\AppData\Local\npm-cache\_logs\2022-10-11T01_22_44_270Z-debug.log
 39 error     at makeError (C:\Users\Michael Puckett\Sites\activitypub-lerna\node_modules\execa\lib\error.js:60:11)
 39 error     at handlePromise (C:\Users\Michael Puckett\Sites\activitypub-lerna\node_modules\execa\index.js:118:26)
 39 error     at processTicksAndRejections (node:internal/process/task_queues:96:5)
