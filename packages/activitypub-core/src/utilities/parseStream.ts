@@ -1,5 +1,5 @@
 import { IncomingMessage } from "http";
-import { AP } from "../types";
+import { AP } from "activitypub-core-types";
 import { convertFromJsonLd } from "./convertFromJsonLd";
 import { streamToString } from "./streamToString";
 

@@ -1,4 +1,4 @@
-import { AP } from '../../../types';
+import { AP } from 'activitypub-core-types';
 import { DatabaseService } from '../../../DatabaseService';
 import { getId } from '../../../utilities/getId';
 import { handleRemove } from '../remove';
