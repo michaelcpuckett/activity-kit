@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.entityGetHandler = void 0;
 const DatabaseService_1 = require("../../DatabaseService");
-const src_1 = require("activitypub-core-types/src");
+const activitypub_core_types_1 = require("activitypub-core-types");
 const globals_1 = require("../../globals");
 const getTypedEntity_1 = require("../../utilities/getTypedEntity");
 const convertUrlsToStrings_1 = require("../../utilities/convertUrlsToStrings");
@@ -44,8 +44,8 @@ async function entityGetHandler(request, response, providedDatabaseService) {
     if (!entity) {
         return handleNotFound();
     }
-    if (entity.type === src_1.AP.CollectionTypes.COLLECTION ||
-        entity.type === src_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+    if (entity.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION ||
+        entity.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
         const collection = await databaseService.expandCollection(entity);
         if (collection) {
             entity = collection;
@@ -54,10 +54,10 @@ async function entityGetHandler(request, response, providedDatabaseService) {
     if ('likes' in entity && entity.likes instanceof URL) {
         const foundLikesCollection = await databaseService.findEntityById(entity.likes);
         if (foundLikesCollection &&
-            foundLikesCollection.type === src_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+            foundLikesCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
             const expandedLikes = await databaseService.expandCollection(foundLikesCollection);
             if (expandedLikes &&
-                expandedLikes.type === src_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+                expandedLikes.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
                 entity.likes = expandedLikes;
             }
         }
@@ -65,10 +65,10 @@ async function entityGetHandler(request, response, providedDatabaseService) {
     if ('shares' in entity && entity.shares instanceof URL) {
         const foundSharesCollection = await databaseService.findEntityById(entity.shares);
         if (foundSharesCollection &&
-            foundSharesCollection.type === src_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+            foundSharesCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
             const expandedShares = await databaseService.expandCollection(foundSharesCollection);
             if (expandedShares &&
-                expandedShares.type === src_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+                expandedShares.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
                 entity.shares = expandedShares;
             }
         }

@@ -1,4 +1,4 @@
-import { AP } from 'activitypub-core-types/src';
+import { AP } from 'activitypub-core-types';
 
 export function compressEntity(
   entity: AP.Entity,

@@ -2,7 +2,7 @@ import { getGuid } from '../../utilities/getGuid';
 import { generateKeyPair } from '../../utilities/generateKeyPair';
 import { LOCAL_DOMAIN, SERVER_ACTOR_ID, SHARED_INBOX_ID } from '../../globals';
 import { DatabaseService } from '../../DatabaseService';
-import { AP } from 'activitypub-core-types/src';
+import { AP } from 'activitypub-core-types';
 
 export async function createUserActor(
   databaseService: DatabaseService,

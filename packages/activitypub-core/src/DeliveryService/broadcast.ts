@@ -1,5 +1,5 @@
 import { DeliveryService } from '.';
-import { AP } from 'activitypub-core-types/src';
+import { AP } from 'activitypub-core-types';
 import { addContext } from '../utilities/addContext';
 import { cleanProps } from '../utilities/cleanProps';
 import { compressEntity } from '../utilities/compressEntity';

@@ -1,4 +1,4 @@
-import { AP } from '../../types';
+import { AP } from 'activitypub-core-types';
 import type { NextPageContext } from 'next';
 import { DatabaseService } from '../../DatabaseService';
 import { LOCAL_DOMAIN } from '../../globals';

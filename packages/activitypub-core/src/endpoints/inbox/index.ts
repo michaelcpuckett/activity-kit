@@ -1,5 +1,5 @@
 import type { NextPageContext } from 'next';
-import { AP } from '../../types';
+import { AP } from 'activitypub-core-types';
 import { LOCAL_DOMAIN } from '../../globals';
 import { DatabaseService } from '../../DatabaseService';
 import { getServerSideProps as getEntityPageServerSideProps } from '../entity';

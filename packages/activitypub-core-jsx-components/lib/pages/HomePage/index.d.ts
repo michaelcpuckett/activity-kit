@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { AP } from 'activitypub-core-types/src';
+import { AP } from 'activitypub-core-types';
 declare type Data = {
     actor: AP.Actor;
 };

@@ -1,5 +1,5 @@
 import { IncomingMessage } from 'http';
-import { AP } from 'activitypub-core-types/src';
+import { AP } from 'activitypub-core-types';
 import { DatabaseService } from '../../DatabaseService';
 import { ServiceAccount } from 'firebase-admin';
 import { convertUrlsToStrings } from '../../utilities/convertUrlsToStrings';

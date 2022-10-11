@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ObjectEntity = void 0;
-const src_1 = require("activitypub-core-types/src");
+const activitypub_core_types_1 = require("activitypub-core-types");
 const Note_1 = require("./Note");
 const react_1 = __importDefault(require("react"));
 function ObjectEntity({ object }) {
-    if (object.type === src_1.AP.ExtendedObjectTypes.NOTE) {
+    if (object.type === activitypub_core_types_1.AP.ExtendedObjectTypes.NOTE) {
         return react_1.default.createElement(Note_1.NoteEntity, { note: object });
     }
     return react_1.default.createElement("div", { className: "card" },

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { DatabaseService } from '../../DatabaseService';
-import { AP } from '../../types';
+import { AP } from 'activitypub-core-types';
 import { convertFromJsonLd } from '../../utilities/convertFromJsonLd';
 import { getId } from '../../utilities/getId';
 import { streamToString } from '../../utilities/streamToString';

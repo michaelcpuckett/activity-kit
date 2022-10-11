@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { ChangeEvent, ChangeEventHandler, FormEventHandler, MouseEventHandler, ReactElement, useState } from 'react';
-import { AP } from 'activitypub-core-types/src';
+import { AP } from 'activitypub-core-types';
 import { Welcome } from './Welcome';
 import { CreateForm } from './CreateForm';
 import { ACCEPT_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE } from 'activitypub-core/src/globals';

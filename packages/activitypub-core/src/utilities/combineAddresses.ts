@@ -1,4 +1,4 @@
-import { AP } from 'activitypub-core-types/src';
+import { AP } from 'activitypub-core-types';
 import { getId } from './getId';
 
 export function combineAddresses(activity: AP.Activity): AP.Activity {

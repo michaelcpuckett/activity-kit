@@ -4,7 +4,7 @@ exports.createUserActor = void 0;
 const getGuid_1 = require("../../utilities/getGuid");
 const generateKeyPair_1 = require("../../utilities/generateKeyPair");
 const globals_1 = require("../../globals");
-const src_1 = require("activitypub-core-types/src");
+const activitypub_core_types_1 = require("activitypub-core-types");
 async function createUserActor(databaseService, user) {
     const { publicKey, privateKey } = await (0, generateKeyPair_1.generateKeyPair)();
     const id = `${globals_1.LOCAL_DOMAIN}/actor/${user.preferredUsername}`;
@@ -12,7 +12,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${id}/inbox`),
         url: new URL(`${id}/inbox`),
         name: 'Inbox',
-        type: src_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
     };
@@ -20,7 +20,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${id}/outbox`),
         url: new URL(`${id}/outbox`),
         name: 'Outbox',
-        type: src_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
     };
@@ -28,7 +28,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${id}/followers`),
         url: new URL(`${id}/followers`),
         name: 'Followers',
-        type: src_1.AP.CollectionTypes.COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         items: [],
     };
@@ -36,7 +36,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${id}/following`),
         url: new URL(`${id}/following`),
         name: 'Following',
-        type: src_1.AP.CollectionTypes.COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         items: [],
     };
@@ -44,7 +44,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${id}/liked`),
         url: new URL(`${id}/liked`),
         name: 'Liked',
-        type: src_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
     };
@@ -52,7 +52,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${id}/shared`),
         url: new URL(`${id}/shared`),
         name: 'Shared',
-        type: src_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
     };
@@ -60,7 +60,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${id}/blocked`),
         url: new URL(`${id}/blocked`),
         name: 'Blocked',
-        type: src_1.AP.CollectionTypes.COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         items: [],
     };
@@ -68,7 +68,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${id}/groups`),
         url: new URL(`${id}/groups`),
         name: 'Groups',
-        type: src_1.AP.CollectionTypes.COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         items: [],
     };
@@ -76,7 +76,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${id}/likes`),
         url: new URL(`${id}/likes`),
         name: 'Likes',
-        type: src_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
     };
@@ -84,7 +84,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${id}/shares`),
         url: new URL(`${id}/shares`),
         name: 'Shares',
-        type: src_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
     };
@@ -92,14 +92,14 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${id}/bookmarks`),
         url: new URL(`${id}/bookmarks`),
         name: 'Bookmarks',
-        type: src_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
     };
     const userActor = {
         id: new URL(id),
         url: new URL(id),
-        type: src_1.AP.ActorTypes.PERSON,
+        type: activitypub_core_types_1.AP.ActorTypes.PERSON,
         name: user.name,
         preferredUsername: user.preferredUsername,
         inbox: userInbox,
@@ -124,7 +124,7 @@ async function createUserActor(databaseService, user) {
     const createActorActivity = {
         id: new URL(createActorActivityId),
         url: new URL(createActorActivityId),
-        type: src_1.AP.ActivityTypes.CREATE,
+        type: activitypub_core_types_1.AP.ActivityTypes.CREATE,
         actor: new URL(globals_1.SERVER_ACTOR_ID),
         object: userActor,
     };
@@ -151,7 +151,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${friendsGroupId}/inbox`),
         url: new URL(`${friendsGroupId}/inbox`),
         name: 'Inbox',
-        type: src_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
     };
@@ -159,7 +159,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${friendsGroupId}/outbox`),
         url: new URL(`${friendsGroupId}/outbox`),
         name: 'Outbox',
-        type: src_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
     };
@@ -167,7 +167,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${friendsGroupId}/likes`),
         url: new URL(`${friendsGroupId}/likes`),
         name: 'Likes',
-        type: src_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
     };
@@ -175,7 +175,7 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${friendsGroupId}/shares`),
         url: new URL(`${friendsGroupId}/shares`),
         name: 'Shares',
-        type: src_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
     };
@@ -183,14 +183,14 @@ async function createUserActor(databaseService, user) {
         id: new URL(`${friendsGroupId}/members`),
         url: new URL(`${friendsGroupId}/members`),
         name: 'Members',
-        type: src_1.AP.CollectionTypes.COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         items: [],
     };
     const friendsGroupActor = {
         id: new URL(friendsGroupId),
         url: new URL(friendsGroupId),
-        type: src_1.AP.ActorTypes.GROUP,
+        type: activitypub_core_types_1.AP.ActorTypes.GROUP,
         name: 'Friends',
         inbox: friendsGroupInbox,
         outbox: friendsGroupOutbox,
@@ -208,7 +208,7 @@ async function createUserActor(databaseService, user) {
     const createFriendsGroupActorActivity = {
         id: new URL(createFriendsGroupActorActivityId),
         url: new URL(createFriendsGroupActorActivityId),
-        type: src_1.AP.ActivityTypes.CREATE,
+        type: activitypub_core_types_1.AP.ActivityTypes.CREATE,
         actor: new URL(globals_1.SERVER_ACTOR_ID),
         object: friendsGroupActor,
     };

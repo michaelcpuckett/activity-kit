@@ -1,5 +1,5 @@
 import { DatabaseService } from '.';
-import { AP } from 'activitypub-core-types/src';
+import { AP } from 'activitypub-core-types';
 import {
   ACCEPT_HEADER,
   ACTIVITYSTREAMS_CONTENT_TYPE,

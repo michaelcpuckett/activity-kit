@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EntityPage = void 0;
-const src_1 = require("activitypub-core-types/src");
+const activitypub_core_types_1 = require("activitypub-core-types");
 const Activity_1 = require("./Activity");
 const Actor_1 = require("./Actor");
 const Collection_1 = require("./Collection");
@@ -27,34 +27,34 @@ function EntityPage({ entity }) {
 }
 exports.EntityPage = EntityPage;
 function Entity({ entity }) {
-    if (entity.type === src_1.AP.CollectionTypes.COLLECTION) {
+    if (entity.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION) {
         return react_1.default.createElement(Collection_1.CollectionEntity, { collection: entity });
     }
-    if (entity.type === src_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+    if (entity.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
         return react_1.default.createElement(OrderedCollection_1.OrderedCollectionEntity, { collection: entity });
     }
-    if (entity.type === src_1.AP.CollectionPageTypes.COLLECTION_PAGE) {
+    if (entity.type === activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE) {
         return react_1.default.createElement(CollectionPage_1.CollectionPageEntity, { collectionPage: entity });
     }
-    if (entity.type === src_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE) {
+    if (entity.type === activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE) {
         return react_1.default.createElement(OrderedCollectionPage_1.OrderedCollectionPageEntity, { orderedCollectionPage: entity });
     }
-    for (const type of Object.values(src_1.AP.ActivityTypes)) {
+    for (const type of Object.values(activitypub_core_types_1.AP.ActivityTypes)) {
         if (entity.type === type) {
             return react_1.default.createElement(Activity_1.ActivityEntity, { activity: entity });
         }
     }
-    for (const type of Object.values(src_1.AP.ActorTypes)) {
+    for (const type of Object.values(activitypub_core_types_1.AP.ActorTypes)) {
         if (entity.type === type) {
             return react_1.default.createElement(Actor_1.ActorEntity, { actor: entity });
         }
     }
-    for (const type of Object.values(src_1.AP.ExtendedObjectTypes)) {
+    for (const type of Object.values(activitypub_core_types_1.AP.ExtendedObjectTypes)) {
         if (entity.type === type) {
             return react_1.default.createElement(Object_1.ObjectEntity, { object: entity });
         }
     }
-    for (const type of Object.values(src_1.AP.LinkTypes)) {
+    for (const type of Object.values(activitypub_core_types_1.AP.LinkTypes)) {
         if (entity.type === type) {
             return react_1.default.createElement(Link_1.LinkEntity, { link: entity });
         }

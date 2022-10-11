@@ -1,4 +1,4 @@
-import { AP } from 'activitypub-core-types/src';
+import { AP } from 'activitypub-core-types';
 import { ActivityEntity } from './Activity';
 import { ActorEntity } from './Actor';
 import { CollectionEntity } from './Collection';

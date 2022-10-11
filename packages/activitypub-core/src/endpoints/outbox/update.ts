@@ -1,4 +1,4 @@
-import { AP } from '../../types';
+import { AP } from 'activitypub-core-types';
 import { DatabaseService } from '../../DatabaseService';
 import { getId } from '../../utilities/getId';
 
@@ -51,8 +51,8 @@ export async function handleUpdate(
     ...activity.object,
     ...(objectToUpdate.type !== 'Link' && objectToUpdate.type !== 'Mention'
       ? {
-          updated: new Date(),
-        }
+        updated: new Date(),
+      }
       : null),
   };
 

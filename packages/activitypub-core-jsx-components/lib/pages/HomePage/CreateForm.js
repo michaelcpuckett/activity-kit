@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateForm = void 0;
 const globals_1 = require("activitypub-core/src/globals");
-const src_1 = require("activitypub-core-types/src");
+const activitypub_core_types_1 = require("activitypub-core-types");
 const react_1 = __importDefault(require("react"));
 function CreateForm({ actor }) {
     return react_1.default.createElement(react_1.default.Fragment, null,
@@ -15,7 +15,7 @@ function CreateForm({ actor }) {
             react_1.default.createElement("input", { type: "hidden", value: actor.outbox instanceof URL ? actor.outbox.toString() : actor.outbox?.id?.toString(), name: "actorOutboxId" }),
             react_1.default.createElement("label", null,
                 react_1.default.createElement("span", null, "Type"),
-                react_1.default.createElement("select", { name: "type", defaultValue: 'Note' }, Object.values(src_1.AP.ExtendedObjectTypes).map(type => react_1.default.createElement("option", { key: type }, type)))),
+                react_1.default.createElement("select", { name: "type", defaultValue: 'Note' }, Object.values(activitypub_core_types_1.AP.ExtendedObjectTypes).map(type => react_1.default.createElement("option", { key: type }, type)))),
             react_1.default.createElement("label", null,
                 react_1.default.createElement("span", null, "Summary"),
                 react_1.default.createElement("textarea", { name: "summary" })),

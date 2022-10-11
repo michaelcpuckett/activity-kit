@@ -1,4 +1,4 @@
-import { AP } from "activitypub-core-types/src";
+import { AP } from 'activitypub-core-types';
 import { addContext } from "./addContext";
 import { cleanProps } from "./cleanProps";
 import { convertUrlsToStrings } from "./convertUrlsToStrings";

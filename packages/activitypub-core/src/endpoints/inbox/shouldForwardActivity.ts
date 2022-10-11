@@ -1,5 +1,5 @@
 import { DatabaseService } from '../../DatabaseService';
-import { AP } from '../../types';
+import { AP } from 'activitypub-core-types';
 import { getId } from '../../utilities/getId';
 
 export async function shouldForwardActivity(

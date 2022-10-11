@@ -1,5 +1,5 @@
 import { PUBLIC_ACTOR } from 'activitypub-core/src/globals';
-import { AP } from 'activitypub-core-types/src';
+import { AP } from 'activitypub-core-types';
 import { ActorCard } from './Actor';
 import { ActivityCard } from './Activity';
 import { NoteCard } from './Note';

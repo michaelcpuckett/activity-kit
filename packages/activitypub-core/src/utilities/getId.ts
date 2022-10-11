@@ -1,4 +1,4 @@
-import { AP } from 'activitypub-core-types/src';
+import { AP } from 'activitypub-core-types';
 
 export const getId = (
   entity?: undefined | null | AP.EntityReference | AP.EntityReference[],

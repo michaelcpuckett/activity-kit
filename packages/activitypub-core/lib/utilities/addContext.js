@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addContext = void 0;
 const globals_1 = require("../globals");
-const src_1 = require("activitypub-core-types/src");
+const activitypub_core_types_1 = require("activitypub-core-types");
 function addContext(entity) {
-    for (const type of Object.values(src_1.AP.ActorTypes)) {
+    for (const type of Object.values(activitypub_core_types_1.AP.ActorTypes)) {
         if (type === entity.type) {
             return {
                 '@context': [

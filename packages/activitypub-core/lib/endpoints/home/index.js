@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.homeGetHandler = void 0;
-const src_1 = require("activitypub-core-types/src");
+const activitypub_core_types_1 = require("activitypub-core-types");
 const DatabaseService_1 = require("../../DatabaseService");
 const convertUrlsToStrings_1 = require("../../utilities/convertUrlsToStrings");
 const cookie_1 = __importDefault(require("cookie"));
@@ -45,8 +45,8 @@ const homeGetHandler = async (req, res, serviceAccount, setup, providedDatabaseS
         if (stream instanceof URL) {
             const foundStream = await databaseService.findEntityById(stream);
             if (foundStream &&
-                (foundStream.type === src_1.AP.CollectionTypes.COLLECTION ||
-                    foundStream.type === src_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
+                (foundStream.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION ||
+                    foundStream.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
                 const expandedStream = await databaseService.expandCollection(foundStream);
                 if (expandedStream) {
                     streams.push(expandedStream);

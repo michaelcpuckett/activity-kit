@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { DatabaseService } from '../../DatabaseService';
-import { AP } from 'activitypub-core-types/src';
+import { AP } from 'activitypub-core-types';
 import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   CONTENT_TYPE_HEADER,

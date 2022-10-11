@@ -1,5 +1,5 @@
 import { ACTIVITYSTREAMS_CONTEXT, PUBLIC_ACTOR } from 'activitypub-core/src/globals';
-import { AP } from 'activitypub-core-types/src';
+import { AP } from 'activitypub-core-types';
 import { FormEvent, FormEventHandler } from 'react';
 import React from 'react';
 
