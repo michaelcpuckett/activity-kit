@@ -10,7 +10,7 @@ const app = express();
 app.use(express.static('src/static'));
 app.use(activityPub({
   renderIndex: async () => {
-    return renderToString(<IndexPage />)
+    return renderToString(<IndexPage />);
   },
   renderEntity: async ({ entity }) => {
     return renderToString(<EntityPage entity={entity} />);

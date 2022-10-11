@@ -1,2 +1,2 @@
 /// <reference types="react" />
-export declare const IndexPage: () => JSX.Element;
+export declare const IndexPage: ({}: {}) => JSX.Element;
