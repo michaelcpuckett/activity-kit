@@ -1,0 +1,26 @@
+import { MongoDatabase } from '.';
+import { AP } from 'activitypub-core-types';
+import { cleanProps } from 'activitypub-core-utilities';
+import { compressEntity } from 'activitypub-core-utilities';
+import { convertUrlsToStrings } from 'activitypub-core-utilities';
+import { getCollectionNameByUrl } from 'activitypub-core-utilities';
+
+export async function saveEntity(this: MongoDatabase, entity: AP.Entity) {
+  if (!entity.id) {
+    throw new Error('No ID.');
+  }
+
+  const collectionName = getCollectionNameByUrl(entity.id);
+  const _id = entity.id.toString();
+  const convertedEntity = convertUrlsToStrings(cleanProps(compressEntity(entity)));
+
+  return await this.db.collection(collectionName).replaceOne(
+    {
+      _id,
+    },
+    convertedEntity,
+    {
+      upsert: true,
+    },
+  );
+}

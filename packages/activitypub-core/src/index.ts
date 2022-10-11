@@ -1,5 +1,5 @@
-import { userPostHandler } from './endpoints/user/index';
-import { homeGetHandler } from './endpoints/home/index';
-import { entityGetHandler } from './endpoints/entity/index';
-
-export { userPostHandler, homeGetHandler, entityGetHandler }
+export { userPostHandler } from './user';
+export { homeGetHandler } from './home';
+export { entityGetHandler } from './entity';
+export { outboxHandler } from './outbox';
+export { inboxHandler } from './inbox';

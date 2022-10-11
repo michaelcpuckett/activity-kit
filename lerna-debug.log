@@ -1,12 +1,59 @@
-39 error Error: Command failed with exit code 1: npm install --package-lock-only --ignore-scripts
-39 error npm ERR! code ETARGET
-39 error npm ERR! notarget No matching version found for activitypub-core-types@^0.0.40.
-39 error npm ERR! notarget In most cases you or one of your dependencies are requesting
-39 error npm ERR! notarget a package version that doesn't exist.
-39 error
-39 error npm ERR! A complete log of this run can be found in:
-39 error npm ERR!     C:\Users\Michael Puckett\AppData\Local\npm-cache\_logs\2022-10-11T14_43_21_198Z-debug.log
-39 error     at makeError (C:\Users\Michael Puckett\Sites\activitypub-lerna\node_modules\execa\lib\error.js:60:11)
-39 error     at handlePromise (C:\Users\Michael Puckett\Sites\activitypub-lerna\node_modules\execa\index.js:118:26)
-39 error     at processTicksAndRejections (node:internal/process/task_queues:96:5)
-39 error     at async Promise.all (index 0)
+0 silly argv {
+0 silly argv   _: [ 'version' ],
+0 silly argv   lernaVersion: '5.6.2',
+0 silly argv   '$0': '..\\..\\AppData\\Roaming\\npm\\node_modules\\lerna\\cli.js'
+0 silly argv }
+1 notice cli v5.6.2
+2 verbose rootPath C:\Users\Michael Puckett\Sites\activitypub-lerna
+3 info current version 0.0.40
+4 silly isAnythingCommitted
+5 verbose isAnythingCommitted 1
+6 silly getCurrentBranch
+7 verbose currentBranch master
+8 silly remoteBranchExists
+9 silly isBehindUpstream
+10 silly isBehindUpstream master is behind origin/master by 0 commit(s) and ahead by 0
+11 silly hasTags
+12 verbose hasTags false
+13 info Assuming all packages changed
+14 verbose updated activitypub-core-delivery
+15 verbose updated activitypub-core-example-mongodb-express-jsx
+16 verbose updated activitypub-core-express-middleware
+17 verbose updated activitypub-core-jsx-components
+18 verbose updated activitypub-core-mongodb
+19 verbose updated activitypub-core-types
+20 verbose updated activitypub-core-utilities
+21 verbose updated activitypub-core
+22 verbose git-describe undefined => "7d05933"
+23 silly git-describe parsed => {"refCount":"20","sha":"7d05933","isDirty":false}
+24 info execute Skipping releases
+25 silly lifecycle No script for "preversion" in "root", continuing
+26 silly lifecycle No script for "preversion" in "activitypub-core-delivery", continuing
+27 silly lifecycle No script for "preversion" in "activitypub-core-jsx-components", continuing
+28 silly lifecycle No script for "preversion" in "activitypub-core-mongodb", continuing
+29 silly lifecycle No script for "preversion" in "activitypub-core-types", continuing
+30 silly lifecycle No script for "version" in "activitypub-core-mongodb", continuing
+31 silly lifecycle No script for "preversion" in "activitypub-core-utilities", continuing
+32 silly lifecycle No script for "version" in "activitypub-core-jsx-components", continuing
+33 silly lifecycle No script for "preversion" in "activitypub-core", continuing
+34 silly lifecycle No script for "version" in "activitypub-core-delivery", continuing
+35 silly lifecycle No script for "version" in "activitypub-core-types", continuing
+36 silly lifecycle No script for "version" in "activitypub-core-utilities", continuing
+37 silly lifecycle No script for "version" in "activitypub-core", continuing
+38 silly lifecycle No script for "preversion" in "activitypub-core-express-middleware", continuing
+39 silly lifecycle No script for "version" in "activitypub-core-express-middleware", continuing
+40 silly lifecycle No script for "preversion" in "activitypub-core-example-mongodb-express-jsx", continuing
+41 silly lifecycle No script for "version" in "activitypub-core-example-mongodb-express-jsx", continuing
+42 verbose version Updating root package-lock.json
+43 error Error: Command failed with exit code 1: npm install --package-lock-only --ignore-scripts
+43 error npm ERR! code ETARGET
+43 error npm ERR! notarget No matching version found for activitypub-core-express-middleware@^0.0.45.
+43 error npm ERR! notarget In most cases you or one of your dependencies are requesting
+43 error npm ERR! notarget a package version that doesn't exist.
+43 error
+43 error npm ERR! A complete log of this run can be found in:
+43 error npm ERR!     C:\Users\Michael Puckett\AppData\Local\npm-cache\_logs\2022-10-11T19_45_44_026Z-debug.log
+43 error     at makeError (C:\Users\Michael Puckett\Sites\activitypub-lerna\node_modules\execa\lib\error.js:60:11)
+43 error     at handlePromise (C:\Users\Michael Puckett\Sites\activitypub-lerna\node_modules\execa\index.js:118:26)
+43 error     at processTicksAndRejections (node:internal/process/task_queues:96:5)
+43 error     at async Promise.all (index 0)

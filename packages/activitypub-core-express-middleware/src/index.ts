@@ -1,8 +1,9 @@
 import type { NextFunction } from 'express';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { userPostHandler, homeGetHandler, entityGetHandler } from 'activitypub-core';
+import { userPostHandler, homeGetHandler, entityGetHandler, outboxHandler, inboxHandler } from 'activitypub-core';
 import { AP } from 'activitypub-core-types';
 import type { ServiceAccount } from 'firebase-admin';
+import type { Database, DeliveryService } from 'activitypub-core-types';
 
 export const activityPub = ({
   renderIndex,
@@ -12,9 +13,29 @@ export const activityPub = ({
   renderIndex: () => Promise<string>,
   renderHome: ({ actor }: { actor: AP.Actor }) => Promise<string>,
   renderEntity: ({ entity }: { entity: AP.Entity }) => Promise<string>,
-}, serviceAccount: ServiceAccount) => async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
+}, {
+  serviceAccount,
+  databaseService,
+  deliveryService,
+}: {
+  serviceAccount: ServiceAccount,
+  databaseService: Database,
+  deliveryService: DeliveryService,
+}) => async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
   if (req.url === '/user' && req.method === 'POST') {
     await userPostHandler(req, res, serviceAccount);
+    next();
+    return;
+  }
+
+  if (req.url.startsWith('actor/') && req.url.endsWith('/inbox')) {
+    await inboxHandler(req, res, databaseService, deliveryService);
+    next();
+    return;
+  }
+
+  if (req.url.startsWith('actor/') && req.url.endsWith('/outbox')) {
+    await outboxHandler(req, res, databaseService, deliveryService);
     next();
     return;
   }
@@ -28,7 +49,7 @@ export const activityPub = ({
   }
 
   if (req.url === '/home' && req.method === 'GET') {
-    const result = await homeGetHandler(req, res, serviceAccount);
+    const result = await homeGetHandler(req, res, serviceAccount, databaseService);
 
     if (result.redirect) {
       next();
@@ -50,7 +71,7 @@ export const activityPub = ({
   }
 
   if (req.url.startsWith('/object/') || req.url.startsWith('/actor/') || req.url.startsWith('/activity')) {
-    const result = await entityGetHandler(req, res);
+    const result = await entityGetHandler(req, res, databaseService);
 
     if (result.props) {
       res.statusCode = 200;
