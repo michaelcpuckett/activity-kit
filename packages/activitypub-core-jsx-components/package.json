@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-jsx-components",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "activitypub-core-express-middleware": "^0.0.0",
-    "activitypub-core-types": "^0.0.34",
+    "activitypub-core-types": "^0.0.35",
     "react": "^18.2.0"
   }
 }
