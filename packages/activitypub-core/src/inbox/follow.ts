@@ -8,6 +8,7 @@ import {
   PUBLIC_ACTOR,
 } from 'activitypub-core-utilities';
 import { getId } from 'activitypub-core-utilities';
+import { DeliveryService } from 'activitypub-core-delivery';
 
 export async function handleFollow(
   activity: AP.Follow,

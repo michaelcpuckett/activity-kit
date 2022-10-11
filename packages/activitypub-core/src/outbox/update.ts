@@ -56,10 +56,6 @@ export async function handleUpdate(
       : null),
   };
 
-  if (!activity.object.type || !activity.object.id) {
-    throw new Error('??');
-  }
-
   await databaseService.saveEntity(activity.object);
 }
 

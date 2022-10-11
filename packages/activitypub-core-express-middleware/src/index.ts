@@ -3,7 +3,8 @@ import type { IncomingMessage, ServerResponse } from 'http';
 import { userPostHandler, homeGetHandler, entityGetHandler, outboxHandler, inboxHandler } from 'activitypub-core';
 import { AP } from 'activitypub-core-types';
 import type { ServiceAccount } from 'firebase-admin';
-import type { Database, DeliveryService } from 'activitypub-core-types';
+import { DeliveryService } from 'activitypub-core-delivery';
+import type { Database } from 'activitypub-core-types/index';
 
 export const activityPub = ({
   renderIndex,
@@ -23,7 +24,7 @@ export const activityPub = ({
   deliveryService: DeliveryService,
 }) => async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
   if (req.url === '/user' && req.method === 'POST') {
-    await userPostHandler(req, res, serviceAccount);
+    await userPostHandler(req, res, serviceAccount, databaseService);
     next();
     return;
   }
