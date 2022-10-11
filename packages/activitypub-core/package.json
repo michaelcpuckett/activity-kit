@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -18,7 +18,7 @@
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --watch"
   },
   "dependencies": {
-    "activitypub-core-types": "^0.0.38",
+    "activitypub-core-types": "^0.0.39",
     "cookie": "^0.5.0",
     "firebase-admin": "^11.1.0",
     "http": "^0.0.1-security",
