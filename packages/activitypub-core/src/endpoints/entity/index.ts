@@ -1,4 +1,4 @@
-import type { NextPageContext } from 'next';
+import { IncomingMessage, ServerResponse } from 'http';
 import { DatabaseService } from '../../DatabaseService';
 import { AP } from '../../types';
 import {
@@ -9,17 +9,14 @@ import {
   LOCAL_DOMAIN,
 } from '../../globals';
 import { getTypedEntity } from '../../utilities/getTypedEntity';
-import { addContext } from '../../utilities/addContext';
-import { cleanProps } from '../../utilities/cleanProps';
 import { convertUrlsToStrings } from '../../utilities/convertUrlsToStrings';
 import { stringifyWithContext } from '../../utilities/stringifyWithContext';
 
-export async function getServerSideProps(
-  context: NextPageContext,
+export async function entityGetHandler(
+  request: IncomingMessage,
+  response: ServerResponse,
   providedDatabaseService?: DatabaseService,
 ) {
-  const { req: request, res: response } = context;
-
   if (!response) {
     throw new Error('Bad request.');
   }

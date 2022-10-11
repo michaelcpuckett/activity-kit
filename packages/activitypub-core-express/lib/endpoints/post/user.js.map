@@ -1,1 +1,0 @@
-{"version":3,"file":"user.js","sourceRoot":"","sources":["../../../src/endpoints/post/user.ts"],"names":[],"mappings":";;;;;;AAAA,uDAAmD;AACnD,oEAA+C;AAIxC,MAAM,qBAAqB,GAAG,KAAK,EAAE,GAAoB,EAAE,GAAmB,EAAE,EAAE;IACvF,OAAO,IAAA,kCAAe,EAAC,qBAAc,CAAC,CAAC,GAAG,EAAE,GAAG,CAAC,CAAC;AACnD,CAAC,CAAC;AAFW,QAAA,qBAAqB,yBAEhC"}

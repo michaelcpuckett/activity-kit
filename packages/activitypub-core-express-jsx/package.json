@@ -1,0 +1,31 @@
+{
+  "name": "activitypub-core-express-jsx",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michaelcpuckett@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "devDependencies": {
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "ts-node": "^10.9.1"
+  },
+  "scripts": {
+    "tsc": "tsc --project tsconfig.json",
+    "dev": "ts-node ./src/index.tsx"
+  },
+  "dependencies": {
+    "activitypub-core": "^0.0.24",
+    "activitypub-core-express-middleware": "^0.0.5",
+    "activitypub-core-jsx-components": "^0.0.1",
+    "react": "^16.14.0",
+    "react-server": "^0.8.1"
+  }
+}

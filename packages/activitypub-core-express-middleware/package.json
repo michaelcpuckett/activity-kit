@@ -1,0 +1,28 @@
+{
+  "name": "activitypub-core-express-middleware",
+  "version": "0.0.5",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michaelcpuckett@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "devDependencies": {
+    "ts-node": "^10.9.1"
+  },
+  "scripts": {
+    "tsc": "tsc --project tsconfig.json",
+    "dev": "ts-node ./src/index.ts"
+  },
+  "dependencies": {
+    "activitypub-core": "^0.0.28",
+    "express": "^4.18.2",
+    "firebase-admin": "^11.1.0",
+    "http": "^0.0.1-security"
+  }
+}

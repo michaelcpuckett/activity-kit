@@ -12,93 +12,91 @@ type Data = {
   success?: boolean;
 };
 
-export default (
+export async function userPostHandler(req: IncomingMessage, res: ServerResponse,
   serviceAccount: ServiceAccount,
   setup?: (
     actor: AP.Entity,
     databaseService: DatabaseService,
-  ) => Promise<{ actor: AP.Actor }>,
-) =>
-  async function userPostHandler(req: IncomingMessage, res: ServerResponse) {
-    const databaseService = await DatabaseService.connect();
+  ) => Promise<{ actor: AP.Actor }>) {
+  const databaseService = await DatabaseService.connect();
 
-    const body: { [key: string]: string } = await new Promise((resolve, reject) => {
-      let data = '';
+  const body: { [key: string]: string } = await new Promise((resolve, reject) => {
+    let data = '';
 
-      req.on('data', function (chunk) {
-        data += chunk;
-      });
-
-      req.on('end', function () {
-        resolve(JSON.parse(data));
-      });
-
-      req.on('error', function () {
-        reject('Failed to make an OAuth request');
-      });
+    req.on('data', function (chunk) {
+      data += chunk;
     });
 
-    const { email, password, name, preferredUsername } = body;
-
-    const isUsernameTaken = !!(await databaseService.findOne('actor', {
-      preferredUsername,
-    }));
-
-    if (isUsernameTaken || RESERVED_USERNAMES.includes(preferredUsername)) {
-      res.statusCode = 409;
-      res.write(JSON.stringify({
-        error: 'Username Taken.'
-      }));
-      res.end();
-      return;
-    }
-
-    if (!firebaseAdmin.apps.length) {
-      const appOptions: AppOptions = {
-        credential: firebaseAdmin.credential.cert(serviceAccount),
-        projectId: 'socialweb-id',
-      };
-
-      firebaseAdmin.initializeApp(appOptions);
-    }
-
-    const user = await firebaseAdmin.auth().createUser({
-      email,
-      emailVerified: false,
-      password,
-      displayName: preferredUsername,
-      disabled: false,
+    req.on('end', function () {
+      resolve(JSON.parse(data));
     });
 
-    const isBotCreated = !!(await databaseService.findOne('actor', {
-      preferredUsername: SERVER_ACTOR_USERNAME,
-    }));
-
-    if (!isBotCreated) {
-      await createServerActor(databaseService);
-    }
-
-    await createUserActor(databaseService, {
-      uid: user.uid,
-      email,
-      preferredUsername,
-      name,
+    req.on('error', function () {
+      reject('Failed to make an OAuth request');
     });
+  });
 
-    if (setup) {
-      const actor = await databaseService.findOne('actor', {
-        preferredUsername,
-      });
+  const { email, password, name, preferredUsername } = body;
 
-      if (actor && 'outbox' in actor) {
-        await setup(actor, databaseService);
-      }
-    }
+  const isUsernameTaken = !!(await databaseService.findOne('actor', {
+    preferredUsername,
+  }));
 
-    res.statusCode = 200;
+  if (isUsernameTaken || RESERVED_USERNAMES.includes(preferredUsername)) {
+    res.statusCode = 409;
     res.write(JSON.stringify({
-      success: true
+      error: 'Username Taken.'
     }));
     res.end();
     return;
-  };
+  }
+
+  if (!firebaseAdmin.apps.length) {
+    const appOptions: AppOptions = {
+      credential: firebaseAdmin.credential.cert(serviceAccount),
+      projectId: 'socialweb-id',
+    };
+
+    firebaseAdmin.initializeApp(appOptions);
+  }
+
+  const user = await firebaseAdmin.auth().createUser({
+    email,
+    emailVerified: false,
+    password,
+    displayName: preferredUsername,
+    disabled: false,
+  });
+
+  const isBotCreated = !!(await databaseService.findOne('actor', {
+    preferredUsername: SERVER_ACTOR_USERNAME,
+  }));
+
+  if (!isBotCreated) {
+    await createServerActor(databaseService);
+  }
+
+  await createUserActor(databaseService, {
+    uid: user.uid,
+    email,
+    preferredUsername,
+    name,
+  });
+
+  if (setup) {
+    const actor = await databaseService.findOne('actor', {
+      preferredUsername,
+    });
+
+    if (actor && 'outbox' in actor) {
+      await setup(actor, databaseService);
+    }
+  }
+
+  res.statusCode = 200;
+  res.write(JSON.stringify({
+    success: true
+  }));
+  res.end();
+  return;
+};

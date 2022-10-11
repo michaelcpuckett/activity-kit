@@ -3,12 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getServerSideProps = void 0;
+exports.homeGetHandler = void 0;
 const types_1 = require("../../types");
 const DatabaseService_1 = require("../../DatabaseService");
 const convertUrlsToStrings_1 = require("../../utilities/convertUrlsToStrings");
 const cookie_1 = __importDefault(require("cookie"));
-const getServerSideProps = async ({ req, res, }, serviceAccount, setup, providedDatabaseService) => {
+const homeGetHandler = async (req, res, serviceAccount, setup, providedDatabaseService) => {
     const databaseService = providedDatabaseService ?? (await DatabaseService_1.DatabaseService.connect());
     const cookies = cookie_1.default.parse(req.headers.cookie);
     const actor = await databaseService.getActorByToken(cookies.__session ?? '', serviceAccount);
@@ -75,5 +75,5 @@ const getServerSideProps = async ({ req, res, }, serviceAccount, setup, provided
         },
     };
 };
-exports.getServerSideProps = getServerSideProps;
+exports.homeGetHandler = homeGetHandler;
 //# sourceMappingURL=index.js.map

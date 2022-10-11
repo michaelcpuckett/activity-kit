@@ -3,10 +3,7 @@ import { AP } from '../../types';
 import { DatabaseService } from '../../DatabaseService';
 import { ServiceAccount } from 'firebase-admin';
 import type { ServerResponse } from 'http';
-export declare const getServerSideProps: ({ req, res, }: {
-    req: IncomingMessage;
-    res: ServerResponse;
-}, serviceAccount: ServiceAccount, setup?: (props: {
+export declare const homeGetHandler: (req: IncomingMessage, res: ServerResponse, serviceAccount: ServiceAccount, setup?: (props: {
     actor: AP.Actor;
 }, databaseService: DatabaseService) => Promise<{
     actor: AP.Actor;

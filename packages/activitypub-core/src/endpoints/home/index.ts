@@ -6,14 +6,9 @@ import { convertUrlsToStrings } from '../../utilities/convertUrlsToStrings';
 import cookie from 'cookie';
 import type { ServerResponse } from 'http';
 
-export const getServerSideProps = async (
-  {
-    req,
-    res,
-  }: {
-    req: IncomingMessage,
-    res: ServerResponse
-  },
+export const homeGetHandler = async (
+  req: IncomingMessage,
+  res: ServerResponse,
   serviceAccount: ServiceAccount,
   setup?: (
     props: { actor: AP.Actor },

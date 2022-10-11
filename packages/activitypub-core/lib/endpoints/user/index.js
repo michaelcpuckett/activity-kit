@@ -23,12 +23,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.userPostHandler = void 0;
 const DatabaseService_1 = require("../../DatabaseService");
 const firebaseAdmin = __importStar(require("firebase-admin"));
 const globals_1 = require("../../globals");
 const createServerActor_1 = require("./createServerActor");
 const createUserActor_1 = require("./createUserActor");
-exports.default = (serviceAccount, setup) => async function userPostHandler(req, res) {
+async function userPostHandler(req, res, serviceAccount, setup) {
     const databaseService = await DatabaseService_1.DatabaseService.connect();
     const body = await new Promise((resolve, reject) => {
         let data = '';
@@ -94,5 +95,7 @@ exports.default = (serviceAccount, setup) => async function userPostHandler(req,
     }));
     res.end();
     return;
-};
+}
+exports.userPostHandler = userPostHandler;
+;
 //# sourceMappingURL=index.js.map

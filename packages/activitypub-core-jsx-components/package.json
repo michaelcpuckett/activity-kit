@@ -1,0 +1,28 @@
+{
+  "name": "activitypub-core-jsx-components",
+  "version": "0.0.1",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michaelcpuckett@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "tsc": "tsc --project tsconfig.json",
+    "dev": "ts-node ./src/index.ts"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.21",
+    "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "activitypub-core": "^0.0.24",
+    "activitypub-core-express-middleware": "^0.0.0",
+    "react": "^18.2.0"
+  }
+}
