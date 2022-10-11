@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-express-middleware",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -20,7 +20,7 @@
     "dev": "ts-node ./src/index.ts"
   },
   "dependencies": {
-    "activitypub-core": "^0.0.28",
+    "activitypub-core": "^0.0.37",
     "activitypub-core-types": "^0.0.36",
     "express": "^4.18.2",
     "firebase-admin": "^11.1.0",
