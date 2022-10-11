@@ -19,7 +19,8 @@
   },
   "scripts": {
     "tsc": "tsc --project tsconfig.json",
-    "dev": "ts-node ./src/index.tsx"
+    "dev": "ts-node ./src/index.tsx",
+    "server": "node ./lib/index.js"
   },
   "dependencies": {
     "activitypub-core-express-middleware": "^0.0.39",

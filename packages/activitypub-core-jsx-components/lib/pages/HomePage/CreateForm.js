@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateForm = void 0;
-const globals_1 = require("activitypub-core/src/globals");
 const activitypub_core_types_1 = require("activitypub-core-types");
 const react_1 = __importDefault(require("react"));
 function CreateForm({ actor }) {
@@ -27,8 +26,7 @@ function CreateForm({ actor }) {
                 react_1.default.createElement("input", { type: "text", name: "location" })),
             react_1.default.createElement("fieldset", { name: "to" },
                 react_1.default.createElement("label", null,
-                    react_1.default.createElement("span", null, "Public"),
-                    react_1.default.createElement("input", { defaultChecked: true, type: "checkbox", name: "to", value: globals_1.PUBLIC_ACTOR })),
+                    react_1.default.createElement("span", null, "Public")),
                 react_1.default.createElement("label", null,
                     react_1.default.createElement("span", null, "Followers"),
                     react_1.default.createElement("input", { defaultChecked: true, type: "checkbox", name: "to", value: actor.followers ? actor.followers instanceof URL ? actor.followers.toString() : actor.followers.id?.toString() ?? '' : '' })),

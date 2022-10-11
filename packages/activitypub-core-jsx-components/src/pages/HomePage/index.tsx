@@ -3,8 +3,6 @@ import { ChangeEvent, ChangeEventHandler, FormEventHandler, MouseEventHandler, R
 import { AP } from 'activitypub-core-types';
 import { Welcome } from './Welcome';
 import { CreateForm } from './CreateForm';
-import { ACCEPT_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE } from 'activitypub-core/src/globals';
-import { convertStringsToUrls } from 'activitypub-core/src/utilities/convertStringsToUrls';
 import { OrderedCollectionEntity } from '../EntityPage/OrderedCollection';
 import { CollectionEntity } from '../EntityPage/Collection';
 import React from 'react';

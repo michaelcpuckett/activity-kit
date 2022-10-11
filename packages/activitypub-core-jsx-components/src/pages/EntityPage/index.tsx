@@ -8,7 +8,6 @@ import { ObjectEntity } from './Object';
 import { OrderedCollectionEntity } from './OrderedCollection';
 import { OrderedCollectionPageEntity } from './OrderedCollectionPage';
 import Head from 'next/head';
-import { convertStringsToUrls } from 'activitypub-core/src/utilities/convertStringsToUrls';
 import React from 'react';
 
 export function EntityPage({

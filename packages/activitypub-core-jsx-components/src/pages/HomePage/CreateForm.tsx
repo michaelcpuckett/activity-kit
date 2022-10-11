@@ -1,6 +1,4 @@
-import { ACTIVITYSTREAMS_CONTEXT, PUBLIC_ACTOR } from 'activitypub-core/src/globals';
 import { AP } from 'activitypub-core-types';
-import { FormEvent, FormEventHandler } from 'react';
 import React from 'react';
 
 export function CreateForm({ actor }: { actor: AP.Actor }) {
@@ -37,7 +35,6 @@ export function CreateForm({ actor }: { actor: AP.Actor }) {
           <span>
             Public
           </span>
-          <input defaultChecked={true} type="checkbox" name="to" value={PUBLIC_ACTOR} />
         </label>
         <label>
           <span>
