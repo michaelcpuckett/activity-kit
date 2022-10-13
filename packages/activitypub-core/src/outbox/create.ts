@@ -40,6 +40,18 @@ export async function handleCreate(
     object.url = new URL(objectId);
   }
 
+  const publishedDate = new Date();
+
+  const objectReplies: AP.Collection = {
+    id: new URL(`${object.id.toString()}/replies`),
+    url: new URL(`${object.id.toString()}/replies`),
+    name: 'Replies',
+    type: AP.CollectionTypes.COLLECTION,
+    totalItems: 0,
+    items: [],
+    published: publishedDate,
+  };
+
   const objectLikes: AP.OrderedCollection = {
     id: new URL(`${object.id.toString()}/likes`),
     url: new URL(`${object.id.toString()}/likes`),
@@ -47,6 +59,7 @@ export async function handleCreate(
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
     orderedItems: [],
+    published: publishedDate,
   };
 
   const objectShares: AP.OrderedCollection = {
@@ -56,6 +69,7 @@ export async function handleCreate(
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
     orderedItems: [],
+    published: publishedDate,
   };
 
   if (!('id' in object) || !object.id) {
@@ -65,13 +79,16 @@ export async function handleCreate(
   for (const type of Object.values(AP.CoreObjectTypes)) {
     if (type === object.type) {
       object.attributedTo = activity.actor;
+      object.replies = objectReplies;
       object.likes = objectLikes;
       object.shares = objectShares;
       object.published = new Date();
       object.attributedTo = activity.actor;
+      object.published = publishedDate;
 
       await Promise.all([
         databaseService.saveEntity(object),
+        databaseService.saveEntity(objectReplies),
         databaseService.saveEntity(objectLikes),
         databaseService.saveEntity(objectShares),
       ]);

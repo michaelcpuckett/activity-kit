@@ -21,6 +21,16 @@ async function handleCreate(activity, databaseService) {
     if ('url' in object) {
         object.url = new URL(objectId);
     }
+    const publishedDate = new Date();
+    const objectReplies = {
+        id: new URL(`${object.id.toString()}/replies`),
+        url: new URL(`${object.id.toString()}/replies`),
+        name: 'Replies',
+        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
+        totalItems: 0,
+        items: [],
+        published: publishedDate,
+    };
     const objectLikes = {
         id: new URL(`${object.id.toString()}/likes`),
         url: new URL(`${object.id.toString()}/likes`),
@@ -28,6 +38,7 @@ async function handleCreate(activity, databaseService) {
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
+        published: publishedDate,
     };
     const objectShares = {
         id: new URL(`${object.id.toString()}/shares`),
@@ -36,6 +47,7 @@ async function handleCreate(activity, databaseService) {
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
+        published: publishedDate,
     };
     if (!('id' in object) || !object.id) {
         throw new Error('Bad request 4');
@@ -43,12 +55,15 @@ async function handleCreate(activity, databaseService) {
     for (const type of Object.values(activitypub_core_types_1.AP.CoreObjectTypes)) {
         if (type === object.type) {
             object.attributedTo = activity.actor;
+            object.replies = objectReplies;
             object.likes = objectLikes;
             object.shares = objectShares;
             object.published = new Date();
             object.attributedTo = activity.actor;
+            object.published = publishedDate;
             await Promise.all([
                 databaseService.saveEntity(object),
+                databaseService.saveEntity(objectReplies),
                 databaseService.saveEntity(objectLikes),
                 databaseService.saveEntity(objectShares),
             ]);

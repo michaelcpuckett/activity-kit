@@ -65,15 +65,50 @@ export async function handleFollow(
   // Now we're in outbox, because this is auto-generated:
 
   const acceptActivityId = `${LOCAL_DOMAIN}/activity/${getGuid()}`;
+  const publishedDate = new Date();
+
+  const acceptActivityReplies: AP.Collection = {
+    id: new URL(`${acceptActivityId}/replies`),
+    url: new URL(`${acceptActivityId}/replies`),
+    name: 'Replies',
+    type: AP.CollectionTypes.COLLECTION,
+    totalItems: 0,
+    items: [],
+    published: publishedDate,
+  };
+
+  const acceptActivityLikes = {
+    id: new URL(`${acceptActivityId}/likes`),
+    url: new URL(`${acceptActivityId}/likes`),
+    name: 'Likes',
+    type: AP.CollectionTypes.ORDERED_COLLECTION,
+    totalItems: 0,
+    orderedItems: [],
+    published: publishedDate,
+  };
+
+  const acceptActivityShares = {
+    id: new URL(`${acceptActivityId}/shares`),
+    url: new URL(`${acceptActivityId}/shares`),
+    name: 'Likes',
+    type: AP.CollectionTypes.ORDERED_COLLECTION,
+    totalItems: 0,
+    orderedItems: [],
+    published: publishedDate,
+  };
 
   const acceptActivity: AP.Accept = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(acceptActivityId),
     url: new URL(acceptActivityId),
     type: AP.ActivityTypes.ACCEPT,
+    to: [new URL(PUBLIC_ACTOR), follower.id],
     actor: followee.id,
     object: activity.id,
-    to: [new URL(PUBLIC_ACTOR), follower.id],
+    replies: acceptActivityReplies.id,
+    likes: acceptActivityLikes.id,
+    shares: acceptActivityShares.id,
+    published: publishedDate,
   };
 
   const followeeOutboxId = getId(followee.outbox);
@@ -94,6 +129,9 @@ export async function handleFollow(
 
   await Promise.all([
     databaseService.saveEntity(acceptActivity),
+    databaseService.saveEntity(acceptActivityReplies),
+    databaseService.saveEntity(acceptActivityLikes),
+    databaseService.saveEntity(acceptActivityShares),
     databaseService.insertOrderedItem(followeeOutboxId, acceptActivity.id),
     databaseService.insertItem(followeeFollowersId, follower.id),
   ]);

@@ -1,9 +1,6 @@
 import { MongoDatabase } from '.';
 import { AP } from 'activitypub-core-types';
-import { cleanProps } from 'activitypub-core-utilities';
-import { compressEntity } from 'activitypub-core-utilities';
-import { convertUrlsToStrings } from 'activitypub-core-utilities';
-import { getCollectionNameByUrl } from 'activitypub-core-utilities';
+import { cleanProps, convertUrlsToStrings, getCollectionNameByUrl } from 'activitypub-core-utilities';
 
 export async function saveEntity(this: MongoDatabase, entity: AP.Entity) {
   if (!entity.id) {
@@ -12,7 +9,7 @@ export async function saveEntity(this: MongoDatabase, entity: AP.Entity) {
 
   const collectionName = getCollectionNameByUrl(entity.id);
   const _id = entity.id.toString();
-  const convertedEntity = convertUrlsToStrings(cleanProps(compressEntity(entity)));
+  const convertedEntity = convertUrlsToStrings(cleanProps(entity));
 
   return await this.db.collection(collectionName).replaceOne(
     {

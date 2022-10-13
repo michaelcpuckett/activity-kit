@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HomePage = void 0;
 const Welcome_1 = require("./Welcome");
+const Sidebar_1 = require("./Sidebar");
 const CreateForm_1 = require("./CreateForm");
 const OrderedCollection_1 = require("../EntityPage/OrderedCollection");
 const Collection_1 = require("../EntityPage/Collection");
@@ -14,6 +15,7 @@ function HomePage({ actor }) {
         react_1.default.createElement("head", null,
             react_1.default.createElement("link", { rel: "stylesheet", href: "home.css" })),
         react_1.default.createElement("body", null,
+            react_1.default.createElement(Sidebar_1.Sidebar, { actor: actor }),
             react_1.default.createElement("main", null,
                 react_1.default.createElement("div", { className: "two-up" },
                     react_1.default.createElement("div", { className: "card" },

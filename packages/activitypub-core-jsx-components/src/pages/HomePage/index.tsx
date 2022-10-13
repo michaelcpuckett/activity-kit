@@ -1,5 +1,6 @@
 import { AP } from 'activitypub-core-types';
 import { Welcome } from './Welcome';
+import { Sidebar } from './Sidebar';
 import { CreateForm } from './CreateForm';
 import { OrderedCollectionEntity } from '../EntityPage/OrderedCollection';
 import { CollectionEntity } from '../EntityPage/Collection';
@@ -18,6 +19,7 @@ export function HomePage({
         <link rel="stylesheet" href="home.css" />
       </head>
       <body>
+        <Sidebar actor={actor} />
         <main>
           <div className="two-up">
             <div className="card">

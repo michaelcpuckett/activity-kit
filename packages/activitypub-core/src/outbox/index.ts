@@ -114,9 +114,52 @@ async function handleOutboxPost(
       }
 
       activityToSave.url = activityToSaveId;
-      activityToSave.published = new Date();
 
-      await databaseService.saveEntity(activityToSave);
+      const publishedDate = new Date();
+      activityToSave.published = publishedDate;
+
+      // Attach replies, likes, and shares.
+
+      const activityReplies: AP.Collection = {
+        id: new URL(`${activityToSaveId.toString()}/replies`),
+        url: new URL(`${activityToSaveId.toString()}/replies`),
+        name: 'Replies',
+        type: AP.CollectionTypes.COLLECTION,
+        totalItems: 0,
+        items: [],
+        published: publishedDate,
+      };
+
+      const activityLikes: AP.OrderedCollection = {
+        id: new URL(`${activityToSaveId.toString()}/likes`),
+        url: new URL(`${activityToSaveId.toString()}/likes`),
+        name: 'Likes',
+        type: AP.CollectionTypes.ORDERED_COLLECTION,
+        totalItems: 0,
+        orderedItems: [],
+        published: publishedDate,
+      };
+
+      const activityShares: AP.OrderedCollection = {
+        id: new URL(`${activityToSaveId.toString()}/shares`),
+        url: new URL(`${activityToSaveId.toString()}/shares`),
+        name: 'Shares',
+        type: AP.CollectionTypes.ORDERED_COLLECTION,
+        totalItems: 0,
+        orderedItems: [],
+        published: publishedDate,
+      };
+
+      activityToSave.replies = activityReplies.id;
+      activityToSave.likes = activityLikes.id;
+      activityToSave.shares = activityShares.id;
+
+      await Promise.all([
+        databaseService.saveEntity(activityToSave),
+        databaseService.saveEntity(activityReplies),
+        databaseService.saveEntity(activityLikes),
+        databaseService.saveEntity(activityShares),
+      ]);
       await databaseService.insertOrderedItem(
         initiatorOutboxId,
         activityToSaveId,

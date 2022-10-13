@@ -19,7 +19,7 @@ export function ActivityEntity({ activity, headingLevel }: { activity: AP.Activi
   }
 
   return (
-    <div>
+    <div className="card">
       <span role="heading" aria-level={headingLevel}>
         {activity.type}
       </span>

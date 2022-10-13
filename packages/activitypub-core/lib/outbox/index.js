@@ -88,8 +88,44 @@ async function handleOutboxPost(req, res, databaseService, deliveryService) {
                 throw new Error('No Activity ID');
             }
             activityToSave.url = activityToSaveId;
-            activityToSave.published = new Date();
-            await databaseService.saveEntity(activityToSave);
+            const publishedDate = new Date();
+            activityToSave.published = publishedDate;
+            const activityReplies = {
+                id: new URL(`${activityToSaveId.toString()}/replies`),
+                url: new URL(`${activityToSaveId.toString()}/replies`),
+                name: 'Replies',
+                type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
+                totalItems: 0,
+                items: [],
+                published: publishedDate,
+            };
+            const activityLikes = {
+                id: new URL(`${activityToSaveId.toString()}/likes`),
+                url: new URL(`${activityToSaveId.toString()}/likes`),
+                name: 'Likes',
+                type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+                totalItems: 0,
+                orderedItems: [],
+                published: publishedDate,
+            };
+            const activityShares = {
+                id: new URL(`${activityToSaveId.toString()}/shares`),
+                url: new URL(`${activityToSaveId.toString()}/shares`),
+                name: 'Shares',
+                type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+                totalItems: 0,
+                orderedItems: [],
+                published: publishedDate,
+            };
+            activityToSave.replies = activityReplies.id;
+            activityToSave.likes = activityLikes.id;
+            activityToSave.shares = activityShares.id;
+            await Promise.all([
+                databaseService.saveEntity(activityToSave),
+                databaseService.saveEntity(activityReplies),
+                databaseService.saveEntity(activityLikes),
+                databaseService.saveEntity(activityShares),
+            ]);
             await databaseService.insertOrderedItem(initiatorOutboxId, activityToSaveId);
             await deliveryService.broadcast(activityToSave, initiator);
             res.statusCode = 201;
