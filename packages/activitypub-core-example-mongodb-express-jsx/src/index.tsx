@@ -12,16 +12,16 @@ import { DeliveryService } from 'activitypub-core-delivery';
   const databaseService = await new MongoDatabaseService().connect();
   const deliveryService = new DeliveryService(databaseService);
 
-  app.use(express.static('src/static'));
+  app.use(express.static('node_modules/activitypub-core-jsx-components/static'));
   app.use(activityPub({
     renderIndex: async () => {
-      return renderToString(<IndexPage />);
+      return `<!doctype html>${renderToString(<IndexPage />)}`;
     },
     renderEntity: async ({ entity }) => {
-      return renderToString(<EntityPage entity={entity} />);
+      return `<!doctype html>${renderToString(<EntityPage entity={entity} />)}`;
     },
     renderHome: async ({ actor }) => {
-      return renderToString(<HomePage actor={actor} />);
+      return `<!doctype html>${renderToString(<HomePage actor={actor} />)}`;
     },
   }, {
     databaseService,

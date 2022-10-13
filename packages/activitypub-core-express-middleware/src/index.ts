@@ -5,6 +5,7 @@ import { AP } from 'activitypub-core-types';
 import type { ServiceAccount } from 'firebase-admin';
 import { DeliveryService } from 'activitypub-core-delivery';
 import type { Database } from 'activitypub-core-types/index';
+import { CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE, convertStringsToUrls } from 'activitypub-core-utilities';
 
 export const activityPub = ({
   renderIndex,
@@ -29,13 +30,16 @@ export const activityPub = ({
     return;
   }
 
-  if (req.url.startsWith('actor/') && req.url.endsWith('/inbox')) {
+  if (req.url.startsWith('/actor/') && req.url.endsWith('/inbox')) {
     await inboxHandler(req, res, databaseService, deliveryService);
     next();
     return;
   }
 
-  if (req.url.startsWith('actor/') && req.url.endsWith('/outbox')) {
+  console.log(req.url);
+
+  if (req.url.startsWith('/actor/') && req.url.endsWith('/outbox')) {
+    console.log('outboxHandler')
     await outboxHandler(req, res, databaseService, deliveryService);
     next();
     return;
@@ -43,6 +47,7 @@ export const activityPub = ({
 
   if (req.url === '/' && req.method === 'GET') {
     res.statusCode = 200;
+    res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
     res.write(await renderIndex());
     res.end();
     next();
@@ -59,7 +64,8 @@ export const activityPub = ({
 
     if (result.props) {
       res.statusCode = 200;
-      res.write(await renderHome(result.props as { actor: AP.Actor }));
+      res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
+      res.write(await renderHome(convertStringsToUrls(result.props) as { actor: AP.Actor }));
       res.end();
       next();
       return;
@@ -71,12 +77,13 @@ export const activityPub = ({
     return;
   }
 
-  if (req.url.startsWith('/object/') || req.url.startsWith('/actor/') || req.url.startsWith('/activity')) {
+  if (req.url.startsWith('/object/') || req.url.startsWith('/actor/') || req.url.startsWith('/activity/')) {
     const result = await entityGetHandler(req, res, databaseService);
 
     if (result.props) {
       res.statusCode = 200;
-      res.write(await renderEntity(result.props as { entity: AP.Entity }));
+      res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
+      res.write(await renderEntity(convertStringsToUrls(result.props) as unknown as { entity: AP.Entity }));
       res.end();
       next();
       return;
