@@ -7,10 +7,12 @@
   "license": "MIT",
   "main": "lib/index.js",
   "directories": {
-    "lib": "lib"
+    "lib": "lib",
+    "static": "static"
   },
   "files": [
-    "lib"
+    "lib",
+    "static"
   ],
   "scripts": {
     "tsc": "tsc --project tsconfig.json",
