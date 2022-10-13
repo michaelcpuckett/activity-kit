@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ActorEntity = void 0;
 const react_1 = __importDefault(require("react"));
-function ActorEntity({ actor }) {
+function ActorEntity({ actor, headingLevel }) {
     return (react_1.default.createElement("div", null,
-        react_1.default.createElement("h2", null,
+        react_1.default.createElement("span", { role: "heading", "aria-level": headingLevel },
             "@",
             actor.preferredUsername ?? actor.name)));
 }

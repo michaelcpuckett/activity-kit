@@ -1,15 +1,12 @@
 import { AP } from 'activitypub-core-types';
 import React from 'react';
+import { NoteEntity } from './Note';
 
-export function ActivityEntity({ activity }: { activity: AP.Activity }) {
+export function ActivityEntity({ activity, headingLevel }: { activity: AP.Activity, headingLevel: number }) {
   const {
     actor,
     target
   } = activity;
-
-  console.log({
-    activity,
-  })
 
   let object = null;
 
@@ -23,9 +20,10 @@ export function ActivityEntity({ activity }: { activity: AP.Activity }) {
 
   return (
     <div>
-      <h1>
+      <span role="heading" aria-level={headingLevel}>
         {activity.type}
-      </h1>
+      </span>
+      {object && object.type === 'Note' ? <NoteEntity headingLevel={headingLevel + 1} note={object} /> : null}
     </div>
   );
 }

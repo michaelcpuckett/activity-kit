@@ -7,7 +7,6 @@ import { LinkEntity } from './Link';
 import { ObjectEntity } from './Object';
 import { OrderedCollectionEntity } from './OrderedCollection';
 import { OrderedCollectionPageEntity } from './OrderedCollectionPage';
-import Head from 'next/head';
 import React from 'react';
 
 export function EntityPage({
@@ -17,29 +16,25 @@ export function EntityPage({
 }) {
 
   return (
-    <>
-      <Head>
-        <title>ActivityWeb</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Entity entity={entity}></Entity>
+    <body>
+      <Entity headingLevel={1} entity={entity}></Entity>
       <details>
         <summary>
           Raw
         </summary>
         <textarea defaultValue={JSON.stringify(entity)}></textarea>
       </details>
-    </>
+    </body>
   );
 }
 
-function Entity({ entity }: { entity: AP.Entity }) {
+function Entity({ entity, headingLevel }: { entity: AP.Entity, headingLevel: number; }) {
   if (entity.type === AP.CollectionTypes.COLLECTION) {
-    return <CollectionEntity collection={entity as AP.Collection}></CollectionEntity>;
+    return <CollectionEntity headingLevel={1} collection={entity as AP.Collection}></CollectionEntity>;
   }
 
   if (entity.type === AP.CollectionTypes.ORDERED_COLLECTION) {
-    return <OrderedCollectionEntity collection={entity as AP.OrderedCollection}></OrderedCollectionEntity>;
+    return <OrderedCollectionEntity headingLevel={1} collection={entity as AP.OrderedCollection}></OrderedCollectionEntity>;
   }
 
   if (entity.type === AP.CollectionPageTypes.COLLECTION_PAGE) {
@@ -52,19 +47,19 @@ function Entity({ entity }: { entity: AP.Entity }) {
 
   for (const type of Object.values(AP.ActivityTypes)) {
     if (entity.type === type) {
-      return <ActivityEntity activity={entity as AP.Activity}></ActivityEntity>;
+      return <ActivityEntity headingLevel={1} activity={entity as AP.Activity}></ActivityEntity>;
     }
   }
 
   for (const type of Object.values(AP.ActorTypes)) {
     if (entity.type === type) {
-      return <ActorEntity actor={entity as AP.Actor}></ActorEntity>
+      return <ActorEntity headingLevel={1} actor={entity as AP.Actor}></ActorEntity>
     }
   }
 
   for (const type of Object.values(AP.ExtendedObjectTypes)) {
     if (entity.type === type) {
-      return <ObjectEntity object={entity as AP.ExtendedObject}></ObjectEntity>
+      return <ObjectEntity headingLevel={1} object={entity as AP.ExtendedObject}></ObjectEntity>
     }
   }
 

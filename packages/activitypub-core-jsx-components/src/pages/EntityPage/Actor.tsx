@@ -1,12 +1,12 @@
 import { AP } from 'activitypub-core-types';
 import React from 'react';
 
-export function ActorEntity({ actor }: { actor: AP.Actor }) {
+export function ActorEntity({ actor, headingLevel }: { actor: AP.Actor; headingLevel: number; }) {
   return (
     <div>
-      <h2>
+      <span role="heading" aria-level={headingLevel}>
         @{actor.preferredUsername ?? actor.name}
-      </h2>
+      </span>
     </div>
   );
 }

@@ -2,16 +2,14 @@ import { AP } from 'activitypub-core-types';
 import { NoteEntity } from './Note';
 import React from 'react';
 
-export function ObjectEntity({ object }: { object: AP.ExtendedObject }) {
+export function ObjectEntity({ object, headingLevel }: { object: AP.ExtendedObject; headingLevel: number; }) {
   if (object.type === AP.ExtendedObjectTypes.NOTE) {
-    return <NoteEntity note={object}></NoteEntity>;
+    return <NoteEntity headingLevel={headingLevel} note={object}></NoteEntity>;
   }
 
   return <div className="card">
-    <h1>
-      <>
-        A {object.type}
-      </>
-    </h1>
+    <span role="heading" aria-level={headingLevel}>
+      A {object.type}
+    </span>
   </div>;
 }

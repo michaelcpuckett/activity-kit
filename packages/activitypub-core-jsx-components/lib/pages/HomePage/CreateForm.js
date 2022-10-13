@@ -9,9 +9,7 @@ const react_1 = __importDefault(require("react"));
 function CreateForm({ actor }) {
     return react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement("h2", null, "Create"),
-        react_1.default.createElement("form", { noValidate: true },
-            react_1.default.createElement("input", { type: "hidden", value: actor.id?.toString(), name: "actorId" }),
-            react_1.default.createElement("input", { type: "hidden", value: actor.outbox instanceof URL ? actor.outbox.toString() : actor.outbox?.id?.toString(), name: "actorOutboxId" }),
+        react_1.default.createElement("form", { id: "createForm", action: actor.outbox instanceof URL ? actor.outbox.toString() : actor.outbox?.id?.toString(), noValidate: true },
             react_1.default.createElement("label", null,
                 react_1.default.createElement("span", null, "Type"),
                 react_1.default.createElement("select", { name: "type", defaultValue: 'Note' }, Object.values(activitypub_core_types_1.AP.ExtendedObjectTypes).map(type => react_1.default.createElement("option", { key: type }, type)))),
@@ -38,7 +36,8 @@ function CreateForm({ actor }) {
                         react_1.default.createElement("input", { type: "checkbox", name: "to", value: follower instanceof URL ? follower.toString() : follower.id?.toString() ?? '' })));
                 })
                     : null),
-            react_1.default.createElement("button", { type: "submit" }, "Submit")));
+            react_1.default.createElement("button", { type: "submit" }, "Submit")),
+        react_1.default.createElement("script", { src: "createForm.js" }));
 }
 exports.CreateForm = CreateForm;
 ;

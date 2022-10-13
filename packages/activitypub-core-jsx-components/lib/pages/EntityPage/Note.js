@@ -5,10 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NoteEntity = void 0;
 const react_1 = __importDefault(require("react"));
-function NoteEntity({ note }) {
+function NoteEntity({ note, headingLevel }) {
     return react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement("div", { className: "card" },
-            react_1.default.createElement("h1", null, note.summary ?? 'A post'),
+            react_1.default.createElement("span", { role: "heading", "aria-level": headingLevel }, note.summary ?? 'A post'),
             react_1.default.createElement("blockquote", null, note.content),
             react_1.default.createElement("dl", null,
                 react_1.default.createElement(react_1.default.Fragment, null,

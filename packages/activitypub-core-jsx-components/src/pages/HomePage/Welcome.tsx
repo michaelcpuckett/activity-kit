@@ -3,6 +3,8 @@ import React from 'react';
 
 export function Welcome({ actor }: { actor: AP.Actor }) {
   return <>
-    <h1>Welcome, @{actor.preferredUsername}</h1>
+    <span role="heading" aria-level={1}>
+      Welcome, @{actor.preferredUsername}
+    </span>
   </>
 }

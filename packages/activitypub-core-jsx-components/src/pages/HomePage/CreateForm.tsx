@@ -5,9 +5,9 @@ export function CreateForm({ actor }: { actor: AP.Actor }) {
   return <>
     <h2>Create</h2>
     <form
+      id="createForm"
+      action={actor.outbox instanceof URL ? actor.outbox.toString() : actor.outbox?.id?.toString()}
       noValidate>
-      <input type="hidden" value={actor.id?.toString()} name="actorId" />
-      <input type="hidden" value={actor.outbox instanceof URL ? actor.outbox.toString() : actor.outbox?.id?.toString()} name="actorOutboxId" />
       <label>
         <span>
           Type
@@ -58,5 +58,6 @@ export function CreateForm({ actor }: { actor: AP.Actor }) {
         Submit
       </button>
     </form>
+    <script src="createForm.js"></script>
   </>;
 };

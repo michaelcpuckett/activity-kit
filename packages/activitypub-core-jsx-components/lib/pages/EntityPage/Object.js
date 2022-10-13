@@ -7,15 +7,14 @@ exports.ObjectEntity = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const Note_1 = require("./Note");
 const react_1 = __importDefault(require("react"));
-function ObjectEntity({ object }) {
+function ObjectEntity({ object, headingLevel }) {
     if (object.type === activitypub_core_types_1.AP.ExtendedObjectTypes.NOTE) {
-        return react_1.default.createElement(Note_1.NoteEntity, { note: object });
+        return react_1.default.createElement(Note_1.NoteEntity, { headingLevel: headingLevel, note: object });
     }
     return react_1.default.createElement("div", { className: "card" },
-        react_1.default.createElement("h1", null,
-            react_1.default.createElement(react_1.default.Fragment, null,
-                "A ",
-                object.type)));
+        react_1.default.createElement("span", { role: "heading", "aria-level": headingLevel },
+            "A ",
+            object.type));
 }
 exports.ObjectEntity = ObjectEntity;
 //# sourceMappingURL=Object.js.map

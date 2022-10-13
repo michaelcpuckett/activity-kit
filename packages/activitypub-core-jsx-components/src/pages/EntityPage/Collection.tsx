@@ -2,7 +2,7 @@ import { AP } from 'activitypub-core-types';
 import React from 'react';
 
 
-export function CollectionEntity({ collection }: { collection: AP.Collection }) {
+export function CollectionEntity({ collection, headingLevel }: { collection: AP.Collection; headingLevel: number; }) {
   const {
     items
   } = collection;
@@ -13,9 +13,9 @@ export function CollectionEntity({ collection }: { collection: AP.Collection }) 
 
   return (
     <div>
-      <h1>
+      <span role="heading" aria-level={headingLevel}>
         {collection.name}
-      </h1>
+      </span>
     </div>
   );
 }

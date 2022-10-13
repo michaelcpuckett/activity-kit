@@ -1,12 +1,12 @@
 import { AP } from 'activitypub-core-types';
 import React from 'react';
 
-export function NoteEntity({ note }: { note: AP.Note }) {
+export function NoteEntity({ note, headingLevel }: { note: AP.Note; headingLevel: number; }) {
   return <>
     <div className="card">
-      <h1>
+      <span role="heading" aria-level={headingLevel}>
         {note.summary ?? 'A post'}
-      </h1>
+      </span>
       <blockquote>
         {note.content}
       </blockquote>

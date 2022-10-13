@@ -13,25 +13,21 @@ const Link_1 = require("./Link");
 const Object_1 = require("./Object");
 const OrderedCollection_1 = require("./OrderedCollection");
 const OrderedCollectionPage_1 = require("./OrderedCollectionPage");
-const head_1 = __importDefault(require("next/head"));
 const react_1 = __importDefault(require("react"));
 function EntityPage({ entity }) {
-    return (react_1.default.createElement(react_1.default.Fragment, null,
-        react_1.default.createElement(head_1.default, null,
-            react_1.default.createElement("title", null, "ActivityWeb"),
-            react_1.default.createElement("link", { rel: "icon", href: "/favicon.ico" })),
-        react_1.default.createElement(Entity, { entity: entity }),
+    return (react_1.default.createElement("body", null,
+        react_1.default.createElement(Entity, { headingLevel: 1, entity: entity }),
         react_1.default.createElement("details", null,
             react_1.default.createElement("summary", null, "Raw"),
             react_1.default.createElement("textarea", { defaultValue: JSON.stringify(entity) }))));
 }
 exports.EntityPage = EntityPage;
-function Entity({ entity }) {
+function Entity({ entity, headingLevel }) {
     if (entity.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION) {
-        return react_1.default.createElement(Collection_1.CollectionEntity, { collection: entity });
+        return react_1.default.createElement(Collection_1.CollectionEntity, { headingLevel: 1, collection: entity });
     }
     if (entity.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
-        return react_1.default.createElement(OrderedCollection_1.OrderedCollectionEntity, { collection: entity });
+        return react_1.default.createElement(OrderedCollection_1.OrderedCollectionEntity, { headingLevel: 1, collection: entity });
     }
     if (entity.type === activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE) {
         return react_1.default.createElement(CollectionPage_1.CollectionPageEntity, { collectionPage: entity });
@@ -41,17 +37,17 @@ function Entity({ entity }) {
     }
     for (const type of Object.values(activitypub_core_types_1.AP.ActivityTypes)) {
         if (entity.type === type) {
-            return react_1.default.createElement(Activity_1.ActivityEntity, { activity: entity });
+            return react_1.default.createElement(Activity_1.ActivityEntity, { headingLevel: 1, activity: entity });
         }
     }
     for (const type of Object.values(activitypub_core_types_1.AP.ActorTypes)) {
         if (entity.type === type) {
-            return react_1.default.createElement(Actor_1.ActorEntity, { actor: entity });
+            return react_1.default.createElement(Actor_1.ActorEntity, { headingLevel: 1, actor: entity });
         }
     }
     for (const type of Object.values(activitypub_core_types_1.AP.ExtendedObjectTypes)) {
         if (entity.type === type) {
-            return react_1.default.createElement(Object_1.ObjectEntity, { object: entity });
+            return react_1.default.createElement(Object_1.ObjectEntity, { headingLevel: 1, object: entity });
         }
     }
     for (const type of Object.values(activitypub_core_types_1.AP.LinkTypes)) {

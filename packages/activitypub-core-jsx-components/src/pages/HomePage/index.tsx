@@ -1,5 +1,3 @@
-import Head from 'next/head'
-import { ChangeEvent, ChangeEventHandler, FormEventHandler, MouseEventHandler, ReactElement, useState } from 'react';
 import { AP } from 'activitypub-core-types';
 import { Welcome } from './Welcome';
 import { CreateForm } from './CreateForm';
@@ -15,34 +13,39 @@ export function HomePage({
   actor
 }: Data) {
   return (
-    <>
-      <main>
-        <div className="two-up">
-          <div className="card">
-            <Welcome actor={actor} />
+    <html>
+      <head>
+        <link rel="stylesheet" href="home.css" />
+      </head>
+      <body>
+        <main>
+          <div className="two-up">
+            <div className="card">
+              <Welcome actor={actor} />
+            </div>
+            <div className="card">
+              <CreateForm actor={actor} />
+            </div>
           </div>
-          <div className="card">
-            <CreateForm actor={actor} />
+          <div className="two-up">
+            <div className="card">
+              <OrderedCollectionEntity headingLevel={2} collection={actor.inbox as AP.OrderedCollection} />
+            </div>
+            <div className="card">
+              <OrderedCollectionEntity headingLevel={2} collection={actor.outbox as AP.OrderedCollection} />
+            </div>
           </div>
-        </div>
-        <div className="two-up">
-          <div className="card">
-            <OrderedCollectionEntity collection={actor.inbox as AP.OrderedCollection} />
+          <div className="two-up">
+            <div className="card">
+              <CollectionEntity headingLevel={2} collection={actor.following as AP.Collection} />
+            </div>
+            <div className="card">
+              <CollectionEntity headingLevel={2} collection={actor.followers as AP.Collection} />
+            </div>
           </div>
-          <div className="card">
-            <OrderedCollectionEntity collection={actor.outbox as AP.OrderedCollection} />
-          </div>
-        </div>
-        <div className="two-up">
-          <div className="card">
-            <CollectionEntity collection={actor.following as AP.Collection} />
-          </div>
-          <div className="card">
-            <CollectionEntity collection={actor.followers as AP.Collection} />
-          </div>
-        </div>
-        <textarea defaultValue={JSON.stringify(actor)}></textarea>
-      </main>
-    </>
+          <textarea defaultValue={JSON.stringify(actor)}></textarea>
+        </main>
+      </body>
+    </html>
   )
 }
