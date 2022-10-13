@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-express-middleware",
-  "version": "0.0.49",
+  "version": "0.0.50",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -20,7 +20,7 @@
     "dev": "ts-node ./src/index.ts"
   },
   "dependencies": {
-    "activitypub-core": "^0.0.49",
+    "activitypub-core": "^0.0.50",
     "activitypub-core-delivery": "^0.0.41",
     "activitypub-core-types": "^0.0.40",
     "activitypub-core-utilities": "^0.0.40",
