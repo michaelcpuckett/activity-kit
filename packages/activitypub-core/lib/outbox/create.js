@@ -5,7 +5,6 @@ const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
-const activitypub_core_utilities_4 = require("activitypub-core-utilities");
 async function handleCreate(activity, databaseService) {
     if (!activity.object ||
         activity.object instanceof URL ||
@@ -23,6 +22,7 @@ async function handleCreate(activity, databaseService) {
     }
     const publishedDate = new Date();
     const objectReplies = {
+        "@context": new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
         id: new URL(`${object.id.toString()}/replies`),
         url: new URL(`${object.id.toString()}/replies`),
         name: 'Replies',
@@ -32,6 +32,7 @@ async function handleCreate(activity, databaseService) {
         published: publishedDate,
     };
     const objectLikes = {
+        "@context": new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
         id: new URL(`${object.id.toString()}/likes`),
         url: new URL(`${object.id.toString()}/likes`),
         name: 'Likes',
@@ -41,6 +42,7 @@ async function handleCreate(activity, databaseService) {
         published: publishedDate,
     };
     const objectShares = {
+        "@context": new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
         id: new URL(`${object.id.toString()}/shares`),
         url: new URL(`${object.id.toString()}/shares`),
         name: 'Shares',
@@ -70,7 +72,7 @@ async function handleCreate(activity, databaseService) {
             return object.id;
         }
     }
-    await Promise.all([databaseService.saveEntity((0, activitypub_core_utilities_4.cleanProps)(object))]);
+    await Promise.all([databaseService.saveEntity(object)]);
     return object.id;
 }
 exports.handleCreate = handleCreate;

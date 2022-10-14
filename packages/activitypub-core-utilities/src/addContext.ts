@@ -7,17 +7,17 @@ export function addContext(entity: AP.Entity): AP.Entity & {
   for (const type of Object.values(AP.ActorTypes)) {
     if (type === entity.type) {
       return {
+        ...entity,
         '@context': [
           new URL(ACTIVITYSTREAMS_CONTEXT),
           new URL(W3ID_SECURITY_CONTEXT),
         ],
-        ...entity,
       };
     }
   }
 
   return {
-    '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
     ...entity,
+    '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   };
 }

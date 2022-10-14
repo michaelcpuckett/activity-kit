@@ -1,7 +1,7 @@
 import { AP } from 'activitypub-core-types';
 import type { Database } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
+import { ACTIVITYSTREAMS_CONTEXT, LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { entityGetHandler } from '../entity';
 import { handleDelete } from './delete';
 import { handleCreate } from './create';
@@ -121,6 +121,7 @@ async function handleOutboxPost(
       // Attach replies, likes, and shares.
 
       const activityReplies: AP.Collection = {
+        "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
         id: new URL(`${activityToSaveId.toString()}/replies`),
         url: new URL(`${activityToSaveId.toString()}/replies`),
         name: 'Replies',
@@ -131,6 +132,7 @@ async function handleOutboxPost(
       };
 
       const activityLikes: AP.OrderedCollection = {
+        "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
         id: new URL(`${activityToSaveId.toString()}/likes`),
         url: new URL(`${activityToSaveId.toString()}/likes`),
         name: 'Likes',
@@ -141,6 +143,7 @@ async function handleOutboxPost(
       };
 
       const activityShares: AP.OrderedCollection = {
+        "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
         id: new URL(`${activityToSaveId.toString()}/shares`),
         url: new URL(`${activityToSaveId.toString()}/shares`),
         name: 'Shares',

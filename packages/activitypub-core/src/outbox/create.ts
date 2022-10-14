@@ -1,8 +1,7 @@
 import { AP } from 'activitypub-core-types';
-import { getTypedEntity } from 'activitypub-core-utilities';
+import { ACTIVITYSTREAMS_CONTEXT, getTypedEntity } from 'activitypub-core-utilities';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { getGuid } from 'activitypub-core-utilities';
-import { cleanProps } from 'activitypub-core-utilities';
 import type { Database } from 'activitypub-core-types';
 
 /**
@@ -43,6 +42,7 @@ export async function handleCreate(
   const publishedDate = new Date();
 
   const objectReplies: AP.Collection = {
+    "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
     id: new URL(`${object.id.toString()}/replies`),
     url: new URL(`${object.id.toString()}/replies`),
     name: 'Replies',
@@ -53,6 +53,7 @@ export async function handleCreate(
   };
 
   const objectLikes: AP.OrderedCollection = {
+    "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
     id: new URL(`${object.id.toString()}/likes`),
     url: new URL(`${object.id.toString()}/likes`),
     name: 'Likes',
@@ -63,6 +64,7 @@ export async function handleCreate(
   };
 
   const objectShares: AP.OrderedCollection = {
+    "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
     id: new URL(`${object.id.toString()}/shares`),
     url: new URL(`${object.id.toString()}/shares`),
     name: 'Shares',
@@ -98,7 +100,7 @@ export async function handleCreate(
   }
 
   // Link case.
-  await Promise.all([databaseService.saveEntity(cleanProps(object))]);
+  await Promise.all([databaseService.saveEntity(object)]);
 
   return object.id;
 }
