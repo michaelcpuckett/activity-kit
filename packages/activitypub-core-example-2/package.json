@@ -1,0 +1,43 @@
+{
+  "name": "activitypub-core-example-2",
+  "version": "0.0.54",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michaelcpuckett@gmail.com>",
+  "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
+  "license": "MIT",
+  "main": "lib/activitypub-core-example-2.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelcpuckett/activitypub-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
+  },
+  "scripts": {
+    "tsc": "tsc --project tsconfig.json",
+    "dev": "ts-node ./src/index.tsx",
+    "server": "node ./lib/index.js"
+  },
+  "dependencies": {
+    "activitypub-core-delivery": "^0.0.54",
+    "activitypub-core-express-middleware": "^0.0.54",
+    "activitypub-core-jsx-components": "^0.0.54",
+    "activitypub-core-types": "^0.0.54",
+    "activitypub-core-utilities": "^0.0.54",
+    "firebase-admin": "^11.1.0",
+    "react": "^16.14.0",
+    "react-server": "^0.8.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "ts-node": "^10.9.1"
+  }
+}

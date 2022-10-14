@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ActorEntity = void 0;
 const react_1 = __importDefault(require("react"));
 function ActorEntity({ actor, headingLevel }) {
-    return (react_1.default.createElement("div", null,
+    return (react_1.default.createElement("div", { className: "card" },
         react_1.default.createElement("span", { role: "heading", "aria-level": headingLevel },
             "@",
             actor.preferredUsername ?? actor.name)));

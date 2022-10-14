@@ -8,12 +8,15 @@ const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const react_1 = __importDefault(require("react"));
 const Activity_1 = require("./Activity");
+const Actor_1 = require("./Actor");
+const Link_1 = require("./Link");
+const Object_1 = require("./Object");
 function CollectionEntity({ collection, actor, headingLevel }) {
     const { items } = collection;
     if (!Array.isArray(items)) {
         return react_1.default.createElement(react_1.default.Fragment, null);
     }
-    return (react_1.default.createElement("div", null,
+    return (react_1.default.createElement("div", { className: "card" },
         react_1.default.createElement("span", { role: "heading", "aria-level": headingLevel }, collection.name),
         actor && collection.name === 'Following' ? react_1.default.createElement(FollowForm, { headingLevel: headingLevel + 1, actor: actor }) : null,
         Array.isArray(collection.items) ? collection.items.map(item => {
@@ -21,8 +24,23 @@ function CollectionEntity({ collection, actor, headingLevel }) {
                 return react_1.default.createElement(react_1.default.Fragment, null);
             }
             for (const type of Object.values(activitypub_core_types_1.AP.ActivityTypes)) {
-                if (type === item.type) {
+                if (item.type === type) {
                     return react_1.default.createElement(Activity_1.ActivityEntity, { headingLevel: headingLevel + 1, activity: item });
+                }
+            }
+            for (const type of Object.values(activitypub_core_types_1.AP.ActorTypes)) {
+                if (item.type === type) {
+                    return react_1.default.createElement(Actor_1.ActorEntity, { headingLevel: headingLevel + 1, actor: item });
+                }
+            }
+            for (const type of Object.values(activitypub_core_types_1.AP.ExtendedObjectTypes)) {
+                if (item.type === type) {
+                    return react_1.default.createElement(Object_1.ObjectEntity, { headingLevel: headingLevel + 1, object: item });
+                }
+            }
+            for (const type of Object.values(activitypub_core_types_1.AP.LinkTypes)) {
+                if (item.type === type) {
+                    return react_1.default.createElement(Link_1.LinkEntity, { link: item });
                 }
             }
             return react_1.default.createElement("li", { key: item.id.toString() }, item.type);

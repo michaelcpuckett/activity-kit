@@ -3,7 +3,7 @@ import React from 'react';
 
 export function ActorEntity({ actor, headingLevel }: { actor: AP.Actor; headingLevel: number; }) {
   return (
-    <div>
+    <div className="card">
       <span role="heading" aria-level={headingLevel}>
         @{actor.preferredUsername ?? actor.name}
       </span>
