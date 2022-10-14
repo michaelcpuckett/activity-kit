@@ -22,15 +22,15 @@ function EntityPage({ entity, actor, }) {
         react_1.default.createElement("body", null,
             react_1.default.createElement("div", { className: "root" },
                 react_1.default.createElement(Sidebar_1.Sidebar, { actor: actor }),
-                react_1.default.createElement(Entity, { headingLevel: 1, entity: entity }),
+                react_1.default.createElement(Entity, { actor: actor, headingLevel: 1, entity: entity }),
                 react_1.default.createElement("details", null,
                     react_1.default.createElement("summary", null, "Raw"),
                     react_1.default.createElement("textarea", { defaultValue: JSON.stringify(entity) }))))));
 }
 exports.EntityPage = EntityPage;
-function Entity({ entity, headingLevel }) {
+function Entity({ entity, actor, headingLevel }) {
     if (entity.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION) {
-        return react_1.default.createElement(Collection_1.CollectionEntity, { headingLevel: 1, collection: entity });
+        return react_1.default.createElement(Collection_1.CollectionEntity, { actor: actor, headingLevel: 1, collection: entity });
     }
     if (entity.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
         return react_1.default.createElement(OrderedCollection_1.OrderedCollectionEntity, { headingLevel: 1, collection: entity });

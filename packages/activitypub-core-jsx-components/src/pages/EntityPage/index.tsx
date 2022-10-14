@@ -26,7 +26,7 @@ export function EntityPage({
       <body>
         <div className="root">
           <Sidebar actor={actor} />
-          <Entity headingLevel={1} entity={entity}></Entity>
+          <Entity actor={actor} headingLevel={1} entity={entity}></Entity>
           <details>
             <summary>
               Raw
@@ -39,9 +39,9 @@ export function EntityPage({
   );
 }
 
-function Entity({ entity, headingLevel }: { entity: AP.Entity, headingLevel: number; }) {
+function Entity({ entity, actor, headingLevel }: { entity: AP.Entity, actor: AP.Actor; headingLevel: number; }) {
   if (entity.type === AP.CollectionTypes.COLLECTION) {
-    return <CollectionEntity headingLevel={1} collection={entity as AP.Collection}></CollectionEntity>;
+    return <CollectionEntity actor={actor} headingLevel={1} collection={entity as AP.Collection}></CollectionEntity>;
   }
 
   if (entity.type === AP.CollectionTypes.ORDERED_COLLECTION) {
