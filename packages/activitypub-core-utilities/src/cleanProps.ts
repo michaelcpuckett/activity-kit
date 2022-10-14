@@ -1,8 +1,7 @@
 import { AP } from 'activitypub-core-types';
-import { convertStringsToUrls } from './convertStringsToUrls';
 
-export function cleanProps(entity: AP.Entity) {
-  const result = convertStringsToUrls({ ...entity }); // TODO passed in wrong.
+export function cleanProps(entity: AP.Entity): AP.Entity {
+  const result = { ...entity }; // TODO passed in wrong.
 
   if ('bto' in result) {
     delete result.bto;

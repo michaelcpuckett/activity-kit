@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cleanProps = void 0;
-const convertStringsToUrls_1 = require("./convertStringsToUrls");
 function cleanProps(entity) {
-    const result = (0, convertStringsToUrls_1.convertStringsToUrls)({ ...entity });
+    const result = { ...entity };
     if ('bto' in result) {
         delete result.bto;
     }
