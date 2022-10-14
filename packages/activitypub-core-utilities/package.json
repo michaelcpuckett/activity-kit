@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-utilities",
-  "version": "0.0.53",
+  "version": "0.0.54",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -26,7 +26,7 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "activitypub-core-types": "^0.0.53",
+    "activitypub-core-types": "^0.0.54",
     "jsonld": "^8.1.0",
     "superjson": "^1.10.1"
   },

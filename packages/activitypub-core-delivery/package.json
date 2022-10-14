@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-delivery",
-  "version": "0.0.53",
+  "version": "0.0.54",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -26,8 +26,8 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "activitypub-core-types": "^0.0.53",
-    "activitypub-core-utilities": "^0.0.53",
+    "activitypub-core-types": "^0.0.54",
+    "activitypub-core-utilities": "^0.0.54",
     "isomorphic-fetch": "^3.0.0"
   },
   "devDependencies": {
