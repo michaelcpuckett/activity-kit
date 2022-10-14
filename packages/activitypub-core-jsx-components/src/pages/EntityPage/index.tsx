@@ -8,26 +8,32 @@ import { ObjectEntity } from './Object';
 import { OrderedCollectionEntity } from './OrderedCollection';
 import { OrderedCollectionPageEntity } from './OrderedCollectionPage';
 import React from 'react';
+import { Sidebar } from '../HomePage/Sidebar';
 
 export function EntityPage({
-  entity
+  entity,
+  actor,
 }: {
   entity: AP.Entity;
+  actor?: AP.Actor;
 }) {
 
   return (
     <html>
       <head>
-        <link rel="stylesheet" href="home.css" />
+        <link rel="stylesheet" href="/home.css" />
       </head>
       <body>
-        <Entity headingLevel={1} entity={entity}></Entity>
-        <details>
-          <summary>
-            Raw
-          </summary>
-          <textarea defaultValue={JSON.stringify(entity)}></textarea>
-        </details>
+        <div className="root">
+          <Sidebar actor={actor} />
+          <Entity headingLevel={1} entity={entity}></Entity>
+          <details>
+            <summary>
+              Raw
+            </summary>
+            <textarea defaultValue={JSON.stringify(entity)}></textarea>
+          </details>
+        </div>
       </body>
     </html>
   );

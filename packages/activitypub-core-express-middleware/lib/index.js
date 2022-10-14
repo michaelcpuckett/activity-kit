@@ -10,7 +10,7 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { serviceAccoun
         return;
     }
     if (req.url.startsWith('/actor/') && req.url.endsWith('/inbox')) {
-        const result = await (0, activitypub_core_1.inboxHandler)(req, res, databaseService, deliveryService);
+        const result = await (0, activitypub_core_1.inboxHandler)(req, res, serviceAccount, databaseService, deliveryService);
         if (result.props && Object.keys(result.props).length) {
             res.statusCode = 200;
             res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);
@@ -20,11 +20,14 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { serviceAccoun
         return;
     }
     if (req.url.startsWith('/actor/') && req.url.endsWith('/outbox')) {
-        const result = await (0, activitypub_core_1.outboxHandler)(req, res, databaseService, deliveryService);
-        if (result.props && Object.keys(result.props).length) {
+        const result = await (0, activitypub_core_1.outboxHandler)(req, res, serviceAccount, databaseService, deliveryService);
+        if (result.props && Object.keys(result.props).length && 'entity' in result.props) {
             res.statusCode = 200;
             res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);
-            res.write(await renderEntity((0, activitypub_core_utilities_1.convertStringsToUrls)(result.props)));
+            res.write(await renderEntity({
+                entity: (0, activitypub_core_utilities_1.convertStringsToUrls)(result.props.entity),
+                actor: (0, activitypub_core_utilities_1.convertStringsToUrls)(result.props.actor),
+            }));
             res.end();
         }
         return;
@@ -54,7 +57,7 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { serviceAccoun
         return;
     }
     if (req.url.startsWith('/object/') || req.url.startsWith('/actor/') || req.url.startsWith('/activity/')) {
-        const result = await (0, activitypub_core_1.entityGetHandler)(req, res, databaseService);
+        const result = await (0, activitypub_core_1.entityGetHandler)(req, res, serviceAccount, databaseService);
         if (result.props && Object.keys(result.props).length) {
             res.statusCode = 200;
             res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);

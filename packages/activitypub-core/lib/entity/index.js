@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.entityGetHandler = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
@@ -6,7 +9,8 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
 const activitypub_core_utilities_4 = require("activitypub-core-utilities");
-async function entityGetHandler(request, response, databaseService) {
+const cookie_1 = __importDefault(require("cookie"));
+async function entityGetHandler(request, response, serviceAccount, databaseService) {
     if (!response) {
         throw new Error('Bad request.');
     }
@@ -29,6 +33,9 @@ async function entityGetHandler(request, response, databaseService) {
     if (!request) {
         return handleBadRequest();
     }
+    const cookies = cookie_1.default.parse(request.headers.cookie);
+    const actor = await databaseService.getActorByToken(cookies.__session ?? '', serviceAccount);
+    console.log('actor', actor);
     const url = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${request.url}`);
     const foundEntity = await databaseService.findEntityById(url);
     if (!foundEntity) {
@@ -88,6 +95,7 @@ async function entityGetHandler(request, response, databaseService) {
     return {
         props: {
             entity: (0, activitypub_core_utilities_3.convertUrlsToStrings)(entity),
+            actor: (0, activitypub_core_utilities_3.convertUrlsToStrings)(actor),
         },
     };
 }

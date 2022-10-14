@@ -14,7 +14,7 @@ export const activityPub = ({
 }: {
   renderIndex: () => Promise<string>,
   renderHome: ({ actor }: { actor: AP.Actor }) => Promise<string>,
-  renderEntity: ({ entity }: { entity: AP.Entity }) => Promise<string>,
+  renderEntity: ({ entity, actor }: { entity: AP.Entity; actor?: AP.Actor; }) => Promise<string>,
 }, {
   serviceAccount,
   databaseService,
@@ -31,24 +31,26 @@ export const activityPub = ({
   }
 
   if (req.url.startsWith('/actor/') && req.url.endsWith('/inbox')) {
-    const result = await inboxHandler(req, res, databaseService, deliveryService);
+    const result = await inboxHandler(req, res, serviceAccount, databaseService, deliveryService);
 
     if (result.props && Object.keys(result.props).length) {
       res.statusCode = 200;
       res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
-      res.write(await renderEntity(convertStringsToUrls(result.props) as unknown as { entity: AP.Entity }));
+      res.write(await renderEntity(convertStringsToUrls(result.props) as unknown as { entity: AP.Entity; actor?: AP.Actor; }));
       res.end();
     }
     return;
   }
 
   if (req.url.startsWith('/actor/') && req.url.endsWith('/outbox')) {
-    const result = await outboxHandler(req, res, databaseService, deliveryService);
-
-    if (result.props && Object.keys(result.props).length) {
+    const result = await outboxHandler(req, res, serviceAccount, databaseService, deliveryService);
+    if (result.props && Object.keys(result.props).length && 'entity' in result.props) {
       res.statusCode = 200;
       res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
-      res.write(await renderEntity(convertStringsToUrls(result.props) as unknown as { entity: AP.Entity }));
+      res.write(await renderEntity({
+        entity: convertStringsToUrls(result.props.entity as unknown as { [key: string]: unknown }) as AP.Entity,
+        actor: convertStringsToUrls(result.props.actor as unknown as { [key: string]: unknown }) as AP.Actor,
+      }));
       res.end();
     }
     return;
@@ -84,12 +86,12 @@ export const activityPub = ({
   }
 
   if (req.url.startsWith('/object/') || req.url.startsWith('/actor/') || req.url.startsWith('/activity/')) {
-    const result = await entityGetHandler(req, res, databaseService);
+    const result = await entityGetHandler(req, res, serviceAccount, databaseService);
 
     if (result.props && Object.keys(result.props).length) {
       res.statusCode = 200;
       res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
-      res.write(await renderEntity(convertStringsToUrls(result.props) as unknown as { entity: AP.Entity }));
+      res.write(await renderEntity(convertStringsToUrls(result.props) as unknown as { entity: AP.Entity; actor?: AP.Actor; }));
       res.end();
       return;
     }

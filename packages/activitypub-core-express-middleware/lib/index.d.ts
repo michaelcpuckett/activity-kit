@@ -9,8 +9,9 @@ export declare const activityPub: ({ renderIndex, renderHome, renderEntity, }: {
     renderHome: ({ actor }: {
         actor: AP.Actor;
     }) => Promise<string>;
-    renderEntity: ({ entity }: {
+    renderEntity: ({ entity, actor }: {
         entity: AP.Entity;
+        actor?: AP.Actor;
     }) => Promise<string>;
 }, { serviceAccount, databaseService, deliveryService, }: {
     serviceAccount: ServiceAccount;

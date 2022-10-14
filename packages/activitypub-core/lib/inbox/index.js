@@ -11,14 +11,14 @@ const like_1 = require("./like");
 const shouldForwardActivity_1 = require("./shouldForwardActivity");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
-async function inboxHandler(req, res, databaseService, deliveryService) {
+async function inboxHandler(req, res, serviceAccount, databaseService, deliveryService) {
     if (!req) {
         throw new Error('Bad request.');
     }
     if (req.method === 'POST') {
         return await handlePost(req, res, databaseService, deliveryService);
     }
-    return await (0, entity_1.entityGetHandler)(req, res, databaseService);
+    return await (0, entity_1.entityGetHandler)(req, res, serviceAccount, databaseService);
 }
 exports.inboxHandler = inboxHandler;
 async function handlePost(req, res, databaseService, deliveryService) {

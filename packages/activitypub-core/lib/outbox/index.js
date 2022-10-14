@@ -17,14 +17,14 @@ const activitypub_core_utilities_3 = require("activitypub-core-utilities");
 const activitypub_core_utilities_4 = require("activitypub-core-utilities");
 const activitypub_core_utilities_5 = require("activitypub-core-utilities");
 const activitypub_core_utilities_6 = require("activitypub-core-utilities");
-async function outboxHandler(req, res, databaseService, deliveryService) {
+async function outboxHandler(req, res, serviceAccount, databaseService, deliveryService) {
     if (!req) {
         throw new Error('No request object.');
     }
     if (req.method === 'POST') {
         return await handleOutboxPost(req, res, databaseService, deliveryService);
     }
-    return await (0, entity_1.entityGetHandler)(req, res, databaseService);
+    return await (0, entity_1.entityGetHandler)(req, res, serviceAccount, databaseService);
 }
 exports.outboxHandler = outboxHandler;
 async function handleOutboxPost(req, res, databaseService, deliveryService) {

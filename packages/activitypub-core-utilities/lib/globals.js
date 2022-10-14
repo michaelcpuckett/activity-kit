@@ -26,6 +26,7 @@ exports.HTML_CONTENT_TYPE = 'text/html';
 exports.USERNAME_REGEXP = /^[\w\d]{3,12}$/;
 exports.RESERVED_USERNAMES = [
     exports.SERVER_ACTOR_USERNAME,
+    'app',
     'test',
     'user',
     'users',
@@ -35,7 +36,10 @@ exports.RESERVED_USERNAMES = [
     'collection',
     'inbox',
     'outbox',
-    'sharedInbox',
+    'replies',
+    'likes',
+    'shares',
+    'liked',
     'shared',
     'sharedinbox',
     'shared-inbox',

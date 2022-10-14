@@ -14,15 +14,18 @@ const Object_1 = require("./Object");
 const OrderedCollection_1 = require("./OrderedCollection");
 const OrderedCollectionPage_1 = require("./OrderedCollectionPage");
 const react_1 = __importDefault(require("react"));
-function EntityPage({ entity }) {
+const Sidebar_1 = require("../HomePage/Sidebar");
+function EntityPage({ entity, actor, }) {
     return (react_1.default.createElement("html", null,
         react_1.default.createElement("head", null,
             react_1.default.createElement("link", { rel: "stylesheet", href: "/home.css" })),
         react_1.default.createElement("body", null,
-            react_1.default.createElement(Entity, { headingLevel: 1, entity: entity }),
-            react_1.default.createElement("details", null,
-                react_1.default.createElement("summary", null, "Raw"),
-                react_1.default.createElement("textarea", { defaultValue: JSON.stringify(entity) })))));
+            react_1.default.createElement("div", { className: "root" },
+                react_1.default.createElement(Sidebar_1.Sidebar, { actor: actor }),
+                react_1.default.createElement(Entity, { headingLevel: 1, entity: entity }),
+                react_1.default.createElement("details", null,
+                    react_1.default.createElement("summary", null, "Raw"),
+                    react_1.default.createElement("textarea", { defaultValue: JSON.stringify(entity) }))))));
 }
 exports.EntityPage = EntityPage;
 function Entity({ entity, headingLevel }) {

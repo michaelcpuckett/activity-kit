@@ -2,8 +2,10 @@
 import { AP } from 'activitypub-core-types';
 import type { Database } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
-export declare function entityGetHandler(request: IncomingMessage, response: ServerResponse, databaseService: Database): Promise<{
+import { ServiceAccount } from 'firebase-admin';
+export declare function entityGetHandler(request: IncomingMessage, response: ServerResponse, serviceAccount: ServiceAccount, databaseService: Database): Promise<{
     props?: {
         entity?: AP.Entity;
+        actor?: AP.Actor;
     };
 }>;

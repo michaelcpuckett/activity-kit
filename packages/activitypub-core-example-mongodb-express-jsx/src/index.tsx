@@ -15,13 +15,21 @@ import { DeliveryService } from 'activitypub-core-delivery';
   app.use(express.static('node_modules/activitypub-core-jsx-components/static'));
   app.use(activityPub({
     renderIndex: async () => {
-      return `<!doctype html>${renderToString(<IndexPage />)}`;
+      return `
+        <!doctype html>
+        ${renderToString(<IndexPage />)}`;
     },
-    renderEntity: async ({ entity }) => {
-      return `<!doctype html>${renderToString(<EntityPage entity={entity} />)}`;
+    renderEntity: async ({ entity, actor }) => {
+      return `
+        <!doctype html>
+        ${renderToString(<EntityPage entity={entity} actor={actor} />)}
+      `;
     },
     renderHome: async ({ actor }) => {
-      return `<!doctype html>${renderToString(<HomePage actor={actor} />)}`;
+      return `
+        <!doctype html>
+        ${renderToString(<HomePage actor={actor} />)}
+      `;
     },
   }, {
     databaseService,

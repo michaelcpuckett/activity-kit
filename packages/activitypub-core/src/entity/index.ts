@@ -9,14 +9,17 @@ import {
 import { getTypedEntity } from 'activitypub-core-utilities';
 import { convertUrlsToStrings } from 'activitypub-core-utilities';
 import { stringifyWithContext } from 'activitypub-core-utilities';
+import cookie from 'cookie';
 import type { Database } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
+import { ServiceAccount } from 'firebase-admin';
 
 export async function entityGetHandler(
   request: IncomingMessage,
   response: ServerResponse,
+  serviceAccount: ServiceAccount,
   databaseService: Database,
-): Promise<{ props?: { entity?: AP.Entity } }> {
+): Promise<{ props?: { entity?: AP.Entity; actor?: AP.Actor; } }> {
   if (!response) {
     throw new Error('Bad request.');
   }
@@ -42,6 +45,17 @@ export async function entityGetHandler(
   if (!request) {
     return handleBadRequest();
   }
+
+  const cookies = cookie.parse(request.headers.cookie);
+
+  const actor = await databaseService.getActorByToken(
+    cookies.__session ?? '',
+    serviceAccount,
+  );
+
+  console.log('actor', actor);
+
+  // TODO authorize foundEntity posts by actor.
 
   const url = new URL(`${LOCAL_DOMAIN}${request.url}`);
   const foundEntity = await databaseService.findEntityById(url);
@@ -139,6 +153,7 @@ export async function entityGetHandler(
   return {
     props: {
       entity: convertUrlsToStrings(entity),
+      actor: convertUrlsToStrings(actor) as AP.Actor,
     },
   };
 }

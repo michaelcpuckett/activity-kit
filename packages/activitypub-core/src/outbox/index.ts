@@ -17,10 +17,12 @@ import { combineAddresses } from 'activitypub-core-utilities';
 import { DeliveryService } from 'activitypub-core-delivery';
 import { parseStream } from 'activitypub-core-utilities';
 import { stringifyWithContext } from 'activitypub-core-utilities';
+import { ServiceAccount } from 'firebase-admin';
 
 export async function outboxHandler(
   req: IncomingMessage,
   res: ServerResponse,
+  serviceAccount: ServiceAccount,
   databaseService: Database,
   deliveryService: DeliveryService,
 ) {
@@ -31,7 +33,7 @@ export async function outboxHandler(
     return await handleOutboxPost(req, res, databaseService, deliveryService);
   }
 
-  return await entityGetHandler(req, res, databaseService);
+  return await entityGetHandler(req, res, serviceAccount, databaseService);
 }
 
 async function handleOutboxPost(
