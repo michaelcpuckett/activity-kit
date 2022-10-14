@@ -16,15 +16,20 @@ export function EntityPage({
 }) {
 
   return (
-    <body>
-      <Entity headingLevel={1} entity={entity}></Entity>
-      <details>
-        <summary>
-          Raw
-        </summary>
-        <textarea defaultValue={JSON.stringify(entity)}></textarea>
-      </details>
-    </body>
+    <html>
+      <head>
+        <link rel="stylesheet" href="home.css" />
+      </head>
+      <body>
+        <Entity headingLevel={1} entity={entity}></Entity>
+        <details>
+          <summary>
+            Raw
+          </summary>
+          <textarea defaultValue={JSON.stringify(entity)}></textarea>
+        </details>
+      </body>
+    </html>
   );
 }
 

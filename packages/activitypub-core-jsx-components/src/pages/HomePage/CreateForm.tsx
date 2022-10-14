@@ -1,9 +1,11 @@
 import { AP } from 'activitypub-core-types';
 import React from 'react';
 
-export function CreateForm({ actor }: { actor: AP.Actor }) {
+export function CreateForm({ actor, headingLevel }: { actor: AP.Actor; headingLevel: number; }) {
   return <>
-    <h2>Create</h2>
+    <span role="heading" aria-level={headingLevel}>
+      Create
+    </span>
     <form
       id="createForm"
       action={actor.outbox instanceof URL ? actor.outbox.toString() : actor.outbox?.id?.toString()}

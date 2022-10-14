@@ -25,6 +25,7 @@ export const HTML_CONTENT_TYPE = 'text/html';
 export const USERNAME_REGEXP = /^[\w\d]{3,12}$/;
 export const RESERVED_USERNAMES = [
   SERVER_ACTOR_USERNAME,
+  'app',
   'test',
   'user',
   'users',
@@ -34,7 +35,10 @@ export const RESERVED_USERNAMES = [
   'collection',
   'inbox',
   'outbox',
-  'sharedInbox',
+  'replies',
+  'likes',
+  'shares',
+  'liked',
   'shared',
   'sharedinbox',
   'shared-inbox',

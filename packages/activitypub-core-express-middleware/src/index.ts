@@ -31,17 +31,26 @@ export const activityPub = ({
   }
 
   if (req.url.startsWith('/actor/') && req.url.endsWith('/inbox')) {
-    await inboxHandler(req, res, databaseService, deliveryService);
-    next();
+    const result = await inboxHandler(req, res, databaseService, deliveryService);
+
+    if (result.props && Object.keys(result.props).length) {
+      res.statusCode = 200;
+      res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
+      res.write(await renderEntity(convertStringsToUrls(result.props) as unknown as { entity: AP.Entity }));
+      res.end();
+    }
     return;
   }
 
-  console.log(req.url);
-
   if (req.url.startsWith('/actor/') && req.url.endsWith('/outbox')) {
-    console.log('outboxHandler')
-    await outboxHandler(req, res, databaseService, deliveryService);
-    next();
+    const result = await outboxHandler(req, res, databaseService, deliveryService);
+
+    if (result.props && Object.keys(result.props).length) {
+      res.statusCode = 200;
+      res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
+      res.write(await renderEntity(convertStringsToUrls(result.props) as unknown as { entity: AP.Entity }));
+      res.end();
+    }
     return;
   }
 
@@ -50,7 +59,6 @@ export const activityPub = ({
     res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
     res.write(await renderIndex());
     res.end();
-    next();
     return;
   }
 
@@ -62,36 +70,32 @@ export const activityPub = ({
       return;
     }
 
-    if (result.props) {
+    if (result.props && Object.keys(result.props).length) {
       res.statusCode = 200;
       res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
       res.write(await renderHome(convertStringsToUrls(result.props) as { actor: AP.Actor }));
       res.end();
-      next();
       return;
     }
 
     res.statusCode = 500;
     res.end();
-    next();
     return;
   }
 
   if (req.url.startsWith('/object/') || req.url.startsWith('/actor/') || req.url.startsWith('/activity/')) {
     const result = await entityGetHandler(req, res, databaseService);
 
-    if (result.props) {
+    if (result.props && Object.keys(result.props).length) {
       res.statusCode = 200;
       res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
       res.write(await renderEntity(convertStringsToUrls(result.props) as unknown as { entity: AP.Entity }));
       res.end();
-      next();
       return;
     }
 
     res.statusCode = 500;
     res.end();
-    next();
     return;
   }
 

@@ -10,15 +10,23 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { serviceAccoun
         return;
     }
     if (req.url.startsWith('/actor/') && req.url.endsWith('/inbox')) {
-        await (0, activitypub_core_1.inboxHandler)(req, res, databaseService, deliveryService);
-        next();
+        const result = await (0, activitypub_core_1.inboxHandler)(req, res, databaseService, deliveryService);
+        if (result.props && Object.keys(result.props).length) {
+            res.statusCode = 200;
+            res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);
+            res.write(await renderEntity((0, activitypub_core_utilities_1.convertStringsToUrls)(result.props)));
+            res.end();
+        }
         return;
     }
-    console.log(req.url);
     if (req.url.startsWith('/actor/') && req.url.endsWith('/outbox')) {
-        console.log('outboxHandler');
-        await (0, activitypub_core_1.outboxHandler)(req, res, databaseService, deliveryService);
-        next();
+        const result = await (0, activitypub_core_1.outboxHandler)(req, res, databaseService, deliveryService);
+        if (result.props && Object.keys(result.props).length) {
+            res.statusCode = 200;
+            res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);
+            res.write(await renderEntity((0, activitypub_core_utilities_1.convertStringsToUrls)(result.props)));
+            res.end();
+        }
         return;
     }
     if (req.url === '/' && req.method === 'GET') {
@@ -26,7 +34,6 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { serviceAccoun
         res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);
         res.write(await renderIndex());
         res.end();
-        next();
         return;
     }
     if (req.url === '/home' && req.method === 'GET') {
@@ -35,32 +42,28 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { serviceAccoun
             next();
             return;
         }
-        if (result.props) {
+        if (result.props && Object.keys(result.props).length) {
             res.statusCode = 200;
             res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);
             res.write(await renderHome((0, activitypub_core_utilities_1.convertStringsToUrls)(result.props)));
             res.end();
-            next();
             return;
         }
         res.statusCode = 500;
         res.end();
-        next();
         return;
     }
     if (req.url.startsWith('/object/') || req.url.startsWith('/actor/') || req.url.startsWith('/activity/')) {
         const result = await (0, activitypub_core_1.entityGetHandler)(req, res, databaseService);
-        if (result.props) {
+        if (result.props && Object.keys(result.props).length) {
             res.statusCode = 200;
             res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);
             res.write(await renderEntity((0, activitypub_core_utilities_1.convertStringsToUrls)(result.props)));
             res.end();
-            next();
             return;
         }
         res.statusCode = 500;
         res.end();
-        next();
         return;
     }
     next();

@@ -28,11 +28,11 @@ input {
 }
 
 [role="heading"][aria-level="1"] {
-  font-size: 48px;
+  font-size: 42px;
 }
 
 [role="heading"][aria-level="2"] {
-  font-size: 36px;
+  font-size: 32px;
 }
 
 [role="heading"][aria-level="3"] {
@@ -40,8 +40,19 @@ input {
 }
 
 .card {
-  border: 1px solid;
+  border: 1px solid lightgray;
   padding: 12px;
   margin: 12px 0;
   border-radius: 4px;
+}
+
+.root {
+  display: grid;
+  grid-template-columns: min(15%, 200px) minmax(0, 1fr) min(15%, 200px);
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }

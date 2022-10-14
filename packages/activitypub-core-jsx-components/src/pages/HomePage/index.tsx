@@ -16,37 +16,23 @@ export function HomePage({
   return (
     <html>
       <head>
-        <link rel="stylesheet" href="home.css" />
+        <link rel="stylesheet" href="/home.css" />
       </head>
       <body>
-        <Sidebar actor={actor} />
-        <main>
-          <div className="two-up">
-            <div className="card">
-              <Welcome actor={actor} />
+        <div className="root">
+          <Sidebar actor={actor} />
+          <main>
+            <div className="two-up">
+              <div className="card">
+                <Welcome actor={actor} headingLevel={1} />
+              </div>
+              <div className="card">
+                <CreateForm headingLevel={2} actor={actor} />
+              </div>
             </div>
-            <div className="card">
-              <CreateForm actor={actor} />
-            </div>
-          </div>
-          <div className="two-up">
-            <div className="card">
-              <OrderedCollectionEntity headingLevel={2} collection={actor.inbox as AP.OrderedCollection} />
-            </div>
-            <div className="card">
-              <OrderedCollectionEntity headingLevel={2} collection={actor.outbox as AP.OrderedCollection} />
-            </div>
-          </div>
-          <div className="two-up">
-            <div className="card">
-              <CollectionEntity headingLevel={2} collection={actor.following as AP.Collection} />
-            </div>
-            <div className="card">
-              <CollectionEntity headingLevel={2} collection={actor.followers as AP.Collection} />
-            </div>
-          </div>
-          <textarea defaultValue={JSON.stringify(actor)}></textarea>
-        </main>
+            <textarea defaultValue={JSON.stringify(actor)}></textarea>
+          </main>
+        </div>
       </body>
     </html>
   )

@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateForm = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const react_1 = __importDefault(require("react"));
-function CreateForm({ actor }) {
+function CreateForm({ actor, headingLevel }) {
     return react_1.default.createElement(react_1.default.Fragment, null,
-        react_1.default.createElement("h2", null, "Create"),
+        react_1.default.createElement("span", { role: "heading", "aria-level": headingLevel }, "Create"),
         react_1.default.createElement("form", { id: "createForm", action: actor.outbox instanceof URL ? actor.outbox.toString() : actor.outbox?.id?.toString(), noValidate: true },
             react_1.default.createElement("label", null,
                 react_1.default.createElement("span", null, "Type"),
