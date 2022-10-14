@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-express-middleware",
-  "version": "0.0.51",
+  "version": "0.0.53",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -20,10 +20,10 @@
     "dev": "ts-node ./src/index.ts"
   },
   "dependencies": {
-    "activitypub-core": "^0.0.51",
-    "activitypub-core-delivery": "^0.0.41",
-    "activitypub-core-types": "^0.0.40",
-    "activitypub-core-utilities": "^0.0.40",
+    "activitypub-core": "^0.0.53",
+    "activitypub-core-delivery": "^0.0.53",
+    "activitypub-core-types": "^0.0.53",
+    "activitypub-core-utilities": "^0.0.53",
     "express": "^4.18.2",
     "firebase-admin": "^11.1.0",
     "http": "^0.0.1-security"

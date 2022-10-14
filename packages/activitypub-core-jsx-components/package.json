@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-jsx-components",
-  "version": "0.0.51",
+  "version": "0.0.53",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -23,8 +23,8 @@
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "activitypub-core-types": "^0.0.40",
-    "activitypub-core-utilities": "^0.0.40",
+    "activitypub-core-types": "^0.0.53",
+    "activitypub-core-utilities": "^0.0.53",
     "firebase": "^9.12.0",
     "react": "^18.2.0"
   }
