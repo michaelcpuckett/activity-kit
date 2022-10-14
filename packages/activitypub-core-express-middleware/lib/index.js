@@ -42,7 +42,10 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { serviceAccoun
     if (req.url === '/home' && req.method === 'GET') {
         const result = await (0, activitypub_core_1.homeGetHandler)(req, res, serviceAccount, databaseService);
         if (result.redirect) {
-            next();
+            res.statusCode = 200;
+            res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);
+            res.write(await renderIndex());
+            res.end();
             return;
         }
         if (result.props && Object.keys(result.props).length) {

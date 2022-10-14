@@ -68,7 +68,10 @@ export const activityPub = ({
     const result = await homeGetHandler(req, res, serviceAccount, databaseService);
 
     if (result.redirect) {
-      next();
+      res.statusCode = 200;
+      res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
+      res.write(await renderIndex());
+      res.end();
       return;
     }
 
