@@ -18,13 +18,21 @@ const activitypub_core_delivery_1 = require("activitypub-core-delivery");
     app.use(express_1.default.static('node_modules/activitypub-core-jsx-components/static'));
     app.use((0, activitypub_core_express_middleware_1.activityPub)({
         renderIndex: async () => {
-            return `<!doctype html>${(0, server_1.renderToString)(react_1.default.createElement(activitypub_core_jsx_components_1.IndexPage, null))}`;
+            return `
+        <!doctype html>
+        ${(0, server_1.renderToString)(react_1.default.createElement(activitypub_core_jsx_components_1.IndexPage, null))}`;
         },
-        renderEntity: async ({ entity }) => {
-            return `<!doctype html>${(0, server_1.renderToString)(react_1.default.createElement(activitypub_core_jsx_components_1.EntityPage, { entity: entity }))}`;
+        renderEntity: async ({ entity, actor }) => {
+            return `
+        <!doctype html>
+        ${(0, server_1.renderToString)(react_1.default.createElement(activitypub_core_jsx_components_1.EntityPage, { entity: entity, actor: actor }))}
+      `;
         },
         renderHome: async ({ actor }) => {
-            return `<!doctype html>${(0, server_1.renderToString)(react_1.default.createElement(activitypub_core_jsx_components_1.HomePage, { actor: actor }))}`;
+            return `
+        <!doctype html>
+        ${(0, server_1.renderToString)(react_1.default.createElement(activitypub_core_jsx_components_1.HomePage, { actor: actor }))}
+      `;
         },
     }, {
         databaseService,
