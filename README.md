@@ -79,6 +79,16 @@ Currently this project comes with:
 
 * `activitypub-core-mongodb`
 
+### Authentication Layer
+
+Current this project comes with:
+
+* `activitypub-core-firebase-auth`
+
+### Storage Layer
+
+TBD.
+
 ### Server Layer
 
 Then comes the server layer.
