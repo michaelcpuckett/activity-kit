@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-example-2",
-  "version": "0.0.55",
+  "version": "0.0.56",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -25,11 +25,11 @@
     "serve": "ts-node ./src/index.tsx"
   },
   "dependencies": {
-    "activitypub-core-delivery": "^0.0.55",
-    "activitypub-core-express-middleware": "^0.0.55",
-    "activitypub-core-jsx-components": "^0.0.55",
-    "activitypub-core-types": "^0.0.55",
-    "activitypub-core-utilities": "^0.0.55",
+    "activitypub-core-delivery": "^0.0.56",
+    "activitypub-core-express-middleware": "^0.0.56",
+    "activitypub-core-jsx-components": "^0.0.56",
+    "activitypub-core-types": "^0.0.56",
+    "activitypub-core-utilities": "^0.0.56",
     "firebase-admin": "^11.1.0",
     "react": "^16.14.0",
     "react-server": "^0.8.1"

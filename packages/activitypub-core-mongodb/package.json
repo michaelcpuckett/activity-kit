@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-mongodb",
-  "version": "0.0.55",
+  "version": "0.0.56",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -28,9 +28,9 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "activitypub-core-delivery": "^0.0.55",
-    "activitypub-core-types": "^0.0.55",
-    "activitypub-core-utilities": "^0.0.55",
+    "activitypub-core-delivery": "^0.0.56",
+    "activitypub-core-types": "^0.0.56",
+    "activitypub-core-utilities": "^0.0.56",
     "firebase-admin": "^11.1.0",
     "mongodb": "^4.10.0"
   },
