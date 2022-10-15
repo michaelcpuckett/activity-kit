@@ -30,7 +30,6 @@
     "activitypub-core-endpoints": "^0.0.57",
     "activitypub-core-types": "^0.0.57",
     "activitypub-core-utilities": "^0.0.57",
-    "activitypub-core-firebase-auth": "^0.0.57",
     "express": "^4.18.2",
     "http": "^0.0.1-security"
   },
