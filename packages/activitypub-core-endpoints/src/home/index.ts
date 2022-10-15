@@ -24,8 +24,6 @@ export const homeGetHandler = async (
     await authenticationService.getUserIdByToken(cookies.__session ?? ''),
   );
 
-  console.log(actor);
-
   if (!actor) {
     return {
       redirect: {

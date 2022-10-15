@@ -148,6 +148,4 @@ Currently this project comes with:
 
 ### Rendering Layer
 
-Currently this project comes with:
-
-- `activitypub-core-jsx-components`
+TBD. Currently using JSX (React) on the Server.
