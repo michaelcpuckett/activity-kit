@@ -13,7 +13,6 @@ export async function webfingerHandler (
   }
 
   const query = {...queryString.parse(new URL(req.url, LOCAL_DOMAIN).search)} as { [key: string]: string };
-  console.log(query);
   const resource = query.resource ?? '';
   const [account] = resource.split('@');
   const [, username] = account.split(':');
