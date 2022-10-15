@@ -5,8 +5,8 @@ import { Link } from '../Core/Link';
 
 type BaseCollection = BaseCoreObject & {
   type:
-  | typeof CollectionTypes[keyof typeof CollectionTypes]
-  | typeof CollectionPageTypes[keyof typeof CollectionPageTypes];
+    | typeof CollectionTypes[keyof typeof CollectionTypes]
+    | typeof CollectionPageTypes[keyof typeof CollectionPageTypes];
   totalItems?: number;
   items?: EntityReference | EntityReference[];
   current?: URL | CollectionPage | Link;

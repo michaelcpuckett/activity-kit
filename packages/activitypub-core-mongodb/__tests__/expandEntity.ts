@@ -9,7 +9,7 @@ describe('DatabaseService', () => {
     const actor1Url = 'https://test.com/actor/123';
     const object1Url = 'https://test.com/object/123';
     const activity1: AP.Create = {
-      "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(activity1Url),
       url: new URL(activity1Url),
       type: 'Create',
@@ -17,7 +17,7 @@ describe('DatabaseService', () => {
       object: new URL(object1Url),
     };
     const actor1: AP.Person = {
-      "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(actor1Url),
       url: new URL(actor1Url),
       type: 'Person',
@@ -25,14 +25,14 @@ describe('DatabaseService', () => {
       outbox: new URL(`${actor1Url}/outbox`),
     };
     const object1: AP.Note = {
-      "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(object1Url),
       url: new URL(object1Url),
       type: 'Note',
       content: 'Test',
     };
     const activity1Result: AP.Create = {
-      "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(activity1Url),
       url: new URL(activity1Url),
       type: 'Create',

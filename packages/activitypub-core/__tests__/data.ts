@@ -103,7 +103,7 @@ export const originalDeleteActivity: AP.Delete = {
 };
 
 export const actor1Result: AP.Person = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor1Url),
   url: new URL(actor1Url),
   type: 'Person',
@@ -116,7 +116,7 @@ export const actor1Result: AP.Person = {
 };
 
 export const actor1Inbox: AP.OrderedCollection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor1InboxUrl),
   url: new URL(actor1InboxUrl),
   type: 'OrderedCollection',
@@ -125,7 +125,7 @@ export const actor1Inbox: AP.OrderedCollection = {
 };
 
 export const actor1Outbox: AP.OrderedCollection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor1OutboxUrl),
   url: new URL(actor1OutboxUrl),
   type: 'OrderedCollection',
@@ -134,7 +134,7 @@ export const actor1Outbox: AP.OrderedCollection = {
 };
 
 export const actor1Following: AP.Collection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor1FollowingUrl),
   url: new URL(actor1FollowingUrl),
   type: 'Collection',
@@ -143,7 +143,7 @@ export const actor1Following: AP.Collection = {
 };
 
 export const actor1Followers: AP.Collection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor1FollowingUrl),
   url: new URL(actor1FollowingUrl),
   type: 'Collection',
@@ -152,7 +152,7 @@ export const actor1Followers: AP.Collection = {
 };
 
 export const actor2Result: AP.Person = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor2Url),
   url: new URL(actor2Url),
   type: 'Person',
@@ -163,7 +163,7 @@ export const actor2Result: AP.Person = {
 };
 
 export const actor2Inbox: AP.OrderedCollection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor2InboxUrl),
   url: new URL(actor2InboxUrl),
   type: 'OrderedCollection',
@@ -172,7 +172,7 @@ export const actor2Inbox: AP.OrderedCollection = {
 };
 
 export const actor2Outbox: AP.OrderedCollection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor2OutboxUrl),
   url: new URL(actor2OutboxUrl),
   type: 'OrderedCollection',
@@ -181,7 +181,7 @@ export const actor2Outbox: AP.OrderedCollection = {
 };
 
 export const actor2Following: AP.Collection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor2FollowingUrl),
   url: new URL(actor2FollowingUrl),
   type: 'Collection',
@@ -190,7 +190,7 @@ export const actor2Following: AP.Collection = {
 };
 
 export const actor2Followers: AP.Collection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor2FollowingUrl),
   url: new URL(actor2FollowingUrl),
   type: 'Collection',
@@ -199,7 +199,7 @@ export const actor2Followers: AP.Collection = {
 };
 
 export const actor3Result: AP.Person = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor3Url),
   url: new URL(actor3Url),
   type: 'Person',
@@ -208,7 +208,7 @@ export const actor3Result: AP.Person = {
 };
 
 export const actor5Result: AP.Person = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor5Url),
   url: new URL(actor5Url),
   type: 'Person',
@@ -220,7 +220,7 @@ export const actor5Result: AP.Person = {
 };
 
 export const actor3Inbox: AP.OrderedCollection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor3InboxUrl),
   url: new URL(actor3InboxUrl),
   type: 'OrderedCollection',
@@ -229,7 +229,7 @@ export const actor3Inbox: AP.OrderedCollection = {
 };
 
 export const actor3Outbox: AP.OrderedCollection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor3OutboxUrl),
   url: new URL(actor3OutboxUrl),
   type: 'OrderedCollection',
@@ -238,7 +238,7 @@ export const actor3Outbox: AP.OrderedCollection = {
 };
 
 export const actor4Result: AP.Person = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor4Url),
   url: new URL(actor4Url),
   type: 'Person',
@@ -250,7 +250,7 @@ export const actor4Result: AP.Person = {
 };
 
 export const actor1Shared: AP.OrderedCollection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor1SharedUrl),
   url: new URL(actor1SharedUrl),
   name: 'Shared',
@@ -260,7 +260,7 @@ export const actor1Shared: AP.OrderedCollection = {
 };
 
 export const actor1Liked: AP.OrderedCollection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(actor1LikedUrl),
   url: new URL(actor1LikedUrl),
   name: 'Liked',
@@ -270,7 +270,7 @@ export const actor1Liked: AP.OrderedCollection = {
 };
 
 export const collection1: AP.Collection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(collection1Url),
   url: new URL(collection1Url),
   type: 'Collection',
@@ -279,7 +279,7 @@ export const collection1: AP.Collection = {
 };
 
 export const collection2: AP.Collection = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(collection1Url),
   url: new URL(collection1Url),
   type: 'Collection',
@@ -288,7 +288,7 @@ export const collection2: AP.Collection = {
 };
 
 export const note1 = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(note1Url),
   url: new URL(note1Url),
   type: 'Note',
@@ -296,7 +296,7 @@ export const note1 = {
 };
 
 export const note2 = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(note2Url),
   url: new URL(note2Url),
   type: 'Note',
@@ -307,7 +307,7 @@ export const note2 = {
 };
 
 export const note2Likes = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(note2LikesUrl),
   url: new URL(note2LikesUrl),
   type: 'OrderedCollection',
@@ -316,7 +316,7 @@ export const note2Likes = {
 };
 
 export const note2Shares = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(note2SharesUrl),
   url: new URL(note2SharesUrl),
   type: 'OrderedCollection',

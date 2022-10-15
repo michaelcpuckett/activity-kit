@@ -14,9 +14,11 @@
   ],
   "scripts": {
     "tsc": "tsc --project tsconfig.json",
-    "dev": "ts-node ./src/index.ts"
+    "dev": "ts-node ./src/index.ts",
+    "format": "prettier --config .prettierrc \"**/*.ts\" --write"
   },
   "devDependencies": {
+    "prettier": "^2.7.1",
     "ts-node": "^10.9.1"
   }
 }

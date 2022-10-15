@@ -8,7 +8,7 @@ describe('DatabaseService', () => {
     const date = new Date('2022-01-01');
     const object1Url = 'https://test.com/object/123';
     const object1: AP.Note = {
-      "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(object1Url),
       url: new URL(object1Url),
       type: 'Note',
@@ -17,7 +17,7 @@ describe('DatabaseService', () => {
     };
 
     const object1Result = {
-      "@context": ACTIVITYSTREAMS_CONTEXT,
+      '@context': ACTIVITYSTREAMS_CONTEXT,
       id: object1Url,
       url: object1Url,
       type: 'Note',

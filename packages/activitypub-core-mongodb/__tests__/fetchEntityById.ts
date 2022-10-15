@@ -6,7 +6,7 @@ describe('DatabaseService', () => {
   describe('fetchEntityById', () => {
     const actor1Url = 'https://foreign.test.com/456';
     const actor1Result: AP.Person = {
-      "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL('https://foreign.test.com/456'),
       url: new URL('https://foreign.test.com/456'),
       type: 'Person',
@@ -24,8 +24,8 @@ describe('DatabaseService', () => {
             }
 
             return null;
-          }
-        }
+          },
+        };
       },
     });
 

@@ -1,8 +1,10 @@
 jest.mock('../../src/utilities/streamToString', () => {
   return {
-    streamToString: function streamToString(req: IncomingMessage & {
-      body: string;
-    }) {
+    streamToString: function streamToString(
+      req: IncomingMessage & {
+        body: string;
+      },
+    ) {
       return req.body;
     },
   };
@@ -319,9 +321,9 @@ const handleBox = async (
 
   const deliveryService = new ExtendedDeliveryService(databaseService);
 
-  const setHeader = jest.fn(() => { });
-  const write = jest.fn(() => { });
-  const end = jest.fn(() => { });
+  const setHeader = jest.fn(() => {});
+  const write = jest.fn(() => {});
+  const end = jest.fn(() => {});
 
   const req: Partial<IncomingMessage> = new IncomingMessage(new Socket());
 
@@ -333,7 +335,8 @@ const handleBox = async (
   req.body = JSON.stringify(activity);
 
   const res: Partial<ServerResponse> = {
-    setHeader: setHeader as unknown as typeof ServerResponse.prototype.setHeader,
+    setHeader:
+      setHeader as unknown as typeof ServerResponse.prototype.setHeader,
     write: write as unknown as typeof ServerResponse.prototype.write,
     end: end as unknown as typeof ServerResponse.prototype.end,
   };

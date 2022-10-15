@@ -14,7 +14,7 @@ export async function createServerActor(databaseService: Database) {
   const publishedDate = new Date();
 
   const botInbox: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${SERVER_ACTOR_ID}/inbox`),
     url: new URL(`${SERVER_ACTOR_ID}/inbox`),
     type: AP.CollectionTypes.ORDERED_COLLECTION,
@@ -24,7 +24,7 @@ export async function createServerActor(databaseService: Database) {
   };
 
   const botOutbox: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${SERVER_ACTOR_ID}/outbox`),
     url: new URL(`${SERVER_ACTOR_ID}/outbox`),
     type: AP.CollectionTypes.ORDERED_COLLECTION,
@@ -34,7 +34,7 @@ export async function createServerActor(databaseService: Database) {
   };
 
   const botFollowers: AP.Collection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${SERVER_ACTOR_ID}/followers`),
     url: new URL(`${SERVER_ACTOR_ID}/followers`),
     name: 'Followers',
@@ -45,7 +45,7 @@ export async function createServerActor(databaseService: Database) {
   };
 
   const botFollowing: AP.Collection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${SERVER_ACTOR_ID}/following`),
     url: new URL(`${SERVER_ACTOR_ID}/following`),
     name: 'Following',
@@ -56,7 +56,7 @@ export async function createServerActor(databaseService: Database) {
   };
 
   const botActor: AP.Actor = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(SERVER_ACTOR_ID),
     url: new URL(SERVER_ACTOR_ID),
     type: AP.ActorTypes.APPLICATION,

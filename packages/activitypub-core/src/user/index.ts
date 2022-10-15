@@ -1,34 +1,42 @@
 import * as firebaseAdmin from 'firebase-admin';
 import { AppOptions, ServiceAccount } from 'firebase-admin';
-import { RESERVED_USERNAMES, SERVER_ACTOR_USERNAME } from 'activitypub-core-utilities';
+import {
+  RESERVED_USERNAMES,
+  SERVER_ACTOR_USERNAME,
+} from 'activitypub-core-utilities';
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
 import { AP } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import type { Database } from 'activitypub-core-types';
 
-export async function userPostHandler(req: IncomingMessage, res: ServerResponse,
+export async function userPostHandler(
+  req: IncomingMessage,
+  res: ServerResponse,
   serviceAccount: ServiceAccount,
   databaseService: Database,
   setup?: (
     actor: AP.Entity,
     databaseService: Database,
-  ) => Promise<{ actor: AP.Actor }>) {
-  const body: { [key: string]: string } = await new Promise((resolve, reject) => {
-    let data = '';
+  ) => Promise<{ actor: AP.Actor }>,
+) {
+  const body: { [key: string]: string } = await new Promise(
+    (resolve, reject) => {
+      let data = '';
 
-    req.on('data', function (chunk) {
-      data += chunk;
-    });
+      req.on('data', function (chunk) {
+        data += chunk;
+      });
 
-    req.on('end', function () {
-      resolve(JSON.parse(data));
-    });
+      req.on('end', function () {
+        resolve(JSON.parse(data));
+      });
 
-    req.on('error', function () {
-      reject('Failed to make an OAuth request');
-    });
-  });
+      req.on('error', function () {
+        reject('Failed to make an OAuth request');
+      });
+    },
+  );
 
   const { email, password, name, preferredUsername } = body;
 
@@ -38,9 +46,11 @@ export async function userPostHandler(req: IncomingMessage, res: ServerResponse,
 
   if (isUsernameTaken || RESERVED_USERNAMES.includes(preferredUsername)) {
     res.statusCode = 409;
-    res.write(JSON.stringify({
-      error: 'Username Taken.'
-    }));
+    res.write(
+      JSON.stringify({
+        error: 'Username Taken.',
+      }),
+    );
     res.end();
     return;
   }
@@ -88,9 +98,11 @@ export async function userPostHandler(req: IncomingMessage, res: ServerResponse,
   }
 
   res.statusCode = 200;
-  res.write(JSON.stringify({
-    success: true
-  }));
+  res.write(
+    JSON.stringify({
+      success: true,
+    }),
+  );
   res.end();
   return;
-};
+}

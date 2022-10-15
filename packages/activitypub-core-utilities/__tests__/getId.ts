@@ -6,7 +6,7 @@ describe('utilities', () => {
   describe('getId', () => {
     const collection1Url = 'https://test.com/activity/123';
     const collection1Result: AP.Collection = {
-      "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(collection1Url),
       url: new URL(collection1Url),
       type: 'Collection',

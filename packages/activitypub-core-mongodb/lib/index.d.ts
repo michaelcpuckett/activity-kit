@@ -5,7 +5,12 @@ import { findStringValueById } from './findStringValueById';
 import { findStringIdByValue } from './findStringIdByValue';
 import { saveEntity } from './saveEntity';
 import { saveString } from './saveString';
-import { insertItem, removeOrderedItem, insertOrderedItem, removeItem } from './insert';
+import {
+  insertItem,
+  removeOrderedItem,
+  insertOrderedItem,
+  removeItem,
+} from './insert';
 import { fetchEntityById } from './fetchEntityById';
 import { queryById } from './queryById';
 import { expandEntity } from './expandEntity';
@@ -16,28 +21,28 @@ import { getAuthenticatedUserIdByToken } from './getAuthenticatedUserIdByToken';
 import { getActorByToken } from './getActorByToken';
 import type { Database, DatabaseService } from 'activitypub-core-types/index';
 export declare class MongoDatabase implements Database {
-    db: Db;
-    fetch: Function;
-    constructor(db: Db, fetchFn?: Function);
-    findOne: typeof findOne;
-    findAll: typeof findAll;
-    findEntityById: typeof findEntityById;
-    findStringValueById: typeof findStringValueById;
-    findStringIdByValue: typeof findStringIdByValue;
-    getAuthenticatedUserIdByToken: typeof getAuthenticatedUserIdByToken;
-    getActorByToken: typeof getActorByToken;
-    saveEntity: typeof saveEntity;
-    saveString: typeof saveString;
-    insertItem: typeof insertItem;
-    removeItem: typeof removeItem;
-    insertOrderedItem: typeof insertOrderedItem;
-    removeOrderedItem: typeof removeOrderedItem;
-    fetchEntityById: typeof fetchEntityById;
-    queryById: typeof queryById;
-    expandEntity: typeof expandEntity;
-    getCollectionItems: typeof getCollectionItems;
-    expandCollection: typeof expandCollection;
+  db: Db;
+  fetch: Function;
+  constructor(db: Db, fetchFn?: Function);
+  findOne: typeof findOne;
+  findAll: typeof findAll;
+  findEntityById: typeof findEntityById;
+  findStringValueById: typeof findStringValueById;
+  findStringIdByValue: typeof findStringIdByValue;
+  getAuthenticatedUserIdByToken: typeof getAuthenticatedUserIdByToken;
+  getActorByToken: typeof getActorByToken;
+  saveEntity: typeof saveEntity;
+  saveString: typeof saveString;
+  insertItem: typeof insertItem;
+  removeItem: typeof removeItem;
+  insertOrderedItem: typeof insertOrderedItem;
+  removeOrderedItem: typeof removeOrderedItem;
+  fetchEntityById: typeof fetchEntityById;
+  queryById: typeof queryById;
+  expandEntity: typeof expandEntity;
+  getCollectionItems: typeof getCollectionItems;
+  expandCollection: typeof expandCollection;
 }
 export declare class MongoDatabaseService implements DatabaseService {
-    connect(): Promise<MongoDatabase>;
+  connect(): Promise<MongoDatabase>;
 }

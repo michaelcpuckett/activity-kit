@@ -9,6 +9,11 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { serviceAccoun
         next();
         return;
     }
+    if (req.url === '/sharedInbox' && req.method === 'POST') {
+        await (0, activitypub_core_1.sharedInboxHandler)(req, res, databaseService, deliveryService);
+        next();
+        return;
+    }
     if (req.url.startsWith('/actor/') && req.url.endsWith('/inbox')) {
         const result = await (0, activitypub_core_1.inboxHandler)(req, res, serviceAccount, databaseService, deliveryService);
         if (result.props && Object.keys(result.props).length) {

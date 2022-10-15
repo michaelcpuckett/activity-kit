@@ -23,4 +23,4 @@ export type Database = {
 
 export interface DatabaseService {
   connect(): Promise<Database>;
-};
+}

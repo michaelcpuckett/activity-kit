@@ -7,7 +7,7 @@ describe('DatabaseService', () => {
   describe('queryById', () => {
     const object1Url = 'https://test.com/object/123';
     const object1Result: AP.Note = {
-      "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(object1Url),
       url: new URL(object1Url),
       type: 'Note',
@@ -26,8 +26,8 @@ describe('DatabaseService', () => {
             }
 
             return null;
-          }
-        }
+          },
+        };
       },
     });
 

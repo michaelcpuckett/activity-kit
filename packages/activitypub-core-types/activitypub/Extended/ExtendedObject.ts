@@ -9,8 +9,8 @@ type BaseExtendedObject = BaseCoreObject & {
 export type Tombstone = BaseExtendedObject & {
   type: typeof ExtendedObjectTypes.TOMBSTONE;
   formerType?:
-  | typeof AllTypes[keyof typeof AllTypes]
-  | Array<typeof AllTypes[keyof typeof AllTypes]>;
+    | typeof AllTypes[keyof typeof AllTypes]
+    | Array<typeof AllTypes[keyof typeof AllTypes]>;
   deleted?: Date;
 };
 

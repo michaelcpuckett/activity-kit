@@ -68,9 +68,9 @@ describe('Endpoints', () => {
       } as unknown as Db,
     });
 
-    const setHeader = jest.fn(() => { });
-    const write = jest.fn(() => { });
-    const end = jest.fn(() => { });
+    const setHeader = jest.fn(() => {});
+    const write = jest.fn(() => {});
+    const end = jest.fn(() => {});
 
     it('works with accept application/json', async () => {
       const request: Partial<IncomingMessage> = {
@@ -84,7 +84,11 @@ describe('Endpoints', () => {
         write,
         end,
       };
-      const data = await entityGetHandler(request as IncomingMessage, response as ServerResponse, databaseService);
+      const data = await entityGetHandler(
+        request as IncomingMessage,
+        response as ServerResponse,
+        databaseService,
+      );
       expect(setHeader).toBeCalledWith(
         CONTENT_TYPE_HEADER,
         ACTIVITYSTREAMS_CONTENT_TYPE,
@@ -112,7 +116,11 @@ describe('Endpoints', () => {
         write,
         end,
       };
-      const data = await entityGetHandler(request as IncomingMessage, response as ServerResponse, databaseService);
+      const data = await entityGetHandler(
+        request as IncomingMessage,
+        response as ServerResponse,
+        databaseService,
+      );
       expect(data.props).toStrictEqual({
         entity: JSON.parse(
           JSON.stringify({

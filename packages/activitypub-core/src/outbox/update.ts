@@ -51,8 +51,8 @@ export async function handleUpdate(
     ...activity.object,
     ...(objectToUpdate.type !== 'Link' && objectToUpdate.type !== 'Mention'
       ? {
-        updated: new Date(),
-      }
+          updated: new Date(),
+        }
       : null),
   };
 

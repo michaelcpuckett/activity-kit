@@ -19,7 +19,7 @@ export async function entityGetHandler(
   response: ServerResponse,
   serviceAccount: ServiceAccount,
   databaseService: Database,
-): Promise<{ props?: { entity?: AP.Entity; actor?: AP.Actor; } }> {
+): Promise<{ props?: { entity?: AP.Entity; actor?: AP.Actor } }> {
   if (!response) {
     throw new Error('Bad request.');
   }
@@ -46,14 +46,12 @@ export async function entityGetHandler(
     return handleBadRequest();
   }
 
-  const cookies = cookie.parse(request.headers.cookie);
+  const cookies = cookie.parse(request.headers.cookie ?? '');
 
   const actor = await databaseService.getActorByToken(
     cookies.__session ?? '',
     serviceAccount,
   );
-
-  console.log('actor', actor);
 
   // TODO authorize foundEntity posts by actor.
 

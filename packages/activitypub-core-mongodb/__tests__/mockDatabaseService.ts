@@ -19,11 +19,7 @@ export function mockDatabaseService({
   fetchResponder?: (request: Request) => unknown;
 }) {
   const mockDbInstance = {
-    collection: jest.fn(
-      () =>
-        db ?? {
-        },
-    ),
+    collection: jest.fn(() => db ?? {}),
   } as unknown as Db;
 
   const fetchMock =
@@ -32,7 +28,7 @@ export function mockDatabaseService({
       json: fetchResponder(request),
     }));
 
-  let ExtendedDatabase = class extends MongoDatabase { };
+  let ExtendedDatabase = class extends MongoDatabase {};
 
   if (getActorByToken) {
     const ExtendedDatabase2 = class extends ExtendedDatabase {

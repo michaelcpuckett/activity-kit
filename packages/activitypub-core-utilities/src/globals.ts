@@ -2,8 +2,9 @@ export const PORT = Number(process.env.AP_PORT ?? 3000);
 export const LOCAL_HOSTNAME = process.env.AP_HOST_NAME ?? 'localhost';
 export const PROTOCOL = process.env.AP_PROTOCOL ?? 'http:';
 export const DB_NAME = process.env.AP_DB_NAME ?? 'activitypub';
-export const LOCAL_DOMAIN = `${PROTOCOL}//${LOCAL_HOSTNAME}${PORT === 80 ? '' : `:${PORT}`
-  }`;
+export const LOCAL_DOMAIN = `${PROTOCOL}//${LOCAL_HOSTNAME}${
+  PORT === 80 ? '' : `:${PORT}`
+}`;
 export const MONGO_CLIENT_URL =
   process.env.AP_MONGO_CLIENT_URL ?? 'mongodb://localhost:27017';
 export const CONTEXT = '@context';

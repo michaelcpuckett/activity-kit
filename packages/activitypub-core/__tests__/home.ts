@@ -97,9 +97,9 @@ describe('Endpoints', () => {
       } as unknown as Db,
     });
 
-    const setHeader = jest.fn(() => { });
-    const write = jest.fn(() => { });
-    const end = jest.fn(() => { });
+    const setHeader = jest.fn(() => {});
+    const write = jest.fn(() => {});
+    const end = jest.fn(() => {});
 
     it('works with text/html accept header', async () => {
       const request: Partial<IncomingMessage> = {

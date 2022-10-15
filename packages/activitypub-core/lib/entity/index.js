@@ -33,9 +33,8 @@ async function entityGetHandler(request, response, serviceAccount, databaseServi
     if (!request) {
         return handleBadRequest();
     }
-    const cookies = cookie_1.default.parse(request.headers.cookie);
+    const cookies = cookie_1.default.parse(request.headers.cookie ?? '');
     const actor = await databaseService.getActorByToken(cookies.__session ?? '', serviceAccount);
-    console.log('actor', actor);
     const url = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${request.url}`);
     const foundEntity = await databaseService.findEntityById(url);
     if (!foundEntity) {

@@ -50,18 +50,17 @@ export async function getCollectionItems(
       const foundEntity = await this.queryById(item);
 
       result.push(
-        foundEntity ? await this.expandEntity(foundEntity) : {
-          type: AP.CoreObjectTypes.TOMBSTONE,
-          content: 'Not found',
-        },
+        foundEntity
+          ? await this.expandEntity(foundEntity)
+          : {
+              type: AP.CoreObjectTypes.TOMBSTONE,
+              content: 'Not found',
+            },
       );
-
     } else if (!Array.isArray(item) && item.id instanceof URL) {
       const foundEntity = await this.queryById(item.id);
 
-      result.push(
-        foundEntity ?? item
-      );
+      result.push(foundEntity ?? item);
     }
   }
 

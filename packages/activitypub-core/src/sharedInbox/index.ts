@@ -10,7 +10,7 @@ import { stringifyWithContext } from 'activitypub-core-utilities';
 import type { Database } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
 
-export async function sharedInboxPostHandler(
+export async function sharedInboxHandler(
   req: IncomingMessage,
   res: ServerResponse,
   databaseService: Database,

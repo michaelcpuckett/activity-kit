@@ -24,13 +24,12 @@ export async function fetchEntityById(
       [CONTENT_TYPE_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
       [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
     },
-  },
-  )
-    .then(async (response: {
-      json: () => Promise<{ [key: string]: unknown }>
-    }) => {
-      return await response.json();
-    })
+  })
+    .then(
+      async (response: { json: () => Promise<{ [key: string]: unknown }> }) => {
+        return await response.json();
+      },
+    )
     .catch((error: unknown) => {
       console.log(String(error));
       return null;

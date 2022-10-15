@@ -3,7 +3,6 @@ import { AP } from 'activitypub-core-types';
 import { generateKeyPair } from 'activitypub-core-utilities';
 import { DeliveryService } from '../src';
 
-
 describe('DeliveryService', () => {
   describe('signAndSendToForeignActorInbox', () => {
     const fetch = jest.fn(async () => {

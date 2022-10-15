@@ -18,9 +18,10 @@
     "url": "git+https://github.com/michaelcpuckett/activitypub-core.git"
   },
   "scripts": {
-    "tsc": "tsc --project tsconfig.json",
+    "build": "tsc --project tsconfig.json",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
-    "dev": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --watch"
+    "dev": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --watch",
+    "format": "prettier --config .prettierrc \"**/*.ts\" --write"
   },
   "bugs": {
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
@@ -35,6 +36,7 @@
     "@types/jsonld": "^1.5.6",
     "dotenv": "^16.0.3",
     "jest": "^29.1.2",
+    "prettier": "^2.7.1",
     "ts-jest": "^29.0.3",
     "typescript": "^4.8.4"
   }

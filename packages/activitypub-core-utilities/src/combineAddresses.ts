@@ -13,48 +13,48 @@ export function combineAddresses(activity: AP.Activity): AP.Activity {
         const activityTo = Array.isArray(activity.to)
           ? activity.to
           : activity.to
-            ? [activity.to]
-            : [];
+          ? [activity.to]
+          : [];
         const activityCc = Array.isArray(activity.cc)
           ? activity.cc
           : activity.cc
-            ? [activity.cc]
-            : [];
+          ? [activity.cc]
+          : [];
         const activityBto = Array.isArray(activity.bto)
           ? activity.bto
           : activity.bto
-            ? [activity.bto]
-            : [];
+          ? [activity.bto]
+          : [];
         const activityBcc = Array.isArray(activity.bcc)
           ? activity.bcc
           : activity.bcc
-            ? [activity.bcc]
-            : [];
+          ? [activity.bcc]
+          : [];
         const activityAudience = Array.isArray(activity.audience)
           ? activity.audience
           : activity.audience
-            ? [activity.audience]
-            : [];
+          ? [activity.audience]
+          : [];
         const objectTo = Array.isArray(activity.object.to)
           ? activity.object.to
           : activity.object.to
-            ? [activity.object.to]
-            : [];
+          ? [activity.object.to]
+          : [];
         const objectCc = Array.isArray(activity.object.cc)
           ? activity.object.cc
           : activity.object.cc
-            ? [activity.object.cc]
-            : [];
+          ? [activity.object.cc]
+          : [];
         const objectBto = Array.isArray(activity.object.bto)
           ? activity.object.bto
           : activity.object.bto
-            ? [activity.object.bto]
-            : [];
+          ? [activity.object.bto]
+          : [];
         const objectBcc = Array.isArray(activity.object.bcc)
           ? activity.object.bcc
           : activity.object.bcc
-            ? [activity.object.bcc]
-            : [];
+          ? [activity.object.bcc]
+          : [];
         const objectAudience = Array.isArray(activity.object.audience)
           ? activity.object.audience
             ? activity.object.audience

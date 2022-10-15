@@ -8,7 +8,7 @@ const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const cookie_1 = __importDefault(require("cookie"));
 const homeGetHandler = async (req, res, serviceAccount, databaseService, setup) => {
-    const cookies = cookie_1.default.parse(req.headers.cookie);
+    const cookies = cookie_1.default.parse(req.headers.cookie ?? '');
     const actor = await databaseService.getActorByToken(cookies.__session ?? '', serviceAccount);
     if (!actor) {
         return {

@@ -1,5 +1,5 @@
 export declare const convertFromJsonLd: (entity: {
-    [key: string]: unknown;
+  [key: string]: unknown;
 }) => Promise<{
-    [key: string]: unknown;
+  [key: string]: unknown;
 }>;

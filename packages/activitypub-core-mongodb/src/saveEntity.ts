@@ -1,6 +1,11 @@
 import { MongoDatabase } from '.';
 import { AP } from 'activitypub-core-types';
-import { addContext, cleanProps, convertUrlsToStrings, getCollectionNameByUrl } from 'activitypub-core-utilities';
+import {
+  addContext,
+  cleanProps,
+  convertUrlsToStrings,
+  getCollectionNameByUrl,
+} from 'activitypub-core-utilities';
 
 export async function saveEntity(this: MongoDatabase, entity: AP.Entity) {
   if (!entity.id) {

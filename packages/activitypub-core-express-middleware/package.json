@@ -13,11 +13,13 @@
     "lib"
   ],
   "devDependencies": {
+    "prettier": "^2.7.1",
     "ts-node": "^10.9.1"
   },
   "scripts": {
     "tsc": "tsc --project tsconfig.json",
-    "dev": "ts-node ./src/index.ts"
+    "dev": "ts-node ./src/index.ts",
+    "format": "prettier --config .prettierrc \"**/*.ts\" --write"
   },
   "dependencies": {
     "activitypub-core": "^0.0.54",

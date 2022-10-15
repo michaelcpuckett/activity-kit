@@ -19,15 +19,15 @@ export async function getAuthenticatedUserIdByToken(
   const user = !token
     ? null
     : await firebaseAdmin
-      .auth()
-      .verifyIdToken(token)
-      .then(async (userCredential) => {
-        return userCredential ?? null;
-      })
-      .catch((error: unknown) => {
-        console.error(String(error));
-        return null;
-      });
+        .auth()
+        .verifyIdToken(token)
+        .then(async (userCredential) => {
+          return userCredential ?? null;
+        })
+        .catch((error: unknown) => {
+          console.error(String(error));
+          return null;
+        });
 
   if (!user?.uid) {
     return null;

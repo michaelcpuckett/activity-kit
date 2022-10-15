@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import { LOCAL_DOMAIN } from 'activitypub-core-utilities'
+import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { entityGetHandler } from '../entity';
 import { handleAccept } from './accept';

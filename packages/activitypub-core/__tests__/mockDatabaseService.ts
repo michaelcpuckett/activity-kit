@@ -35,7 +35,7 @@ export function mockDatabaseService({
       json: fetchResponder(url, config),
     }));
 
-  let ExtendedDatabaseService = class extends DatabaseService { };
+  let ExtendedDatabaseService = class extends DatabaseService {};
 
   if (getActorByToken) {
     const ExtendedDatabaseService2 = class extends ExtendedDatabaseService {

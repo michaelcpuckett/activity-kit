@@ -1,6 +1,8 @@
 import { AP } from 'activitypub-core-types';
 
-export function convertStringsToUrls(originalEntity: { [key: string]: unknown }): AP.Entity {
+export function convertStringsToUrls(originalEntity: {
+  [key: string]: unknown;
+}): AP.Entity {
   const entity: { [key: string]: unknown } = { ...originalEntity };
 
   for (const [key, value] of Object.entries(entity)) {
@@ -25,7 +27,7 @@ export function convertStringsToUrls(originalEntity: { [key: string]: unknown })
     } else if (value instanceof URL || value instanceof Date) {
       continue;
     } else if (Array.isArray(value)) {
-      entity[key] = value.map(item => {
+      entity[key] = value.map((item) => {
         if (typeof item === 'string') {
           try {
             return new URL(item);

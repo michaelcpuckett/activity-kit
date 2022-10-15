@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 import {
   CONTENT_TYPE_HEADER,
   ACTIVITYSTREAMS_CONTENT_TYPE,
-  ACCEPT_HEADER
+  ACCEPT_HEADER,
 } from 'activitypub-core-utilities';
 import { DeliveryService } from '.';
 

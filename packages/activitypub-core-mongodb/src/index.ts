@@ -68,7 +68,7 @@ export class MongoDatabase implements Database {
   public expandEntity = expandEntity;
   public getCollectionItems = getCollectionItems;
   public expandCollection = expandCollection;
-};
+}
 
 export class MongoDatabaseService implements DatabaseService {
   async connect() {

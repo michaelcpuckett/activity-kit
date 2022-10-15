@@ -68,7 +68,7 @@ export async function handleFollow(
   const publishedDate = new Date();
 
   const acceptActivityReplies: AP.Collection = {
-    "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+    '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
     id: new URL(`${acceptActivityId}/replies`),
     url: new URL(`${acceptActivityId}/replies`),
     name: 'Replies',
@@ -79,7 +79,7 @@ export async function handleFollow(
   };
 
   const acceptActivityLikes = {
-    "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+    '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
     id: new URL(`${acceptActivityId}/likes`),
     url: new URL(`${acceptActivityId}/likes`),
     name: 'Likes',
@@ -90,7 +90,7 @@ export async function handleFollow(
   };
 
   const acceptActivityShares = {
-    "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+    '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
     id: new URL(`${acceptActivityId}/shares`),
     url: new URL(`${acceptActivityId}/shares`),
     name: 'Likes',

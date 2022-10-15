@@ -2,10 +2,7 @@ import { AP } from 'activitypub-core-types';
 import type { Database } from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
 
-export async function handleLike(
-  activity: AP.Like,
-  databaseService: Database,
-) {
+export async function handleLike(activity: AP.Like, databaseService: Database) {
   if (!activity.id) {
     throw new Error('Bad request 6');
   }

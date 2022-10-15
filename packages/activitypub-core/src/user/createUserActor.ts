@@ -1,6 +1,10 @@
 import { ACTIVITYSTREAMS_CONTEXT, getGuid } from 'activitypub-core-utilities';
 import { generateKeyPair } from 'activitypub-core-utilities';
-import { LOCAL_DOMAIN, SERVER_ACTOR_ID, SHARED_INBOX_ID } from 'activitypub-core-utilities';
+import {
+  LOCAL_DOMAIN,
+  SERVER_ACTOR_ID,
+  SHARED_INBOX_ID,
+} from 'activitypub-core-utilities';
 import type { Database } from 'activitypub-core-types';
 import { AP } from 'activitypub-core-types';
 
@@ -14,7 +18,7 @@ export async function createUserActor(
   const publishedDate = new Date();
 
   const userInbox: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${id}/inbox`),
     url: new URL(`${id}/inbox`),
     name: 'Inbox',
@@ -25,7 +29,7 @@ export async function createUserActor(
   };
 
   const userOutbox: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${id}/outbox`),
     url: new URL(`${id}/outbox`),
     name: 'Outbox',
@@ -36,7 +40,7 @@ export async function createUserActor(
   };
 
   const userFollowers: AP.Collection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${id}/followers`),
     url: new URL(`${id}/followers`),
     name: 'Followers',
@@ -47,7 +51,7 @@ export async function createUserActor(
   };
 
   const userFollowing: AP.Collection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${id}/following`),
     url: new URL(`${id}/following`),
     name: 'Following',
@@ -58,7 +62,7 @@ export async function createUserActor(
   };
 
   const userLiked: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${id}/liked`),
     url: new URL(`${id}/liked`),
     name: 'Liked',
@@ -69,7 +73,7 @@ export async function createUserActor(
   };
 
   const userShared: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${id}/shared`),
     url: new URL(`${id}/shared`),
     name: 'Shared',
@@ -80,7 +84,7 @@ export async function createUserActor(
   };
 
   const userBlocked: AP.Collection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${id}/blocked`),
     url: new URL(`${id}/blocked`),
     name: 'Blocked',
@@ -91,7 +95,7 @@ export async function createUserActor(
   };
 
   const userGroups: AP.Collection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${id}/groups`),
     url: new URL(`${id}/groups`),
     name: 'Groups',
@@ -102,7 +106,7 @@ export async function createUserActor(
   };
 
   const userReplies: AP.Collection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${id}/replies`),
     url: new URL(`${id}/replies`),
     name: 'Replies',
@@ -113,7 +117,7 @@ export async function createUserActor(
   };
 
   const userLikes: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${id}/likes`),
     url: new URL(`${id}/likes`),
     name: 'Likes',
@@ -124,7 +128,7 @@ export async function createUserActor(
   };
 
   const userShares: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${id}/shares`),
     url: new URL(`${id}/shares`),
     name: 'Shares',
@@ -135,7 +139,7 @@ export async function createUserActor(
   };
 
   const userBookmarks: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${id}/bookmarks`),
     url: new URL(`${id}/bookmarks`),
     name: 'Bookmarks',
@@ -146,7 +150,7 @@ export async function createUserActor(
   };
 
   const userActor: AP.Actor = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(id),
     url: new URL(id),
     type: AP.ActorTypes.PERSON,
@@ -160,12 +164,7 @@ export async function createUserActor(
     replies: userReplies.id,
     likes: userLikes.id,
     shares: userShares.id,
-    streams: [
-      userShared.id,
-      userBlocked.id,
-      userGroups.id,
-      userBookmarks.id
-    ],
+    streams: [userShared.id, userBlocked.id, userGroups.id, userBookmarks.id],
     endpoints: {
       sharedInbox: new URL(SHARED_INBOX_ID),
     },
@@ -180,7 +179,7 @@ export async function createUserActor(
   const createActorActivityId = `${LOCAL_DOMAIN}/activity/${getGuid()}`;
 
   const createActorActivityReplies: AP.Collection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${createActorActivityId}/replies`),
     url: new URL(`${createActorActivityId}/replies`),
     name: 'Replies',
@@ -191,7 +190,7 @@ export async function createUserActor(
   };
 
   const createActorActivityLikes: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${createActorActivityId}/likes`),
     url: new URL(`${createActorActivityId}/likes`),
     name: 'Likes',
@@ -202,7 +201,7 @@ export async function createUserActor(
   };
 
   const createActorActivityShares: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${createActorActivityId}/shares`),
     url: new URL(`${createActorActivityId}/shares`),
     name: 'Shares',
@@ -213,7 +212,7 @@ export async function createUserActor(
   };
 
   const createActorActivity: AP.Create = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(createActorActivityId),
     url: new URL(createActorActivityId),
     type: AP.ActivityTypes.CREATE,
@@ -251,7 +250,7 @@ export async function createUserActor(
   const friendsGroupId = `${id}/groups/friends`;
 
   const friendsGroupInbox: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${friendsGroupId}/inbox`),
     url: new URL(`${friendsGroupId}/inbox`),
     name: 'Inbox',
@@ -261,7 +260,7 @@ export async function createUserActor(
   };
 
   const friendsGroupOutbox: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${friendsGroupId}/outbox`),
     url: new URL(`${friendsGroupId}/outbox`),
     name: 'Outbox',
@@ -271,7 +270,7 @@ export async function createUserActor(
   };
 
   const friendsGroupReplies: AP.Collection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${friendsGroupId}/likes`),
     url: new URL(`${friendsGroupId}/likes`),
     name: 'Likes',
@@ -281,7 +280,7 @@ export async function createUserActor(
   };
 
   const friendsGroupLikes: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${friendsGroupId}/likes`),
     url: new URL(`${friendsGroupId}/likes`),
     name: 'Likes',
@@ -291,7 +290,7 @@ export async function createUserActor(
   };
 
   const friendsGroupShares: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${friendsGroupId}/shares`),
     url: new URL(`${friendsGroupId}/shares`),
     name: 'Shares',
@@ -301,7 +300,7 @@ export async function createUserActor(
   };
 
   const friendsGroupMembers: AP.Collection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${friendsGroupId}/members`),
     url: new URL(`${friendsGroupId}/members`),
     name: 'Members',
@@ -311,7 +310,7 @@ export async function createUserActor(
   };
 
   const friendsGroupActor: AP.Actor = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(friendsGroupId),
     url: new URL(friendsGroupId),
     type: AP.ActorTypes.GROUP,
@@ -333,7 +332,7 @@ export async function createUserActor(
   const createFriendsGroupActorActivityId = `${LOCAL_DOMAIN}/activity/${getGuid()}`;
 
   const createFriendsGroupActivityReplies: AP.Collection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${createFriendsGroupActorActivityId}/replies`),
     url: new URL(`${createFriendsGroupActorActivityId}/replies`),
     name: 'Replies',
@@ -343,7 +342,7 @@ export async function createUserActor(
   };
 
   const createFriendsGroupActivityLikes: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${createFriendsGroupActorActivityId}/likes`),
     url: new URL(`${createFriendsGroupActorActivityId}/likes`),
     name: 'Likes',
@@ -353,7 +352,7 @@ export async function createUserActor(
   };
 
   const createFriendsGroupActivityShares: AP.OrderedCollection = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${createFriendsGroupActorActivityId}/shares`),
     url: new URL(`${createFriendsGroupActorActivityId}/shares`),
     name: 'Shares',
@@ -363,7 +362,7 @@ export async function createUserActor(
   };
 
   const createFriendsGroupActorActivity: AP.Create = {
-    "@context": ACTIVITYSTREAMS_CONTEXT,
+    '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(createFriendsGroupActorActivityId),
     url: new URL(createFriendsGroupActorActivityId),
     type: AP.ActivityTypes.CREATE,

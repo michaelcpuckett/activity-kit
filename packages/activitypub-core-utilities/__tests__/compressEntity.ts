@@ -6,7 +6,7 @@ describe('Utilities', () => {
   describe('compressEntity', () => {
     const actor1Url = `https://test.com/actor/123`;
     const actor1Result: AP.Person = {
-      "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(actor1Url),
       url: new URL(actor1Url),
       type: 'Person',
@@ -17,7 +17,7 @@ describe('Utilities', () => {
 
     const object1Url = `https://test.com/actor/123`;
     const object1Result: AP.Note = {
-      "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(object1Url),
       url: new URL(object1Url),
       type: 'Note',
@@ -25,7 +25,7 @@ describe('Utilities', () => {
     };
     const activity1Url = 'https://test.com/activity/456';
     const activity1Result: AP.Create = {
-      "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(activity1Url),
       url: new URL(activity1Url),
       type: 'Create',

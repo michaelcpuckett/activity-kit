@@ -15,8 +15,11 @@ export const homeGetHandler = async (
     data: { props?: { actor?: AP.Actor } },
     databaseService: Database,
   ) => Promise<{ props?: { actor?: AP.Actor } }>,
-): Promise<{ redirect?: { permanent: Boolean; destination: string; }; props?: { actor?: AP.Actor } }> => {
-  const cookies = cookie.parse(req.headers.cookie);
+): Promise<{
+  redirect?: { permanent: Boolean; destination: string };
+  props?: { actor?: AP.Actor };
+}> => {
+  const cookies = cookie.parse(req.headers.cookie ?? '');
 
   const actor = await databaseService.getActorByToken(
     cookies.__session ?? '',
@@ -36,16 +39,15 @@ export const homeGetHandler = async (
     throw new Error('Bad actor.');
   }
 
-  const [
-    inbox,
-    outbox,
-    followers,
-    following,
-  ] = await Promise.all([
+  const [inbox, outbox, followers, following] = await Promise.all([
     databaseService.expandCollection(actor.inbox),
     databaseService.expandCollection(actor.outbox),
-    ...actor.followers ? [databaseService.expandCollection(actor.followers)] : [],
-    ...actor.following ? [databaseService.expandCollection(actor.following)] : [],
+    ...(actor.followers
+      ? [databaseService.expandCollection(actor.followers)]
+      : []),
+    ...(actor.following
+      ? [databaseService.expandCollection(actor.following)]
+      : []),
   ]);
 
   if (!inbox || !outbox) {
@@ -97,12 +99,12 @@ export const homeGetHandler = async (
 
   let data: {
     props?: {
-      actor?: AP.Actor
-    }
+      actor?: AP.Actor;
+    };
   } = {
     props: {
       actor,
-    }
+    },
   };
 
   if (setup) {

@@ -61,9 +61,9 @@ describe('Endpoints', () => {
         } as unknown as Db,
       });
 
-      const setHeader = jest.fn(() => { });
-      const write = jest.fn(() => { });
-      const end = jest.fn(() => { });
+      const setHeader = jest.fn(() => {});
+      const write = jest.fn(() => {});
+      const end = jest.fn(() => {});
 
       const req: IncomingMessage = {
         url: data.actor1OutboxUrl.toString().split('https://test.com')[1],

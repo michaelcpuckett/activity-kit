@@ -36,7 +36,7 @@ describe('DatabaseService', () => {
           if (matchingObject._id === collection1Url) {
             return {
               _id: collection1Url,
-              ...JSON.parse(JSON.stringify(collection1Result))
+              ...JSON.parse(JSON.stringify(collection1Result)),
             };
           }
 
@@ -50,8 +50,8 @@ describe('DatabaseService', () => {
           if (matchingObject._id === item2Url) {
             return {
               _id: item2Url,
-              ...JSON.parse(JSON.stringify(item2Result))
-            }
+              ...JSON.parse(JSON.stringify(item2Result)),
+            };
           }
 
           return null;
