@@ -24,7 +24,9 @@ restrictions.
 
 ## Use Cases
 
-There are a few use cases this project attempts to fulfill.
+There are a few use cases this project attempts to fulfill. Ideally this project
+papers over some of the complexity of JSON-LD, Activity Streams collections, etc.
+to make getting started easy.
 
 ### Connecting a Blog to the Fediverse
 
@@ -34,15 +36,14 @@ up an ActivityPub server.
 
 ### Single-Server Social Feeds
 
-An exercise app that wants to build in social features to make their users
-feel proud of their achievements. This would probably include something like a
+An exercise app wants to build in social features to make their users feel
+proud of their achievements. This would probably include something like a
 notification bell and a feed where updates about their friends appear. Users
 might have with the option to react with an emoji or sticker.
 
-All these exchanges would stay local to the server, so ActivityPub itself is
-not utilized much in this scenario.
+All these exchanges would stay local to the server.
 
-### Private Social Network or Group Chat
+### Private Group Chat
 
 A small group of people who communicate online become dissatisfied with their
 existing app's policies and decide to communicate privately. They would like to
@@ -52,28 +53,30 @@ Although ActivityPub does not define an encryption layer, messages could stay
 local to a single server or could be exchanged between all parties in an
 ephermeral way. Encryption could be a good addition, however.
 
+### Federated Social Network
+
+Ideally this project could be used to build an entire social network that
+interfaces with the rest of the Fediverse.
+
 ## Architecture
 
 This project aims to be agnostic as to how the data is stored, which server is
-used, and which rendering engine is used. Plugins that conform to a specific
-interface can be mixed and matched.
+used, etc. Plugins that conform to a specific interface can be mixed and matched.
 
 ### Logic Layer
 
 The logic layer that get included in all projects include these packages:
 
 * `activitypub-core-types`
-    * The TypeScript types.
+    * The Activity Vocabulary converted to TypeScript types.
 * `activitypub-core-utilities`
     * Common functions with no dependencies on packages from upper layers.
-* `activitypub-core`
-    * Most of the logic for carrying out ActivityPub according to the spec.
+* `activitypub-core-endpoints`
+    * The logic for carrying out the Client-to-Server ActivityPub protocol.
 * `activitypub-core-delivery`
-    * All the logic specific to federation.
+    * The logic specific to the Server-to-Server ActivityPub protocol (federation).
 
 ### Database Layer
-
-Up from there is the database layer.
 
 Currently this project comes with:
 
@@ -91,15 +94,11 @@ TBD.
 
 ### Server Layer
 
-Then comes the server layer.
-
 Currently this project comes with:
 
 * `activitypub-core-express-middleware`
 
-### UI Layer
-
-Finally there's the UI/rendering layer.
+### Rendering Layer
 
 Currently this project comes with:
 
