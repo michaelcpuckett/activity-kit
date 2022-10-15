@@ -48,12 +48,12 @@ class MongoDatabase {
 }
 exports.MongoDatabase = MongoDatabase;
 class MongoDatabaseService {
-    async connect({ mongoClientUrl }) {
+    async connect({ mongoClientUrl, dbName }) {
         const client = new mongodb_1.MongoClient(mongoClientUrl, {
             minPoolSize: 10,
         });
         await client.connect();
-        const db = client.db(activitypub_core_utilities_1.DB_NAME);
+        const db = client.db(dbName ?? activitypub_core_utilities_1.DB_NAME);
         return new MongoDatabase(db, isomorphic_fetch_1.default);
     }
 }

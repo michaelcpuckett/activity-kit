@@ -37,7 +37,8 @@ export declare class MongoDatabase implements Database {
     expandCollection: typeof expandCollection;
 }
 export declare class MongoDatabaseService implements DatabaseService {
-    connect({ mongoClientUrl }: {
+    connect({ mongoClientUrl, dbName }: {
         mongoClientUrl: string;
+        dbName?: string;
     }): Promise<MongoDatabase>;
 }

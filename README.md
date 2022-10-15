@@ -17,12 +17,7 @@ Canonical example using Firebase Auth, Express, MongoDB, JSX:
 ```ts
 (async () => {
   const app = express();
-  const authenticationService = new FirebaseAuthentication({
-    projectId: '...',
-    serviceAccount: {
-      private_key: '...',
-    },
-  });
+  const authenticationService = new FirebaseAuthentication(serviceAccount, '<project-id>');
   const databaseService = await new MongoDatabaseService().connect({
     mongoClientUrl: 'mongodb://localhost:27017',
   });
