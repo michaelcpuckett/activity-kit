@@ -3,7 +3,6 @@ export declare const LOCAL_HOSTNAME: string;
 export declare const PROTOCOL: string;
 export declare const DB_NAME: string;
 export declare const LOCAL_DOMAIN: string;
-export declare const MONGO_CLIENT_URL: string;
 export declare const CONTEXT = "@context";
 export declare const ACTIVITYSTREAMS_CONTEXT = "https://www.w3.org/ns/activitystreams#";
 export declare const W3ID_SECURITY_CONTEXT = "https://w3id.org/security/v1";

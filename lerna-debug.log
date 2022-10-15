@@ -1,12 +1,14 @@
-73 error Error: Command failed with exit code 1: npm install --package-lock-only --ignore-scripts
-73 error npm ERR! code ETARGET
-73 error npm ERR! notarget No matching version found for activitypub-core-delivery@^0.0.54.
-73 error npm ERR! notarget In most cases you or one of your dependencies are requesting
-73 error npm ERR! notarget a package version that doesn't exist.
-73 error
-73 error npm ERR! A complete log of this run can be found in:
-73 error npm ERR!     C:\Users\Michael Puckett\AppData\Local\npm-cache\_logs\2022-10-14T17_15_26_171Z-debug.log
-73 error     at makeError (C:\Users\Michael Puckett\Sites\activitypub-lerna\node_modules\execa\lib\error.js:60:11)
-73 error     at handlePromise (C:\Users\Michael Puckett\Sites\activitypub-lerna\node_modules\execa\index.js:118:26)
-73 error     at processTicksAndRejections (node:internal/process/task_queues:96:5)
-73 error     at async Promise.all (index 0)
+0 silly argv {
+0 silly argv   _: [ 'create' ],
+0 silly argv   lernaVersion: '5.6.2',
+0 silly argv   '$0': 'C:\\Users\\MichaelPuckett\\AppData\\Roaming\\npm\\node_modules\\lerna\\cli.js',
+0 silly argv   name: 'activitypub-core-firebase-auth'
+0 silly argv }
+1 notice cli v5.6.2
+2 verbose rootPath C:\sites\activitypub-core
+3 error Error: Command failed with exit code 1: git config --get user.name
+3 error     at makeError (C:\sites\activitypub-core\node_modules\execa\lib\error.js:60:11)
+3 error     at Function.module.exports.sync (C:\sites\activitypub-core\node_modules\execa\index.js:194:17)
+3 error     at Object.execSync (C:\sites\activitypub-core\node_modules\@lerna\child-process\index.js:39:16)
+3 error     at CreateCommand.gitConfig (C:\sites\activitypub-core\node_modules\@lerna\create\index.js:180:25)
+3 error     at CreateCommand.initialize (C:\sites\activitypub-core\node_modules\@lerna\create\index.js:102:46)

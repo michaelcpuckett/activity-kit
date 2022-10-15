@@ -12,9 +12,8 @@ import { expandEntity } from './expandEntity';
 import { getCollectionItems } from './getCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
-import { getAuthenticatedUserIdByToken } from './getAuthenticatedUserIdByToken';
-import { getActorByToken } from './getActorByToken';
-import type { Database, DatabaseService } from 'activitypub-core-types/index';
+import { getActorByUserId } from './getActorByUserId';
+import type { Database, DatabaseService } from 'activitypub-core-types';
 export declare class MongoDatabase implements Database {
     db: Db;
     fetch: Function;
@@ -24,8 +23,7 @@ export declare class MongoDatabase implements Database {
     findEntityById: typeof findEntityById;
     findStringValueById: typeof findStringValueById;
     findStringIdByValue: typeof findStringIdByValue;
-    getAuthenticatedUserIdByToken: typeof getAuthenticatedUserIdByToken;
-    getActorByToken: typeof getActorByToken;
+    getActorByUserId: typeof getActorByUserId;
     saveEntity: typeof saveEntity;
     saveString: typeof saveString;
     insertItem: typeof insertItem;
@@ -39,5 +37,7 @@ export declare class MongoDatabase implements Database {
     expandCollection: typeof expandCollection;
 }
 export declare class MongoDatabaseService implements DatabaseService {
-    connect(): Promise<MongoDatabase>;
+    connect({ mongoClientUrl, }: {
+        mongoClientUrl: string;
+    }): Promise<MongoDatabase>;
 }

@@ -13,4 +13,4 @@ async function getActorByUserId(userId) {
     return null;
 }
 exports.getActorByUserId = getActorByUserId;
-//# sourceMappingURL=getActorByToken.js.map
+//# sourceMappingURL=getActorByUserId.js.map

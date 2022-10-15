@@ -31,7 +31,6 @@
     "activitypub-core-delivery": "^0.0.57",
     "activitypub-core-types": "^0.0.57",
     "activitypub-core-utilities": "^0.0.57",
-    "firebase-admin": "^11.1.0",
     "mongodb": "^4.10.0"
   },
   "devDependencies": {

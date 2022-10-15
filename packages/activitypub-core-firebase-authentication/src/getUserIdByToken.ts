@@ -1,19 +1,12 @@
-import { MongoDatabase } from '.';
+import { FirebaseAuthentication } from '.';
 import * as firebaseAdmin from 'firebase-admin';
-import { AppOptions, ServiceAccount } from 'firebase-admin';
 
-export async function getAuthenticatedUserIdByToken(
-  this: MongoDatabase,
+export async function getUserIdByToken(
+  this: FirebaseAuthentication,
   token: string,
-  serviceAccount: ServiceAccount,
 ): Promise<string | null> {
   if (!firebaseAdmin.apps.length) {
-    const appOptions: AppOptions = {
-      credential: firebaseAdmin.credential.cert(serviceAccount),
-      projectId: 'socialweb-id',
-    };
-
-    firebaseAdmin.initializeApp(appOptions);
+    firebaseAdmin.initializeApp(this.appOptions);
   }
 
   const user = !token

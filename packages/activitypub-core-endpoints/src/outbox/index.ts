@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import type { Database } from 'activitypub-core-types';
+import type { Auth, Database } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import {
   ACTIVITYSTREAMS_CONTEXT,
@@ -20,12 +20,11 @@ import { combineAddresses } from 'activitypub-core-utilities';
 import { DeliveryService } from 'activitypub-core-delivery';
 import { parseStream } from 'activitypub-core-utilities';
 import { stringifyWithContext } from 'activitypub-core-utilities';
-import { ServiceAccount } from 'firebase-admin';
 
 export async function outboxHandler(
   req: IncomingMessage,
   res: ServerResponse,
-  serviceAccount: ServiceAccount,
+  authenticationService: Auth,
   databaseService: Database,
   deliveryService: DeliveryService,
 ) {
@@ -36,7 +35,7 @@ export async function outboxHandler(
     return await handleOutboxPost(req, res, databaseService, deliveryService);
   }
 
-  return await entityGetHandler(req, res, serviceAccount, databaseService);
+  return await entityGetHandler(req, res, authenticationService, databaseService);
 }
 
 async function handleOutboxPost(

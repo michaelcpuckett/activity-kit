@@ -20,8 +20,7 @@ const expandEntity_1 = require("./expandEntity");
 const getCollectionItems_1 = require("./getCollectionItems");
 const expandCollection_1 = require("./expandCollection");
 const findAll_1 = require("./findAll");
-const getAuthenticatedUserIdByToken_1 = require("./getAuthenticatedUserIdByToken");
-const getActorByToken_1 = require("./getActorByToken");
+const getActorByUserId_1 = require("./getActorByUserId");
 class MongoDatabase {
     db;
     fetch;
@@ -34,8 +33,7 @@ class MongoDatabase {
     findEntityById = findEntityById_1.findEntityById;
     findStringValueById = findStringValueById_1.findStringValueById;
     findStringIdByValue = findStringIdByValue_1.findStringIdByValue;
-    getAuthenticatedUserIdByToken = getAuthenticatedUserIdByToken_1.getAuthenticatedUserIdByToken;
-    getActorByToken = getActorByToken_1.getActorByToken;
+    getActorByUserId = getActorByUserId_1.getActorByUserId;
     saveEntity = saveEntity_1.saveEntity;
     saveString = saveString_1.saveString;
     insertItem = insert_1.insertItem;
@@ -50,8 +48,8 @@ class MongoDatabase {
 }
 exports.MongoDatabase = MongoDatabase;
 class MongoDatabaseService {
-    async connect() {
-        const client = new mongodb_1.MongoClient(activitypub_core_utilities_1.MONGO_CLIENT_URL, {
+    async connect({ mongoClientUrl, }) {
+        const client = new mongodb_1.MongoClient(mongoClientUrl, {
             minPoolSize: 10,
         });
         await client.connect();

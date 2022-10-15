@@ -10,14 +10,13 @@ import { getTypedEntity } from 'activitypub-core-utilities';
 import { convertUrlsToStrings } from 'activitypub-core-utilities';
 import { stringifyWithContext } from 'activitypub-core-utilities';
 import cookie from 'cookie';
-import type { Database } from 'activitypub-core-types';
+import type { Database, Auth } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { ServiceAccount } from 'firebase-admin';
 
 export async function entityGetHandler(
   request: IncomingMessage,
   response: ServerResponse,
-  serviceAccount: ServiceAccount,
+  authenticationService: Auth,
   databaseService: Database,
 ): Promise<{ props?: { entity?: AP.Entity; actor?: AP.Actor } }> {
   if (!response) {
@@ -48,9 +47,10 @@ export async function entityGetHandler(
 
   const cookies = cookie.parse(request.headers.cookie ?? '');
 
-  const actor = await databaseService.getActorByToken(
-    cookies.__session ?? '',
-    serviceAccount,
+  const actor = await databaseService.getActorByUserId(
+    await authenticationService.getUserIdByToken(
+      cookies.__session ?? '',
+    )
   );
 
   // TODO authorize foundEntity posts by actor.

@@ -10,6 +10,55 @@ ActivityPub is a standardized method of exchanging social data.
 This is a toy project at the moment. It's not fully working and it changes
 frequently.
 
+## Running in a Project
+
+Canonical example using Firebase Auth, Express, MongoDB, JSX:
+
+```ts
+
+(async () => {
+  const app = express();
+  const authenticationService = new FirebaseAuthentication({
+    projectId: '...',
+    serviceAccount: {
+      private_key: '...',
+    },
+  });
+  const databaseService = await new MongoDatabaseService().connect({
+    mongoClientUrl: 'mongodb://localhost:27017'
+  });
+  const deliveryService = new DeliveryService(databaseService);
+
+  app.use(activityPub({
+    renderIndex: async () => {
+      return `
+        <!doctype html>
+        ${renderToString(<IndexPage />)}`;
+    },
+    renderEntity: async ({ entity, actor }) => {
+      return `
+        <!doctype html>
+        ${renderToString(<EntityPage entity={entity} actor={actor} />)}
+      `;
+    },
+    renderHome: async ({ actor }) => {
+      return `
+        <!doctype html>
+        ${renderToString(<HomePage actor={actor} />)}
+      `;
+    },
+  }, {
+    authenticationService,
+    databaseService,
+    deliveryService,
+  }));
+
+  app.listen(process.env.PORT ?? 3000, () => {
+    console.log('Running...');
+  });
+})();
+```
+
 ## General Philosophy
 
 This project aims to be spec-compliant.

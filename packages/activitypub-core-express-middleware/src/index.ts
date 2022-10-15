@@ -10,9 +10,8 @@ import {
   webfingerHandler,
 } from 'activitypub-core-endpoints';
 import { AP } from 'activitypub-core-types';
-import type { ServiceAccount } from 'firebase-admin';
 import { DeliveryService } from 'activitypub-core-delivery';
-import type { Database } from 'activitypub-core-types';
+import type { Database, Auth } from 'activitypub-core-types';
 import {
   CONTENT_TYPE_HEADER,
   HTML_CONTENT_TYPE,
@@ -37,18 +36,18 @@ export const activityPub =
       }) => Promise<string>;
     },
     {
-      serviceAccount,
+      authenticationService,
       databaseService,
       deliveryService,
     }: {
-      serviceAccount: ServiceAccount;
+      authenticationService: Auth;
       databaseService: Database;
       deliveryService: DeliveryService;
     },
   ) =>
   async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
     if (req.url === '/user' && req.method === 'POST') {
-      await userPostHandler(req, res, serviceAccount, databaseService);
+      await userPostHandler(req, res, authenticationService, databaseService);
       next();
       return;
     }
@@ -70,7 +69,7 @@ export const activityPub =
       const result = await inboxHandler(
         req,
         res,
-        serviceAccount,
+        authenticationService,
         databaseService,
         deliveryService,
       );
@@ -95,7 +94,7 @@ export const activityPub =
       const result = await outboxHandler(
         req,
         res,
-        serviceAccount,
+        authenticationService,
         databaseService,
         deliveryService,
       );
@@ -133,7 +132,7 @@ export const activityPub =
       const result = await homeGetHandler(
         req,
         res,
-        serviceAccount,
+        authenticationService,
         databaseService,
       );
 
@@ -170,7 +169,7 @@ export const activityPub =
       const result = await entityGetHandler(
         req,
         res,
-        serviceAccount,
+        authenticationService,
         databaseService,
       );
 

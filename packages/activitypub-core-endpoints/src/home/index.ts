@@ -1,15 +1,14 @@
 import { IncomingMessage } from 'http';
 import { AP } from 'activitypub-core-types';
-import { ServiceAccount } from 'firebase-admin';
 import { convertUrlsToStrings } from 'activitypub-core-utilities';
 import cookie from 'cookie';
 import type { ServerResponse } from 'http';
-import type { Database } from 'activitypub-core-types';
+import type { Database, Auth } from 'activitypub-core-types';
 
 export const homeGetHandler = async (
   req: IncomingMessage,
   res: ServerResponse,
-  serviceAccount: ServiceAccount,
+  authenticationService: Auth,
   databaseService: Database,
   setup?: (
     data: { props?: { actor?: AP.Actor } },
@@ -20,10 +19,11 @@ export const homeGetHandler = async (
   props?: { actor?: AP.Actor };
 }> => {
   const cookies = cookie.parse(req.headers.cookie ?? '');
-
-  const actor = await databaseService.getActorByToken(
-    cookies.__session ?? '',
-    serviceAccount,
+  
+  const actor = await databaseService.getActorByUserId(
+    await authenticationService.getUserIdByToken(
+      cookies.__session ?? '',
+    )
   );
 
   if (!actor) {

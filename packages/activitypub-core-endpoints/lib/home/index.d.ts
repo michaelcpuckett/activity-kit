@@ -1,9 +1,8 @@
 import { IncomingMessage } from 'http';
 import { AP } from 'activitypub-core-types';
-import { ServiceAccount } from 'firebase-admin';
 import type { ServerResponse } from 'http';
-import type { Database } from 'activitypub-core-types';
-export declare const homeGetHandler: (req: IncomingMessage, res: ServerResponse, serviceAccount: ServiceAccount, databaseService: Database, setup?: (data: {
+import type { Database, Auth } from 'activitypub-core-types';
+export declare const homeGetHandler: (req: IncomingMessage, res: ServerResponse, authenticationService: Auth, databaseService: Database, setup?: (data: {
     props?: {
         actor?: AP.Actor;
     };

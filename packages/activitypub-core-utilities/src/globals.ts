@@ -5,8 +5,6 @@ export const DB_NAME = process.env.AP_DB_NAME ?? 'activitypub';
 export const LOCAL_DOMAIN = `${PROTOCOL}//${LOCAL_HOSTNAME}${
   PORT === 80 ? '' : `:${PORT}`
 }`;
-export const MONGO_CLIENT_URL =
-  process.env.AP_MONGO_CLIENT_URL ?? 'mongodb://localhost:27017';
 export const CONTEXT = '@context';
 export const ACTIVITYSTREAMS_CONTEXT = 'https://www.w3.org/ns/activitystreams#';
 export const W3ID_SECURITY_CONTEXT = 'https://w3id.org/security/v1';

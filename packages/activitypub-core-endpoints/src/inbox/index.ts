@@ -9,14 +9,13 @@ import { handleLike } from './like';
 import { shouldForwardActivity } from './shouldForwardActivity';
 import { stringifyWithContext } from 'activitypub-core-utilities';
 import { parseStream } from 'activitypub-core-utilities';
-import type { Database } from 'activitypub-core-types';
+import type { Database, Auth } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
-import { ServiceAccount } from 'firebase-admin';
 
 export async function inboxHandler(
   req: IncomingMessage,
   res: ServerResponse,
-  serviceAccount: ServiceAccount,
+  authenticationService: Auth,
   databaseService: Database,
   deliveryService: DeliveryService,
 ) {
@@ -28,7 +27,7 @@ export async function inboxHandler(
     return await handlePost(req, res, databaseService, deliveryService);
   }
 
-  return await entityGetHandler(req, res, serviceAccount, databaseService);
+  return await entityGetHandler(req, res, authenticationService, databaseService);
 }
 
 async function handlePost(

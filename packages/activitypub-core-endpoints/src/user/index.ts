@@ -1,4 +1,3 @@
-import * as firebaseAdmin from 'firebase-admin';
 import { AppOptions, ServiceAccount } from 'firebase-admin';
 import {
   RESERVED_USERNAMES,
@@ -8,12 +7,12 @@ import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
 import { AP } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
-import type { Database } from 'activitypub-core-types';
+import type { Database, Auth } from 'activitypub-core-types';
 
 export async function userPostHandler(
   req: IncomingMessage,
   res: ServerResponse,
-  serviceAccount: ServiceAccount,
+  authenticationService: Auth,
   databaseService: Database,
   setup?: (
     actor: AP.Entity,
@@ -55,21 +54,10 @@ export async function userPostHandler(
     return;
   }
 
-  if (!firebaseAdmin.apps.length) {
-    const appOptions: AppOptions = {
-      credential: firebaseAdmin.credential.cert(serviceAccount),
-      projectId: 'socialweb-id',
-    };
-
-    firebaseAdmin.initializeApp(appOptions);
-  }
-
-  const user = await firebaseAdmin.auth().createUser({
+  const user = authenticationService.createUser({
     email,
-    emailVerified: false,
     password,
-    displayName: preferredUsername,
-    disabled: false,
+    preferredUsername,
   });
 
   const isBotCreated = !!(await databaseService.findOne('actor', {

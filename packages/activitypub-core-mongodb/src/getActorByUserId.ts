@@ -1,14 +1,10 @@
 import { MongoDatabase } from '.';
 import { AP } from 'activitypub-core-types';
-import { ServiceAccount } from 'firebase-admin';
 
-export async function getActorByToken(
+export async function getActorByUserId(
   this: MongoDatabase,
-  token: string,
-  credentials: ServiceAccount,
+  userId: string,
 ): Promise<AP.Actor | null> {
-  const userId = await this.getAuthenticatedUserIdByToken(token, credentials);
-
   if (!userId) {
     return null;
   }

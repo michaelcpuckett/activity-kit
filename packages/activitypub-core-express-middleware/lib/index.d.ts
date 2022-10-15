@@ -1,9 +1,8 @@
 import type { NextFunction } from 'express';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { AP } from 'activitypub-core-types';
-import type { ServiceAccount } from 'firebase-admin';
 import { DeliveryService } from 'activitypub-core-delivery';
-import type { Database } from 'activitypub-core-types';
+import type { Database, Auth } from 'activitypub-core-types';
 export declare const activityPub: ({ renderIndex, renderHome, renderEntity, }: {
     renderIndex: () => Promise<string>;
     renderHome: ({ actor }: {
@@ -13,8 +12,8 @@ export declare const activityPub: ({ renderIndex, renderHome, renderEntity, }: {
         entity: AP.Entity;
         actor?: AP.Actor;
     }) => Promise<string>;
-}, { serviceAccount, databaseService, deliveryService, }: {
-    serviceAccount: ServiceAccount;
+}, { authenticationService, databaseService, deliveryService, }: {
+    authenticationService: Auth;
     databaseService: Database;
     deliveryService: DeliveryService;
 }) => (req: IncomingMessage, res: ServerResponse, next: NextFunction) => Promise<void>;

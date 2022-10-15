@@ -1,5 +1,10 @@
 export * as AP from './activitypub';
 
+export type Auth = {
+  createUser: Function;
+  getUserIdByToken: Function;
+}
+
 export type Database = {
   expandCollection: Function;
   expandEntity: Function;
@@ -9,8 +14,7 @@ export type Database = {
   findOne: Function;
   findStringIdByValue: Function;
   findStringValueById: Function;
-  getActorByToken: Function;
-  getAuthenticatedUserIdByToken: Function;
+  getActorByUserId: Function;
   getCollectionItems: Function;
   insertItem: Function;
   removeItem: Function;
@@ -22,5 +26,7 @@ export type Database = {
 };
 
 export interface DatabaseService {
-  connect(): Promise<Database>;
+  connect(config?: {
+    [key: string]: unknown;
+  }): Promise<Database>;
 }

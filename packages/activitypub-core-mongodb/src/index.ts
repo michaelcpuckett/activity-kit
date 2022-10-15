@@ -1,4 +1,4 @@
-import { DB_NAME, MONGO_CLIENT_URL } from 'activitypub-core-utilities';
+import { DB_NAME } from 'activitypub-core-utilities';
 import fetch from 'isomorphic-fetch';
 import { Db, MongoClient } from 'mongodb';
 
@@ -20,9 +20,8 @@ import { expandEntity } from './expandEntity';
 import { getCollectionItems } from './getCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
-import { getAuthenticatedUserIdByToken } from './getAuthenticatedUserIdByToken';
-import { getActorByToken } from './getActorByToken';
-import type { Database, DatabaseService } from 'activitypub-core-types/index';
+import { getActorByUserId } from './getActorByUserId';
+import type { Database, DatabaseService } from 'activitypub-core-types';
 
 export class MongoDatabase implements Database {
   db: Db;
@@ -43,8 +42,7 @@ export class MongoDatabase implements Database {
 
   // Auth.
 
-  public getAuthenticatedUserIdByToken = getAuthenticatedUserIdByToken;
-  public getActorByToken = getActorByToken;
+  public getActorByUserId = getActorByUserId;
 
   // Save.
 
@@ -71,8 +69,12 @@ export class MongoDatabase implements Database {
 }
 
 export class MongoDatabaseService implements DatabaseService {
-  async connect() {
-    const client = new MongoClient(MONGO_CLIENT_URL, {
+  async connect({
+    mongoClientUrl,
+  }: {
+    mongoClientUrl: string;
+  }) {
+    const client = new MongoClient(mongoClientUrl, {
       minPoolSize: 10,
     });
     await client.connect();
