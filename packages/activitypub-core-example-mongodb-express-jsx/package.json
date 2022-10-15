@@ -25,6 +25,7 @@
     "activitypub-core-delivery": "^0.0.57",
     "activitypub-core-express-middleware": "^0.0.57",
     "activitypub-core-jsx-components": "^0.0.57",
+    "activitypub-core-mongodb": "^0.0.57",
     "activitypub-core-types": "^0.0.57",
     "activitypub-core-utilities": "^0.0.57",
     "firebase-admin": "^11.1.0",
