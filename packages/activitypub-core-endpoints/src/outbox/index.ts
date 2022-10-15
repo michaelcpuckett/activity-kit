@@ -35,7 +35,12 @@ export async function outboxHandler(
     return await handleOutboxPost(req, res, databaseService, deliveryService);
   }
 
-  return await entityGetHandler(req, res, authenticationService, databaseService);
+  return await entityGetHandler(
+    req,
+    res,
+    authenticationService,
+    databaseService,
+  );
 }
 
 async function handleOutboxPost(

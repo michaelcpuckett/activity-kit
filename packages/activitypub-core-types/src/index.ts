@@ -3,7 +3,7 @@ export * as AP from './activitypub';
 export type Auth = {
   createUser: Function;
   getUserIdByToken: Function;
-}
+};
 
 export type Database = {
   expandCollection: Function;
@@ -26,7 +26,5 @@ export type Database = {
 };
 
 export interface DatabaseService {
-  connect(config?: {
-    [key: string]: unknown;
-  }): Promise<Database>;
+  connect(config?: { [key: string]: unknown }): Promise<Database>;
 }

@@ -1,25 +1,34 @@
 import type { IncomingMessage, ServerResponse } from 'http';
-import { ACTIVITYSTREAMS_CONTENT_TYPE, CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE, JSON_CONTENT_TYPE, LOCAL_DOMAIN, LOCAL_HOSTNAME } from 'activitypub-core-utilities';
+import {
+  ACTIVITYSTREAMS_CONTENT_TYPE,
+  CONTENT_TYPE_HEADER,
+  HTML_CONTENT_TYPE,
+  JSON_CONTENT_TYPE,
+  LOCAL_DOMAIN,
+  LOCAL_HOSTNAME,
+} from 'activitypub-core-utilities';
 import * as queryString from 'query-string';
 import { Database } from 'activitypub-core-types';
 
-export async function webfingerHandler (
+export async function webfingerHandler(
   req: IncomingMessage,
   res: ServerResponse,
-  databaseService: Database
+  databaseService: Database,
 ) {
   if (!req || !req.url) {
     throw new Error('Bad request');
   }
 
-  const query = {...queryString.parse(new URL(req.url, LOCAL_DOMAIN).search)} as { [key: string]: string };
+  const query = {
+    ...queryString.parse(new URL(req.url, LOCAL_DOMAIN).search),
+  } as { [key: string]: string };
   const resource = query.resource ?? '';
   const [account] = resource.split('@');
   const [, username] = account.split(':');
 
   if (username) {
     const actor = await databaseService.findOne('actor', {
-      preferredUsername: username
+      preferredUsername: username,
     });
 
     if (actor) {
@@ -40,15 +49,14 @@ export async function webfingerHandler (
       };
 
       res.statusCode = 200;
-      res.setHeader(CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE)
+      res.setHeader(CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE);
       res.write(JSON.stringify(finger));
       res.end();
       return;
     }
   }
 
-  
   res.statusCode = 404;
   res.setHeader(CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE);
   res.end();
-};
+}

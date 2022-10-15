@@ -48,9 +48,7 @@ export async function entityGetHandler(
   const cookies = cookie.parse(request.headers.cookie ?? '');
 
   const actor = await databaseService.getActorByUserId(
-    await authenticationService.getUserIdByToken(
-      cookies.__session ?? '',
-    )
+    await authenticationService.getUserIdByToken(cookies.__session ?? ''),
   );
 
   // TODO authorize foundEntity posts by actor.

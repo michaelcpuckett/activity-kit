@@ -6,7 +6,7 @@ import { getUserIdByToken } from './getUserIdByToken';
 
 export class FirebaseAuthentication implements Auth {
   appOptions: AppOptions;
-  
+
   constructor(serviceAccount: ServiceAccount, projectId: string) {
     this.appOptions = {
       credential: firebaseAdmin.credential.cert(serviceAccount),

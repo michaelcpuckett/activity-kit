@@ -15,7 +15,6 @@ frequently.
 Canonical example using Firebase Auth, Express, MongoDB, JSX:
 
 ```ts
-
 (async () => {
   const app = express();
   const authenticationService = new FirebaseAuthentication({
@@ -25,33 +24,38 @@ Canonical example using Firebase Auth, Express, MongoDB, JSX:
     },
   });
   const databaseService = await new MongoDatabaseService().connect({
-    mongoClientUrl: 'mongodb://localhost:27017'
+    mongoClientUrl: 'mongodb://localhost:27017',
   });
   const deliveryService = new DeliveryService(databaseService);
 
-  app.use(activityPub({
-    renderIndex: async () => {
-      return `
+  app.use(
+    activityPub(
+      {
+        renderIndex: async () => {
+          return `
         <!doctype html>
         ${renderToString(<IndexPage />)}`;
-    },
-    renderEntity: async ({ entity, actor }) => {
-      return `
+        },
+        renderEntity: async ({ entity, actor }) => {
+          return `
         <!doctype html>
         ${renderToString(<EntityPage entity={entity} actor={actor} />)}
       `;
-    },
-    renderHome: async ({ actor }) => {
-      return `
+        },
+        renderHome: async ({ actor }) => {
+          return `
         <!doctype html>
         ${renderToString(<HomePage actor={actor} />)}
       `;
-    },
-  }, {
-    authenticationService,
-    databaseService,
-    deliveryService,
-  }));
+        },
+      },
+      {
+        authenticationService,
+        databaseService,
+        deliveryService,
+      },
+    ),
+  );
 
   app.listen(process.env.PORT ?? 3000, () => {
     console.log('Running...');
@@ -116,26 +120,26 @@ used, etc. Plugins that conform to a specific interface can be mixed and matched
 
 The logic layer that get included in all projects include these packages:
 
-* `activitypub-core-types`
-    * The Activity Vocabulary converted to TypeScript types.
-* `activitypub-core-utilities`
-    * Common functions with no dependencies on packages from upper layers.
-* `activitypub-core-endpoints`
-    * The logic for carrying out the Client-to-Server ActivityPub protocol.
-* `activitypub-core-delivery`
-    * The logic specific to the Server-to-Server ActivityPub protocol (federation).
+- `activitypub-core-types`
+  - The Activity Vocabulary converted to TypeScript types.
+- `activitypub-core-utilities`
+  - Common functions with no dependencies on packages from upper layers.
+- `activitypub-core-endpoints`
+  - The logic for carrying out the Client-to-Server ActivityPub protocol.
+- `activitypub-core-delivery`
+  - The logic specific to the Server-to-Server ActivityPub protocol (federation).
 
 ### Database Layer
 
 Currently this project comes with:
 
-* `activitypub-core-mongodb`
+- `activitypub-core-mongodb`
 
 ### Authentication Layer
 
 Current this project comes with:
 
-* `activitypub-core-firebase-auth`
+- `activitypub-core-firebase-auth`
 
 ### Storage Layer
 
@@ -145,10 +149,10 @@ TBD.
 
 Currently this project comes with:
 
-* `activitypub-core-express-middleware`
+- `activitypub-core-express-middleware`
 
 ### Rendering Layer
 
 Currently this project comes with:
 
-* `activitypub-core-jsx-components`
+- `activitypub-core-jsx-components`

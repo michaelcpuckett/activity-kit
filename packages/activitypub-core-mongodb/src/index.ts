@@ -69,11 +69,7 @@ export class MongoDatabase implements Database {
 }
 
 export class MongoDatabaseService implements DatabaseService {
-  async connect({
-    mongoClientUrl,
-  }: {
-    mongoClientUrl: string;
-  }) {
+  async connect({ mongoClientUrl }: { mongoClientUrl: string }) {
     const client = new MongoClient(mongoClientUrl, {
       minPoolSize: 10,
     });

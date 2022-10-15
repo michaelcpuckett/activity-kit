@@ -30,13 +30,15 @@ async function webfingerHandler(req, res, databaseService) {
     if (!req || !req.url) {
         throw new Error('Bad request');
     }
-    const query = { ...queryString.parse(new URL(req.url, activitypub_core_utilities_1.LOCAL_DOMAIN).search) };
+    const query = {
+        ...queryString.parse(new URL(req.url, activitypub_core_utilities_1.LOCAL_DOMAIN).search),
+    };
     const resource = query.resource ?? '';
     const [account] = resource.split('@');
     const [, username] = account.split(':');
     if (username) {
         const actor = await databaseService.findOne('actor', {
-            preferredUsername: username
+            preferredUsername: username,
         });
         if (actor) {
             const finger = {
@@ -66,5 +68,4 @@ async function webfingerHandler(req, res, databaseService) {
     res.end();
 }
 exports.webfingerHandler = webfingerHandler;
-;
 //# sourceMappingURL=index.js.map

@@ -19,11 +19,9 @@ export const homeGetHandler = async (
   props?: { actor?: AP.Actor };
 }> => {
   const cookies = cookie.parse(req.headers.cookie ?? '');
-  
+
   const actor = await databaseService.getActorByUserId(
-    await authenticationService.getUserIdByToken(
-      cookies.__session ?? '',
-    )
+    await authenticationService.getUserIdByToken(cookies.__session ?? ''),
   );
 
   if (!actor) {

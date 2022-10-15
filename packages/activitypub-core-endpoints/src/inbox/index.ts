@@ -27,7 +27,12 @@ export async function inboxHandler(
     return await handlePost(req, res, databaseService, deliveryService);
   }
 
-  return await entityGetHandler(req, res, authenticationService, databaseService);
+  return await entityGetHandler(
+    req,
+    res,
+    authenticationService,
+    databaseService,
+  );
 }
 
 async function handlePost(
