@@ -18,7 +18,7 @@
     "ts-node": "^10.9.1"
   },
   "scripts": {
-    "tsc": "tsc --project tsconfig.json",
+    "build": "tsc --project tsconfig.json",
     "dev": "ts-node ./src/index.tsx",
     "server": "node ./lib/index.js"
   },

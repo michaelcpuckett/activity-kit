@@ -13,7 +13,7 @@
     "lib"
   ],
   "scripts": {
-    "tsc": "tsc --project tsconfig.json",
+    "build": "tsc --project tsconfig.json",
     "dev": "ts-node ./src/index.ts",
     "format": "prettier --config .prettierrc \"**/*.ts\" --write"
   },
