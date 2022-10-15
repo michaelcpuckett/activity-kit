@@ -29,7 +29,7 @@ async function userPostHandler(req, res, authenticationService, databaseService,
         res.end();
         return;
     }
-    const user = authenticationService.createUser({
+    const user = await authenticationService.createUser({
         email,
         password,
         preferredUsername,

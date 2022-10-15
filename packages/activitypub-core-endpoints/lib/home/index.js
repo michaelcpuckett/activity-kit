@@ -10,6 +10,7 @@ const cookie_1 = __importDefault(require("cookie"));
 const homeGetHandler = async (req, res, authenticationService, databaseService, setup) => {
     const cookies = cookie_1.default.parse(req.headers.cookie ?? '');
     const actor = await databaseService.getActorByUserId(await authenticationService.getUserIdByToken(cookies.__session ?? ''));
+    console.log(actor);
     if (!actor) {
         return {
             redirect: {

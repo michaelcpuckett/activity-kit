@@ -54,7 +54,7 @@ export async function userPostHandler(
     return;
   }
 
-  const user = authenticationService.createUser({
+  const user = await authenticationService.createUser({
     email,
     password,
     preferredUsername,
