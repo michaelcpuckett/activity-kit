@@ -31,7 +31,6 @@ async function webfingerHandler(req, res, databaseService) {
         throw new Error('Bad request');
     }
     const query = { ...queryString.parse(new URL(req.url, activitypub_core_utilities_1.LOCAL_DOMAIN).search) };
-    console.log(query);
     const resource = query.resource ?? '';
     const [account] = resource.split('@');
     const [, username] = account.split(':');

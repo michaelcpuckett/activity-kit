@@ -3,7 +3,7 @@ import type { IncomingMessage, ServerResponse } from 'http';
 import { AP } from 'activitypub-core-types';
 import type { ServiceAccount } from 'firebase-admin';
 import { DeliveryService } from 'activitypub-core-delivery';
-import type { Database } from 'activitypub-core-types/index';
+import type { Database } from 'activitypub-core-types';
 export declare const activityPub: ({ renderIndex, renderHome, renderEntity, }: {
     renderIndex: () => Promise<string>;
     renderHome: ({ actor }: {
