@@ -31,5 +31,6 @@
     "firebase-admin": "^11.1.0",
     "react": "^16.14.0",
     "react-server": "^0.8.1"
-  }
+  },
+  "gitHead": "e80e9fb060465142aa9e3a9e8de30056275b72a4"
 }

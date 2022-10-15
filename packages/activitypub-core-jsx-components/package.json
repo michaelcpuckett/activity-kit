@@ -29,5 +29,6 @@
     "activitypub-core-utilities": "^0.0.55",
     "firebase": "^9.12.0",
     "react": "^18.2.0"
-  }
+  },
+  "gitHead": "e80e9fb060465142aa9e3a9e8de30056275b72a4"
 }
