@@ -8,7 +8,7 @@ import {
   inboxHandler,
   sharedInboxHandler,
   webfingerHandler,
-} from 'activitypub-core';
+} from 'activitypub-core-endpoints';
 import { AP } from 'activitypub-core-types';
 import type { ServiceAccount } from 'firebase-admin';
 import { DeliveryService } from 'activitypub-core-delivery';

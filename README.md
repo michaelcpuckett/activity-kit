@@ -1,4 +1,4 @@
-# activitypub-core-lerna
+# activitypub-core
 
 This is a Lerna project that holds packages related to an implementation of the
 ActivityPub protocol specification.
