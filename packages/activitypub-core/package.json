@@ -31,6 +31,7 @@
     "jsonld": "^8.1.0",
     "mongodb": "^4.10.0",
     "next": "^12.3.1",
+    "query-string": "^7.1.1",
     "superjson": "^1.10.1"
   },
   "devDependencies": {

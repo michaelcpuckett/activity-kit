@@ -7,6 +7,7 @@ import {
   outboxHandler,
   inboxHandler,
   sharedInboxHandler,
+  webfingerHandler,
 } from 'activitypub-core';
 import { AP } from 'activitypub-core-types';
 import type { ServiceAccount } from 'firebase-admin';
@@ -48,6 +49,13 @@ export const activityPub =
   async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
     if (req.url === '/user' && req.method === 'POST') {
       await userPostHandler(req, res, serviceAccount, databaseService);
+      next();
+      return;
+    }
+
+    if (req.url.startsWith('/.well-known/webfinger')) {
+      await webfingerHandler(req, res, databaseService);
+      console.log('???')
       next();
       return;
     }

@@ -9,6 +9,12 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { serviceAccoun
         next();
         return;
     }
+    if (req.url.startsWith('/.well-known/webfinger')) {
+        await (0, activitypub_core_1.webfingerHandler)(req, res, databaseService);
+        console.log('???');
+        next();
+        return;
+    }
     if (req.url === '/sharedInbox' && req.method === 'POST') {
         await (0, activitypub_core_1.sharedInboxHandler)(req, res, databaseService, deliveryService);
         next();

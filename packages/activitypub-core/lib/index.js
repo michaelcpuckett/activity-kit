@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sharedInboxHandler = exports.inboxHandler = exports.outboxHandler = exports.entityGetHandler = exports.homeGetHandler = exports.userPostHandler = void 0;
+exports.webfingerHandler = exports.sharedInboxHandler = exports.inboxHandler = exports.outboxHandler = exports.entityGetHandler = exports.homeGetHandler = exports.userPostHandler = void 0;
 var user_1 = require("./user");
 Object.defineProperty(exports, "userPostHandler", { enumerable: true, get: function () { return user_1.userPostHandler; } });
 var home_1 = require("./home");
@@ -13,4 +13,6 @@ var inbox_1 = require("./inbox");
 Object.defineProperty(exports, "inboxHandler", { enumerable: true, get: function () { return inbox_1.inboxHandler; } });
 var sharedInbox_1 = require("./sharedInbox");
 Object.defineProperty(exports, "sharedInboxHandler", { enumerable: true, get: function () { return sharedInbox_1.sharedInboxHandler; } });
+var webfinger_1 = require("./webfinger");
+Object.defineProperty(exports, "webfingerHandler", { enumerable: true, get: function () { return webfinger_1.webfingerHandler; } });
 //# sourceMappingURL=index.js.map
