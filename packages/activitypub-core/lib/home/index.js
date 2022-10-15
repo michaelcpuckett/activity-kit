@@ -21,11 +21,15 @@ const homeGetHandler = async (req, res, serviceAccount, databaseService, setup) 
     if (!actor.inbox || !actor.outbox) {
         throw new Error('Bad actor.');
     }
-    const [inbox, outbox, followers, following,] = await Promise.all([
+    const [inbox, outbox, followers, following] = await Promise.all([
         databaseService.expandCollection(actor.inbox),
         databaseService.expandCollection(actor.outbox),
-        ...actor.followers ? [databaseService.expandCollection(actor.followers)] : [],
-        ...actor.following ? [databaseService.expandCollection(actor.following)] : [],
+        ...(actor.followers
+            ? [databaseService.expandCollection(actor.followers)]
+            : []),
+        ...(actor.following
+            ? [databaseService.expandCollection(actor.following)]
+            : []),
     ]);
     if (!inbox || !outbox) {
         throw new Error('Bad actor.');
@@ -64,7 +68,7 @@ const homeGetHandler = async (req, res, serviceAccount, databaseService, setup) 
     let data = {
         props: {
             actor,
-        }
+        },
     };
     if (setup) {
         data = await setup(data, databaseService);

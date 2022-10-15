@@ -1,3 +1,3 @@
 export declare type StringReferenceMap = {
-  [key: string]: string;
+    [key: string]: string;
 };

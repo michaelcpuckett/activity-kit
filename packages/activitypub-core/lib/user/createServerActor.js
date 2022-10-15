@@ -8,7 +8,7 @@ async function createServerActor(databaseService) {
     const { publicKey: botPublicKey, privateKey: botPrivateKey } = await (0, activitypub_core_utilities_2.generateKeyPair)();
     const publishedDate = new Date();
     const botInbox = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${activitypub_core_utilities_1.SERVER_ACTOR_ID}/inbox`),
         url: new URL(`${activitypub_core_utilities_1.SERVER_ACTOR_ID}/inbox`),
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
@@ -17,7 +17,7 @@ async function createServerActor(databaseService) {
         published: publishedDate,
     };
     const botOutbox = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${activitypub_core_utilities_1.SERVER_ACTOR_ID}/outbox`),
         url: new URL(`${activitypub_core_utilities_1.SERVER_ACTOR_ID}/outbox`),
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
@@ -26,7 +26,7 @@ async function createServerActor(databaseService) {
         published: publishedDate,
     };
     const botFollowers = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${activitypub_core_utilities_1.SERVER_ACTOR_ID}/followers`),
         url: new URL(`${activitypub_core_utilities_1.SERVER_ACTOR_ID}/followers`),
         name: 'Followers',
@@ -36,7 +36,7 @@ async function createServerActor(databaseService) {
         published: publishedDate,
     };
     const botFollowing = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${activitypub_core_utilities_1.SERVER_ACTOR_ID}/following`),
         url: new URL(`${activitypub_core_utilities_1.SERVER_ACTOR_ID}/following`),
         name: 'Following',
@@ -46,7 +46,7 @@ async function createServerActor(databaseService) {
         published: publishedDate,
     };
     const botActor = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(activitypub_core_utilities_1.SERVER_ACTOR_ID),
         url: new URL(activitypub_core_utilities_1.SERVER_ACTOR_ID),
         type: activitypub_core_types_1.AP.ActorTypes.APPLICATION,

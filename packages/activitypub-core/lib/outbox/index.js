@@ -91,7 +91,7 @@ async function handleOutboxPost(req, res, databaseService, deliveryService) {
             const publishedDate = new Date();
             activityToSave.published = publishedDate;
             const activityReplies = {
-                "@context": new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
+                '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
                 id: new URL(`${activityToSaveId.toString()}/replies`),
                 url: new URL(`${activityToSaveId.toString()}/replies`),
                 name: 'Replies',
@@ -101,7 +101,7 @@ async function handleOutboxPost(req, res, databaseService, deliveryService) {
                 published: publishedDate,
             };
             const activityLikes = {
-                "@context": new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
+                '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
                 id: new URL(`${activityToSaveId.toString()}/likes`),
                 url: new URL(`${activityToSaveId.toString()}/likes`),
                 name: 'Likes',
@@ -111,7 +111,7 @@ async function handleOutboxPost(req, res, databaseService, deliveryService) {
                 published: publishedDate,
             };
             const activityShares = {
-                "@context": new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
+                '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
                 id: new URL(`${activityToSaveId.toString()}/shares`),
                 url: new URL(`${activityToSaveId.toString()}/shares`),
                 name: 'Shares',

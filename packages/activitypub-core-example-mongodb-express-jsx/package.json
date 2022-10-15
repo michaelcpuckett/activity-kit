@@ -19,8 +19,7 @@
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
-    "dev": "ts-node ./src/index.tsx",
-    "server": "node ./lib/index.js"
+    "serve": "ts-node ./src/index.tsx"
   },
   "dependencies": {
     "activitypub-core-delivery": "^0.0.55",

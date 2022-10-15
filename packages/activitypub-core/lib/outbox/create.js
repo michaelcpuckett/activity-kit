@@ -22,7 +22,7 @@ async function handleCreate(activity, databaseService) {
     }
     const publishedDate = new Date();
     const objectReplies = {
-        "@context": new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
+        '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
         id: new URL(`${object.id.toString()}/replies`),
         url: new URL(`${object.id.toString()}/replies`),
         name: 'Replies',
@@ -32,7 +32,7 @@ async function handleCreate(activity, databaseService) {
         published: publishedDate,
     };
     const objectLikes = {
-        "@context": new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
+        '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
         id: new URL(`${object.id.toString()}/likes`),
         url: new URL(`${object.id.toString()}/likes`),
         name: 'Likes',
@@ -42,7 +42,7 @@ async function handleCreate(activity, databaseService) {
         published: publishedDate,
     };
     const objectShares = {
-        "@context": new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
+        '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
         id: new URL(`${object.id.toString()}/shares`),
         url: new URL(`${object.id.toString()}/shares`),
         name: 'Shares',

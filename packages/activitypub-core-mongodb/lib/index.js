@@ -49,7 +49,6 @@ class MongoDatabase {
     expandCollection = expandCollection_1.expandCollection;
 }
 exports.MongoDatabase = MongoDatabase;
-;
 class MongoDatabaseService {
     async connect() {
         const client = new mongodb_1.MongoClient(activitypub_core_utilities_1.MONGO_CLIENT_URL, {

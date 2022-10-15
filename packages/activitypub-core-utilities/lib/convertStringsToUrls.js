@@ -27,7 +27,7 @@ function convertStringsToUrls(originalEntity) {
             continue;
         }
         else if (Array.isArray(value)) {
-            entity[key] = value.map(item => {
+            entity[key] = value.map((item) => {
                 if (typeof item === 'string') {
                     try {
                         return new URL(item);

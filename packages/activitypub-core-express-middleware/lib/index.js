@@ -26,7 +26,9 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { serviceAccoun
     }
     if (req.url.startsWith('/actor/') && req.url.endsWith('/outbox')) {
         const result = await (0, activitypub_core_1.outboxHandler)(req, res, serviceAccount, databaseService, deliveryService);
-        if (result.props && Object.keys(result.props).length && 'entity' in result.props) {
+        if (result.props &&
+            Object.keys(result.props).length &&
+            'entity' in result.props) {
             res.statusCode = 200;
             res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);
             res.write(await renderEntity({
@@ -64,7 +66,9 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { serviceAccoun
         res.end();
         return;
     }
-    if (req.url.startsWith('/object/') || req.url.startsWith('/actor/') || req.url.startsWith('/activity/')) {
+    if (req.url.startsWith('/object/') ||
+        req.url.startsWith('/actor/') ||
+        req.url.startsWith('/activity/')) {
         const result = await (0, activitypub_core_1.entityGetHandler)(req, res, serviceAccount, databaseService);
         if (result.props && Object.keys(result.props).length) {
             res.statusCode = 200;

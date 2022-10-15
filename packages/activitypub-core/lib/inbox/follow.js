@@ -42,7 +42,7 @@ async function handleFollow(activity, databaseService, deliveryService) {
     const acceptActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/activity/${(0, activitypub_core_utilities_2.getGuid)()}`;
     const publishedDate = new Date();
     const acceptActivityReplies = {
-        "@context": new URL(activitypub_core_utilities_3.ACTIVITYSTREAMS_CONTEXT),
+        '@context': new URL(activitypub_core_utilities_3.ACTIVITYSTREAMS_CONTEXT),
         id: new URL(`${acceptActivityId}/replies`),
         url: new URL(`${acceptActivityId}/replies`),
         name: 'Replies',
@@ -52,7 +52,7 @@ async function handleFollow(activity, databaseService, deliveryService) {
         published: publishedDate,
     };
     const acceptActivityLikes = {
-        "@context": new URL(activitypub_core_utilities_3.ACTIVITYSTREAMS_CONTEXT),
+        '@context': new URL(activitypub_core_utilities_3.ACTIVITYSTREAMS_CONTEXT),
         id: new URL(`${acceptActivityId}/likes`),
         url: new URL(`${acceptActivityId}/likes`),
         name: 'Likes',
@@ -62,7 +62,7 @@ async function handleFollow(activity, databaseService, deliveryService) {
         published: publishedDate,
     };
     const acceptActivityShares = {
-        "@context": new URL(activitypub_core_utilities_3.ACTIVITYSTREAMS_CONTEXT),
+        '@context': new URL(activitypub_core_utilities_3.ACTIVITYSTREAMS_CONTEXT),
         id: new URL(`${acceptActivityId}/shares`),
         url: new URL(`${acceptActivityId}/shares`),
         name: 'Likes',

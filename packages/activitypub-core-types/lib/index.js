@@ -25,5 +25,4 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AP = void 0;
 exports.AP = __importStar(require("./activitypub"));
-;
 //# sourceMappingURL=index.js.map

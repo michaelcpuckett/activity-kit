@@ -30,10 +30,12 @@ async function getCollectionItems(entity) {
     for (const item of collectionItems) {
         if (item instanceof URL) {
             const foundEntity = await this.queryById(item);
-            result.push(foundEntity ? await this.expandEntity(foundEntity) : {
-                type: activitypub_core_types_1.AP.CoreObjectTypes.TOMBSTONE,
-                content: 'Not found',
-            });
+            result.push(foundEntity
+                ? await this.expandEntity(foundEntity)
+                : {
+                    type: activitypub_core_types_1.AP.CoreObjectTypes.TOMBSTONE,
+                    content: 'Not found',
+                });
         }
         else if (!Array.isArray(item) && item.id instanceof URL) {
             const foundEntity = await this.queryById(item.id);

@@ -9,6 +9,8 @@
     "ts-node": "^10.9.1"
   },
   "scripts": {
-    "package": "lerna exec npm publish"
+    "publish": "lerna publish",
+    "package": "lerna exec npm publish",
+    "build": "lerna run build"
   }
 }

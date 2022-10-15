@@ -10,7 +10,7 @@ async function createUserActor(databaseService, user) {
     const id = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/actor/${user.preferredUsername}`;
     const publishedDate = new Date();
     const userInbox = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${id}/inbox`),
         url: new URL(`${id}/inbox`),
         name: 'Inbox',
@@ -20,7 +20,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const userOutbox = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${id}/outbox`),
         url: new URL(`${id}/outbox`),
         name: 'Outbox',
@@ -30,7 +30,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const userFollowers = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${id}/followers`),
         url: new URL(`${id}/followers`),
         name: 'Followers',
@@ -40,7 +40,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const userFollowing = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${id}/following`),
         url: new URL(`${id}/following`),
         name: 'Following',
@@ -50,7 +50,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const userLiked = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${id}/liked`),
         url: new URL(`${id}/liked`),
         name: 'Liked',
@@ -60,7 +60,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const userShared = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${id}/shared`),
         url: new URL(`${id}/shared`),
         name: 'Shared',
@@ -70,7 +70,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const userBlocked = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${id}/blocked`),
         url: new URL(`${id}/blocked`),
         name: 'Blocked',
@@ -80,7 +80,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const userGroups = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${id}/groups`),
         url: new URL(`${id}/groups`),
         name: 'Groups',
@@ -90,7 +90,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const userReplies = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${id}/replies`),
         url: new URL(`${id}/replies`),
         name: 'Replies',
@@ -100,7 +100,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const userLikes = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${id}/likes`),
         url: new URL(`${id}/likes`),
         name: 'Likes',
@@ -110,7 +110,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const userShares = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${id}/shares`),
         url: new URL(`${id}/shares`),
         name: 'Shares',
@@ -120,7 +120,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const userBookmarks = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${id}/bookmarks`),
         url: new URL(`${id}/bookmarks`),
         name: 'Bookmarks',
@@ -130,7 +130,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const userActor = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(id),
         url: new URL(id),
         type: activitypub_core_types_1.AP.ActorTypes.PERSON,
@@ -144,12 +144,7 @@ async function createUserActor(databaseService, user) {
         replies: userReplies.id,
         likes: userLikes.id,
         shares: userShares.id,
-        streams: [
-            userShared.id,
-            userBlocked.id,
-            userGroups.id,
-            userBookmarks.id
-        ],
+        streams: [userShared.id, userBlocked.id, userGroups.id, userBookmarks.id],
         endpoints: {
             sharedInbox: new URL(activitypub_core_utilities_3.SHARED_INBOX_ID),
         },
@@ -162,7 +157,7 @@ async function createUserActor(databaseService, user) {
     };
     const createActorActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/activity/${(0, activitypub_core_utilities_1.getGuid)()}`;
     const createActorActivityReplies = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${createActorActivityId}/replies`),
         url: new URL(`${createActorActivityId}/replies`),
         name: 'Replies',
@@ -172,7 +167,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const createActorActivityLikes = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${createActorActivityId}/likes`),
         url: new URL(`${createActorActivityId}/likes`),
         name: 'Likes',
@@ -182,7 +177,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const createActorActivityShares = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${createActorActivityId}/shares`),
         url: new URL(`${createActorActivityId}/shares`),
         name: 'Shares',
@@ -192,7 +187,7 @@ async function createUserActor(databaseService, user) {
         published: publishedDate,
     };
     const createActorActivity = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(createActorActivityId),
         url: new URL(createActorActivityId),
         type: activitypub_core_types_1.AP.ActivityTypes.CREATE,
@@ -227,7 +222,7 @@ async function createUserActor(databaseService, user) {
     ]);
     const friendsGroupId = `${id}/groups/friends`;
     const friendsGroupInbox = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${friendsGroupId}/inbox`),
         url: new URL(`${friendsGroupId}/inbox`),
         name: 'Inbox',
@@ -236,7 +231,7 @@ async function createUserActor(databaseService, user) {
         orderedItems: [],
     };
     const friendsGroupOutbox = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${friendsGroupId}/outbox`),
         url: new URL(`${friendsGroupId}/outbox`),
         name: 'Outbox',
@@ -245,7 +240,7 @@ async function createUserActor(databaseService, user) {
         orderedItems: [],
     };
     const friendsGroupReplies = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${friendsGroupId}/likes`),
         url: new URL(`${friendsGroupId}/likes`),
         name: 'Likes',
@@ -254,7 +249,7 @@ async function createUserActor(databaseService, user) {
         items: [],
     };
     const friendsGroupLikes = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${friendsGroupId}/likes`),
         url: new URL(`${friendsGroupId}/likes`),
         name: 'Likes',
@@ -263,7 +258,7 @@ async function createUserActor(databaseService, user) {
         orderedItems: [],
     };
     const friendsGroupShares = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${friendsGroupId}/shares`),
         url: new URL(`${friendsGroupId}/shares`),
         name: 'Shares',
@@ -272,7 +267,7 @@ async function createUserActor(databaseService, user) {
         orderedItems: [],
     };
     const friendsGroupMembers = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${friendsGroupId}/members`),
         url: new URL(`${friendsGroupId}/members`),
         name: 'Members',
@@ -281,7 +276,7 @@ async function createUserActor(databaseService, user) {
         items: [],
     };
     const friendsGroupActor = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(friendsGroupId),
         url: new URL(friendsGroupId),
         type: activitypub_core_types_1.AP.ActorTypes.GROUP,
@@ -301,7 +296,7 @@ async function createUserActor(databaseService, user) {
     };
     const createFriendsGroupActorActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/activity/${(0, activitypub_core_utilities_1.getGuid)()}`;
     const createFriendsGroupActivityReplies = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${createFriendsGroupActorActivityId}/replies`),
         url: new URL(`${createFriendsGroupActorActivityId}/replies`),
         name: 'Replies',
@@ -310,7 +305,7 @@ async function createUserActor(databaseService, user) {
         items: [],
     };
     const createFriendsGroupActivityLikes = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${createFriendsGroupActorActivityId}/likes`),
         url: new URL(`${createFriendsGroupActorActivityId}/likes`),
         name: 'Likes',
@@ -319,7 +314,7 @@ async function createUserActor(databaseService, user) {
         orderedItems: [],
     };
     const createFriendsGroupActivityShares = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${createFriendsGroupActorActivityId}/shares`),
         url: new URL(`${createFriendsGroupActorActivityId}/shares`),
         name: 'Shares',
@@ -328,7 +323,7 @@ async function createUserActor(databaseService, user) {
         orderedItems: [],
     };
     const createFriendsGroupActorActivity = {
-        "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(createFriendsGroupActorActivityId),
         url: new URL(createFriendsGroupActorActivityId),
         type: activitypub_core_types_1.AP.ActivityTypes.CREATE,

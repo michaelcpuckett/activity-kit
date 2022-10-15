@@ -48,7 +48,7 @@ async function userPostHandler(req, res, serviceAccount, databaseService, setup)
     if (isUsernameTaken || activitypub_core_utilities_1.RESERVED_USERNAMES.includes(preferredUsername)) {
         res.statusCode = 409;
         res.write(JSON.stringify({
-            error: 'Username Taken.'
+            error: 'Username Taken.',
         }));
         res.end();
         return;
@@ -89,11 +89,10 @@ async function userPostHandler(req, res, serviceAccount, databaseService, setup)
     }
     res.statusCode = 200;
     res.write(JSON.stringify({
-        success: true
+        success: true,
     }));
     res.end();
     return;
 }
 exports.userPostHandler = userPostHandler;
-;
 //# sourceMappingURL=index.js.map

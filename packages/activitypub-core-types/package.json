@@ -15,9 +15,13 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "ts-node ./src/index.ts",
-    "format": "prettier --config .prettierrc \"**/*.ts\" --write"
+    "format": "prettier --config .prettierrc \"**/*.ts\" --write",
+    "lint": "eslint activitypub/**/*.ts"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "eslint": "^8.25.0",
     "prettier": "^2.7.1",
     "ts-node": "^10.9.1"
   },
