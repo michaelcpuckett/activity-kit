@@ -13,7 +13,7 @@ export async function broadcast(
   activity: AP.Activity,
   actor: AP.Actor,
 ) {
-  const publicActivity = addContext(cleanProps(compressEntity(activity)));
+  const publicActivity = addContext(cleanProps(activity));
 
   if (!('actor' in publicActivity)) {
     throw new Error('Not an activity?');

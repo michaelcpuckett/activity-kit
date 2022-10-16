@@ -85,7 +85,7 @@ async function entityGetHandler(request, response, authenticationService, databa
         }
         response.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);
         response.statusCode = 200;
-        response.write((0, activitypub_core_utilities_4.stringifyWithContext)((0, activitypub_core_utilities_1.compressEntity)(entity)));
+        response.write((0, activitypub_core_utilities_4.stringifyWithContext)(entity));
         response.end();
         return {
             props: {},

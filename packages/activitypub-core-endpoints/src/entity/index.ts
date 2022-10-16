@@ -139,7 +139,7 @@ export async function entityGetHandler(
 
     response.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
     response.statusCode = 200;
-    response.write(stringifyWithContext(compressEntity(entity)));
+    response.write(stringifyWithContext(entity));
     response.end();
 
     return {
