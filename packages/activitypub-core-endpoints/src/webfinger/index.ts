@@ -20,6 +20,7 @@ export async function webfingerHandler(
   }
 
   console.log(new URL(req.url, LOCAL_DOMAIN));
+  console.log(req.headers.accept);
 
   const query = {
     ...queryString.parse(new URL(req.url, LOCAL_DOMAIN).search),
@@ -59,6 +60,5 @@ export async function webfingerHandler(
   }
 
   res.statusCode = 404;
-  res.setHeader(CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE);
   res.end();
 }

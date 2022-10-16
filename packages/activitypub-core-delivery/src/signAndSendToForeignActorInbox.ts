@@ -40,7 +40,7 @@ export async function signAndSendToForeignActorInbox(
   console.log(JSON.parse(stringifiedActivity));
 
   // send
-  const result = await this.fetch(foreignActorInbox.toString(), {
+  return await this.fetch(foreignActorInbox.toString(), {
     method: 'post',
     body: stringifiedActivity,
     headers: {
@@ -51,9 +51,8 @@ export async function signAndSendToForeignActorInbox(
       Digest: `SHA-256=${digestHash}`,
       Signature: signatureHeader,
     },
-  }).then(res => res.text());
-
-  console.log(result);
-
-  return result;
+  }).then(res => {
+    console.log(res.text())
+    return res;
+  });
 }
