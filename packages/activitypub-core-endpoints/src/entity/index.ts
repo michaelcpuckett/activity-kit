@@ -1,6 +1,7 @@
 import { AP } from 'activitypub-core-types';
 import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
+  compressEntity,
   CONTENT_TYPE_HEADER,
   JSON_CONTENT_TYPE,
   LINKED_DATA_CONTENT_TYPE,
@@ -138,7 +139,7 @@ export async function entityGetHandler(
 
     response.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
     response.statusCode = 200;
-    response.write(stringifyWithContext(entity));
+    response.write(stringifyWithContext(compressEntity(entity)));
     response.end();
 
     return {

@@ -58,8 +58,8 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity
             Digest: `SHA-256=${digestHash}`,
             Signature: signatureHeader,
         },
-    }).then(res => {
-        console.log(res.text());
+    }).then(async (res) => {
+        console.log(await res.text());
         return res;
     });
 }
