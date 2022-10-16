@@ -31,7 +31,6 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity
     const foreignDomain = foreignActorInbox.hostname;
     const foreignPathName = foreignActorInbox.pathname;
     const stringifiedActivity = JSON.stringify((0, activitypub_core_utilities_1.convertUrlsToStrings)(activity));
-    console.log({ privateKey });
     const digestHash = crypto
         .createHash('sha256')
         .update(stringifiedActivity)
@@ -47,7 +46,7 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity
     if (typeof this.fetch !== 'function') {
         return null;
     }
-    console.log(JSON.parse(stringifiedActivity));
+    console.log(signatureHeader);
     return await this.fetch(foreignActorInbox.toString(), {
         method: 'post',
         body: stringifiedActivity,

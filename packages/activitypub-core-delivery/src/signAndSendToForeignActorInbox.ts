@@ -19,8 +19,6 @@ export async function signAndSendToForeignActorInbox(
   const foreignPathName = foreignActorInbox.pathname;
   const stringifiedActivity = JSON.stringify(convertUrlsToStrings(activity));
 
-  console.log({privateKey});
-
   // sign
   const digestHash = crypto
     .createHash('sha256')
@@ -39,7 +37,7 @@ export async function signAndSendToForeignActorInbox(
     return null;
   }
 
-  console.log(JSON.parse(stringifiedActivity));
+  console.log(signatureHeader);
 
   // send
   return await this.fetch(foreignActorInbox.toString(), {

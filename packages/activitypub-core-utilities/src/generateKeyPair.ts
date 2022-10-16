@@ -8,15 +8,15 @@ export async function generateKeyPair(): Promise<{
     crypto.generateKeyPair(
       'rsa',
       {
-        modulusLength: 4096,
+        modulusLength: 2048,
         publicKeyEncoding: {
-          type: 'spki',
-          format: 'pem',
+          type: 'pkcs1',
+          format: 'pem'
         },
         privateKeyEncoding: {
-          type: 'pkcs8',
-          format: 'pem',
-        },
+          type: 'pkcs1',
+          format: 'pem'
+        }
       },
       (error, publicKey, privateKey) => {
         if (error) {
