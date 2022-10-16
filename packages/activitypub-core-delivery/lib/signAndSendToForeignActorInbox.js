@@ -47,7 +47,7 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity
         return null;
     }
     console.log(JSON.parse(stringifiedActivity));
-    const result = await this.fetch(foreignActorInbox.toString(), {
+    return await this.fetch(foreignActorInbox.toString(), {
         method: 'post',
         body: stringifiedActivity,
         headers: {
@@ -58,9 +58,10 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity
             Digest: `SHA-256=${digestHash}`,
             Signature: signatureHeader,
         },
-    }).then(res => res.text());
-    console.log(result);
-    return result;
+    }).then(res => {
+        console.log(res.text());
+        return res;
+    });
 }
 exports.signAndSendToForeignActorInbox = signAndSendToForeignActorInbox;
 //# sourceMappingURL=signAndSendToForeignActorInbox.js.map

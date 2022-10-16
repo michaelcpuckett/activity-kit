@@ -31,6 +31,7 @@ async function webfingerHandler(req, res, databaseService) {
         throw new Error('Bad request');
     }
     console.log(new URL(req.url, activitypub_core_utilities_1.LOCAL_DOMAIN));
+    console.log(req.headers.accept);
     const query = {
         ...queryString.parse(new URL(req.url, activitypub_core_utilities_1.LOCAL_DOMAIN).search),
     };
@@ -65,7 +66,6 @@ async function webfingerHandler(req, res, databaseService) {
         }
     }
     res.statusCode = 404;
-    res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE);
     res.end();
 }
 exports.webfingerHandler = webfingerHandler;
