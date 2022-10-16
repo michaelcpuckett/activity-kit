@@ -13,7 +13,7 @@ function removeContext(entity) {
         else if (Array.isArray(value)) {
             result[key] = value.map(handleArrayItem);
         }
-        else if (typeof value === 'object') {
+        else if (value && typeof value === 'object' && 'type' in value) {
             result[key] = removeContext(value);
         }
     }
@@ -24,7 +24,7 @@ function handleArrayItem(item) {
     if (Array.isArray(item)) {
         return item.map(handleArrayItem);
     }
-    else if (item && typeof item === 'object') {
+    else if (item && typeof item === 'object' && 'type' in item) {
         return removeContext(item);
     }
     else {
