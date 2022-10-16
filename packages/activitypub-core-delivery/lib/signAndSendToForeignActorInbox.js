@@ -31,6 +31,7 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity
     const foreignDomain = foreignActorInbox.hostname;
     const foreignPathName = foreignActorInbox.pathname;
     const stringifiedActivity = JSON.stringify((0, activitypub_core_utilities_1.convertUrlsToStrings)(activity));
+    console.log({ privateKey });
     const digestHash = crypto
         .createHash('sha256')
         .update(stringifiedActivity)
