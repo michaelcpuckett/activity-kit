@@ -30,9 +30,10 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity
     const privateKey = await this.getPrivateKey(actor);
     const foreignDomain = foreignActorInbox.hostname;
     const foreignPathName = foreignActorInbox.pathname;
+    const stringifiedActivity = JSON.stringify((0, activitypub_core_utilities_1.convertUrlsToStrings)(activity));
     const digestHash = crypto
         .createHash('sha256')
-        .update(JSON.stringify(activity))
+        .update(stringifiedActivity)
         .digest('base64');
     const signer = crypto.createSign('sha256');
     const dateString = new Date().toUTCString();
@@ -41,13 +42,14 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity
     signer.end();
     const signature = signer.sign(privateKey);
     const signature_b64 = signature.toString('base64');
-    const signatureHeader = `keyId="${actor.url}#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest",signature="${signature_b64}"`;
+    const signatureHeader = `keyId="${actor.id.toString()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest",signature="${signature_b64}"`;
     if (typeof this.fetch !== 'function') {
         return null;
     }
+    console.log(JSON.parse(stringifiedActivity));
     const result = await this.fetch(foreignActorInbox.toString(), {
         method: 'post',
-        body: JSON.stringify(activity),
+        body: stringifiedActivity,
         headers: {
             [activitypub_core_utilities_1.CONTENT_TYPE_HEADER]: activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE,
             [activitypub_core_utilities_1.ACCEPT_HEADER]: activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE,
