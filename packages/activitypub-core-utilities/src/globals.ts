@@ -6,11 +6,11 @@ export const LOCAL_DOMAIN = `${PROTOCOL}//${LOCAL_HOSTNAME}${
   PORT === 80 ? '' : `:${PORT}`
 }`;
 export const CONTEXT = '@context';
-export const ACTIVITYSTREAMS_CONTEXT = 'https://www.w3.org/ns/activitystreams#';
+export const ACTIVITYSTREAMS_CONTEXT = 'https://www.w3.org/ns/activitystreams';
 export const W3ID_SECURITY_CONTEXT = 'https://w3id.org/security/v1';
 export const RELATIONSHIP_CONTEXT = 'http://purl.org/vocab/relationship/';
 export const CHANGESET_CONTEXT = 'http://purl.org/vocab/changeset/schema#';
-export const PUBLIC_ACTOR = `${ACTIVITYSTREAMS_CONTEXT}Public`;
+export const PUBLIC_ACTOR = `${ACTIVITYSTREAMS_CONTEXT}#Public`;
 export const LINKED_DATA_CONTENT_TYPE = 'application/ld+json';
 export const SERVER_ACTOR_USERNAME = 'bot';
 export const SERVER_ACTOR_ID = `${LOCAL_DOMAIN}/actor/${SERVER_ACTOR_USERNAME}`;
