@@ -47,7 +47,7 @@ export async function signAndSendToForeignActorInbox(
       Digest: `SHA-256=${digestHash}`,
       Signature: signatureHeader,
     },
-  }).then(res => res.json());
+  }).then(res => res.text());
 
   console.log(result);
 
