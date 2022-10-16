@@ -30,6 +30,7 @@ async function webfingerHandler(req, res, databaseService) {
     if (!req || !req.url) {
         throw new Error('Bad request');
     }
+    console.log(new URL(req.url, activitypub_core_utilities_1.LOCAL_DOMAIN));
     const query = {
         ...queryString.parse(new URL(req.url, activitypub_core_utilities_1.LOCAL_DOMAIN).search),
     };

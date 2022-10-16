@@ -11,7 +11,6 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { authenticatio
     }
     if (req.url.startsWith('/.well-known/webfinger')) {
         await (0, activitypub_core_endpoints_1.webfingerHandler)(req, res, databaseService);
-        console.log('???');
         next();
         return;
     }

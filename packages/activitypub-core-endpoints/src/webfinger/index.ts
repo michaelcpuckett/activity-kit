@@ -19,6 +19,8 @@ export async function webfingerHandler(
     throw new Error('Bad request');
   }
 
+  console.log(new URL(req.url, LOCAL_DOMAIN));
+
   const query = {
     ...queryString.parse(new URL(req.url, LOCAL_DOMAIN).search),
   } as { [key: string]: string };

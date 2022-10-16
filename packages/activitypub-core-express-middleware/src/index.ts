@@ -54,7 +54,6 @@ export const activityPub =
 
     if (req.url.startsWith('/.well-known/webfinger')) {
       await webfingerHandler(req, res, databaseService);
-      console.log('???');
       next();
       return;
     }
