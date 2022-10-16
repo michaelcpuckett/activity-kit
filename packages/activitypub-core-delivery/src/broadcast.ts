@@ -1,6 +1,7 @@
 import { DeliveryService } from '.';
 import { AP } from 'activitypub-core-types';
 import { addContext } from 'activitypub-core-utilities';
+import { removeContext } from 'activitypub-core-utilities';
 import { cleanProps } from 'activitypub-core-utilities';
 import { compressEntity } from 'activitypub-core-utilities';
 
@@ -13,7 +14,7 @@ export async function broadcast(
   activity: AP.Activity,
   actor: AP.Actor,
 ) {
-  const publicActivity = addContext(cleanProps(compressEntity(activity)));
+  const publicActivity = addContext(removeContext(cleanProps(compressEntity(activity))));
 
   if (!('actor' in publicActivity)) {
     throw new Error('Not an activity?');

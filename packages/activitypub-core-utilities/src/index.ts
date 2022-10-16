@@ -11,6 +11,7 @@ export { getGuid } from './getGuid';
 export { getId } from './getId';
 export { getTypedEntity } from './getTypedEntity';
 export { parseStream } from './parseStream';
+export { removeContext } from './removeContext';
 export { streamToString } from './streamToString';
 export { stringifyWithContext } from './stringifyWithContext';
 export * from './globals';

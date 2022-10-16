@@ -4,8 +4,9 @@ exports.broadcast = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
+const activitypub_core_utilities_4 = require("activitypub-core-utilities");
 async function broadcast(activity, actor) {
-    const publicActivity = (0, activitypub_core_utilities_1.addContext)((0, activitypub_core_utilities_2.cleanProps)((0, activitypub_core_utilities_3.compressEntity)(activity)));
+    const publicActivity = (0, activitypub_core_utilities_1.addContext)((0, activitypub_core_utilities_2.removeContext)((0, activitypub_core_utilities_3.cleanProps)((0, activitypub_core_utilities_4.compressEntity)(activity))));
     if (!('actor' in publicActivity)) {
         throw new Error('Not an activity?');
     }
