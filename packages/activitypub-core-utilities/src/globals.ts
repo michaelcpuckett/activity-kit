@@ -19,6 +19,7 @@ export const ACCEPT_HEADER = 'Accept';
 export const CONTENT_TYPE_HEADER = 'Content-Type';
 export const ACTIVITYSTREAMS_CONTENT_TYPE_WITH_PROFILE = `${LINKED_DATA_CONTENT_TYPE}; profile="${ACTIVITYSTREAMS_CONTEXT}"`;
 export const ACTIVITYSTREAMS_CONTENT_TYPE = 'application/activity+json';
+export const JRD_CONTENT_TYPE = 'application/jrd+json';
 export const JSON_CONTENT_TYPE = 'application/json';
 export const HTML_CONTENT_TYPE = 'text/html';
 export const USERNAME_REGEXP = /^[\w\d]{3,12}$/;

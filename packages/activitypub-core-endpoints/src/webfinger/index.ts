@@ -3,7 +3,7 @@ import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   CONTENT_TYPE_HEADER,
   HTML_CONTENT_TYPE,
-  JSON_CONTENT_TYPE,
+  JRD_CONTENT_TYPE,
   LOCAL_DOMAIN,
   LOCAL_HOSTNAME,
 } from 'activitypub-core-utilities';
@@ -50,11 +50,8 @@ export async function webfingerHandler(
         ],
       };
 
-      console.log('sending FINGER:');
-      console.log(finger);
-
       res.statusCode = 200;
-      res.setHeader(CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE);
+      res.setHeader(CONTENT_TYPE_HEADER, JRD_CONTENT_TYPE);
       res.write(JSON.stringify(finger));
       res.end();
       return;

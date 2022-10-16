@@ -57,17 +57,15 @@ async function webfingerHandler(req, res, databaseService) {
                     },
                 ],
             };
-            console.log('sending FINGER:');
-            console.log(finger);
             res.statusCode = 200;
-            res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.JSON_CONTENT_TYPE);
+            res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.JRD_CONTENT_TYPE);
             res.write(JSON.stringify(finger));
             res.end();
             return;
         }
     }
     res.statusCode = 404;
-    res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.JSON_CONTENT_TYPE);
+    res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE);
     res.end();
 }
 exports.webfingerHandler = webfingerHandler;
