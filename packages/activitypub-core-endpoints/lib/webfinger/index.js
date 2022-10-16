@@ -57,6 +57,8 @@ async function webfingerHandler(req, res, databaseService) {
                     },
                 ],
             };
+            console.log('sending FINGER:');
+            console.log(finger);
             res.statusCode = 200;
             res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.JSON_CONTENT_TYPE);
             res.write(JSON.stringify(finger));
