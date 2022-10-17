@@ -55,7 +55,8 @@ export async function getRecipientsList(
             )
           ) {
             if (foundThing.first) {
-              const foundCollectionPage = await this.databaseService.queryById(foundThing.first);
+              console.log('?')
+              const foundCollectionPage = await this.databaseService.queryById(new URL(foundThing.first));
 
               if (
                 foundCollectionPage === 'object' &&
