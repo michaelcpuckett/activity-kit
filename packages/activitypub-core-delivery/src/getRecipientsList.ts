@@ -31,18 +31,48 @@ export async function getRecipientsList(
 
           if (
             typeof foundThing === 'object' &&
-            foundThing.type === AP.CollectionTypes.ORDERED_COLLECTION &&
-            foundThing.orderedItems
+            foundThing.type === AP.CollectionTypes.ORDERED_COLLECTION
           ) {
-            return foundThing.orderedItems;
+            if (foundThing.orderedItems) {
+              return foundThing.orderedItems;
+            }
           }
 
           if (
             typeof foundThing === 'object' &&
-            'items' in foundThing &&
-            foundThing.items
+            foundThing.type === AP.CollectionTypes.COLLECTION
           ) {
-            return foundThing.items;
+            if (foundThing.items) {
+              return foundThing.items;
+            }
+          }
+
+          if (
+            typeof foundThing === 'object' &&
+            (
+              foundThing.type === AP.CollectionTypes.ORDERED_COLLECTION ||
+              foundThing.type === AP.CollectionTypes.COLLECTION
+            )
+          ) {
+            if (foundThing.first) {
+              const foundCollectionPage = await this.databaseService.queryById(foundThing.first);
+
+              if (
+                foundCollectionPage === 'object' &&
+                foundCollectionPage.type === AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE &&
+                foundCollectionPage.orderedItems
+              ) {
+                return foundCollectionPage.orderedItems;
+              }
+
+              if (
+                foundCollectionPage === 'object' &&
+                foundCollectionPage.type === AP.CollectionPageTypes.COLLECTION_PAGE &&
+                foundCollectionPage.items
+              ) {
+                return foundCollectionPage.items;
+              }
+            }
           }
 
           return null;

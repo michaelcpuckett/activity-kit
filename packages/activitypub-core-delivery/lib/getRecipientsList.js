@@ -18,14 +18,33 @@ async function getRecipientsList(to) {
                 return foundThing.id;
             }
             if (typeof foundThing === 'object' &&
-                foundThing.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION &&
-                foundThing.orderedItems) {
-                return foundThing.orderedItems;
+                foundThing.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+                if (foundThing.orderedItems) {
+                    return foundThing.orderedItems;
+                }
             }
             if (typeof foundThing === 'object' &&
-                'items' in foundThing &&
-                foundThing.items) {
-                return foundThing.items;
+                foundThing.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION) {
+                if (foundThing.items) {
+                    return foundThing.items;
+                }
+            }
+            if (typeof foundThing === 'object' &&
+                (foundThing.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
+                    foundThing.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
+                if (foundThing.first) {
+                    const foundCollectionPage = await this.databaseService.queryById(foundThing.first);
+                    if (foundCollectionPage === 'object' &&
+                        foundCollectionPage.type === activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE &&
+                        foundCollectionPage.orderedItems) {
+                        return foundCollectionPage.orderedItems;
+                    }
+                    if (foundCollectionPage === 'object' &&
+                        foundCollectionPage.type === activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE &&
+                        foundCollectionPage.items) {
+                        return foundCollectionPage.items;
+                    }
+                }
             }
             return null;
         }
