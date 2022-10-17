@@ -51,6 +51,7 @@ async function sharedInboxHandler(req, res, databaseService, deliveryService) {
                 break;
         }
         const recipientIds = await getRecipientInboxUrls(activity, actor, databaseService, deliveryService);
+        console.log({ recipientIds });
         for (const recipientId of recipientIds) {
             const recipient = (await databaseService.findEntityById(recipientId));
             if (!recipient) {

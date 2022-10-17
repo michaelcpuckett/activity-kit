@@ -78,6 +78,8 @@ export async function sharedInboxHandler(
       deliveryService,
     );
 
+    console.log({recipientIds});
+
     for (const recipientId of recipientIds) {
       const recipient = (await databaseService.findEntityById(
         recipientId,
