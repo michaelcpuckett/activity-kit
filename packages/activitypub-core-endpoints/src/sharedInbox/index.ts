@@ -24,7 +24,7 @@ export async function sharedInboxHandler(
     const activity = await parseStream(req);
 
     console.log(activity);
-    console.log('^activity')
+    console.log('^activity: sharedInbox')
 
     if (!activity) {
       throw new Error('Bad jsonld?');

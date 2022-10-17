@@ -17,7 +17,7 @@ async function sharedInboxHandler(req, res, databaseService, deliveryService) {
     try {
         const activity = await (0, activitypub_core_utilities_2.parseStream)(req);
         console.log(activity);
-        console.log('^activity');
+        console.log('^activity: sharedInbox');
         if (!activity) {
             throw new Error('Bad jsonld?');
         }

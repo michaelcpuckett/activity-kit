@@ -35,6 +35,8 @@ async function handlePost(req, res, databaseService, deliveryService) {
         }
         const recipientInboxId = new URL(url);
         const activity = await (0, activitypub_core_utilities_3.parseStream)(req);
+        console.log(activity);
+        console.log('^ activity from user inbox');
         if (!activity) {
             throw new Error('bad JSONLD?');
         }

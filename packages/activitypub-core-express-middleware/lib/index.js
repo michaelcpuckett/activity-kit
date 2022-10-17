@@ -86,6 +86,7 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { authenticatio
         res.end();
         return;
     }
+    console.log('404', req.url);
     next();
 };
 exports.activityPub = activityPub;

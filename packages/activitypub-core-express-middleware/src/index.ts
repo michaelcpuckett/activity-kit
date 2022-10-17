@@ -192,5 +192,6 @@ export const activityPub =
       return;
     }
 
+    console.log('404', req.url);
     next();
   };

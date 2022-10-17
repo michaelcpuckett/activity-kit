@@ -59,6 +59,9 @@ async function handlePost(
     const recipientInboxId = new URL(url);
     const activity = await parseStream(req);
 
+    console.log(activity);
+    console.log('^ activity from user inbox')
+
     if (!activity) {
       throw new Error('bad JSONLD?');
     }
