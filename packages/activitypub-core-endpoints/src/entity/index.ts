@@ -128,6 +128,12 @@ export async function entityGetHandler(
     }
   }
 
+  const compressedEntity = compressEntity(entity);
+
+  if (entity.publicKey && 'publicKey' in compressedEntity) {
+    compressedEntity.publicKey = entity.publicKey;
+  }
+
   if (
     request.headers.accept?.includes(ACTIVITYSTREAMS_CONTENT_TYPE) ||
     request.headers.accept?.includes(LINKED_DATA_CONTENT_TYPE) ||
@@ -139,7 +145,7 @@ export async function entityGetHandler(
 
     response.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
     response.statusCode = 200;
-    response.write(stringifyWithContext(entity));
+    response.write(stringifyWithContext(compressedEntity));
     response.end();
 
     return {
@@ -147,11 +153,6 @@ export async function entityGetHandler(
     };
   }
 
-  const compressedEntity = compressEntity(entity);
-
-  if (entity.publicKey && 'publicKey' in compressedEntity) {
-    compressedEntity.publicKey = entity.publicKey;
-  }
 
   return {
     props: {

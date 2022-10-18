@@ -77,6 +77,10 @@ async function entityGetHandler(request, response, authenticationService, databa
             }
         }
     }
+    const compressedEntity = (0, activitypub_core_utilities_1.compressEntity)(entity);
+    if (entity.publicKey && 'publicKey' in compressedEntity) {
+        compressedEntity.publicKey = entity.publicKey;
+    }
     if (request.headers.accept?.includes(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE) ||
         request.headers.accept?.includes(activitypub_core_utilities_1.LINKED_DATA_CONTENT_TYPE) ||
         request.headers.accept?.includes(activitypub_core_utilities_1.JSON_CONTENT_TYPE)) {
@@ -85,15 +89,11 @@ async function entityGetHandler(request, response, authenticationService, databa
         }
         response.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);
         response.statusCode = 200;
-        response.write((0, activitypub_core_utilities_4.stringifyWithContext)(entity));
+        response.write((0, activitypub_core_utilities_4.stringifyWithContext)(compressedEntity));
         response.end();
         return {
             props: {},
         };
-    }
-    const compressedEntity = (0, activitypub_core_utilities_1.compressEntity)(entity);
-    if (entity.publicKey && 'publicKey' in compressedEntity) {
-        compressedEntity.publicKey = entity.publicKey;
     }
     return {
         props: {
