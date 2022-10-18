@@ -71,27 +71,16 @@ export async function sharedInboxHandler(
         break;
     }
 
-    const recipientIds = await getRecipientInboxIds(
+    const recipientInboxIds = await getRecipientInboxIds(
       activity,
       actor as AP.Actor,
       databaseService,
       deliveryService,
     );
 
-    console.log({recipientIds});
+    console.log({recipientInboxIds});
 
-    for (const recipientId of recipientIds) {
-      console.log(recipientId);
-      const recipient = (await databaseService.findEntityById(
-        recipientId,
-      )) as AP.Actor;
-
-      if (!recipient) {
-        continue;
-      }
-
-      const recipientInboxId = getId(recipient.inbox);
-
+    for (const recipientInboxId of recipientInboxIds) {
       console.log(recipientInboxId);
 
       console.log('WILL INSERT...')
