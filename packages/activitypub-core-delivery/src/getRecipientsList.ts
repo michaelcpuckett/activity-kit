@@ -71,6 +71,8 @@ export async function getRecipientsList(
                 foundCollectionPage.type === AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE &&
                 foundCollectionPage.orderedItems
               ) {
+                console.log(foundCollectionPage.orderedItems);
+                console.log('^-- ordered items')
                 return foundCollectionPage.orderedItems;
               }
 

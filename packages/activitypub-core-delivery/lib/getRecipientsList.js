@@ -44,6 +44,8 @@ async function getRecipientsList(to) {
                     if (typeof foundCollectionPage === 'object' &&
                         foundCollectionPage.type === activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE &&
                         foundCollectionPage.orderedItems) {
+                        console.log(foundCollectionPage.orderedItems);
+                        console.log('^-- ordered items');
                         return foundCollectionPage.orderedItems;
                     }
                     if (typeof foundCollectionPage === 'object' &&
