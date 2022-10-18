@@ -81,6 +81,7 @@ export async function sharedInboxHandler(
     console.log({recipientIds});
 
     for (const recipientId of recipientIds) {
+      console.log(recipientId);
       const recipient = (await databaseService.findEntityById(
         recipientId,
       )) as AP.Actor;
@@ -90,6 +91,8 @@ export async function sharedInboxHandler(
       }
 
       const recipientInboxId = getId(recipient.inbox);
+
+      console.log(recipientInboxId);
 
       if (!recipientInboxId) {
         continue;
