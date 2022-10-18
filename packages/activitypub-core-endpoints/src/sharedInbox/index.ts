@@ -71,7 +71,7 @@ export async function sharedInboxHandler(
         break;
     }
 
-    const recipientIds = await getRecipientInboxUrls(
+    const recipientIds = await getRecipientUrls(
       activity,
       actor as AP.Actor,
       databaseService,
@@ -117,7 +117,7 @@ export async function sharedInboxHandler(
   }
 }
 
-export async function getRecipientInboxUrls(
+export async function getRecipientUrls(
   activity: AP.Activity,
   actor: AP.Actor,
   databaseService: Database,
@@ -161,7 +161,7 @@ export async function getRecipientInboxUrls(
         'inbox' in foundThing &&
         foundThing.inbox
       ) {
-        return foundThing.id;
+        return foundThing.inbox;
       }
     }),
   );

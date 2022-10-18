@@ -79,9 +79,11 @@ export async function getRecipientsList(
 
           return null;
         }
+
         if ('id' in reference) {
           return reference.id;
         }
+
         if ('href' in reference) {
           return reference.href;
         }

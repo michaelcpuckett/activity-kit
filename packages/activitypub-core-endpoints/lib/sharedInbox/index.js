@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRecipientInboxUrls = exports.sharedInboxHandler = void 0;
+exports.getRecipientUrls = exports.sharedInboxHandler = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const accept_1 = require("../inbox/accept");
 const announce_1 = require("../inbox/announce");
@@ -50,7 +50,7 @@ async function sharedInboxHandler(req, res, databaseService, deliveryService) {
                 await (0, follow_1.handleFollow)(activity, databaseService, deliveryService);
                 break;
         }
-        const recipientIds = await getRecipientInboxUrls(activity, actor, databaseService, deliveryService);
+        const recipientIds = await getRecipientUrls(activity, actor, databaseService, deliveryService);
         console.log({ recipientIds });
         for (const recipientId of recipientIds) {
             const recipient = (await databaseService.findEntityById(recipientId));
@@ -77,7 +77,7 @@ async function sharedInboxHandler(req, res, databaseService, deliveryService) {
     }
 }
 exports.sharedInboxHandler = sharedInboxHandler;
-async function getRecipientInboxUrls(activity, actor, databaseService, providedDeliveryService) {
+async function getRecipientUrls(activity, actor, databaseService, providedDeliveryService) {
     const deliveryService = providedDeliveryService ?? new activitypub_core_delivery_1.DeliveryService(databaseService);
     const recipients = [
         ...(activity.to
@@ -107,7 +107,7 @@ async function getRecipientInboxUrls(activity, actor, databaseService, providedD
         if (typeof foundThing === 'object' &&
             'inbox' in foundThing &&
             foundThing.inbox) {
-            return foundThing.id;
+            return foundThing.inbox;
         }
     }));
     const recipientIds = [];
@@ -118,5 +118,5 @@ async function getRecipientInboxUrls(activity, actor, databaseService, providedD
     }
     return [...new Set(recipientIds)];
 }
-exports.getRecipientInboxUrls = getRecipientInboxUrls;
+exports.getRecipientUrls = getRecipientUrls;
 //# sourceMappingURL=index.js.map
