@@ -94,9 +94,13 @@ export async function sharedInboxHandler(
 
       console.log(recipientInboxId);
 
+      console.log('WILL INSERT...')
+
       if (!recipientInboxId) {
         continue;
       }
+
+      console.log('INSERTING?')
 
       await databaseService.insertOrderedItem(recipientInboxId, activityId);
     }

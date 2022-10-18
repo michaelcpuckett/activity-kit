@@ -60,9 +60,11 @@ async function sharedInboxHandler(req, res, databaseService, deliveryService) {
             }
             const recipientInboxId = (0, activitypub_core_utilities_1.getId)(recipient.inbox);
             console.log(recipientInboxId);
+            console.log('WILL INSERT...');
             if (!recipientInboxId) {
                 continue;
             }
+            console.log('INSERTING?');
             await databaseService.insertOrderedItem(recipientInboxId, activityId);
         }
         await databaseService.saveEntity(activity);
