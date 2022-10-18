@@ -12,6 +12,8 @@ async function getRecipientsList(to) {
             if (!foundThing) {
                 return null;
             }
+            console.log(foundThing);
+            console.log('^--foundThing, getRecipientsList');
             if (typeof foundThing === 'object' &&
                 'inbox' in foundThing &&
                 foundThing.inbox) {

@@ -45,6 +45,7 @@ describe('DeliveryService', () => {
       }, new URL(actor1FollowingUrl));
 
       expect(result.length).toBe(1);
+      expect(result[0].toString()).toBe(actor2Url);
     });
   });
 });

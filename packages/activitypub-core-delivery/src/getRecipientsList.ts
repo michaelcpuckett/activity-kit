@@ -21,6 +21,9 @@ export async function getRecipientsList(
             return null;
           }
 
+          console.log(foundThing)
+          console.log('^--foundThing, getRecipientsList')
+
           if (
             typeof foundThing === 'object' &&
             'inbox' in foundThing &&
