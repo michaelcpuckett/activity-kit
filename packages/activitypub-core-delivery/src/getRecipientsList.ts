@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import { convertStringsToUrls, PUBLIC_ACTOR } from 'activitypub-core-utilities';
+import { PUBLIC_ACTOR } from 'activitypub-core-utilities';
 import { DeliveryService } from '.';
 
 export async function getRecipientsList(

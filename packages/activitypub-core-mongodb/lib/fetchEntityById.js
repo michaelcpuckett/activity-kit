@@ -41,7 +41,7 @@ async function fetchEntityById(id) {
         return null;
     }
     const compressedEntity = (0, activitypub_core_utilities_4.compressEntity)(typedThing);
-    return (0, activitypub_core_utilities_3.convertStringsToUrls)(compressedEntity);
+    return compressedEntity;
 }
 exports.fetchEntityById = fetchEntityById;
 //# sourceMappingURL=fetchEntityById.js.map

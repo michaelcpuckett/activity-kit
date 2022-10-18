@@ -73,5 +73,5 @@ export async function fetchEntityById(
   // TODO Turn on smarter caching.
   // await this.saveThing(compressedEntity);
 
-  return convertStringsToUrls(compressedEntity as { [key: string]: unknown });
+  return compressedEntity;
 }
