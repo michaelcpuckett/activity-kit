@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-firebase-authentication",
-  "version": "0.0.95",
+  "version": "0.0.96",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -26,7 +26,7 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "activitypub-core-types": "^0.0.95",
+    "activitypub-core-types": "^0.0.96",
     "firebase-admin": "^11.2.0"
   }
 }
