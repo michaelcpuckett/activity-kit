@@ -1,14 +1,9 @@
-0 silly argv {
-0 silly argv   _: [ 'create' ],
-0 silly argv   lernaVersion: '5.6.2',
-0 silly argv   '$0': 'C:\\Users\\MichaelPuckett\\AppData\\Roaming\\npm\\node_modules\\lerna\\cli.js',
-0 silly argv   name: 'activitypub-core-firebase-auth'
-0 silly argv }
-1 notice cli v5.6.2
-2 verbose rootPath C:\sites\activitypub-core
-3 error Error: Command failed with exit code 1: git config --get user.name
-3 error     at makeError (C:\sites\activitypub-core\node_modules\execa\lib\error.js:60:11)
-3 error     at Function.module.exports.sync (C:\sites\activitypub-core\node_modules\execa\index.js:194:17)
-3 error     at Object.execSync (C:\sites\activitypub-core\node_modules\@lerna\child-process\index.js:39:16)
-3 error     at CreateCommand.gitConfig (C:\sites\activitypub-core\node_modules\@lerna\create\index.js:180:25)
-3 error     at CreateCommand.initialize (C:\sites\activitypub-core\node_modules\@lerna\create\index.js:102:46)
+67 error Error: Command failed with exit code 1: npm install --package-lock-only --ignore-scripts
+67 error npm ERR! Cannot read properties of null (reading 'package')
+67 error
+67 error npm ERR! A complete log of this run can be found in:
+67 error npm ERR!     C:\Users\MichaelPuckett\AppData\Local\npm-cache\_logs\2022-10-18T13_20_21_526Z-debug-0.log
+67 error     at makeError (C:\sites\activitypub-core\node_modules\execa\lib\error.js:60:11)
+67 error     at handlePromise (C:\sites\activitypub-core\node_modules\execa\index.js:118:26)
+67 error     at processTicksAndRejections (node:internal/process/task_queues:96:5)
+67 error     at async Promise.all (index 0)
