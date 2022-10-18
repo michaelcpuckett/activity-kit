@@ -1,9 +1,9 @@
-67 error Error: Command failed with exit code 1: npm install --package-lock-only --ignore-scripts
-67 error npm ERR! Cannot read properties of null (reading 'package')
-67 error
-67 error npm ERR! A complete log of this run can be found in:
-67 error npm ERR!     C:\Users\MichaelPuckett\AppData\Local\npm-cache\_logs\2022-10-18T13_20_21_526Z-debug-0.log
-67 error     at makeError (C:\sites\activitypub-core\node_modules\execa\lib\error.js:60:11)
-67 error     at handlePromise (C:\sites\activitypub-core\node_modules\execa\index.js:118:26)
-67 error     at processTicksAndRejections (node:internal/process/task_queues:96:5)
-67 error     at async Promise.all (index 0)
+74 error Error: Command failed with exit code 1: npm install --package-lock-only --ignore-scripts
+74 error npm ERR! Cannot read properties of null (reading 'package')
+74 error
+74 error npm ERR! A complete log of this run can be found in:
+74 error npm ERR!     C:\Users\MichaelPuckett\AppData\Local\npm-cache\_logs\2022-10-18T13_41_01_993Z-debug-0.log
+74 error     at makeError (C:\sites\activitypub-core\node_modules\execa\lib\error.js:60:11)
+74 error     at handlePromise (C:\sites\activitypub-core\node_modules\execa\index.js:118:26)
+74 error     at processTicksAndRejections (node:internal/process/task_queues:96:5)
+74 error     at async Promise.all (index 0)
