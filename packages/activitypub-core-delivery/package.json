@@ -19,8 +19,8 @@
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
-    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
-    "dev": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --watch",
+    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js",
+    "dev": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch",
     "format": "prettier --config .prettierrc \"**/*.ts\" --write",
     "lint": "eslint src/**/*.ts"
   },

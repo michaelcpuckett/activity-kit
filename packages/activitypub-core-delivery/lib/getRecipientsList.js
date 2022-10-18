@@ -8,7 +8,7 @@ async function getRecipientsList(to) {
     const filteredToArray = toArray.filter((recipient) => recipient.toString() !== activitypub_core_utilities_1.PUBLIC_ACTOR);
     const unfilteredInboxArray = (await Promise.all(filteredToArray.map(async (reference) => {
         if (reference instanceof URL) {
-            const foundThing = await this.databaseService.queryById(reference);
+            const foundThing = (0, activitypub_core_utilities_1.convertStringsToUrls)(await this.databaseService.queryById(reference));
             if (!foundThing) {
                 return null;
             }
@@ -33,16 +33,16 @@ async function getRecipientsList(to) {
                 (foundThing.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
                     foundThing.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
                 if (foundThing.first) {
-                    console.log('?');
-                    const foundCollectionPage = await this.databaseService.queryById(new URL(foundThing.first));
-                    if (foundCollectionPage === 'object' &&
+                    const foundCollectionPage = (0, activitypub_core_utilities_1.convertStringsToUrls)(await this.databaseService.queryById(foundThing.first));
+                    if (typeof foundCollectionPage === 'object' &&
                         foundCollectionPage.type === activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE &&
                         foundCollectionPage.orderedItems) {
                         return foundCollectionPage.orderedItems;
                     }
-                    if (foundCollectionPage === 'object' &&
+                    if (typeof foundCollectionPage === 'object' &&
                         foundCollectionPage.type === activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE &&
                         foundCollectionPage.items) {
+                        console.log('has items');
                         return foundCollectionPage.items;
                     }
                 }

@@ -24,5 +24,9 @@
     "build": "tsc --project tsconfig.json",
     "format": "prettier --config .prettierrc \"**/*.ts\" --write",
     "lint": "eslint src/**/*.ts"
+  },
+  "dependencies": {
+    "activitypub-core-types": "^0.0.82",
+    "firebase-admin": "^11.2.0"
   }
 }

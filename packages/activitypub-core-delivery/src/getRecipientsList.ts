@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import { PUBLIC_ACTOR } from 'activitypub-core-utilities';
+import { convertStringsToUrls, PUBLIC_ACTOR } from 'activitypub-core-utilities';
 import { DeliveryService } from '.';
 
 export async function getRecipientsList(
@@ -15,7 +15,7 @@ export async function getRecipientsList(
     await Promise.all(
       filteredToArray.map(async (reference) => {
         if (reference instanceof URL) {
-          const foundThing = await this.databaseService.queryById(reference);
+          const foundThing = convertStringsToUrls(await this.databaseService.queryById(reference));
 
           if (!foundThing) {
             return null;
@@ -55,22 +55,23 @@ export async function getRecipientsList(
             )
           ) {
             if (foundThing.first) {
-              console.log('?')
-              const foundCollectionPage = await this.databaseService.queryById(new URL(foundThing.first));
+              const foundCollectionPage = convertStringsToUrls(await this.databaseService.queryById(foundThing.first));
 
               if (
-                foundCollectionPage === 'object' &&
+                typeof foundCollectionPage === 'object' &&
                 foundCollectionPage.type === AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE &&
                 foundCollectionPage.orderedItems
               ) {
                 return foundCollectionPage.orderedItems;
               }
 
+
               if (
-                foundCollectionPage === 'object' &&
+                typeof foundCollectionPage === 'object' &&
                 foundCollectionPage.type === AP.CollectionPageTypes.COLLECTION_PAGE &&
                 foundCollectionPage.items
               ) {
+                console.log('has items')
                 return foundCollectionPage.items;
               }
             }
