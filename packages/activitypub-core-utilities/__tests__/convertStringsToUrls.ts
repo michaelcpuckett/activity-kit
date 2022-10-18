@@ -26,9 +26,35 @@ describe('utilities', () => {
       items: [item1Url, item2Url],
       published: date.toISOString(),
     };
+    const collectionPage = {
+      "@context": "https://www.w3.org/ns/activitystreams",
+      "id": "https://mastodon.social/users/mpuckett/followers?page=1",
+      "type": "OrderedCollectionPage",
+      "totalItems": 2,
+      "partOf": "https://mastodon.social/users/mpuckett/followers",
+      "orderedItems": [
+          "https://puckett.contact/actor/michael",
+          "https://michaelpuckett.engineer/as/actor"
+      ]
+    };
+    const collectionPageResult = {
+      "@context": new URL("https://www.w3.org/ns/activitystreams"),
+      "id": new URL("https://mastodon.social/users/mpuckett/followers?page=1"),
+      "type": "OrderedCollectionPage",
+      "totalItems": 2,
+      "partOf": new URL("https://mastodon.social/users/mpuckett/followers"),
+      "orderedItems": [
+          new URL("https://puckett.contact/actor/michael"),
+          new URL("https://michaelpuckett.engineer/as/actor"),
+      ]
+    };
     it('converts strings to URLS', async () => {
       const result = convertStringsToUrls(collection1);
       expect(result).toStrictEqual(collection1Result);
     });
+    it('handles mastodon collection page', async () => {
+      const result = convertStringsToUrls(collectionPage);
+      expect(result).toStrictEqual(collectionPageResult);
+    })
   });
 });

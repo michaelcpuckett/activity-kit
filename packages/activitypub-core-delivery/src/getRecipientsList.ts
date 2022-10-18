@@ -18,7 +18,7 @@ export async function getRecipientsList(
     await Promise.all(
       filteredToArray.map(async (reference) => {
         if (reference instanceof URL) {
-          const foundThing = convertStringsToUrls(await this.databaseService.queryById(reference));
+          const foundThing = await this.databaseService.queryById(reference);
 
           if (!foundThing) {
             return null;
@@ -62,7 +62,7 @@ export async function getRecipientsList(
           ) {
             console.log('Correct Type...')
             if (foundThing.first) {
-              const foundCollectionPage = convertStringsToUrls(await this.databaseService.queryById(foundThing.first));
+              const foundCollectionPage = await this.databaseService.queryById(foundThing.first);
 
               console.log(foundCollectionPage, '^--FOUND COLLECTION PAGE')
 
