@@ -4,6 +4,7 @@ exports.activityPub = void 0;
 const activitypub_core_endpoints_1 = require("activitypub-core-endpoints");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activityPub = ({ renderIndex, renderHome, renderEntity, }, { authenticationService, databaseService, deliveryService, }) => async (req, res, next) => {
+    console.log('INCOMING:', req.url);
     if (req.url === '/user' && req.method === 'POST') {
         await (0, activitypub_core_endpoints_1.userPostHandler)(req, res, authenticationService, databaseService);
         next();

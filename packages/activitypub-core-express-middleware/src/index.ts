@@ -46,6 +46,8 @@ export const activityPub =
     },
   ) =>
   async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
+    console.log('INCOMING:', req.url);
+  
     if (req.url === '/user' && req.method === 'POST') {
       await userPostHandler(req, res, authenticationService, databaseService);
       next();
