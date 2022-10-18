@@ -5,6 +5,9 @@ const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function getRecipientsList(to) {
     const toArray = Array.isArray(to) ? to : [to];
+    console.log({
+        toArray,
+    });
     const filteredToArray = toArray.filter((recipient) => recipient.toString() !== activitypub_core_utilities_1.PUBLIC_ACTOR);
     const unfilteredInboxArray = (await Promise.all(filteredToArray.map(async (reference) => {
         if (reference instanceof URL) {

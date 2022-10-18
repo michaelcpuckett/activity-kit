@@ -7,6 +7,9 @@ export async function getRecipientsList(
   to: AP.EntityReference | AP.EntityReference[],
 ): Promise<URL[]> {
   const toArray = Array.isArray(to) ? to : [to];
+  console.log({
+    toArray,
+  });
   const filteredToArray = toArray.filter(
     (recipient) => recipient.toString() !== PUBLIC_ACTOR,
   );
