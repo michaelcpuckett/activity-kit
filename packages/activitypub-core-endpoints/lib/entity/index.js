@@ -91,6 +91,10 @@ async function entityGetHandler(request, response, authenticationService, databa
             props: {},
         };
     }
+    const compressedEntity = (0, activitypub_core_utilities_1.compressEntity)(entity);
+    if (entity.publicKey && 'publicKey' in compressedEntity) {
+        compressedEntity.publicKey = entity.publicKey;
+    }
     return {
         props: {
             entity: (0, activitypub_core_utilities_3.convertUrlsToStrings)(entity),

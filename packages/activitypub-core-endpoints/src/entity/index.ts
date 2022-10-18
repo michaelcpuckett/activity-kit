@@ -147,6 +147,12 @@ export async function entityGetHandler(
     };
   }
 
+  const compressedEntity = compressEntity(entity);
+
+  if (entity.publicKey && 'publicKey' in compressedEntity) {
+    compressedEntity.publicKey = entity.publicKey;
+  }
+
   return {
     props: {
       entity: convertUrlsToStrings(entity),
