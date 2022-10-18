@@ -71,7 +71,7 @@ export async function sharedInboxHandler(
         break;
     }
 
-    const recipientIds = await getRecipientUrls(
+    const recipientIds = await getRecipientInboxIds(
       activity,
       actor as AP.Actor,
       databaseService,
@@ -117,12 +117,13 @@ export async function sharedInboxHandler(
   }
 }
 
-export async function getRecipientUrls(
+export async function getRecipientInboxIds(
   activity: AP.Activity,
   actor: AP.Actor,
   databaseService: Database,
   providedDeliveryService: DeliveryService,
 ): Promise<URL[]> {
+  console.log('TEST HERE', activity.cc);
   const deliveryService =
     providedDeliveryService ?? new DeliveryService(databaseService);
 
@@ -166,13 +167,13 @@ export async function getRecipientUrls(
     }),
   );
 
-  const recipientIds: URL[] = [];
+  const recipientInboxIds: URL[] = [];
 
   for (const recipientInbox of recipientInboxes) {
     if (recipientInbox instanceof URL) {
-      recipientIds.push(recipientInbox);
+      recipientInboxIds.push(recipientInbox);
     }
   }
 
-  return [...new Set(recipientIds)];
+  return [...new Set(recipientInboxIds)];
 }
