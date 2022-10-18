@@ -37,8 +37,10 @@ async function getRecipientsList(to) {
             if (typeof foundThing === 'object' &&
                 (foundThing.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
                     foundThing.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
+                console.log('Correct Type...');
                 if (foundThing.first) {
                     const foundCollectionPage = (0, activitypub_core_utilities_1.convertStringsToUrls)(await this.databaseService.queryById(foundThing.first));
+                    console.log(foundCollectionPage, '^--FOUND COLLECTION PAGE');
                     if (typeof foundCollectionPage === 'object' &&
                         foundCollectionPage.type === activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE &&
                         foundCollectionPage.orderedItems) {

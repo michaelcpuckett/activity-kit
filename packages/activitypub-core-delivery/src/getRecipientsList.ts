@@ -60,8 +60,11 @@ export async function getRecipientsList(
               foundThing.type === AP.CollectionTypes.COLLECTION
             )
           ) {
+            console.log('Correct Type...')
             if (foundThing.first) {
               const foundCollectionPage = convertStringsToUrls(await this.databaseService.queryById(foundThing.first));
+
+              console.log(foundCollectionPage, '^--FOUND COLLECTION PAGE')
 
               if (
                 typeof foundCollectionPage === 'object' &&
