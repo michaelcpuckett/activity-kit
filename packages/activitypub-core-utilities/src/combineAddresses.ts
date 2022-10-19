@@ -4,9 +4,8 @@ import { getId } from './getId';
 export function combineAddresses(activity: AP.Activity): AP.Activity {
   if (
     (activity.type === AP.ActivityTypes.CREATE ||
-      Array.isArray(activity.type) &&
-      activity.type.includes(AP.ActivityTypes.CREATE)
-    ) &&
+      (Array.isArray(activity.type) &&
+        activity.type.includes(AP.ActivityTypes.CREATE))) &&
     'object' in activity &&
     activity.object &&
     'type' in activity.object
@@ -14,10 +13,11 @@ export function combineAddresses(activity: AP.Activity): AP.Activity {
     const activityObject = activity.object as AP.CoreObject;
 
     for (const type of Object.values(AP.CoreObjectTypes)) {
-      if (type === activityObject.type || (
-        Array.isArray(activityObject.type) &&
-        activityObject.type.includes(type)
-      )) {
+      if (
+        type === activityObject.type ||
+        (Array.isArray(activityObject.type) &&
+          activityObject.type.includes(type))
+      ) {
         const activityTo = Array.isArray(activity.to)
           ? activity.to
           : activity.to

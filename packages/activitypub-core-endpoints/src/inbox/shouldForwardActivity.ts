@@ -40,12 +40,10 @@ export async function shouldForwardActivity(
 
     if (
       foundItem.type === AP.CollectionTypes.COLLECTION ||
-      foundItem.type === AP.CollectionTypes.ORDERED_COLLECTION || (
-        Array.isArray(foundItem.type) && (
-          foundItem.type.includes(AP.CollectionTypes.COLLECTION) ||
-          foundItem.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
-        )
-      )
+      foundItem.type === AP.CollectionTypes.ORDERED_COLLECTION ||
+      (Array.isArray(foundItem.type) &&
+        (foundItem.type.includes(AP.CollectionTypes.COLLECTION) ||
+          foundItem.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)))
     ) {
       return true;
     }

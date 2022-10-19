@@ -28,7 +28,7 @@ export async function handleCreate(
     throw new Error('bad request 1');
   }
 
-  const object = getTypedEntity(activity.object as {[key: string]: unknown});
+  const object = getTypedEntity(activity.object as { [key: string]: unknown });
 
   if (!object) {
     throw new Error('Bad request. 2');
@@ -82,11 +82,13 @@ export async function handleCreate(
   }
 
   for (const type of Object.values(AP.CoreObjectTypes)) {
-    if (type === object.type || (
-      Array.isArray(object.type) &&
-      object.type.includes(type)
-    )) {
-      const typedObject = getTypedEntity(object as { [key: string]: unknown }) as AP.ExtendedObject;
+    if (
+      type === object.type ||
+      (Array.isArray(object.type) && object.type.includes(type))
+    ) {
+      const typedObject = getTypedEntity(
+        object as { [key: string]: unknown },
+      ) as AP.ExtendedObject;
       typedObject.attributedTo = activity.actor;
       typedObject.replies = objectReplies;
       typedObject.likes = objectLikes;

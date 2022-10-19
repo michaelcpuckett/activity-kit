@@ -24,7 +24,7 @@ export async function sharedInboxHandler(
     const activity = await parseStream(req);
 
     console.log(activity);
-    console.log('^activity: sharedInbox')
+    console.log('^activity: sharedInbox');
 
     if (!activity) {
       throw new Error('Bad jsonld?');
@@ -78,18 +78,18 @@ export async function sharedInboxHandler(
       deliveryService,
     );
 
-    console.log({recipientInboxIds});
+    console.log({ recipientInboxIds });
 
     for (const recipientInboxId of recipientInboxIds) {
       console.log(recipientInboxId);
 
-      console.log('WILL INSERT...')
+      console.log('WILL INSERT...');
 
       if (!recipientInboxId) {
         continue;
       }
 
-      console.log('INSERTING?')
+      console.log('INSERTING?');
 
       await databaseService.insertOrderedItem(recipientInboxId, activityId);
     }

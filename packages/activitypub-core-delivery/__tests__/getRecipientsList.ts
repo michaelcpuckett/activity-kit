@@ -26,25 +26,30 @@ describe('DeliveryService', () => {
               url: actor1FollowingPageUrl,
               type: AP.CollectionPageTypes.COLLECTION_PAGE,
               name: 'Following Page 1',
-              items: [
-                actor2Url
-              ]
+              items: [actor2Url],
             };
           }
           return null;
-        }
-      }
+        },
+      };
     });
 
     it('follows collections/collection pages', async () => {
-      const result = await getRecipientsList.call({
-        databaseService: {
-          async queryById(id: URL) {
-            console.log(id.toString());
-            return convertStringsToUrls((await fetch(id.toString()).then(({ json }) => json()) as { [key: string]: unknown }))
-          }
-        }
-      }, new URL(actor1FollowingUrl));
+      const result = await getRecipientsList.call(
+        {
+          databaseService: {
+            async queryById(id: URL) {
+              console.log(id.toString());
+              return convertStringsToUrls(
+                (await fetch(id.toString()).then(({ json }) => json())) as {
+                  [key: string]: unknown;
+                },
+              );
+            },
+          },
+        },
+        new URL(actor1FollowingUrl),
+      );
 
       expect(result.length).toBe(1);
       expect(result[0].toString()).toBe(actor2Url);

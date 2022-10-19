@@ -49,7 +49,6 @@ export async function handleLike(activity: AP.Like, databaseService: Database) {
     databaseService.insertOrderedItem(actorLikedId, object.id),
   ]);
 
-  
   const isLocal = getCollectionNameByUrl(object.id) !== 'remote-object';
 
   if (isLocal) {

@@ -22,7 +22,7 @@ import { TypeOrArrayWithType } from '../Core/Entity';
  * actor's ActivityStreams description.
  */
 
- type BaseActor = BaseCoreObject & {
+type BaseActor = BaseCoreObject & {
   // Activity Streams properties.
   type: TypeOrArrayWithType<typeof ActorTypes[keyof typeof ActorTypes]>;
   // Activity Pub properties.

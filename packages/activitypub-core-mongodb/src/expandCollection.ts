@@ -22,16 +22,17 @@ export async function expandCollection(
     foundThing.type !== AP.CollectionTypes.COLLECTION &&
     foundThing.type !== AP.CollectionTypes.ORDERED_COLLECTION &&
     !(
-      Array.isArray(foundThing.type) && (
-        foundThing.type.includes(AP.CollectionTypes.COLLECTION) ||
-        foundThing.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
-      )
+      Array.isArray(foundThing.type) &&
+      (foundThing.type.includes(AP.CollectionTypes.COLLECTION) ||
+        foundThing.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
     )
   ) {
     return null;
   }
 
-  const foundCollection = getTypedEntity(foundThing as { [key: string]: unknown }) as AP.Collection | AP.OrderedCollection;
+  const foundCollection = getTypedEntity(
+    foundThing as { [key: string]: unknown },
+  ) as AP.Collection | AP.OrderedCollection;
 
   const items = await this.getCollectionItems(foundCollection);
 
@@ -39,10 +40,14 @@ export async function expandCollection(
     return foundCollection;
   }
 
-  if (foundCollection.type === AP.CollectionTypes.ORDERED_COLLECTION || (
-    Array.isArray(foundCollection.type) && foundCollection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
-  )) {
-    const orderedCollection = getTypedEntity(foundCollection as unknown as { [key: string]: unknown }) as AP.OrderedCollection;
+  if (
+    foundCollection.type === AP.CollectionTypes.ORDERED_COLLECTION ||
+    (Array.isArray(foundCollection.type) &&
+      foundCollection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
+  ) {
+    const orderedCollection = getTypedEntity(
+      foundCollection as unknown as { [key: string]: unknown },
+    ) as AP.OrderedCollection;
 
     return {
       ...orderedCollection,
@@ -50,10 +55,14 @@ export async function expandCollection(
     };
   }
 
-  if (foundCollection.type === AP.CollectionTypes.COLLECTION || (
-    Array.isArray(foundCollection.type) && foundCollection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
-  )) {
-    const collection = getTypedEntity(foundCollection as unknown as {[key: string]: unknown}) as AP.Collection;
+  if (
+    foundCollection.type === AP.CollectionTypes.COLLECTION ||
+    (Array.isArray(foundCollection.type) &&
+      foundCollection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
+  ) {
+    const collection = getTypedEntity(
+      foundCollection as unknown as { [key: string]: unknown },
+    ) as AP.Collection;
 
     return {
       ...collection,

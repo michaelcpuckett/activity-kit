@@ -4,7 +4,9 @@ import { EntityReference, CoreObjectReference } from '../Core';
 import { TypeOrArrayWithType } from '../Core/Entity';
 
 type BaseExtendedObject = BaseCoreObject & {
-  type: TypeOrArrayWithType<typeof ExtendedObjectTypes[keyof typeof ExtendedObjectTypes]>;
+  type: TypeOrArrayWithType<
+    typeof ExtendedObjectTypes[keyof typeof ExtendedObjectTypes]
+  >;
 };
 
 export type Tombstone = BaseExtendedObject & {

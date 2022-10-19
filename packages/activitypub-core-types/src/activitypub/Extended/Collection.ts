@@ -6,8 +6,8 @@ import { TypeOrArrayWithType } from '../Core/Entity';
 
 type BaseCollection = BaseCoreObject & {
   type: TypeOrArrayWithType<
-    typeof CollectionTypes[keyof typeof CollectionTypes] |
-    typeof CollectionPageTypes[keyof typeof CollectionPageTypes]
+    | typeof CollectionTypes[keyof typeof CollectionTypes]
+    | typeof CollectionPageTypes[keyof typeof CollectionPageTypes]
   >;
   totalItems?: number;
   items?: EntityReference | EntityReference[];
@@ -26,7 +26,9 @@ export type OrderedCollection = BaseCollection & {
 };
 
 type BaseCollectionPage = BaseCollection & {
-  type: TypeOrArrayWithType<typeof CollectionPageTypes[keyof typeof CollectionPageTypes]>;
+  type: TypeOrArrayWithType<
+    typeof CollectionPageTypes[keyof typeof CollectionPageTypes]
+  >;
   current?: URL | CollectionPage | Link;
   first?: URL | CollectionPage | Link;
   last?: URL | CollectionPage | Link;

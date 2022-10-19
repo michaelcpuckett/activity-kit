@@ -71,14 +71,13 @@ export const homeGetHandler = async (
 
       if (
         foundStream &&
-        (
-          foundStream.type === AP.CollectionTypes.COLLECTION ||
+        (foundStream.type === AP.CollectionTypes.COLLECTION ||
           foundStream.type === AP.CollectionTypes.ORDERED_COLLECTION ||
-          (Array.isArray(foundStream.type) && (
-            foundStream.type.includes(AP.CollectionTypes.COLLECTION) ||
-            foundStream.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
-          ))
-        )
+          (Array.isArray(foundStream.type) &&
+            (foundStream.type.includes(AP.CollectionTypes.COLLECTION) ||
+              foundStream.type.includes(
+                AP.CollectionTypes.ORDERED_COLLECTION,
+              ))))
       ) {
         const expandedStream = await databaseService.expandCollection(
           foundStream,

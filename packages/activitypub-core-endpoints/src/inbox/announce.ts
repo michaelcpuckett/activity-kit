@@ -42,15 +42,17 @@ export async function handleAnnounce(
     throw new Error('bad request; no shares collection');
   }
 
-  if (sharesCollection.type === AP.CollectionTypes.COLLECTION || (
-    Array.isArray(sharesCollection.type) &&
-    sharesCollection.type.includes(AP.CollectionTypes.COLLECTION)
-  )) {
+  if (
+    sharesCollection.type === AP.CollectionTypes.COLLECTION ||
+    (Array.isArray(sharesCollection.type) &&
+      sharesCollection.type.includes(AP.CollectionTypes.COLLECTION))
+  ) {
     await databaseService.insertItem(sharesCollectionId, activity.id);
-  } else if (sharesCollection.type === AP.CollectionTypes.ORDERED_COLLECTION || (
-    Array.isArray(sharesCollection.type) &&
-    sharesCollection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
-  )) {
+  } else if (
+    sharesCollection.type === AP.CollectionTypes.ORDERED_COLLECTION ||
+    (Array.isArray(sharesCollection.type) &&
+      sharesCollection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
+  ) {
     await databaseService.insertOrderedItem(sharesCollectionId, activity.id);
   }
 

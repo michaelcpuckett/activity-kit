@@ -21,7 +21,9 @@ import type {
 
 export interface BaseCoreObject extends BaseEntity {
   // Activity Streams properties.
-  type: TypeOrArrayWithType<typeof CoreObjectTypes[keyof typeof CoreObjectTypes]>;
+  type: TypeOrArrayWithType<
+    typeof CoreObjectTypes[keyof typeof CoreObjectTypes]
+  >;
   attachment?: EntityReference | EntityReference[];
   attributedTo?: EntityReference | EntityReference[];
   audience?: EntityReference | EntityReference[];
