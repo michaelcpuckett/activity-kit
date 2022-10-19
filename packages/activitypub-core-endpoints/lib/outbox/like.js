@@ -25,15 +25,6 @@ async function handleLike(activity, databaseService) {
     if (!('id' in object) || !object.id) {
         throw new Error('Bad request 3');
     }
-    if (!('likes' in object) || !object.likes) {
-        console.log(object);
-        console.log('^object w/o likes');
-        throw new Error('Bad request 4');
-    }
-    const objectLikesId = (0, activitypub_core_utilities_1.getId)(object.likes);
-    if (!objectLikesId) {
-        throw new Error('Bad request 5');
-    }
     if (!('liked' in actor) || !actor.liked) {
         throw new Error('bad request 9');
     }
@@ -42,7 +33,6 @@ async function handleLike(activity, databaseService) {
         throw new Error('bad request 10');
     }
     await Promise.all([
-        databaseService.insertOrderedItem(objectLikesId, activity.id),
         databaseService.insertOrderedItem(actorLikedId, object.id),
     ]);
 }

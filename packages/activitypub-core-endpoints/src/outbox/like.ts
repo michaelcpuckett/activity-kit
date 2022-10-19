@@ -34,7 +34,7 @@ export async function handleLike(activity: AP.Like, databaseService: Database) {
   if (!('id' in object) || !object.id) {
     throw new Error('Bad request 3');
   }
-
+/*
   if (!('likes' in object) || !object.likes) {
     console.log(object);
     console.log('^object w/o likes');
@@ -45,7 +45,7 @@ export async function handleLike(activity: AP.Like, databaseService: Database) {
 
   if (!objectLikesId) {
     throw new Error('Bad request 5');
-  }
+  }*/
 
   if (!('liked' in actor) || !actor.liked) {
     throw new Error('bad request 9');
@@ -58,7 +58,6 @@ export async function handleLike(activity: AP.Like, databaseService: Database) {
   }
 
   await Promise.all([
-    databaseService.insertOrderedItem(objectLikesId, activity.id),
     databaseService.insertOrderedItem(actorLikedId, object.id),
   ]);
 }
