@@ -18,18 +18,6 @@ export async function expandCollection(
     return null;
   }
 
-  if (
-    foundThing.type !== AP.CollectionTypes.COLLECTION &&
-    foundThing.type !== AP.CollectionTypes.ORDERED_COLLECTION &&
-    !(
-      Array.isArray(foundThing.type) &&
-      (foundThing.type.includes(AP.CollectionTypes.COLLECTION) ||
-        foundThing.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
-    )
-  ) {
-    return null;
-  }
-
   const foundCollection = getTypedEntity(
     foundThing as { [key: string]: unknown },
   ) as AP.Collection | AP.OrderedCollection;

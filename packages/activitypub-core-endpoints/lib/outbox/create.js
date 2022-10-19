@@ -51,13 +51,12 @@ async function handleCreate(activity, databaseService) {
         orderedItems: [],
         published: publishedDate,
     };
-    if (!('id' in object) || !object.id) {
+    if (!('id' in object) || !object.id || !('type' in object) || !object.type) {
         throw new Error('Bad request 4');
     }
     for (const type of Object.values(activitypub_core_types_1.AP.CoreObjectTypes)) {
-        if (type === object.type ||
-            (Array.isArray(object.type) && object.type.includes(type))) {
-            const typedObject = (0, activitypub_core_utilities_1.getTypedEntity)(object);
+        const typedObject = (0, activitypub_core_utilities_1.getTypedEntity)(object);
+        if (Array.isArray(typedObject.type) ? typedObject.type.includes(type) : type === typedObject.type) {
             typedObject.attributedTo = activity.actor;
             typedObject.replies = objectReplies;
             typedObject.likes = objectLikes;

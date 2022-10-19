@@ -12,13 +12,6 @@ async function expandCollection(collection) {
     if (!foundThing) {
         return null;
     }
-    if (foundThing.type !== activitypub_core_types_1.AP.CollectionTypes.COLLECTION &&
-        foundThing.type !== activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION &&
-        !(Array.isArray(foundThing.type) &&
-            (foundThing.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
-                foundThing.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)))) {
-        return null;
-    }
     const foundCollection = (0, activitypub_core_utilities_1.getTypedEntity)(foundThing);
     const items = await this.getCollectionItems(foundCollection);
     if (!items) {
