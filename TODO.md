@@ -1,3 +1,4 @@
+* Full integration with i.e. Mastodon
 * replies / inReplyTo
 * performance issues
 * http signatures
