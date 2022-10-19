@@ -20,8 +20,9 @@ async function getCollectionItems(entity) {
         ('orderedItems' in collection && Array.isArray(collection.orderedItems)))) {
         return [];
     }
-    const collectionItems = collection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION || (Array.isArray(collection.type) &&
-        collection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))
+    const collectionItems = collection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
+        (Array.isArray(collection.type) &&
+            collection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))
         ? collection.orderedItems
         : collection.items;
     if (!Array.isArray(collectionItems)) {

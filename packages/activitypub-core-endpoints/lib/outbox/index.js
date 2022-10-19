@@ -57,28 +57,44 @@ async function handleOutboxPost(req, res, databaseService, deliveryService) {
             }
         }
         if ('object' in activity) {
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.CREATE || (Array.isArray(activity.type) && activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.CREATE))) {
+            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.CREATE ||
+                (Array.isArray(activity.type) &&
+                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.CREATE))) {
                 activity.object = await (0, create_1.handleCreate)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.DELETE || (Array.isArray(activity.type) && activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.DELETE))) {
+            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.DELETE ||
+                (Array.isArray(activity.type) &&
+                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.DELETE))) {
                 await (0, delete_1.handleDelete)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.UPDATE || (Array.isArray(activity.type) && activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.UPDATE))) {
+            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.UPDATE ||
+                (Array.isArray(activity.type) &&
+                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.UPDATE))) {
                 await (0, update_1.handleUpdate)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.LIKE || (Array.isArray(activity.type) && activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.LIKE))) {
+            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.LIKE ||
+                (Array.isArray(activity.type) &&
+                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.LIKE))) {
                 await (0, like_1.handleLike)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE || (Array.isArray(activity.type) && activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE))) {
+            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE ||
+                (Array.isArray(activity.type) &&
+                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE))) {
                 await (0, announce_1.handleAnnounce)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.ADD || (Array.isArray(activity.type) && activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.ADD))) {
+            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.ADD ||
+                (Array.isArray(activity.type) &&
+                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.ADD))) {
                 await (0, add_1.handleAdd)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.REMOVE || (Array.isArray(activity.type) && activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.REMOVE))) {
+            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.REMOVE ||
+                (Array.isArray(activity.type) &&
+                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.REMOVE))) {
                 await (0, remove_1.handleRemove)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.UNDO || (Array.isArray(activity.type) && activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.UNDO))) {
+            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.UNDO ||
+                (Array.isArray(activity.type) &&
+                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.UNDO))) {
                 await (0, undo_1.handleUndo)(activity, databaseService, initiator);
             }
         }
@@ -142,8 +158,8 @@ async function handleOutboxPost(req, res, databaseService, deliveryService) {
             };
         };
         for (const type of Object.values(activitypub_core_types_1.AP.ActivityTypes)) {
-            if (type === activity.type || (Array.isArray(activity.type) &&
-                activity.type.includes(type))) {
+            if (type === activity.type ||
+                (Array.isArray(activity.type) && activity.type.includes(type))) {
                 return await saveActivity(activity);
             }
         }

@@ -48,7 +48,7 @@ class MongoDatabase {
 }
 exports.MongoDatabase = MongoDatabase;
 class MongoDatabaseService {
-    async connect({ mongoClientUrl, dbName }) {
+    async connect({ mongoClientUrl, dbName, }) {
         const client = new mongodb_1.MongoClient(mongoClientUrl, {
             minPoolSize: 10,
         });

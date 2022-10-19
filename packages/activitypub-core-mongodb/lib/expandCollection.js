@@ -14,8 +14,9 @@ async function expandCollection(collection) {
     }
     if (foundThing.type !== activitypub_core_types_1.AP.CollectionTypes.COLLECTION &&
         foundThing.type !== activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION &&
-        !(Array.isArray(foundThing.type) && (foundThing.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
-            foundThing.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)))) {
+        !(Array.isArray(foundThing.type) &&
+            (foundThing.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
+                foundThing.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)))) {
         return null;
     }
     const foundCollection = (0, activitypub_core_utilities_1.getTypedEntity)(foundThing);
@@ -23,14 +24,18 @@ async function expandCollection(collection) {
     if (!items) {
         return foundCollection;
     }
-    if (foundCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION || (Array.isArray(foundCollection.type) && foundCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
+    if (foundCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
+        (Array.isArray(foundCollection.type) &&
+            foundCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
         const orderedCollection = (0, activitypub_core_utilities_1.getTypedEntity)(foundCollection);
         return {
             ...orderedCollection,
             orderedItems: items,
         };
     }
-    if (foundCollection.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION || (Array.isArray(foundCollection.type) && foundCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
+    if (foundCollection.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION ||
+        (Array.isArray(foundCollection.type) &&
+            foundCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
         const collection = (0, activitypub_core_utilities_1.getTypedEntity)(foundCollection);
         return {
             ...collection,

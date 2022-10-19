@@ -5,15 +5,16 @@ const activitypub_core_types_1 = require("activitypub-core-types");
 const getId_1 = require("./getId");
 function combineAddresses(activity) {
     if ((activity.type === activitypub_core_types_1.AP.ActivityTypes.CREATE ||
-        Array.isArray(activity.type) &&
-            activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.CREATE)) &&
+        (Array.isArray(activity.type) &&
+            activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.CREATE))) &&
         'object' in activity &&
         activity.object &&
         'type' in activity.object) {
         const activityObject = activity.object;
         for (const type of Object.values(activitypub_core_types_1.AP.CoreObjectTypes)) {
-            if (type === activityObject.type || (Array.isArray(activityObject.type) &&
-                activityObject.type.includes(type))) {
+            if (type === activityObject.type ||
+                (Array.isArray(activityObject.type) &&
+                    activityObject.type.includes(type))) {
                 const activityTo = Array.isArray(activity.to)
                     ? activity.to
                     : activity.to

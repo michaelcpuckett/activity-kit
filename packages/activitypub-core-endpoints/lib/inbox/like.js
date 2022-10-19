@@ -26,12 +26,14 @@ async function handleLike(activity, databaseService) {
     if (!likesCollection) {
         throw new Error('bad request ;; no likes collection');
     }
-    if (likesCollection.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION || (Array.isArray(likesCollection.type) &&
-        likesCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION))) {
+    if (likesCollection.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION ||
+        (Array.isArray(likesCollection.type) &&
+            likesCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION))) {
         await databaseService.insertItem(likesCollectionId, activity.id);
     }
-    else if (likesCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION || (Array.isArray(likesCollection.type) &&
-        likesCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
+    else if (likesCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
+        (Array.isArray(likesCollection.type) &&
+            likesCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
         await databaseService.insertOrderedItem(likesCollectionId, activity.id);
     }
 }

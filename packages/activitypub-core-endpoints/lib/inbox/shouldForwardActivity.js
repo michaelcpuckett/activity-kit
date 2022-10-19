@@ -30,8 +30,10 @@ async function shouldForwardActivity(activity, recipient, databaseService) {
             continue;
         }
         if (foundItem.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION ||
-            foundItem.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION || (Array.isArray(foundItem.type) && (foundItem.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
-            foundItem.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)))) {
+            foundItem.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
+            (Array.isArray(foundItem.type) &&
+                (foundItem.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
+                    foundItem.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)))) {
             return true;
         }
     }

@@ -55,8 +55,8 @@ async function handleCreate(activity, databaseService) {
         throw new Error('Bad request 4');
     }
     for (const type of Object.values(activitypub_core_types_1.AP.CoreObjectTypes)) {
-        if (type === object.type || (Array.isArray(object.type) &&
-            object.type.includes(type))) {
+        if (type === object.type ||
+            (Array.isArray(object.type) && object.type.includes(type))) {
             const typedObject = (0, activitypub_core_utilities_1.getTypedEntity)(object);
             typedObject.attributedTo = activity.actor;
             typedObject.replies = objectReplies;

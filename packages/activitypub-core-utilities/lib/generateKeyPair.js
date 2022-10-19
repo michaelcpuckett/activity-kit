@@ -26,7 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateKeyPair = void 0;
 const crypto = __importStar(require("crypto"));
 async function generateKeyPair() {
-    const { publicKey, privateKey, } = await crypto.subtle.generateKey({
+    const { publicKey, privateKey } = await crypto.subtle.generateKey({
         name: 'RSASSA-PKCS1-v1_5',
         modulusLength: 2048,
         hash: { name: 'SHA-256' },
