@@ -36,6 +36,8 @@ export async function handleLike(activity: AP.Like, databaseService: Database) {
   }
 
   if (!('likes' in object) || !object.likes) {
+    console.log(object);
+    console.log('^object w/o likes');
     throw new Error('Bad request 4');
   }
 
