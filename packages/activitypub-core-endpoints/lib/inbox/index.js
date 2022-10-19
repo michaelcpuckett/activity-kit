@@ -47,19 +47,27 @@ async function handlePost(req, res, databaseService, deliveryService) {
         if (!('actor' in activity)) {
             throw new Error('Bad activity, no actor.');
         }
-        switch (activity.type) {
-            case activitypub_core_types_1.AP.ActivityTypes.FOLLOW:
+        if ('object' in activity) {
+            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.FOLLOW ||
+                (Array.isArray(activity.type) &&
+                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.FOLLOW))) {
                 await (0, follow_1.handleFollow)(activity, databaseService, deliveryService);
-                break;
-            case activitypub_core_types_1.AP.ActivityTypes.ACCEPT:
+            }
+            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.ACCEPT ||
+                (Array.isArray(activity.type) &&
+                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.ACCEPT))) {
                 await (0, accept_1.handleAccept)(activity, databaseService);
-                break;
-            case activitypub_core_types_1.AP.ActivityTypes.LIKE:
+            }
+            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.LIKE ||
+                (Array.isArray(activity.type) &&
+                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.LIKE))) {
                 await (0, like_1.handleLike)(activity, databaseService);
-                break;
-            case activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE:
+            }
+            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE ||
+                (Array.isArray(activity.type) &&
+                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE))) {
                 await (0, announce_1.handleAnnounce)(activity, databaseService);
-                break;
+            }
         }
         if (await (0, shouldForwardActivity_1.shouldForwardActivity)(activity, recipient, databaseService)) {
             await deliveryService.broadcast(activity, recipient);

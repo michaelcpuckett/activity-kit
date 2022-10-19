@@ -76,23 +76,42 @@ async function handlePost(
       throw new Error('Bad activity, no actor.');
     }
 
-    switch (activity.type) {
-      case AP.ActivityTypes.FOLLOW:
+    if ('object' in activity) {
+      if (
+        activity.type === AP.ActivityTypes.FOLLOW ||
+        (Array.isArray(activity.type) &&
+          activity.type.includes(AP.ActivityTypes.FOLLOW))
+      ) {
         await handleFollow(
           activity as AP.Follow,
           databaseService,
           deliveryService,
         );
-        break;
-      case AP.ActivityTypes.ACCEPT:
+      }
+
+      if (
+        activity.type === AP.ActivityTypes.ACCEPT ||
+        (Array.isArray(activity.type) &&
+          activity.type.includes(AP.ActivityTypes.ACCEPT))
+      ) {
         await handleAccept(activity as AP.Accept, databaseService);
-        break;
-      case AP.ActivityTypes.LIKE:
+      }
+
+      if (
+        activity.type === AP.ActivityTypes.LIKE ||
+        (Array.isArray(activity.type) &&
+          activity.type.includes(AP.ActivityTypes.LIKE))
+      ) {
         await handleLike(activity as AP.Like, databaseService);
-        break;
-      case AP.ActivityTypes.ANNOUNCE:
+      }
+
+      if (
+        activity.type === AP.ActivityTypes.ANNOUNCE ||
+        (Array.isArray(activity.type) &&
+          activity.type.includes(AP.ActivityTypes.ANNOUNCE))
+      ) {
         await handleAnnounce(activity as AP.Announce, databaseService);
-        break;
+      }
     }
 
     if (await shouldForwardActivity(activity, recipient, databaseService)) {
