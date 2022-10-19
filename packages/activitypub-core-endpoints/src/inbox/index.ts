@@ -7,7 +7,7 @@ import { handleAnnounce } from './announce';
 import { handleFollow } from './follow';
 import { handleLike } from './like';
 import { shouldForwardActivity } from './shouldForwardActivity';
-import { stringifyWithContext } from 'activitypub-core-utilities';
+import { stringify } from 'activitypub-core-utilities';
 import { parseStream } from 'activitypub-core-utilities';
 import type { Database, Auth } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
@@ -103,7 +103,7 @@ async function handlePost(
     await databaseService.insertOrderedItem(recipientInboxId, activityId);
 
     res.statusCode = 200;
-    res.write(stringifyWithContext(activity));
+    res.write(stringify(activity));
     res.end();
 
     return {

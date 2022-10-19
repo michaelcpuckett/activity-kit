@@ -9,7 +9,7 @@ import {
 } from 'activitypub-core-utilities';
 import { getTypedEntity } from 'activitypub-core-utilities';
 import { convertUrlsToStrings } from 'activitypub-core-utilities';
-import { stringifyWithContext } from 'activitypub-core-utilities';
+import { stringify } from 'activitypub-core-utilities';
 import cookie from 'cookie';
 import type { Database, Auth } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
@@ -145,7 +145,7 @@ export async function entityGetHandler(
 
     response.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
     response.statusCode = 200;
-    response.write(stringifyWithContext(compressedEntity));
+    response.write(stringify(compressedEntity));
     response.end();
 
     return {

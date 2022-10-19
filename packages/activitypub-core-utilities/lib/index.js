@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stringifyWithContext = exports.streamToString = exports.removeContext = exports.parseStream = exports.getTypedEntity = exports.getId = exports.getGuid = exports.getCollectionNameByUrl = exports.generateKeyPair = exports.convertUrlsToStrings = exports.convertStringsToUrls = exports.convertFromJsonLd = exports.compressEntity = exports.combineAddresses = exports.cleanProps = exports.addContext = void 0;
+exports.stringify = exports.streamToString = exports.removeContext = exports.parseStream = exports.getTypedEntity = exports.getId = exports.getGuid = exports.getCollectionNameByUrl = exports.generateKeyPair = exports.convertUrlsToStrings = exports.convertStringsToUrls = exports.convertFromJsonLd = exports.compressEntity = exports.combineAddresses = exports.cleanProps = exports.addContext = void 0;
 var addContext_1 = require("./addContext");
 Object.defineProperty(exports, "addContext", { enumerable: true, get: function () { return addContext_1.addContext; } });
 var cleanProps_1 = require("./cleanProps");
@@ -45,7 +45,7 @@ var removeContext_1 = require("./removeContext");
 Object.defineProperty(exports, "removeContext", { enumerable: true, get: function () { return removeContext_1.removeContext; } });
 var streamToString_1 = require("./streamToString");
 Object.defineProperty(exports, "streamToString", { enumerable: true, get: function () { return streamToString_1.streamToString; } });
-var stringifyWithContext_1 = require("./stringifyWithContext");
-Object.defineProperty(exports, "stringifyWithContext", { enumerable: true, get: function () { return stringifyWithContext_1.stringifyWithContext; } });
+var stringify_1 = require("./stringify");
+Object.defineProperty(exports, "stringify", { enumerable: true, get: function () { return stringify_1.stringify; } });
 __exportStar(require("./globals"), exports);
 //# sourceMappingURL=index.js.map

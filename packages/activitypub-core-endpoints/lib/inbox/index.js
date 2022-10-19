@@ -67,7 +67,7 @@ async function handlePost(req, res, databaseService, deliveryService) {
         await databaseService.saveEntity(activity);
         await databaseService.insertOrderedItem(recipientInboxId, activityId);
         res.statusCode = 200;
-        res.write((0, activitypub_core_utilities_2.stringifyWithContext)(activity));
+        res.write((0, activitypub_core_utilities_2.stringify)(activity));
         res.end();
         return {
             props: {},

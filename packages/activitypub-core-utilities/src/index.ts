@@ -13,5 +13,5 @@ export { getTypedEntity } from './getTypedEntity';
 export { parseStream } from './parseStream';
 export { removeContext } from './removeContext';
 export { streamToString } from './streamToString';
-export { stringifyWithContext } from './stringifyWithContext';
+export { stringify } from './stringify';
 export * from './globals';

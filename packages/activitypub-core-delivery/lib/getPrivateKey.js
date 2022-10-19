@@ -3,12 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPrivateKey = void 0;
 async function getPrivateKey(actor) {
     if (!actor.preferredUsername) {
-        throw new Error('Bad actor');
+        throw new Error('Actor has no `preferredUsername`.');
     }
     const userId = await this.databaseService.findStringIdByValue('username', actor.preferredUsername);
     const privateKey = await this.databaseService.findStringValueById('private-key', userId);
     if (!privateKey) {
-        throw new Error("User's private key not found.");
+        throw new Error('Private key not found for this Actor.');
     }
     return privateKey;
 }

@@ -135,7 +135,7 @@ async function handleOutboxPost(req, res, databaseService, deliveryService) {
             if (activityToSave.id) {
                 res.setHeader('Location', activityToSave.id.toString());
             }
-            res.write((0, activitypub_core_utilities_6.stringifyWithContext)(activityToSave));
+            res.write((0, activitypub_core_utilities_6.stringify)(activityToSave));
             res.end();
             return {
                 props: {},

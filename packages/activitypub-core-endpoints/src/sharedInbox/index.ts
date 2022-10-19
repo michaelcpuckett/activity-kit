@@ -6,7 +6,7 @@ import { handleFollow } from '../inbox/follow';
 import { handleLike } from '../inbox/like';
 import { getId } from 'activitypub-core-utilities';
 import { parseStream } from 'activitypub-core-utilities';
-import { stringifyWithContext } from 'activitypub-core-utilities';
+import { stringify } from 'activitypub-core-utilities';
 import type { Database } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
 
@@ -101,7 +101,7 @@ export async function sharedInboxHandler(
     await databaseService.saveEntity(activity);
 
     res.statusCode = 200;
-    res.write(stringifyWithContext(activity));
+    res.write(stringify(activity));
     res.end();
   } catch (error) {
     console.log(error);

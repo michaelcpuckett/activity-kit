@@ -63,7 +63,7 @@ async function sharedInboxHandler(req, res, databaseService, deliveryService) {
         }
         await databaseService.saveEntity(activity);
         res.statusCode = 200;
-        res.write((0, activitypub_core_utilities_3.stringifyWithContext)(activity));
+        res.write((0, activitypub_core_utilities_3.stringify)(activity));
         res.end();
     }
     catch (error) {

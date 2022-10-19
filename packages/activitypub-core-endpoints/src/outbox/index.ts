@@ -19,7 +19,7 @@ import { getId } from 'activitypub-core-utilities';
 import { combineAddresses } from 'activitypub-core-utilities';
 import { DeliveryService } from 'activitypub-core-delivery';
 import { parseStream } from 'activitypub-core-utilities';
-import { stringifyWithContext } from 'activitypub-core-utilities';
+import { stringify } from 'activitypub-core-utilities';
 
 export async function outboxHandler(
   req: IncomingMessage,
@@ -182,7 +182,7 @@ async function handleOutboxPost(
       if (activityToSave.id) {
         res.setHeader('Location', activityToSave.id.toString());
       }
-      res.write(stringifyWithContext(activityToSave));
+      res.write(stringify(activityToSave));
       res.end();
 
       return {
