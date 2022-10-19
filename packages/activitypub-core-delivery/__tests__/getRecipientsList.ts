@@ -1,4 +1,5 @@
 import { AP } from 'activitypub-core-types';
+import { convertStringsToUrls } from 'activitypub-core-utilities';
 import { getRecipientsList } from '../src/getRecipientsList';
 
 describe('DeliveryService', () => {
@@ -16,7 +17,7 @@ describe('DeliveryService', () => {
               url: actor1FollowingUrl,
               type: AP.CollectionTypes.COLLECTION,
               name: 'Following',
-              first: actor1FollowingPageUrl
+              first: actor1FollowingPageUrl,
             };
           }
           if (url === actor1FollowingPageUrl) {
@@ -35,11 +36,12 @@ describe('DeliveryService', () => {
       }
     });
 
-    it('works', async () => {
+    it('follows collections/collection pages', async () => {
       const result = await getRecipientsList.call({
         databaseService: {
           async queryById(id: URL) {
-            return await fetch(id.toString()).then(({ json }) => json())
+            console.log(id.toString());
+            return convertStringsToUrls((await fetch(id.toString()).then(({ json }) => json()) as { [key: string]: unknown }))
           }
         }
       }, new URL(actor1FollowingUrl));
