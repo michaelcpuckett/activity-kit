@@ -1,7 +1,6 @@
 import { MongoDatabase } from '.';
 import { AP } from 'activitypub-core-types';
 import {
-  addContext,
   cleanProps,
   convertUrlsToStrings,
   getCollectionNameByUrl,

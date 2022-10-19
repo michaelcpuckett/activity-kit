@@ -1,4 +1,3 @@
-export { addContext } from './addContext';
 export { cleanProps } from './cleanProps';
 export { combineAddresses } from './combineAddresses';
 export { compressEntity } from './compressEntity';

@@ -14,9 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stringify = exports.streamToString = exports.removeContext = exports.parseStream = exports.getTypedEntity = exports.getId = exports.getGuid = exports.getCollectionNameByUrl = exports.generateKeyPair = exports.convertUrlsToStrings = exports.convertStringsToUrls = exports.convertFromJsonLd = exports.compressEntity = exports.combineAddresses = exports.cleanProps = exports.addContext = void 0;
-var addContext_1 = require("./addContext");
-Object.defineProperty(exports, "addContext", { enumerable: true, get: function () { return addContext_1.addContext; } });
+exports.stringify = exports.streamToString = exports.removeContext = exports.parseStream = exports.getTypedEntity = exports.getId = exports.getGuid = exports.getCollectionNameByUrl = exports.generateKeyPair = exports.convertUrlsToStrings = exports.convertStringsToUrls = exports.convertFromJsonLd = exports.compressEntity = exports.combineAddresses = exports.cleanProps = void 0;
 var cleanProps_1 = require("./cleanProps");
 Object.defineProperty(exports, "cleanProps", { enumerable: true, get: function () { return cleanProps_1.cleanProps; } });
 var combineAddresses_1 = require("./combineAddresses");
