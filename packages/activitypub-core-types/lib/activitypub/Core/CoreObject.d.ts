@@ -1,12 +1,12 @@
 import { CoreObjectTypes } from '../util/const';
-import type { BaseEntity } from './Entity';
+import type { BaseEntity, TypeOrArrayWithType } from './Entity';
 import type { EntityReference } from '.';
 import type { StringReferenceMap } from '../util/values';
 import type { ImageReference } from '../Extended/ExtendedObject';
 import type { LinkReference } from './Link';
 import type { CollectionReference, OrderedCollectionReference } from '../Extended/Collection';
 export interface BaseCoreObject extends BaseEntity {
-    type: typeof CoreObjectTypes[keyof typeof CoreObjectTypes];
+    type: TypeOrArrayWithType<typeof CoreObjectTypes[keyof typeof CoreObjectTypes]>;
     attachment?: EntityReference | EntityReference[];
     attributedTo?: EntityReference | EntityReference[];
     audience?: EntityReference | EntityReference[];

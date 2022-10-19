@@ -26,10 +26,12 @@ async function handleAnnounce(activity, databaseService) {
     if (!sharesCollection) {
         throw new Error('bad request; no shares collection');
     }
-    if (sharesCollection.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION) {
+    if (sharesCollection.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION || (Array.isArray(sharesCollection.type) &&
+        sharesCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION))) {
         await databaseService.insertItem(sharesCollectionId, activity.id);
     }
-    else if (sharesCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+    else if (sharesCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION || (Array.isArray(sharesCollection.type) &&
+        sharesCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
         await databaseService.insertOrderedItem(sharesCollectionId, activity.id);
     }
     if (!foundThing.attributedTo) {

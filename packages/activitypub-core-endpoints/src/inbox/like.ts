@@ -42,9 +42,15 @@ export async function handleLike(
     throw new Error('bad request ;; no likes collection');
   }
 
-  if (likesCollection.type === AP.CollectionTypes.COLLECTION) {
+  if (likesCollection.type === AP.CollectionTypes.COLLECTION || (
+    Array.isArray(likesCollection.type) &&
+    likesCollection.type.includes(AP.CollectionTypes.COLLECTION)
+  )) {
     await databaseService.insertItem(likesCollectionId, activity.id);
-  } else if (likesCollection.type === AP.CollectionTypes.ORDERED_COLLECTION) {
+  } else if (likesCollection.type === AP.CollectionTypes.ORDERED_COLLECTION || (
+    Array.isArray(likesCollection.type) &&
+    likesCollection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
+  )) {
     await databaseService.insertOrderedItem(likesCollectionId, activity.id);
   }
 }

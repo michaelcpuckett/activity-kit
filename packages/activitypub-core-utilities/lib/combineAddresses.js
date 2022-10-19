@@ -4,12 +4,16 @@ exports.combineAddresses = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const getId_1 = require("./getId");
 function combineAddresses(activity) {
-    if (activity.type === activitypub_core_types_1.AP.ActivityTypes.CREATE &&
+    if ((activity.type === activitypub_core_types_1.AP.ActivityTypes.CREATE ||
+        Array.isArray(activity.type) &&
+            activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.CREATE)) &&
         'object' in activity &&
         activity.object &&
         'type' in activity.object) {
+        const activityObject = activity.object;
         for (const type of Object.values(activitypub_core_types_1.AP.CoreObjectTypes)) {
-            if (type === activity.object.type) {
+            if (type === activityObject.type || (Array.isArray(activityObject.type) &&
+                activityObject.type.includes(type))) {
                 const activityTo = Array.isArray(activity.to)
                     ? activity.to
                     : activity.to
@@ -35,30 +39,30 @@ function combineAddresses(activity) {
                     : activity.audience
                         ? [activity.audience]
                         : [];
-                const objectTo = Array.isArray(activity.object.to)
-                    ? activity.object.to
-                    : activity.object.to
-                        ? [activity.object.to]
+                const objectTo = Array.isArray(activityObject.to)
+                    ? activityObject.to
+                    : activityObject.to
+                        ? [activityObject.to]
                         : [];
-                const objectCc = Array.isArray(activity.object.cc)
-                    ? activity.object.cc
-                    : activity.object.cc
-                        ? [activity.object.cc]
+                const objectCc = Array.isArray(activityObject.cc)
+                    ? activityObject.cc
+                    : activityObject.cc
+                        ? [activityObject.cc]
                         : [];
-                const objectBto = Array.isArray(activity.object.bto)
-                    ? activity.object.bto
-                    : activity.object.bto
-                        ? [activity.object.bto]
+                const objectBto = Array.isArray(activityObject.bto)
+                    ? activityObject.bto
+                    : activityObject.bto
+                        ? [activityObject.bto]
                         : [];
-                const objectBcc = Array.isArray(activity.object.bcc)
-                    ? activity.object.bcc
-                    : activity.object.bcc
-                        ? [activity.object.bcc]
+                const objectBcc = Array.isArray(activityObject.bcc)
+                    ? activityObject.bcc
+                    : activityObject.bcc
+                        ? [activityObject.bcc]
                         : [];
-                const objectAudience = Array.isArray(activity.object.audience)
-                    ? activity.object.audience
-                        ? activity.object.audience
-                        : [activity.object.audience]
+                const objectAudience = Array.isArray(activityObject.audience)
+                    ? activityObject.audience
+                        ? activityObject.audience
+                        : [activityObject.audience]
                     : [];
                 const to = [...new Set([...activityTo, ...objectTo].map(getId_1.getId))].filter((item) => item);
                 const bto = [
@@ -76,11 +80,12 @@ function combineAddresses(activity) {
                 activity.cc = cc;
                 activity.bcc = bcc;
                 activity.audience = audience;
-                activity.object.to = to;
-                activity.object.bto = bto;
-                activity.object.cc = cc;
-                activity.object.bcc = bcc;
-                activity.object.audience = audience;
+                activityObject.to = to;
+                activityObject.bto = bto;
+                activityObject.cc = cc;
+                activityObject.bcc = bcc;
+                activityObject.audience = audience;
+                activity.object = activityObject;
             }
         }
     }

@@ -28,7 +28,7 @@ export async function handleCreate(
     throw new Error('bad request 1');
   }
 
-  const object = getTypedEntity(activity.object);
+  const object = getTypedEntity(activity.object as {[key: string]: unknown});
 
   if (!object) {
     throw new Error('Bad request. 2');
@@ -82,17 +82,21 @@ export async function handleCreate(
   }
 
   for (const type of Object.values(AP.CoreObjectTypes)) {
-    if (type === object.type) {
-      object.attributedTo = activity.actor;
-      object.replies = objectReplies;
-      object.likes = objectLikes;
-      object.shares = objectShares;
-      object.published = new Date();
-      object.attributedTo = activity.actor;
-      object.published = publishedDate;
+    if (type === object.type || (
+      Array.isArray(object.type) &&
+      object.type.includes(type)
+    )) {
+      const typedObject = getTypedEntity(object as { [key: string]: unknown }) as AP.ExtendedObject;
+      typedObject.attributedTo = activity.actor;
+      typedObject.replies = objectReplies;
+      typedObject.likes = objectLikes;
+      typedObject.shares = objectShares;
+      typedObject.published = new Date();
+      typedObject.attributedTo = activity.actor;
+      typedObject.published = publishedDate;
 
       await Promise.all([
-        databaseService.saveEntity(object),
+        databaseService.saveEntity(typedObject),
         databaseService.saveEntity(objectReplies),
         databaseService.saveEntity(objectLikes),
         databaseService.saveEntity(objectShares),

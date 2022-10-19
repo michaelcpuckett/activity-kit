@@ -1,13 +1,14 @@
 import { AllTypes, ExtendedObjectTypes } from '../util/const';
 import { BaseCoreObject } from '../Core/CoreObject';
 import { EntityReference, CoreObjectReference } from '../Core';
+import { TypeOrArrayWithType } from '../Core/Entity';
 
 type BaseExtendedObject = BaseCoreObject & {
-  type: typeof ExtendedObjectTypes[keyof typeof ExtendedObjectTypes];
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes[keyof typeof ExtendedObjectTypes]>;
 };
 
 export type Tombstone = BaseExtendedObject & {
-  type: typeof ExtendedObjectTypes.TOMBSTONE;
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes.TOMBSTONE>;
   formerType?:
     | typeof AllTypes[keyof typeof AllTypes]
     | Array<typeof AllTypes[keyof typeof AllTypes]>;
@@ -15,30 +16,30 @@ export type Tombstone = BaseExtendedObject & {
 };
 
 export type Relationship = BaseExtendedObject & {
-  type: typeof ExtendedObjectTypes.RELATIONSHIP;
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes.RELATIONSHIP>;
   subject?: EntityReference;
   object?: EntityReference | EntityReference[];
   relationship?: CoreObjectReference;
 };
 
 export type Article = BaseExtendedObject & {
-  type: typeof ExtendedObjectTypes.ARTICLE;
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes.ARTICLE>;
 };
 
 export type Note = BaseExtendedObject & {
-  type: typeof ExtendedObjectTypes.NOTE;
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes.NOTE>;
 };
 
 export type Page = BaseExtendedObject & {
-  type: typeof ExtendedObjectTypes.PAGE;
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes.PAGE>;
 };
 
 export type Event = BaseExtendedObject & {
-  type: typeof ExtendedObjectTypes.EVENT;
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes.EVENT>;
 };
 
 export type Place = BaseExtendedObject & {
-  type: typeof ExtendedObjectTypes.PLACE;
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes.PLACE>;
   accuracy?: number;
   altitude?: number;
   latitude?: number;
@@ -48,23 +49,23 @@ export type Place = BaseExtendedObject & {
 };
 
 export type Document = BaseExtendedObject & {
-  type: typeof ExtendedObjectTypes.DOCUMENT;
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes.DOCUMENT>;
 };
 
 export type Image = Document & {
-  type: typeof ExtendedObjectTypes.IMAGE;
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes.IMAGE>;
 };
 
 export type Audio = Document & {
-  type: typeof ExtendedObjectTypes.IMAGE;
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes.AUDIO>;
 };
 
 export type Video = Document & {
-  type: typeof ExtendedObjectTypes.IMAGE;
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes.VIDEO>;
 };
 
 export type Profile = BaseExtendedObject & {
-  type: typeof ExtendedObjectTypes.PROFILE;
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes.PROFILE>;
   describes?: CoreObjectReference;
 };
 

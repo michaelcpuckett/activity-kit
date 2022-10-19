@@ -37,7 +37,8 @@ export async function getRecipientsList(
 
           if (
             typeof foundThing === 'object' &&
-            foundThing.type === AP.CollectionTypes.ORDERED_COLLECTION
+            foundThing.type === AP.CollectionTypes.ORDERED_COLLECTION ||
+            Array.isArray(foundThing.type) && foundThing.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
           ) {
             if (foundThing.orderedItems) {
               return foundThing.orderedItems;
@@ -46,7 +47,8 @@ export async function getRecipientsList(
 
           if (
             typeof foundThing === 'object' &&
-            foundThing.type === AP.CollectionTypes.COLLECTION
+            foundThing.type === AP.CollectionTypes.COLLECTION ||
+            Array.isArray(foundThing.type) && foundThing.type.includes(AP.CollectionTypes.COLLECTION)
           ) {
             if (foundThing.items) {
               return foundThing.items;
@@ -57,7 +59,11 @@ export async function getRecipientsList(
             typeof foundThing === 'object' &&
             (
               foundThing.type === AP.CollectionTypes.ORDERED_COLLECTION ||
-              foundThing.type === AP.CollectionTypes.COLLECTION
+              foundThing.type === AP.CollectionTypes.COLLECTION ||
+              Array.isArray(foundThing.type) && (
+                foundThing.type.includes(AP.CollectionTypes.ORDERED_COLLECTION) ||
+                foundThing.type.includes(AP.CollectionTypes.COLLECTION)
+              )
             )
           ) {
             console.log('Correct Type...')
@@ -68,7 +74,10 @@ export async function getRecipientsList(
 
               if (
                 typeof foundCollectionPage === 'object' &&
-                foundCollectionPage.type === AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE &&
+                (
+                  foundCollectionPage.type === AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE ||
+                  Array.isArray(foundCollectionPage.type) && foundCollectionPage.type.includes(AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE)
+                ) &&
                 foundCollectionPage.orderedItems
               ) {
                 console.log(foundCollectionPage.orderedItems);
@@ -79,7 +88,10 @@ export async function getRecipientsList(
 
               if (
                 typeof foundCollectionPage === 'object' &&
-                foundCollectionPage.type === AP.CollectionPageTypes.COLLECTION_PAGE &&
+                (
+                  foundCollectionPage.type === AP.CollectionPageTypes.COLLECTION_PAGE ||
+                  Array.isArray(foundCollectionPage.type) && foundCollectionPage.type.includes(AP.CollectionPageTypes.COLLECTION_PAGE)
+                 ) &&
                 foundCollectionPage.items
               ) {
                 console.log('has items')

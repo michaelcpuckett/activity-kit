@@ -1,4 +1,4 @@
-import { BaseEntity } from './Entity';
+import { BaseEntity, TypeOrArrayWithType } from './Entity';
 import { LinkTypes } from '../util/const';
 import { StringReferenceMap } from '../util/values';
 import { EntityReference } from '.';
@@ -16,7 +16,7 @@ import { EntityReference } from '.';
  */
 
 export interface BaseLink extends BaseEntity {
-  type: typeof LinkTypes[keyof typeof LinkTypes];
+  type: TypeOrArrayWithType<typeof LinkTypes[keyof typeof LinkTypes]>;
   height?: number;
   href?: URL;
   hrefLang?: string;

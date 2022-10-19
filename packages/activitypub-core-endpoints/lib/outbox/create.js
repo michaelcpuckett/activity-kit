@@ -55,16 +55,18 @@ async function handleCreate(activity, databaseService) {
         throw new Error('Bad request 4');
     }
     for (const type of Object.values(activitypub_core_types_1.AP.CoreObjectTypes)) {
-        if (type === object.type) {
-            object.attributedTo = activity.actor;
-            object.replies = objectReplies;
-            object.likes = objectLikes;
-            object.shares = objectShares;
-            object.published = new Date();
-            object.attributedTo = activity.actor;
-            object.published = publishedDate;
+        if (type === object.type || (Array.isArray(object.type) &&
+            object.type.includes(type))) {
+            const typedObject = (0, activitypub_core_utilities_1.getTypedEntity)(object);
+            typedObject.attributedTo = activity.actor;
+            typedObject.replies = objectReplies;
+            typedObject.likes = objectLikes;
+            typedObject.shares = objectShares;
+            typedObject.published = new Date();
+            typedObject.attributedTo = activity.actor;
+            typedObject.published = publishedDate;
             await Promise.all([
-                databaseService.saveEntity(object),
+                databaseService.saveEntity(typedObject),
                 databaseService.saveEntity(objectReplies),
                 databaseService.saveEntity(objectLikes),
                 databaseService.saveEntity(objectShares),

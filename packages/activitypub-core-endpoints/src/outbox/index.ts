@@ -88,31 +88,54 @@ async function handleOutboxPost(
     }
 
     // Run side effects.
-    switch (activity.type) {
-      case AP.ActivityTypes.CREATE:
-        activity.object = await handleCreate(activity, databaseService);
-        break;
-      case AP.ActivityTypes.DELETE:
-        await handleDelete(activity, databaseService);
-        break;
-      case AP.ActivityTypes.UPDATE:
-        await handleUpdate(activity, databaseService);
-        break;
-      case AP.ActivityTypes.LIKE:
-        await handleLike(activity, databaseService);
-        break;
-      case AP.ActivityTypes.ANNOUNCE:
-        await handleAnnounce(activity, databaseService);
-        break;
-      case AP.ActivityTypes.ADD:
-        await handleAdd(activity, databaseService);
-        break;
-      case AP.ActivityTypes.REMOVE:
-        await handleRemove(activity, databaseService);
-        break;
-      case AP.ActivityTypes.UNDO:
-        await handleUndo(activity, databaseService, initiator);
-        break;
+    if ('object' in activity) {
+      if (activity.type === AP.ActivityTypes.CREATE || (
+        Array.isArray(activity.type) && activity.type.includes(AP.ActivityTypes.CREATE)
+      )) {
+        activity.object = await handleCreate(activity as AP.Create, databaseService);
+      }
+
+      if (activity.type === AP.ActivityTypes.DELETE || (
+        Array.isArray(activity.type) && activity.type.includes(AP.ActivityTypes.DELETE)
+      )) {
+        await handleDelete(activity as AP.Delete, databaseService);
+      }
+
+      if (activity.type === AP.ActivityTypes.UPDATE || (
+        Array.isArray(activity.type) && activity.type.includes(AP.ActivityTypes.UPDATE)
+      )) {
+        await handleUpdate(activity as AP.Update, databaseService);
+      }
+
+      if (activity.type === AP.ActivityTypes.LIKE || (
+        Array.isArray(activity.type) && activity.type.includes(AP.ActivityTypes.LIKE)
+      )) {
+        await handleLike(activity as AP.Like, databaseService);
+      }
+
+      if (activity.type === AP.ActivityTypes.ANNOUNCE || (
+        Array.isArray(activity.type) && activity.type.includes(AP.ActivityTypes.ANNOUNCE)
+      )) {
+        await handleAnnounce(activity as AP.Announce, databaseService);
+      }
+      
+      if (activity.type === AP.ActivityTypes.ADD || (
+        Array.isArray(activity.type) && activity.type.includes(AP.ActivityTypes.ADD)
+      )) {
+        await handleAdd(activity as AP.Add, databaseService);
+      }
+      
+      if (activity.type === AP.ActivityTypes.REMOVE || (
+        Array.isArray(activity.type) && activity.type.includes(AP.ActivityTypes.REMOVE)
+      )) {
+        await handleRemove(activity as AP.Remove, databaseService);
+      }
+      
+      if (activity.type === AP.ActivityTypes.UNDO || (
+        Array.isArray(activity.type) && activity.type.includes(AP.ActivityTypes.UNDO)
+      )) {
+        await handleUndo(activity as AP.Undo, databaseService, initiator);
+      }
     }
 
     const saveActivity = async (activityToSave: AP.Activity) => {
@@ -191,7 +214,10 @@ async function handleOutboxPost(
     };
 
     for (const type of Object.values(AP.ActivityTypes)) {
-      if (type === activity.type) {
+      if (type === activity.type || (
+        Array.isArray(activity.type) &&
+        activity.type.includes(type)
+      )) {
         return await saveActivity(activity);
       }
     }

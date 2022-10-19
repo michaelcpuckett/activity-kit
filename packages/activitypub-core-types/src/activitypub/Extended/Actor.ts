@@ -6,6 +6,7 @@ import {
   OrderedCollectionReference,
 } from './Collection';
 import { StringReferenceMap } from '../util/values';
+import { TypeOrArrayWithType } from '../Core/Entity';
 
 // Actors.
 
@@ -21,10 +22,9 @@ import { StringReferenceMap } from '../util/values';
  * actor's ActivityStreams description.
  */
 
-type BaseActor = BaseCoreObject & {
+ type BaseActor = BaseCoreObject & {
   // Activity Streams properties.
-  type: typeof ActorTypes[keyof typeof ActorTypes];
-
+  type: TypeOrArrayWithType<typeof ActorTypes[keyof typeof ActorTypes]>;
   // Activity Pub properties.
   inbox: OrderedCollectionReference;
   outbox: OrderedCollectionReference;
@@ -51,23 +51,23 @@ type BaseActor = BaseCoreObject & {
 };
 
 export type Application = BaseActor & {
-  type: typeof ActorTypes.APPLICATION;
+  type: TypeOrArrayWithType<typeof ActorTypes.APPLICATION>;
 };
 
 export type Person = BaseActor & {
-  type: typeof ActorTypes.PERSON;
+  type: TypeOrArrayWithType<typeof ActorTypes.PERSON>;
 };
 
 export type Group = BaseActor & {
-  type: typeof ActorTypes.GROUP;
+  type: TypeOrArrayWithType<typeof ActorTypes.GROUP>;
 };
 
 export type Service = BaseActor & {
-  type: typeof ActorTypes.SERVICE;
+  type: TypeOrArrayWithType<typeof ActorTypes.SERVICE>;
 };
 
 export type Organization = BaseActor & {
-  type: typeof ActorTypes.ORGANIZATION;
+  type: TypeOrArrayWithType<typeof ActorTypes.ORGANIZATION>;
 };
 
 export type Actor = Application | Service | Group | Organization | Person;

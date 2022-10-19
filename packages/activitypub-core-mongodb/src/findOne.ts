@@ -1,6 +1,6 @@
 import { MongoDatabase } from '.';
 import { AP } from 'activitypub-core-types';
-import { convertStringsToUrls } from 'activitypub-core-utilities';
+import { convertStringsToUrls, getTypedEntity } from 'activitypub-core-utilities';
 
 export async function findOne(
   this: MongoDatabase,
@@ -15,21 +15,5 @@ export async function findOne(
 
   delete (value as Partial<typeof value>)._id;
 
-  const foundEntity = convertStringsToUrls(value) as AP.Entity;
-
-  const entityWithType: {
-    [key: string]: unknown;
-    type: typeof AP.AllTypes[keyof typeof AP.AllTypes];
-  } = {
-    ...foundEntity,
-    type: foundEntity.type as typeof AP.AllTypes[keyof typeof AP.AllTypes],
-  };
-
-  for (const type of Object.values(AP.AllTypes)) {
-    if (type === entityWithType.type) {
-      return entityWithType as AP.Entity;
-    }
-  }
-
-  return null;
+  return getTypedEntity(convertStringsToUrls(value) as { [key: string]: unknown });
 }

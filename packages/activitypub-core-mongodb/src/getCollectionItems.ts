@@ -35,8 +35,11 @@ export async function getCollectionItems(
   }
 
   const collectionItems =
-    collection.type === AP.CollectionTypes.ORDERED_COLLECTION
-      ? collection.orderedItems
+    collection.type === AP.CollectionTypes.ORDERED_COLLECTION || (
+      Array.isArray(collection.type) &&
+      collection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
+    )
+      ? (collection as AP.OrderedCollection).orderedItems
       : collection.items;
 
   if (!Array.isArray(collectionItems)) {

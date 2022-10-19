@@ -49,7 +49,9 @@ async function entityGetHandler(request, response, authenticationService, databa
         return handleNotFound();
     }
     if (entity.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION ||
-        entity.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+        entity.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
+        (Array.isArray(entity.type) && (entity.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
+            entity.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)))) {
         const collection = await databaseService.expandCollection(entity);
         if (collection) {
             entity = collection;
@@ -58,10 +60,12 @@ async function entityGetHandler(request, response, authenticationService, databa
     if ('likes' in entity && entity.likes instanceof URL) {
         const foundLikesCollection = await databaseService.findEntityById(entity.likes);
         if (foundLikesCollection &&
-            foundLikesCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+            foundLikesCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
+            (Array.isArray(foundLikesCollection.type) && foundLikesCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
             const expandedLikes = await databaseService.expandCollection(foundLikesCollection);
             if (expandedLikes &&
-                expandedLikes.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+                expandedLikes.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
+                (Array.isArray(expandedLikes.type) && expandedLikes.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
                 entity.likes = expandedLikes;
             }
         }
@@ -69,10 +73,12 @@ async function entityGetHandler(request, response, authenticationService, databa
     if ('shares' in entity && entity.shares instanceof URL) {
         const foundSharesCollection = await databaseService.findEntityById(entity.shares);
         if (foundSharesCollection &&
-            foundSharesCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+            foundSharesCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
+            (Array.isArray(foundSharesCollection.type) && foundSharesCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
             const expandedShares = await databaseService.expandCollection(foundSharesCollection);
             if (expandedShares &&
-                expandedShares.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+                expandedShares.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
+                (Array.isArray(expandedShares.type) && expandedShares.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
                 entity.shares = expandedShares;
             }
         }

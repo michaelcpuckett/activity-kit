@@ -48,7 +48,9 @@ const homeGetHandler = async (req, res, authenticationService, databaseService, 
             const foundStream = await databaseService.findEntityById(stream);
             if (foundStream &&
                 (foundStream.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION ||
-                    foundStream.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
+                    foundStream.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
+                    (Array.isArray(foundStream.type) && (foundStream.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
+                        foundStream.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))))) {
                 const expandedStream = await databaseService.expandCollection(foundStream);
                 if (expandedStream) {
                     streams.push(expandedStream);

@@ -75,7 +75,11 @@ export async function entityGetHandler(
 
   if (
     entity.type === AP.CollectionTypes.COLLECTION ||
-    entity.type === AP.CollectionTypes.ORDERED_COLLECTION
+    entity.type === AP.CollectionTypes.ORDERED_COLLECTION ||
+    (Array.isArray(entity.type) && (
+      entity.type.includes(AP.CollectionTypes.COLLECTION) ||
+      entity.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
+    ))
   ) {
     const collection = await databaseService.expandCollection(entity);
 
@@ -91,7 +95,8 @@ export async function entityGetHandler(
 
     if (
       foundLikesCollection &&
-      foundLikesCollection.type === AP.CollectionTypes.ORDERED_COLLECTION
+      foundLikesCollection.type === AP.CollectionTypes.ORDERED_COLLECTION ||
+      (Array.isArray(foundLikesCollection.type) && foundLikesCollection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
     ) {
       const expandedLikes = await databaseService.expandCollection(
         foundLikesCollection,
@@ -99,7 +104,8 @@ export async function entityGetHandler(
 
       if (
         expandedLikes &&
-        expandedLikes.type === AP.CollectionTypes.ORDERED_COLLECTION
+        expandedLikes.type === AP.CollectionTypes.ORDERED_COLLECTION ||
+        (Array.isArray(expandedLikes.type) && expandedLikes.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
       ) {
         entity.likes = expandedLikes;
       }
@@ -113,7 +119,8 @@ export async function entityGetHandler(
 
     if (
       foundSharesCollection &&
-      foundSharesCollection.type === AP.CollectionTypes.ORDERED_COLLECTION
+      foundSharesCollection.type === AP.CollectionTypes.ORDERED_COLLECTION ||
+      (Array.isArray(foundSharesCollection.type) && foundSharesCollection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
     ) {
       const expandedShares = await databaseService.expandCollection(
         foundSharesCollection,
@@ -121,7 +128,8 @@ export async function entityGetHandler(
 
       if (
         expandedShares &&
-        expandedShares.type === AP.CollectionTypes.ORDERED_COLLECTION
+        expandedShares.type === AP.CollectionTypes.ORDERED_COLLECTION ||
+        (Array.isArray(expandedShares.type) && expandedShares.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
       ) {
         entity.shares = expandedShares;
       }
