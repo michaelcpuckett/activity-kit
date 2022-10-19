@@ -35,6 +35,21 @@ async function handleLike(activity, databaseService) {
     await Promise.all([
         databaseService.insertOrderedItem(actorLikedId, object.id),
     ]);
+    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(object.id) !== 'remote-object';
+    if (isLocal) {
+        if (!('likes' in object) || !object.likes) {
+            console.log(object);
+            console.log('^object w/o likes');
+            throw new Error('Bad request 4');
+        }
+        const objectLikesId = (0, activitypub_core_utilities_1.getId)(object.likes);
+        if (!objectLikesId) {
+            throw new Error('Bad request 5');
+        }
+        await Promise.all([
+            databaseService.insertOrderedItem(objectLikesId, activity.id),
+        ]);
+    }
 }
 exports.handleLike = handleLike;
 //# sourceMappingURL=like.js.map

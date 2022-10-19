@@ -1,6 +1,6 @@
 import { AP } from 'activitypub-core-types';
 import type { Database } from 'activitypub-core-types';
-import { getId } from 'activitypub-core-utilities';
+import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
 
 export async function handleLike(activity: AP.Like, databaseService: Database) {
   if (!activity.id) {
@@ -34,18 +34,6 @@ export async function handleLike(activity: AP.Like, databaseService: Database) {
   if (!('id' in object) || !object.id) {
     throw new Error('Bad request 3');
   }
-/*
-  if (!('likes' in object) || !object.likes) {
-    console.log(object);
-    console.log('^object w/o likes');
-    throw new Error('Bad request 4');
-  }
-
-  const objectLikesId = getId(object.likes);
-
-  if (!objectLikesId) {
-    throw new Error('Bad request 5');
-  }*/
 
   if (!('liked' in actor) || !actor.liked) {
     throw new Error('bad request 9');
@@ -60,4 +48,25 @@ export async function handleLike(activity: AP.Like, databaseService: Database) {
   await Promise.all([
     databaseService.insertOrderedItem(actorLikedId, object.id),
   ]);
+
+  
+  const isLocal = getCollectionNameByUrl(object.id) !== 'remote-object';
+
+  if (isLocal) {
+    if (!('likes' in object) || !object.likes) {
+      console.log(object);
+      console.log('^object w/o likes');
+      throw new Error('Bad request 4');
+    }
+
+    const objectLikesId = getId(object.likes);
+
+    if (!objectLikesId) {
+      throw new Error('Bad request 5');
+    }
+
+    await Promise.all([
+      databaseService.insertOrderedItem(objectLikesId, activity.id),
+    ]);
+  }
 }
