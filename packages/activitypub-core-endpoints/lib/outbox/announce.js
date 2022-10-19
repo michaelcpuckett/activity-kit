@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleAnnounce = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function handleAnnounce(activity, databaseService) {
+    if (!activity.id) {
+        throw new Error('Bad request 6');
+    }
     const activityActorId = (0, activitypub_core_utilities_1.getId)(activity.actor);
     if (!activityActorId) {
         throw new Error('No actor ID.');
@@ -21,16 +24,6 @@ async function handleAnnounce(activity, databaseService) {
     }
     if (!('id' in object) || !object.id) {
         throw new Error('Bad request 3');
-    }
-    if (!('shares' in object) || !object.shares) {
-        throw new Error('Bad request 4');
-    }
-    const objectSharesId = (0, activitypub_core_utilities_1.getId)(object.shares);
-    if (!objectSharesId) {
-        throw new Error('Bad request 5');
-    }
-    if (!activity.id) {
-        throw new Error('Bad request 6');
     }
     if (!('streams' in actor) ||
         !actor.streams ||
@@ -51,9 +44,21 @@ async function handleAnnounce(activity, databaseService) {
         throw new Error('bad request');
     }
     await Promise.all([
-        databaseService.insertOrderedItem(objectSharesId, activity.id),
         databaseService.insertOrderedItem(actorSharedCollection.id, object.id),
     ]);
+    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(object.id) !== 'remote-object';
+    if (isLocal) {
+        if (!('shares' in object) || !object.shares) {
+            throw new Error('Bad request 4');
+        }
+        const objectSharesId = (0, activitypub_core_utilities_1.getId)(object.shares);
+        if (!objectSharesId) {
+            throw new Error('Bad request 5');
+        }
+        await Promise.all([
+            databaseService.insertOrderedItem(objectSharesId, activity.id),
+        ]);
+    }
 }
 exports.handleAnnounce = handleAnnounce;
 //# sourceMappingURL=announce.js.map

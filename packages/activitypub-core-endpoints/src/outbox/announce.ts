@@ -1,11 +1,15 @@
 import { AP } from 'activitypub-core-types';
 import type { Database } from 'activitypub-core-types';
-import { getId } from 'activitypub-core-utilities';
+import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
 
 export async function handleAnnounce(
   activity: AP.Announce,
   databaseService: Database,
 ) {
+  if (!activity.id) {
+    throw new Error('Bad request 6');
+  }
+
   const activityActorId = getId(activity.actor);
 
   if (!activityActorId) {
@@ -32,20 +36,6 @@ export async function handleAnnounce(
 
   if (!('id' in object) || !object.id) {
     throw new Error('Bad request 3');
-  }
-
-  if (!('shares' in object) || !object.shares) {
-    throw new Error('Bad request 4');
-  }
-
-  const objectSharesId = getId(object.shares);
-
-  if (!objectSharesId) {
-    throw new Error('Bad request 5');
-  }
-
-  if (!activity.id) {
-    throw new Error('Bad request 6');
   }
 
   if (
@@ -75,7 +65,24 @@ export async function handleAnnounce(
   }
 
   await Promise.all([
-    databaseService.insertOrderedItem(objectSharesId, activity.id),
     databaseService.insertOrderedItem(actorSharedCollection.id, object.id),
   ]);
+
+  const isLocal = getCollectionNameByUrl(object.id) !== 'remote-object';
+
+  if (isLocal) {
+    if (!('shares' in object) || !object.shares) {
+      throw new Error('Bad request 4');
+    }
+
+    const objectSharesId = getId(object.shares);
+
+    if (!objectSharesId) {
+      throw new Error('Bad request 5');
+    }
+
+    await Promise.all([
+      databaseService.insertOrderedItem(objectSharesId, activity.id),
+    ]);
+  }
 }
