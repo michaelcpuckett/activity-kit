@@ -14,7 +14,7 @@ export async function saveEntity(this: MongoDatabase, entity: AP.Entity) {
 
   const collectionName = getCollectionNameByUrl(entity.id);
   const _id = entity.id.toString();
-  const convertedEntity = cleanProps(convertUrlsToStrings(addContext(entity)));
+  const convertedEntity = cleanProps(convertUrlsToStrings(entity));
 
   return await this.db.collection(collectionName).replaceOne(
     {
