@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.outboxHandler = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
@@ -17,17 +20,18 @@ const activitypub_core_utilities_3 = require("activitypub-core-utilities");
 const activitypub_core_utilities_4 = require("activitypub-core-utilities");
 const activitypub_core_utilities_5 = require("activitypub-core-utilities");
 const activitypub_core_utilities_6 = require("activitypub-core-utilities");
+const cookie_1 = __importDefault(require("cookie"));
 async function outboxHandler(req, res, authenticationService, databaseService, deliveryService) {
     if (!req) {
         throw new Error('No request object.');
     }
     if (req.method === 'POST') {
-        return await handleOutboxPost(req, res, databaseService, deliveryService);
+        return await handleOutboxPost(req, res, authenticationService, databaseService, deliveryService);
     }
     return await (0, entity_1.entityGetHandler)(req, res, authenticationService, databaseService);
 }
 exports.outboxHandler = outboxHandler;
-async function handleOutboxPost(req, res, databaseService, deliveryService) {
+async function handleOutboxPost(req, res, authenticationService, databaseService, deliveryService) {
     if (!req || !res) {
         throw new Error('No response object.');
     }
@@ -38,6 +42,11 @@ async function handleOutboxPost(req, res, databaseService, deliveryService) {
         });
         if (!initiator || !initiator.id || !('outbox' in initiator)) {
             throw new Error('No actor with this outbox.');
+        }
+        const cookies = cookie_1.default.parse(req.headers.cookie ?? '');
+        const actor = await databaseService.getActorByUserId(await authenticationService.getUserIdByToken(cookies.__session ?? ''));
+        if (!actor || actor.id.toString() !== initiator.id.toString()) {
+            throw new Error('Not authorized.');
         }
         const initiatorOutboxId = new URL(url);
         const entity = await (0, activitypub_core_utilities_5.parseStream)(req);
@@ -57,44 +66,28 @@ async function handleOutboxPost(req, res, databaseService, deliveryService) {
             }
         }
         if ('object' in activity) {
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.CREATE ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.CREATE))) {
+            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
                 activity.object = await (0, create_1.handleCreate)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.DELETE ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.DELETE))) {
+            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.DELETE)) {
                 await (0, delete_1.handleDelete)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.UPDATE ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.UPDATE))) {
+            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.UPDATE)) {
                 await (0, update_1.handleUpdate)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.LIKE ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.LIKE))) {
+            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.LIKE)) {
                 await (0, like_1.handleLike)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE))) {
+            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE)) {
                 await (0, announce_1.handleAnnounce)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.ADD ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.ADD))) {
+            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.ADD)) {
                 await (0, add_1.handleAdd)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.REMOVE ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.REMOVE))) {
+            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.REMOVE)) {
                 await (0, remove_1.handleRemove)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.UNDO ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.UNDO))) {
+            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.UNDO)) {
                 await (0, undo_1.handleUndo)(activity, databaseService, initiator);
             }
         }
@@ -144,8 +137,8 @@ async function handleOutboxPost(req, res, databaseService, deliveryService) {
                 databaseService.saveEntity(activityReplies),
                 databaseService.saveEntity(activityLikes),
                 databaseService.saveEntity(activityShares),
+                databaseService.insertOrderedItem(initiatorOutboxId, activityToSaveId),
             ]);
-            await databaseService.insertOrderedItem(initiatorOutboxId, activityToSaveId);
             await deliveryService.broadcast(activityToSave, initiator);
             res.statusCode = 201;
             if (activityToSave.id) {
@@ -157,11 +150,8 @@ async function handleOutboxPost(req, res, databaseService, deliveryService) {
                 props: {},
             };
         };
-        for (const type of Object.values(activitypub_core_types_1.AP.ActivityTypes)) {
-            if (type === activity.type ||
-                (Array.isArray(activity.type) && activity.type.includes(type))) {
-                return await saveActivity(activity);
-            }
+        if ((0, activitypub_core_utilities_1.isTypeOf)(activity, typeof activitypub_core_types_1.AP.ActivityTypes)) {
+            return await saveActivity(activity);
         }
         const convertedActivity = {
             id: activityId,

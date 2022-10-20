@@ -1,5 +1,5 @@
 import { AP } from "activitypub-core-types";
-import { isTypeOf } from "./isTypeOf";
+import { isTypeOf } from "./isType";
 import {
   ACTIVITYSTREAMS_CONTEXT,
   W3ID_SECURITY_CONTEXT

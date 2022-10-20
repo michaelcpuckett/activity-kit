@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRecipientInboxIds = exports.sharedInboxHandler = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
+const create_1 = require("../inbox/create");
 const accept_1 = require("../inbox/accept");
 const announce_1 = require("../inbox/announce");
 const follow_1 = require("../inbox/follow");
@@ -16,8 +17,6 @@ async function sharedInboxHandler(req, res, databaseService, deliveryService) {
     }
     try {
         const activity = await (0, activitypub_core_utilities_2.parseStream)(req);
-        console.log(activity);
-        console.log('^activity: sharedInbox');
         if (!activity) {
             throw new Error('Bad jsonld?');
         }
@@ -37,24 +36,19 @@ async function sharedInboxHandler(req, res, databaseService, deliveryService) {
             throw new Error('Bad activity, no actor');
         }
         if ('object' in activity) {
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.LIKE ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.LIKE))) {
+            if ((0, activitypub_core_utilities_3.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
+                await (0, create_1.handleCreate)(activity, databaseService);
+            }
+            if ((0, activitypub_core_utilities_3.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.LIKE)) {
                 await (0, like_1.handleLike)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE))) {
+            if ((0, activitypub_core_utilities_3.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE)) {
                 await (0, announce_1.handleAnnounce)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.ACCEPT ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.ACCEPT))) {
+            if ((0, activitypub_core_utilities_3.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.ACCEPT)) {
                 await (0, accept_1.handleAccept)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.FOLLOW ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.FOLLOW))) {
+            if ((0, activitypub_core_utilities_3.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.FOLLOW)) {
                 await (0, follow_1.handleFollow)(activity, databaseService, deliveryService);
             }
         }

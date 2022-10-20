@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import { getId } from 'activitypub-core-utilities';
+import { getId, isType } from 'activitypub-core-utilities';
 import { handleRemove } from '../remove';
 import { handleAdd } from '../add';
 import { handleUndoLike } from './undoLike';
@@ -37,28 +37,24 @@ export async function handleUndo(
   }
 
   // Run side effects.
-  switch (activityObject.type) {
-    case AP.ActivityTypes.CREATE:
-      await handleDelete(activityObject, databaseService);
-      break;
-    // case AP.ActivityTypes.DELETE:
-    //   await handleUndoDelete(activityObject, databaseService, initiator);
-    //   break;
-    // case AP.ActivityTypes.UPDATE:
-    //   await handleUndoUpdate(activityObject as AP.Update, databaseService, initiator);
-    //   break;
-    case AP.ActivityTypes.LIKE:
-      await handleUndoLike(activityObject as AP.Like, databaseService);
-      break;
-    case AP.ActivityTypes.ANNOUNCE:
-      await handleUndoAnnounce(activityObject as AP.Announce, databaseService);
-      break;
-    case AP.ActivityTypes.ADD:
-      await handleRemove(activityObject, databaseService);
-      break;
-    case AP.ActivityTypes.REMOVE:
-      await handleAdd(activityObject, databaseService);
-      break;
+  if (isType(activityObject, AP.ActivityTypes.CREATE)) {
+    await handleDelete(activityObject, databaseService);
+  }
+
+  if (isType(activityObject, AP.ActivityTypes.LIKE)) {
+    await handleUndoLike(activityObject as AP.Like, databaseService);
+  }
+
+  if (isType(activityObject, AP.ActivityTypes.ANNOUNCE)) {
+    await handleUndoAnnounce(activityObject as AP.Announce, databaseService);
+  }
+
+  if (isType(activityObject, AP.ActivityTypes.ADD)) {
+    await handleRemove(activityObject, databaseService);
+  }
+
+  if (isType(activityObject, AP.ActivityTypes.REMOVE)) {
+    await handleAdd(activityObject, databaseService);
   }
 }
 

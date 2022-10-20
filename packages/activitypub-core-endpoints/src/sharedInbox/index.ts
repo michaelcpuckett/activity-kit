@@ -1,12 +1,13 @@
 import type { IncomingMessage, ServerResponse } from 'http';
 import { AP } from 'activitypub-core-types';
+import { handleCreate } from '../inbox/create';
 import { handleAccept } from '../inbox/accept';
 import { handleAnnounce } from '../inbox/announce';
 import { handleFollow } from '../inbox/follow';
 import { handleLike } from '../inbox/like';
 import { getId } from 'activitypub-core-utilities';
 import { parseStream } from 'activitypub-core-utilities';
-import { stringify } from 'activitypub-core-utilities';
+import { stringify, isType } from 'activitypub-core-utilities';
 import type { Database } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
 
@@ -22,9 +23,6 @@ export async function sharedInboxHandler(
 
   try {
     const activity = await parseStream(req);
-
-    console.log(activity);
-    console.log('^activity: sharedInbox');
 
     if (!activity) {
       throw new Error('Bad jsonld?');
@@ -53,40 +51,24 @@ export async function sharedInboxHandler(
     }
 
     if ('object' in activity) {
-      if (
-        activity.type === AP.ActivityTypes.LIKE ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.LIKE))
-      ) {
+      if (isType(activity, AP.ActivityTypes.CREATE)) {
+        await handleCreate(activity as AP.Create, databaseService);
+      }
+
+      if (isType(activity, AP.ActivityTypes.LIKE)) {
         await handleLike(activity as AP.Like, databaseService);
       }
 
-      if (
-        activity.type === AP.ActivityTypes.ANNOUNCE ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.ANNOUNCE))
-      ) {
+      if (isType(activity, AP.ActivityTypes.ANNOUNCE)) {
         await handleAnnounce(activity as AP.Announce, databaseService);
       }
 
-      if (
-        activity.type === AP.ActivityTypes.ACCEPT ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.ACCEPT))
-      ) {
+      if (isType(activity, AP.ActivityTypes.ACCEPT)) {
         await handleAccept(activity as AP.Accept, databaseService);
       }
 
-      if (
-        activity.type === AP.ActivityTypes.FOLLOW ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.FOLLOW))
-      ) {
-        await handleFollow(
-          activity as AP.Follow,
-          databaseService,
-          deliveryService,
-        );
+      if (isType(activity, AP.ActivityTypes.FOLLOW)) {
+        await handleFollow(activity as AP.Follow, databaseService, deliveryService);
       }
     }
 

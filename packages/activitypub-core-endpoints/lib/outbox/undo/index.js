@@ -20,22 +20,20 @@ async function handleUndo(activity, databaseService, initiator) {
     if (!isAuthorizedToModifyObject(initiator, activity)) {
         throw new Error('Not authorized');
     }
-    switch (activityObject.type) {
-        case activitypub_core_types_1.AP.ActivityTypes.CREATE:
-            await (0, delete_1.handleDelete)(activityObject, databaseService);
-            break;
-        case activitypub_core_types_1.AP.ActivityTypes.LIKE:
-            await (0, undoLike_1.handleUndoLike)(activityObject, databaseService);
-            break;
-        case activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE:
-            await (0, undoAnnounce_1.handleUndoAnnounce)(activityObject, databaseService);
-            break;
-        case activitypub_core_types_1.AP.ActivityTypes.ADD:
-            await (0, remove_1.handleRemove)(activityObject, databaseService);
-            break;
-        case activitypub_core_types_1.AP.ActivityTypes.REMOVE:
-            await (0, add_1.handleAdd)(activityObject, databaseService);
-            break;
+    if ((0, activitypub_core_utilities_1.isType)(activityObject, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
+        await (0, delete_1.handleDelete)(activityObject, databaseService);
+    }
+    if ((0, activitypub_core_utilities_1.isType)(activityObject, activitypub_core_types_1.AP.ActivityTypes.LIKE)) {
+        await (0, undoLike_1.handleUndoLike)(activityObject, databaseService);
+    }
+    if ((0, activitypub_core_utilities_1.isType)(activityObject, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE)) {
+        await (0, undoAnnounce_1.handleUndoAnnounce)(activityObject, databaseService);
+    }
+    if ((0, activitypub_core_utilities_1.isType)(activityObject, activitypub_core_types_1.AP.ActivityTypes.ADD)) {
+        await (0, remove_1.handleRemove)(activityObject, databaseService);
+    }
+    if ((0, activitypub_core_utilities_1.isType)(activityObject, activitypub_core_types_1.AP.ActivityTypes.REMOVE)) {
+        await (0, add_1.handleAdd)(activityObject, databaseService);
     }
 }
 exports.handleUndo = handleUndo;

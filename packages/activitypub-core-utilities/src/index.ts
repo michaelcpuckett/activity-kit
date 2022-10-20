@@ -10,7 +10,7 @@ export { getCollectionNameByUrl } from './getCollectionNameByUrl';
 export { getGuid } from './getGuid';
 export { getId } from './getId';
 export { getTypedEntity } from './getTypedEntity';
-export { isTypeOf } from './isTypeOf';
+export { isTypeOf, isType } from './isType';
 export { parseStream } from './parseStream';
 export { removeContext } from './removeContext';
 export { streamToString } from './streamToString';

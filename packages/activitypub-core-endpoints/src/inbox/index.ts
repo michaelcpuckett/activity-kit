@@ -6,11 +6,13 @@ import { handleAccept } from './accept';
 import { handleAnnounce } from './announce';
 import { handleFollow } from './follow';
 import { handleLike } from './like';
+import { handleCreate } from './create';
 import { shouldForwardActivity } from './shouldForwardActivity';
 import { stringify } from 'activitypub-core-utilities';
 import { parseStream } from 'activitypub-core-utilities';
 import type { Database, Auth } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
+import { isType } from 'activitypub-core-utilities';
 
 export async function inboxHandler(
   req: IncomingMessage,
@@ -59,9 +61,6 @@ async function handlePost(
     const recipientInboxId = new URL(url);
     const activity = await parseStream(req);
 
-    console.log(activity);
-    console.log('^ activity from user inbox');
-
     if (!activity) {
       throw new Error('bad JSONLD?');
     }
@@ -77,39 +76,23 @@ async function handlePost(
     }
 
     if ('object' in activity) {
-      if (
-        activity.type === AP.ActivityTypes.FOLLOW ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.FOLLOW))
-      ) {
-        await handleFollow(
-          activity as AP.Follow,
-          databaseService,
-          deliveryService,
-        );
+      if (isType(activity, AP.ActivityTypes.CREATE)) {
+        await handleCreate(activity as AP.Create, databaseService);
       }
 
-      if (
-        activity.type === AP.ActivityTypes.ACCEPT ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.ACCEPT))
-      ) {
+      if (isType(activity, AP.ActivityTypes.FOLLOW)) {
+        await handleFollow(activity as AP.Follow, databaseService, deliveryService);
+      }
+
+      if (isType(activity, AP.ActivityTypes.ACCEPT)) {
         await handleAccept(activity as AP.Accept, databaseService);
       }
 
-      if (
-        activity.type === AP.ActivityTypes.LIKE ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.LIKE))
-      ) {
+      if (isType(activity, AP.ActivityTypes.LIKE)) {
         await handleLike(activity as AP.Like, databaseService);
       }
 
-      if (
-        activity.type === AP.ActivityTypes.ANNOUNCE ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.ANNOUNCE))
-      ) {
+      if (isType(activity, AP.ActivityTypes.ANNOUNCE)) {
         await handleAnnounce(activity as AP.Announce, databaseService);
       }
     }

@@ -1,10 +1,11 @@
 import { AP } from 'activitypub-core-types';
 import {
   ACTIVITYSTREAMS_CONTEXT,
+  getCollectionNameByUrl,
   getTypedEntity,
 } from 'activitypub-core-utilities';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
-import { getGuid } from 'activitypub-core-utilities';
+import { getId, getGuid } from 'activitypub-core-utilities';
 import type { Database } from 'activitypub-core-types';
 
 /**
@@ -100,6 +101,22 @@ export async function handleCreate(
         databaseService.saveEntity(objectLikes),
         databaseService.saveEntity(objectShares),
       ]);
+
+      if (typedObject.inReplyTo) {
+        const objectInReplyTo = await databaseService.queryById(getId(typedObject.inReplyTo));
+
+        if (objectInReplyTo) {
+          const isLocal = getCollectionNameByUrl(objectInReplyTo) !== 'remote-object';
+
+          if (isLocal) {
+            const repliesCollectionId = getId(objectInReplyTo.replies);
+
+            if (repliesCollectionId) {
+              await databaseService.insertOrderedItem(repliesCollectionId, typedObject.id);
+            }
+          }
+        }
+      }
 
       return object.id;
     }

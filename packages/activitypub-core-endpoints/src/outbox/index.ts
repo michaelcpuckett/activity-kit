@@ -3,6 +3,7 @@ import type { Auth, Database } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import {
   ACTIVITYSTREAMS_CONTEXT,
+  isTypeOf,
   LOCAL_DOMAIN,
 } from 'activitypub-core-utilities';
 import { entityGetHandler } from '../entity';
@@ -19,7 +20,8 @@ import { getId } from 'activitypub-core-utilities';
 import { combineAddresses } from 'activitypub-core-utilities';
 import { DeliveryService } from 'activitypub-core-delivery';
 import { parseStream } from 'activitypub-core-utilities';
-import { stringify } from 'activitypub-core-utilities';
+import { stringify, isType } from 'activitypub-core-utilities';
+import cookie from 'cookie';
 
 export async function outboxHandler(
   req: IncomingMessage,
@@ -31,8 +33,9 @@ export async function outboxHandler(
   if (!req) {
     throw new Error('No request object.');
   }
+
   if (req.method === 'POST') {
-    return await handleOutboxPost(req, res, databaseService, deliveryService);
+    return await handleOutboxPost(req, res, authenticationService, databaseService, deliveryService);
   }
 
   return await entityGetHandler(
@@ -46,6 +49,7 @@ export async function outboxHandler(
 async function handleOutboxPost(
   req: IncomingMessage,
   res: ServerResponse,
+  authenticationService: Auth,
   databaseService: Database,
   deliveryService: DeliveryService,
 ) {
@@ -62,6 +66,18 @@ async function handleOutboxPost(
 
     if (!initiator || !initiator.id || !('outbox' in initiator)) {
       throw new Error('No actor with this outbox.');
+    }
+
+    // Auth
+
+    const cookies = cookie.parse(req.headers.cookie ?? '');
+
+    const actor = await databaseService.getActorByUserId(
+      await authenticationService.getUserIdByToken(cookies.__session ?? ''),
+    );
+
+    if (!actor || actor.id.toString() !== initiator.id.toString()) {
+      throw new Error('Not authorized.');
     }
 
     const initiatorOutboxId = new URL(url);
@@ -89,70 +105,35 @@ async function handleOutboxPost(
 
     // Run side effects.
     if ('object' in activity) {
-      if (
-        activity.type === AP.ActivityTypes.CREATE ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.CREATE))
-      ) {
-        activity.object = await handleCreate(
-          activity as AP.Create,
-          databaseService,
-        );
+      if (isType(activity, AP.ActivityTypes.CREATE)) {
+        activity.object = await handleCreate(activity as AP.Create, databaseService);
       }
 
-      if (
-        activity.type === AP.ActivityTypes.DELETE ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.DELETE))
-      ) {
+      if (isType(activity, AP.ActivityTypes.DELETE)) {
         await handleDelete(activity as AP.Delete, databaseService);
       }
 
-      if (
-        activity.type === AP.ActivityTypes.UPDATE ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.UPDATE))
-      ) {
+      if (isType(activity, AP.ActivityTypes.UPDATE)) {
         await handleUpdate(activity as AP.Update, databaseService);
       }
 
-      if (
-        activity.type === AP.ActivityTypes.LIKE ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.LIKE))
-      ) {
+      if (isType(activity, AP.ActivityTypes.LIKE)) {
         await handleLike(activity as AP.Like, databaseService);
       }
 
-      if (
-        activity.type === AP.ActivityTypes.ANNOUNCE ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.ANNOUNCE))
-      ) {
+      if (isType(activity, AP.ActivityTypes.ANNOUNCE)) {
         await handleAnnounce(activity as AP.Announce, databaseService);
       }
 
-      if (
-        activity.type === AP.ActivityTypes.ADD ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.ADD))
-      ) {
+      if (isType(activity, AP.ActivityTypes.ADD)) {
         await handleAdd(activity as AP.Add, databaseService);
       }
 
-      if (
-        activity.type === AP.ActivityTypes.REMOVE ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.REMOVE))
-      ) {
+      if (isType(activity, AP.ActivityTypes.REMOVE)) {
         await handleRemove(activity as AP.Remove, databaseService);
       }
 
-      if (
-        activity.type === AP.ActivityTypes.UNDO ||
-        (Array.isArray(activity.type) &&
-          activity.type.includes(AP.ActivityTypes.UNDO))
-      ) {
+      if (isType(activity, AP.ActivityTypes.UNDO)) {
         await handleUndo(activity as AP.Undo, databaseService, initiator);
       }
     }
@@ -213,11 +194,9 @@ async function handleOutboxPost(
         databaseService.saveEntity(activityReplies),
         databaseService.saveEntity(activityLikes),
         databaseService.saveEntity(activityShares),
+        databaseService.insertOrderedItem(initiatorOutboxId, activityToSaveId),
       ]);
-      await databaseService.insertOrderedItem(
-        initiatorOutboxId,
-        activityToSaveId,
-      );
+
       await deliveryService.broadcast(activityToSave, initiator);
 
       res.statusCode = 201;
@@ -232,13 +211,8 @@ async function handleOutboxPost(
       };
     };
 
-    for (const type of Object.values(AP.ActivityTypes)) {
-      if (
-        type === activity.type ||
-        (Array.isArray(activity.type) && activity.type.includes(type))
-      ) {
-        return await saveActivity(activity);
-      }
+    if (isTypeOf(activity, typeof AP.ActivityTypes)) {
+      return await saveActivity(activity);
     }
 
     // Non-Activity object.

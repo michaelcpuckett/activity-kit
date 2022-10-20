@@ -21,4 +21,4 @@ function isType(entity, type) {
     return false;
 }
 exports.isType = isType;
-//# sourceMappingURL=isTypeOf.js.map
+//# sourceMappingURL=isType.js.map

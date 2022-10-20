@@ -8,9 +8,11 @@ const accept_1 = require("./accept");
 const announce_1 = require("./announce");
 const follow_1 = require("./follow");
 const like_1 = require("./like");
+const create_1 = require("./create");
 const shouldForwardActivity_1 = require("./shouldForwardActivity");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
+const activitypub_core_utilities_4 = require("activitypub-core-utilities");
 async function inboxHandler(req, res, authenticationService, databaseService, deliveryService) {
     if (!req) {
         throw new Error('Bad request.');
@@ -35,8 +37,6 @@ async function handlePost(req, res, databaseService, deliveryService) {
         }
         const recipientInboxId = new URL(url);
         const activity = await (0, activitypub_core_utilities_3.parseStream)(req);
-        console.log(activity);
-        console.log('^ activity from user inbox');
         if (!activity) {
             throw new Error('bad JSONLD?');
         }
@@ -48,24 +48,19 @@ async function handlePost(req, res, databaseService, deliveryService) {
             throw new Error('Bad activity, no actor.');
         }
         if ('object' in activity) {
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.FOLLOW ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.FOLLOW))) {
+            if ((0, activitypub_core_utilities_4.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
+                await (0, create_1.handleCreate)(activity, databaseService);
+            }
+            if ((0, activitypub_core_utilities_4.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.FOLLOW)) {
                 await (0, follow_1.handleFollow)(activity, databaseService, deliveryService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.ACCEPT ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.ACCEPT))) {
+            if ((0, activitypub_core_utilities_4.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.ACCEPT)) {
                 await (0, accept_1.handleAccept)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.LIKE ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.LIKE))) {
+            if ((0, activitypub_core_utilities_4.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.LIKE)) {
                 await (0, like_1.handleLike)(activity, databaseService);
             }
-            if (activity.type === activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE ||
-                (Array.isArray(activity.type) &&
-                    activity.type.includes(activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE))) {
+            if ((0, activitypub_core_utilities_4.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE)) {
                 await (0, announce_1.handleAnnounce)(activity, databaseService);
             }
         }
