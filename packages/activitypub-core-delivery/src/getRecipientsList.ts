@@ -7,9 +7,6 @@ export async function getRecipientsList(
   to: AP.EntityReference | AP.EntityReference[],
 ): Promise<URL[]> {
   const toArray = Array.isArray(to) ? to : [to];
-  console.log({
-    toArray,
-  });
   const filteredToArray = toArray.filter(
     (recipient) => recipient.toString() !== PUBLIC_ACTOR,
   );
@@ -23,9 +20,6 @@ export async function getRecipientsList(
           if (!foundThing) {
             return null;
           }
-
-          console.log(foundThing);
-          console.log('^--foundThing, getRecipientsList');
 
           if (
             typeof foundThing === 'object' &&
@@ -67,13 +61,10 @@ export async function getRecipientsList(
                 ) ||
                   foundThing.type.includes(AP.CollectionTypes.COLLECTION))))
           ) {
-            console.log('Correct Type...');
             if (foundThing.first) {
               const foundCollectionPage = await this.databaseService.queryById(
                 foundThing.first,
               );
-
-              console.log(foundCollectionPage, '^--FOUND COLLECTION PAGE');
 
               if (
                 typeof foundCollectionPage === 'object' &&
@@ -85,8 +76,6 @@ export async function getRecipientsList(
                     ))) &&
                 foundCollectionPage.orderedItems
               ) {
-                console.log(foundCollectionPage.orderedItems);
-                console.log('^-- ordered items');
                 return foundCollectionPage.orderedItems;
               }
 
@@ -100,7 +89,6 @@ export async function getRecipientsList(
                     ))) &&
                 foundCollectionPage.items
               ) {
-                console.log('has items');
                 return foundCollectionPage.items;
               }
             }

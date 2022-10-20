@@ -27,6 +27,7 @@ exports.signAndSendToForeignActorInbox = void 0;
 const crypto = __importStar(require("crypto"));
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity) {
+    console.log('SENDING TO...', foreignActorInbox.toString());
     const privateKey = await this.getPrivateKey(actor);
     const foreignDomain = foreignActorInbox.hostname;
     const foreignPathName = foreignActorInbox.pathname;
@@ -46,7 +47,6 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity
     if (typeof this.fetch !== 'function') {
         return null;
     }
-    console.log(signatureHeader);
     return await this.fetch(foreignActorInbox.toString(), {
         method: 'post',
         body: stringifiedActivity,
@@ -59,7 +59,7 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity
             Signature: signatureHeader,
         },
     }).then(async (res) => {
-        console.log(await res.text());
+        console.log(await res.text(), res.statusCode);
         return res;
     });
 }

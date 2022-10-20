@@ -14,6 +14,7 @@ export async function signAndSendToForeignActorInbox(
   actor: AP.Actor,
   activity: AP.Activity,
 ) {
+  console.log('SENDING TO...', foreignActorInbox.toString());
   const privateKey = await this.getPrivateKey(actor);
   const foreignDomain = foreignActorInbox.hostname;
   const foreignPathName = foreignActorInbox.pathname;
@@ -37,8 +38,6 @@ export async function signAndSendToForeignActorInbox(
     return null;
   }
 
-  console.log(signatureHeader);
-
   // send
   return await this.fetch(foreignActorInbox.toString(), {
     method: 'post',
@@ -52,7 +51,7 @@ export async function signAndSendToForeignActorInbox(
       Signature: signatureHeader,
     },
   }).then(async (res) => {
-    console.log(await res.text());
+    console.log(await res.text(), res.statusCode);
     return res;
   });
 }

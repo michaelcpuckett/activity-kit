@@ -5,9 +5,6 @@ const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function getRecipientsList(to) {
     const toArray = Array.isArray(to) ? to : [to];
-    console.log({
-        toArray,
-    });
     const filteredToArray = toArray.filter((recipient) => recipient.toString() !== activitypub_core_utilities_1.PUBLIC_ACTOR);
     const unfilteredInboxArray = (await Promise.all(filteredToArray.map(async (reference) => {
         if (reference instanceof URL) {
@@ -15,8 +12,6 @@ async function getRecipientsList(to) {
             if (!foundThing) {
                 return null;
             }
-            console.log(foundThing);
-            console.log('^--foundThing, getRecipientsList');
             if (typeof foundThing === 'object' &&
                 'inbox' in foundThing &&
                 foundThing.inbox) {
@@ -44,18 +39,14 @@ async function getRecipientsList(to) {
                     (Array.isArray(foundThing.type) &&
                         (foundThing.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) ||
                             foundThing.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION))))) {
-                console.log('Correct Type...');
                 if (foundThing.first) {
                     const foundCollectionPage = await this.databaseService.queryById(foundThing.first);
-                    console.log(foundCollectionPage, '^--FOUND COLLECTION PAGE');
                     if (typeof foundCollectionPage === 'object' &&
                         (foundCollectionPage.type ===
                             activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE ||
                             (Array.isArray(foundCollectionPage.type) &&
                                 foundCollectionPage.type.includes(activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE))) &&
                         foundCollectionPage.orderedItems) {
-                        console.log(foundCollectionPage.orderedItems);
-                        console.log('^-- ordered items');
                         return foundCollectionPage.orderedItems;
                     }
                     if (typeof foundCollectionPage === 'object' &&
@@ -64,7 +55,6 @@ async function getRecipientsList(to) {
                             (Array.isArray(foundCollectionPage.type) &&
                                 foundCollectionPage.type.includes(activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE))) &&
                         foundCollectionPage.items) {
-                        console.log('has items');
                         return foundCollectionPage.items;
                     }
                 }
