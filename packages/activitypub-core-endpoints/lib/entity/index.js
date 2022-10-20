@@ -10,7 +10,7 @@ const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
 const activitypub_core_utilities_4 = require("activitypub-core-utilities");
 const cookie_1 = __importDefault(require("cookie"));
-async function entityGetHandler(request, response, authenticationService, databaseService) {
+async function entityGetHandler(request, response, authenticationService, databaseService, providedUrl) {
     if (!response) {
         throw new Error('Bad request.');
     }
@@ -35,8 +35,8 @@ async function entityGetHandler(request, response, authenticationService, databa
     }
     const cookies = cookie_1.default.parse(request.headers.cookie ?? '');
     const actor = await databaseService.getActorByUserId(await authenticationService.getUserIdByToken(cookies.__session ?? ''));
-    const url = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${request.url}`);
-    const foundEntity = await databaseService.findEntityById(url);
+    const url = providedUrl ?? new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${request.url}`);
+    const foundEntity = await databaseService.queryById(url);
     if (!foundEntity) {
         return handleNotFound();
     }

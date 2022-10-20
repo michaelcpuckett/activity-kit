@@ -19,6 +19,7 @@ export async function entityGetHandler(
   response: ServerResponse,
   authenticationService: Auth,
   databaseService: Database,
+  providedUrl?: URL,
 ): Promise<{ props?: { entity?: AP.Entity; actor?: AP.Actor } }> {
   if (!response) {
     throw new Error('Bad request.');
@@ -54,8 +55,8 @@ export async function entityGetHandler(
 
   // TODO authorize foundEntity posts by actor.
 
-  const url = new URL(`${LOCAL_DOMAIN}${request.url}`);
-  const foundEntity = await databaseService.findEntityById(url);
+  const url = providedUrl ?? new URL(`${LOCAL_DOMAIN}${request.url}`);
+  const foundEntity = await databaseService.queryById(url);
 
   if (!foundEntity) {
     return handleNotFound();

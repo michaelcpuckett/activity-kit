@@ -15,6 +15,11 @@ const activityPub = ({ renderIndex, renderHome, renderEntity, }, { authenticatio
         next();
         return;
     }
+    if (req.url.startsWith('/remote')) {
+        await (0, activitypub_core_endpoints_1.remoteHandler)(req, res, authenticationService, databaseService);
+        next();
+        return;
+    }
     if (req.url === '/sharedInbox' && req.method === 'POST') {
         await (0, activitypub_core_endpoints_1.sharedInboxHandler)(req, res, databaseService, deliveryService);
         next();

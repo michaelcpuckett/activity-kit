@@ -8,6 +8,7 @@ import {
   inboxHandler,
   sharedInboxHandler,
   webfingerHandler,
+  remoteHandler,
 } from 'activitypub-core-endpoints';
 import { AP } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
@@ -56,6 +57,12 @@ export const activityPub =
 
     if (req.url.startsWith('/.well-known/webfinger')) {
       await webfingerHandler(req, res, databaseService);
+      next();
+      return;
+    }
+
+    if (req.url.startsWith('/remote')) {
+      await remoteHandler(req, res, authenticationService, databaseService);
       next();
       return;
     }
