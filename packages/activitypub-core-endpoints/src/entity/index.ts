@@ -9,7 +9,7 @@ import {
 } from 'activitypub-core-utilities';
 import { getTypedEntity } from 'activitypub-core-utilities';
 import { convertUrlsToStrings } from 'activitypub-core-utilities';
-import { stringify } from 'activitypub-core-utilities';
+import { stringify, applyContext } from 'activitypub-core-utilities';
 import cookie from 'cookie';
 import type { Database, Auth } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
@@ -143,7 +143,7 @@ export async function entityGetHandler(
     }
   }
 
-  const compressedEntity = compressEntity(entity);
+  const compressedEntity = compressEntity(applyContext(entity));
 
   if (entity.publicKey && 'publicKey' in compressedEntity) {
     compressedEntity.publicKey = entity.publicKey;

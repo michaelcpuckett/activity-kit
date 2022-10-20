@@ -1,6 +1,7 @@
 import { MongoDatabase } from '.';
 import { AP } from 'activitypub-core-types';
 import {
+  applyContext,
   cleanProps,
   convertUrlsToStrings,
   getCollectionNameByUrl,
@@ -13,7 +14,7 @@ export async function saveEntity(this: MongoDatabase, entity: AP.Entity) {
 
   const collectionName = getCollectionNameByUrl(entity.id);
   const _id = entity.id.toString();
-  const convertedEntity = cleanProps(convertUrlsToStrings(entity));
+  const convertedEntity = cleanProps(convertUrlsToStrings(applyContext(entity)));
 
   return await this.db.collection(collectionName).replaceOne(
     {

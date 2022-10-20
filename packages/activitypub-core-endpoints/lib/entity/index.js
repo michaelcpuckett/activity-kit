@@ -88,7 +88,7 @@ async function entityGetHandler(request, response, authenticationService, databa
             }
         }
     }
-    const compressedEntity = (0, activitypub_core_utilities_1.compressEntity)(entity);
+    const compressedEntity = (0, activitypub_core_utilities_1.compressEntity)((0, activitypub_core_utilities_4.applyContext)(entity));
     if (entity.publicKey && 'publicKey' in compressedEntity) {
         compressedEntity.publicKey = entity.publicKey;
     }

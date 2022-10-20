@@ -1,3 +1,4 @@
+export { applyContext } from './applyContext';
 export { cleanProps } from './cleanProps';
 export { combineAddresses } from './combineAddresses';
 export { compressEntity } from './compressEntity';
@@ -9,6 +10,7 @@ export { getCollectionNameByUrl } from './getCollectionNameByUrl';
 export { getGuid } from './getGuid';
 export { getId } from './getId';
 export { getTypedEntity } from './getTypedEntity';
+export { isTypeOf } from './isTypeOf';
 export { parseStream } from './parseStream';
 export { removeContext } from './removeContext';
 export { streamToString } from './streamToString';

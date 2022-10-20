@@ -1,7 +1,7 @@
 import { DeliveryService } from '.';
 import { AP } from 'activitypub-core-types';
 import { cleanProps } from 'activitypub-core-utilities';
-import { compressEntity } from 'activitypub-core-utilities';
+import { applyContext } from 'activitypub-core-utilities';
 
 /**
  *    [x] Removes the `bto` and `bcc` properties from Objects before delivery
@@ -12,7 +12,7 @@ export async function broadcast(
   activity: AP.Activity,
   actor: AP.Actor,
 ) {
-  const publicActivity = cleanProps(activity);
+  const publicActivity = cleanProps(applyContext(activity));
 
   if (!('actor' in publicActivity)) {
     throw new Error('Not an activity?');
