@@ -7,7 +7,7 @@ const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
 async function handleCreate() {
     if (!('object' in this.activity)) {
-        return;
+        throw new Error('Bad activity: no object.');
     }
     const object = this.activity.object;
     if (!object) {

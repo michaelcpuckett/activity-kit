@@ -4,7 +4,7 @@ import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
 
 export async function handleLike(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {
-    return;
+    throw new Error('Bad activity: no object.');
   }
 
   if (!this.activity.id) {

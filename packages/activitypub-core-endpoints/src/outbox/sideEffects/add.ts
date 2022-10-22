@@ -1,22 +1,25 @@
 import { OutboxPostHandler } from '..';
 import { getId } from 'activitypub-core-utilities';
+import { AP } from 'activitypub-core-types';
 
-export async function handleAdd(this: OutboxPostHandler) {
-  if (!('object' in this.activity) || !('target' in this.activity)) {
-    return;
+export async function handleAdd(this: OutboxPostHandler, activity?: AP.Entity) {
+  activity = activity || this.activity;
+
+  if (!('object' in activity) || !('target' in activity)) {
+    throw new Error('Bad activity: no object / target.'); 
   }
 
-  const objectId = getId(this.activity.object);
+  const objectId = getId(activity.object);
 
   if (!objectId) {
     throw new Error('Bad object: no ID.');
   }
 
-  if (!this.activity.target) {
+  if (!activity.target) {
     throw new Error('Bad activity: must have target.');
   }
 
-  const targetId = getId(this.activity.target);
+  const targetId = getId(activity.target);
 
   if (!targetId) {
     throw new Error('Bad target: no ID.');

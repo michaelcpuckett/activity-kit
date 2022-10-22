@@ -66,8 +66,8 @@ class OutboxPostHandler {
                             throw new Error('Bad object: Object with ID does not exist!');
                         }
                     }
-                    await this.runSideEffects();
                 }
+                await this.runSideEffects();
             }
             else {
                 await this.wrapInActivity();

@@ -1,2 +1,3 @@
 import { OutboxPostHandler } from '..';
-export declare function handleDelete(this: OutboxPostHandler): Promise<void>;
+import { AP } from 'activitypub-core-types';
+export declare function handleDelete(this: OutboxPostHandler, activity?: AP.Entity): Promise<void>;

@@ -4,7 +4,7 @@ exports.handleLike = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function handleLike() {
     if (!('object' in this.activity)) {
-        return;
+        throw new Error('Bad activity: no object.');
     }
     if (!this.activity.id) {
         throw new Error('Bad activity: no ID.');

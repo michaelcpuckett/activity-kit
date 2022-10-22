@@ -12,7 +12,7 @@ import { OutboxPostHandler } from '../..';
 
 export async function handleUndo(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {
-    return;
+    throw new Error('Bad activity: no object.');
   }
 
   const objectId = getId(this.activity.object);
@@ -35,23 +35,23 @@ export async function handleUndo(this: OutboxPostHandler) {
 
   // Run side effects.
   if (isType(object, AP.ActivityTypes.CREATE)) {
-    await this.handleDelete();
+    await this.handleDelete(object);
   }
 
   if (isType(object, AP.ActivityTypes.LIKE)) {
-    await this.handleUndoLike();
+    await this.handleUndoLike(object);
   }
 
   if (isType(object, AP.ActivityTypes.ANNOUNCE)) {
-    await this.handleUndoAnnounce();
+    await this.handleUndoAnnounce(object);
   }
 
   if (isType(object, AP.ActivityTypes.ADD)) {
-    await this.handleRemove();
+    await this.handleRemove(object);
   }
 
   if (isType(object, AP.ActivityTypes.REMOVE)) {
-    await this.handleAdd();
+    await this.handleAdd(object);
   }
 }
 

@@ -2,16 +2,16 @@ import { getId } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 import { OutboxPostHandler } from '../..';
 
-export async function handleUndoAnnounce(this: OutboxPostHandler) {
-  if (!('object' in this.activity)) {
-    return;
+export async function handleUndoAnnounce(this: OutboxPostHandler, activity: AP.Entity) {
+  if (!('object' in activity)) {
+    throw new Error('Bad activity: no object.');
   }
 
-  if (!this.activity.id) {
+  if (!activity.id) {
     throw new Error('Bad activity: no ID.');
   }
 
-  const actorId = getId((this.activity as AP.Activity).actor);
+  const actorId = getId((activity as AP.Activity).actor);
 
   if (!actorId) {
     throw new Error('Bad actor: no ID.');
@@ -23,7 +23,7 @@ export async function handleUndoAnnounce(this: OutboxPostHandler) {
     throw new Error('Bad actor: not found.');
   }
 
-  const objectId = getId(this.activity.object);
+  const objectId = getId(activity.object);
 
   if (!objectId) {
     throw new Error('Bad object: no ID.');
@@ -74,7 +74,7 @@ export async function handleUndoAnnounce(this: OutboxPostHandler) {
   }
 
   await Promise.all([
-    this.databaseService.removeOrderedItem(sharesId, this.activity.id),
+    this.databaseService.removeOrderedItem(sharesId, activity.id),
     this.databaseService.removeOrderedItem(shared.id, object.id),
   ]);
 }

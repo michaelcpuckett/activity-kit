@@ -4,7 +4,7 @@ exports.handleAnnounce = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function handleAnnounce() {
     if (!('object' in this.activity)) {
-        return;
+        throw new Error('Bad activity: no object.');
     }
     if (!this.activity.id) {
         throw new Error('Bad activity: no ID.');
@@ -35,7 +35,7 @@ async function handleAnnounce() {
     }
     const streams = await Promise.all(actor.streams
         .map((stream) => stream instanceof URL ? stream : stream.id)
-        .map(async (id) => id ? await this.databaseService.queryById(id) : null));
+        .map(async (id) => id ? await this.databaseService.findEntityById(id) : null));
     const shared = streams.find((stream) => {
         if (stream && 'name' in stream) {
             if (stream.name === 'Shared') {

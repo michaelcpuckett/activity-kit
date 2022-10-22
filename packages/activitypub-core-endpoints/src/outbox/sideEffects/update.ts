@@ -4,7 +4,7 @@ import { OutboxPostHandler } from '..';
 
 export async function handleUpdate(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {
-    return;
+    throw new Error('Bad activity: no object.');
   }
 
   const actorId = getId((this.activity as AP.Activity).actor);

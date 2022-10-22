@@ -100,7 +100,7 @@ export class OutboxPostHandler {
 
         // If the activity has an object...
         if ('object' in this.activity) {
-          // First check that any attached `object` with ID really exists.
+          // Check that any attached `object` with ID really exists.
           const objectId = getId(this.activity.object);
 
           if (objectId) {
@@ -110,10 +110,9 @@ export class OutboxPostHandler {
               throw new Error('Bad object: Object with ID does not exist!');
             }
           }
-
-          // Then run side effects.
-          await this.runSideEffects();
         }
+        // Then run side effects.
+        await this.runSideEffects();
       } else {
         // If not activity type, wrap object in a Create activity.
         await this.wrapInActivity();

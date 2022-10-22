@@ -4,7 +4,7 @@ exports.handleUpdate = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function handleUpdate() {
     if (!('object' in this.activity)) {
-        return;
+        throw new Error('Bad activity: no object.');
     }
     const actorId = (0, activitypub_core_utilities_1.getId)(this.activity.actor);
     if (!actorId) {

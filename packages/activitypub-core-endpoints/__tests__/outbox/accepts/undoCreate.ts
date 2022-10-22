@@ -1,28 +1,25 @@
 import { ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 import * as data from '../../../__data__';
-import { handleOutboxPost } from '../';
+import { handleOutboxPost } from '..';
 
 describe('Endpoints', () => {
   describe('Actor Outbox', () => {
-    it('Create Activity', async () => {
-      const activity: AP.Activity = {
+    it('Undo Create', async () => {
+      const activity: AP.Undo = {
         '@context': ACTIVITYSTREAMS_CONTEXT,
-        type: AP.ActivityTypes.CREATE,
+        type: 'Undo',
         actor: new URL(data.aliceUrl),
-        object: {
-          type: 'Note',
-          content: 'Hello world',
-        },
+        object: new URL(data.createActivityUrl),
       };
 
       const { res, saveEntity, insertOrderedItem, broadcast } =
         await handleOutboxPost(activity, data.aliceOutboxUrl);
 
-      expect(res.statusCode).toBe(201);
-      expect(saveEntity).toBeCalledTimes(8);
-      expect(insertOrderedItem).toBeCalledTimes(1);
-      expect(broadcast).toBeCalledTimes(1);
+        expect(res.statusCode).toBe(201);
+        expect(saveEntity).toBeCalledTimes(5);
+        expect(insertOrderedItem).toBeCalledTimes(1);
+        expect(broadcast).toBeCalledTimes(1);
     });
   });
 });

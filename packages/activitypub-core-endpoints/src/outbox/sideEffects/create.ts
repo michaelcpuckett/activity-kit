@@ -18,7 +18,7 @@ import { getId, getGuid } from 'activitypub-core-utilities';
 
 export async function handleCreate(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {
-    return;
+    throw new Error('Bad activity: no object.');
   }
 
   const object = this.activity.object;

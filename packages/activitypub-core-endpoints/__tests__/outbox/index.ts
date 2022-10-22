@@ -19,6 +19,14 @@ export const handleOutboxPost = async (activity, url) => {
   const insertItem = jest.fn(async () => {
     return true;
   });
+  
+  const removeOrderedItem = jest.fn(async () => {
+    return true;
+  });
+
+  const removeItem = jest.fn(async () => {
+    return true;
+  });
 
   const res = new ServerResponse(new IncomingMessage(new Socket()));
   const auth = {
@@ -44,6 +52,10 @@ export const handleOutboxPost = async (activity, url) => {
         return data.aliceLiked;
       }
 
+      if (_id === data.aliceSharedUrl) {
+        return data.aliceShared;
+      }
+
       if (_id === data.collection1Url) {
         return data.collection1;
       }
@@ -60,6 +72,34 @@ export const handleOutboxPost = async (activity, url) => {
         return data.note2Likes;
       }
 
+      if (_id === data.note2SharesUrl) {
+        return data.note2Shares;
+      }
+
+      if (_id === data.addActivityUrl) {
+        return data.addActivity;
+      }
+
+      if (_id === data.removeActivityUrl) {
+        return data.removeActivity;
+      }
+
+      if (_id === data.createActivityUrl) {
+        return data.createActivity;
+      }
+
+      if (_id === data.likeActivityUrl) {
+        return data.likeActivity;
+      }
+
+      if (_id === data.announceActivityUrl) {
+        return data.announceActivity;
+      }
+
+      if (_id === data.eveUrl) {
+        return data.eve;
+      }
+
       return null;
     },
     async findEntityById(id: URL) {
@@ -74,6 +114,8 @@ export const handleOutboxPost = async (activity, url) => {
     saveEntity,
     insertOrderedItem,
     insertItem,
+    removeOrderedItem,
+    removeItem,
   };
   const delivery = {
     broadcast,
@@ -98,6 +140,8 @@ export const handleOutboxPost = async (activity, url) => {
     saveEntity,
     insertOrderedItem,
     insertItem,
+    removeOrderedItem,
+    removeItem,
     broadcast,
   };
 };

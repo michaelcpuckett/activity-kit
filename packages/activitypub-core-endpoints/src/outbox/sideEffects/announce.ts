@@ -4,7 +4,7 @@ import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
 
 export async function handleAnnounce(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {
-    return;
+    throw new Error('Bad activity: no object.');
   }
 
   if (!this.activity.id) {
@@ -53,7 +53,7 @@ export async function handleAnnounce(this: OutboxPostHandler) {
         stream instanceof URL ? stream : stream.id,
       )
       .map(async (id: URL) =>
-        id ? await this.databaseService.queryById(id) : null,
+        id ? await this.databaseService.findEntityById(id) : null,
       ),
   );
 

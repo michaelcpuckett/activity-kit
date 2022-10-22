@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUndoLike = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
-async function handleUndoLike() {
-    if (!('object' in this.activity)) {
-        return;
+async function handleUndoLike(activity) {
+    if (!('object' in activity)) {
+        throw new Error('Bad activity: no object.');
     }
-    if (!this.activity.id) {
+    if (!activity.id) {
         throw new Error('Bad activity: no ID.');
     }
-    const actorId = (0, activitypub_core_utilities_1.getId)(this.activity.actor);
+    const actorId = (0, activitypub_core_utilities_1.getId)(activity.actor);
     if (!actorId) {
         throw new Error('Bad actor: no ID.');
     }
@@ -17,7 +17,7 @@ async function handleUndoLike() {
     if (!actor || !('outbox' in actor)) {
         throw new Error('Bad actor: not found.');
     }
-    const objectId = (0, activitypub_core_utilities_1.getId)(this.activity.object);
+    const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
     if (!objectId) {
         throw new Error('Bad object: no ID.');
     }
@@ -40,7 +40,7 @@ async function handleUndoLike() {
         throw new Error('Bad liked collection: no ID');
     }
     await Promise.all([
-        this.databaseService.removeOrderedItem(likesId, this.activity.id),
+        this.databaseService.removeOrderedItem(likesId, activity.id),
         this.databaseService.removeOrderedItem(likedId, object.id),
     ]);
 }

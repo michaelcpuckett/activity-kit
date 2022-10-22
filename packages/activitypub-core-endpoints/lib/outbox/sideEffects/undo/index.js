@@ -5,7 +5,7 @@ const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function handleUndo() {
     if (!('object' in this.activity)) {
-        return;
+        throw new Error('Bad activity: no object.');
     }
     const objectId = (0, activitypub_core_utilities_1.getId)(this.activity.object);
     if (!objectId) {
@@ -19,19 +19,19 @@ async function handleUndo() {
         throw new Error('Not authorized to modify object!');
     }
     if ((0, activitypub_core_utilities_1.isType)(object, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
-        await this.handleDelete();
+        await this.handleDelete(object);
     }
     if ((0, activitypub_core_utilities_1.isType)(object, activitypub_core_types_1.AP.ActivityTypes.LIKE)) {
-        await this.handleUndoLike();
+        await this.handleUndoLike(object);
     }
     if ((0, activitypub_core_utilities_1.isType)(object, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE)) {
-        await this.handleUndoAnnounce();
+        await this.handleUndoAnnounce(object);
     }
     if ((0, activitypub_core_utilities_1.isType)(object, activitypub_core_types_1.AP.ActivityTypes.ADD)) {
-        await this.handleRemove();
+        await this.handleRemove(object);
     }
     if ((0, activitypub_core_utilities_1.isType)(object, activitypub_core_types_1.AP.ActivityTypes.REMOVE)) {
-        await this.handleAdd();
+        await this.handleAdd(object);
     }
 }
 exports.handleUndo = handleUndo;
