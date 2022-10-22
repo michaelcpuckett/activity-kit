@@ -83,9 +83,9 @@ export async function handleCreate(this: OutboxPostHandler) {
   if (isTypeOf(object, AP.CoreObjectTypes)) {
     const typedObject = object as AP.CoreObject;
     typedObject.attributedTo = (this.activity as AP.Activity).actor;
-    typedObject.replies = objectReplies;
-    typedObject.likes = objectLikes;
-    typedObject.shares = objectShares;
+    typedObject.replies = objectReplies.id;
+    typedObject.likes = objectLikes.id;
+    typedObject.shares = objectShares.id;
     typedObject.attributedTo = (this.activity as AP.Activity).actor;
     typedObject.published = publishedDate;
 

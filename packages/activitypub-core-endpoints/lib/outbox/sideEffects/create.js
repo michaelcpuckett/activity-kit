@@ -58,9 +58,9 @@ async function handleCreate() {
     if ((0, activitypub_core_utilities_1.isTypeOf)(object, activitypub_core_types_1.AP.CoreObjectTypes)) {
         const typedObject = object;
         typedObject.attributedTo = this.activity.actor;
-        typedObject.replies = objectReplies;
-        typedObject.likes = objectLikes;
-        typedObject.shares = objectShares;
+        typedObject.replies = objectReplies.id;
+        typedObject.likes = objectLikes.id;
+        typedObject.shares = objectShares.id;
         typedObject.attributedTo = this.activity.actor;
         typedObject.published = publishedDate;
         await Promise.all([
