@@ -20,6 +20,8 @@ const homeGetHandler = async (req, res, authenticationService, databaseService, 
     if (!actor.inbox || !actor.outbox) {
         throw new Error('Bad actor.');
     }
+    actor.inbox = await databaseService.expandEntity(actor.inbox);
+    actor.outbox = await databaseService.expandEntity(actor.outbox);
     let data = {
         props: {
             actor,
