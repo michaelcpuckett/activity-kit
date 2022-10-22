@@ -22,11 +22,11 @@ import {
 export const activityPub =
   (
     {
-      renderIndex,
+      renderLogin,
       renderHome,
       renderEntity,
     }: {
-      renderIndex: () => Promise<string>;
+      renderLogin: () => Promise<string>;
       renderHome: ({ actor }: { actor: AP.Actor }) => Promise<string>;
       renderEntity: ({
         entity,
@@ -128,10 +128,10 @@ export const activityPub =
       return;
     }
 
-    if (req.url === '/' && req.method === 'GET') {
+    if (req.url === '/login' && req.method === 'GET') {
       res.statusCode = 200;
       res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
-      res.write(await renderIndex());
+      res.write(await renderLogin());
       res.end();
       return;
     }
@@ -147,7 +147,7 @@ export const activityPub =
       if (result.redirect) {
         res.statusCode = 200;
         res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
-        res.write(await renderIndex());
+        res.write(await renderLogin());
         res.end();
         return;
       }
