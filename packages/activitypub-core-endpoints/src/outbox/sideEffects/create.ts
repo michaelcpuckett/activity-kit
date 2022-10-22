@@ -2,8 +2,7 @@ import { OutboxPostHandler } from '..';
 import { AP } from 'activitypub-core-types';
 import {
   ACTIVITYSTREAMS_CONTEXT,
-  getTypedEntity,
-  isTypeOf
+  isTypeOf,
 } from 'activitypub-core-utilities';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { getId, getGuid } from 'activitypub-core-utilities';
@@ -17,9 +16,7 @@ import { getId, getGuid } from 'activitypub-core-utilities';
  *    (outbox:create:actor-to-attributed-to) SHOULD
  */
 
-export async function handleCreate(
-  this: OutboxPostHandler
-) {
+export async function handleCreate(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {
     return;
   }
@@ -35,7 +32,9 @@ export async function handleCreate(
   }
 
   if (Array.isArray(object)) {
-    throw new Error('Internal error: Object array not supported currently. TODO.');
+    throw new Error(
+      'Internal error: Object array not supported currently. TODO.',
+    );
   }
 
   const objectId = `${LOCAL_DOMAIN}/object/${getGuid()}`;
@@ -98,21 +97,24 @@ export async function handleCreate(
     ]);
 
     if (typedObject.inReplyTo) {
-      const objectInReplyTo = await this.databaseService.findEntityById(getId(typedObject.inReplyTo));
+      const objectInReplyTo = await this.databaseService.findEntityById(
+        getId(typedObject.inReplyTo),
+      );
 
       if (objectInReplyTo) {
         const repliesCollectionId = getId(objectInReplyTo.replies);
 
         if (repliesCollectionId) {
-          await this.databaseService.insertOrderedItem(repliesCollectionId, typedObject.id);
+          await this.databaseService.insertOrderedItem(
+            repliesCollectionId,
+            typedObject.id,
+          );
         }
       }
     }
   } else {
     // Link case.
-    await Promise.all([
-      this.databaseService.saveEntity(object)
-    ]);
+    await Promise.all([this.databaseService.saveEntity(object)]);
   }
 
   this.activity.object = object.id;

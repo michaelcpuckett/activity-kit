@@ -58,5 +58,4 @@ async function saveActivity() {
     ]);
 }
 exports.saveActivity = saveActivity;
-;
 //# sourceMappingURL=saveActivity.js.map

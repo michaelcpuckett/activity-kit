@@ -21,8 +21,7 @@ async function handleRemove() {
     if (!target) {
         throw new Error('Bad target: not found.');
     }
-    if ('orderedItems' in target &&
-        Array.isArray(target.orderedItems)) {
+    if ('orderedItems' in target && Array.isArray(target.orderedItems)) {
         await this.databaseService.removeOrderedItem(targetId, objectId);
     }
     else if ('items' in target && Array.isArray(target.items)) {

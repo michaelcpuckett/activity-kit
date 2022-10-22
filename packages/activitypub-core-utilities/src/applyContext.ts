@@ -1,9 +1,6 @@
-import { AP } from "activitypub-core-types";
-import { isTypeOf } from "./isType";
-import {
-  ACTIVITYSTREAMS_CONTEXT,
-  W3ID_SECURITY_CONTEXT
-} from './globals';
+import { AP } from 'activitypub-core-types';
+import { isTypeOf } from './isType';
+import { ACTIVITYSTREAMS_CONTEXT, W3ID_SECURITY_CONTEXT } from './globals';
 
 export function applyContext(entity: AP.Entity): AP.Entity {
   if (!entity['@context']) {

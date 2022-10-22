@@ -2,9 +2,7 @@ import { getId } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 import { OutboxPostHandler } from '../..';
 
-export async function handleUndoAnnounce(
-  this: OutboxPostHandler
-) {
+export async function handleUndoAnnounce(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {
     return;
   }
@@ -58,7 +56,9 @@ export async function handleUndoAnnounce(
   const streams = await Promise.all(
     actor.streams
       .map((stream: AP.Entity) => (stream instanceof URL ? stream : stream.id))
-      .map(async (id: URL) => (id ? await this.databaseService.queryById(id) : null)),
+      .map(async (id: URL) =>
+        id ? await this.databaseService.queryById(id) : null,
+      ),
   );
 
   const shared = streams.find((stream) => {

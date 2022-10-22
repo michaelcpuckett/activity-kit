@@ -2,9 +2,7 @@ import { OutboxPostHandler } from '..';
 import { AP } from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
 
-export async function handleDelete(
-  this: OutboxPostHandler
-) {
+export async function handleDelete(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {
     return;
   }
@@ -26,9 +24,11 @@ export async function handleDelete(
     type: AP.CoreObjectTypes.TOMBSTONE,
     deleted: new Date(),
     formerType: object.type,
-    ...object.created ? {
-      created: object.created
-    } : null,
+    ...(object.created
+      ? {
+          created: object.created,
+        }
+      : null),
   };
 
   await this.databaseService.saveEntity(this.activity.object);

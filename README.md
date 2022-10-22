@@ -117,12 +117,12 @@ The logic layer that get included in all projects include these packages:
 
 - `activitypub-core-types`
   - The Activity Vocabulary converted to TypeScript types.
+- `activitypub-core-endpoints`
+  - The logic for carrying out the bulk of the ActivityPub protocol.
+- `activitypub-core-delivery`
+  - The logic specific to the Server-to-Server delivery (federation).
 - `activitypub-core-utilities`
   - Common functions with no dependencies on packages from upper layers.
-- `activitypub-core-endpoints`
-  - The logic for carrying out the Client-to-Server ActivityPub protocol.
-- `activitypub-core-delivery`
-  - The logic specific to the Server-to-Server ActivityPub protocol (federation).
 
 ### Database Layer
 

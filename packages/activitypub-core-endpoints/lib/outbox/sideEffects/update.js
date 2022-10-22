@@ -34,9 +34,11 @@ async function handleUpdate() {
     const updatedObject = {
         ...object,
         ...this.activity.object,
-        ...(object.type !== 'Link' && object.type !== 'Mention') ? {
-            updated: new Date(),
-        } : null,
+        ...(object.type !== 'Link' && object.type !== 'Mention'
+            ? {
+                updated: new Date(),
+            }
+            : null),
     };
     await this.databaseService.saveEntity(updatedObject);
 }

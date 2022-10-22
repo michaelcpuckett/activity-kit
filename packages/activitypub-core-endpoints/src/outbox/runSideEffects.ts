@@ -2,7 +2,7 @@ import { AP } from 'activitypub-core-types';
 import type { Auth, Database } from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
 import { stringify, isType } from 'activitypub-core-utilities';
-import {OutboxPostHandler} from '.';
+import { OutboxPostHandler } from '.';
 
 export async function runSideEffects(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {

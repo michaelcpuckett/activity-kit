@@ -1,4 +1,7 @@
-import { ACTIVITYSTREAMS_CONTEXT, getCollectionNameByUrl } from 'activitypub-core-utilities';
+import {
+  ACTIVITYSTREAMS_CONTEXT,
+  getCollectionNameByUrl,
+} from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 import * as data from '../../../__data__';
 import { handleOutboxPost } from '../';
@@ -7,7 +10,7 @@ describe('Endpoints', () => {
   describe('Actor Outbox', () => {
     it('Accepts Activity Objects (outbox:accepts-activities)', async () => {
       const activity: AP.Arrive = {
-        "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+        '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
         type: AP.ActivityTypes.ARRIVE,
         actor: new URL(data.aliceUrl),
         location: {
@@ -16,12 +19,8 @@ describe('Endpoints', () => {
         },
       };
 
-      const {
-        res,
-        saveEntity,
-        insertOrderedItem,
-        broadcast,
-      } = await handleOutboxPost(activity, data.aliceOutboxUrl);
+      const { res, saveEntity, insertOrderedItem, broadcast } =
+        await handleOutboxPost(activity, data.aliceOutboxUrl);
 
       expect(res.statusCode).toBe(201);
       expect(saveEntity).toBeCalledTimes(4);

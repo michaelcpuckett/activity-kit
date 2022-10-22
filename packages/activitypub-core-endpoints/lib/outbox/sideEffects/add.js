@@ -21,8 +21,7 @@ async function handleAdd() {
     if (!target) {
         throw new Error('Bad target: not found, only local allowed.');
     }
-    if ('orderedItems' in target &&
-        Array.isArray(target.orderedItems)) {
+    if ('orderedItems' in target && Array.isArray(target.orderedItems)) {
         await this.databaseService.insertOrderedItem(targetId, objectId);
     }
     else if ('items' in target && Array.isArray(target.items)) {

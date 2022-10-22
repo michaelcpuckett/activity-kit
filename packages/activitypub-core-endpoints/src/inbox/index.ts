@@ -81,7 +81,11 @@ async function handlePost(
       }
 
       if (isType(activity, AP.ActivityTypes.FOLLOW)) {
-        await handleFollow(activity as AP.Follow, databaseService, deliveryService);
+        await handleFollow(
+          activity as AP.Follow,
+          databaseService,
+          deliveryService,
+        );
       }
 
       if (isType(activity, AP.ActivityTypes.ACCEPT)) {

@@ -6,9 +6,7 @@ import { getId } from 'activitypub-core-utilities';
  * requirements in 7.5 (outbox:remove:removes-from-target) SHOULD
  */
 
-export async function handleRemove(
-  this: OutboxPostHandler
-) {
+export async function handleRemove(this: OutboxPostHandler) {
   if (!('object' in this.activity) || !('target' in this.activity)) {
     return;
   }
@@ -38,10 +36,7 @@ export async function handleRemove(
 
   // TODO: Check if actor "owns" this collection.
 
-  if (
-    'orderedItems' in target &&
-    Array.isArray(target.orderedItems)
-  ) {
+  if ('orderedItems' in target && Array.isArray(target.orderedItems)) {
     await this.databaseService.removeOrderedItem(targetId, objectId);
   } else if ('items' in target && Array.isArray(target.items)) {
     await this.databaseService.removeItem(targetId, objectId);

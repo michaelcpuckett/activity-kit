@@ -13,12 +13,8 @@ describe('Endpoints', () => {
         object: new URL(data.note1Url),
       };
 
-      const {
-        res,
-        saveEntity,
-        insertOrderedItem,
-        broadcast,
-      } = await handleOutboxPost(activity, data.aliceOutboxUrl);
+      const { res, saveEntity, insertOrderedItem, broadcast } =
+        await handleOutboxPost(activity, data.aliceOutboxUrl);
 
       expect(res.statusCode).toBe(201);
       expect(saveEntity).toBeCalledTimes(5);

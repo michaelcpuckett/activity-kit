@@ -2,9 +2,7 @@ import { OutboxPostHandler } from '..';
 import { AP } from 'activitypub-core-types';
 import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
 
-export async function handleAnnounce(
-  this: OutboxPostHandler
-) {
+export async function handleAnnounce(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {
     return;
   }
@@ -46,13 +44,17 @@ export async function handleAnnounce(
     !actor.streams ||
     !Array.isArray(actor.streams)
   ) {
-    throw new Error('Actor\'s streams not found.');
+    throw new Error("Actor's streams not found.");
   }
 
   const streams = await Promise.all(
     actor.streams
-      .map((stream: AP.Entity|URL) => (stream instanceof URL ? stream : stream.id))
-      .map(async (id: URL) => (id ? await this.databaseService.queryById(id) : null)),
+      .map((stream: AP.Entity | URL) =>
+        stream instanceof URL ? stream : stream.id,
+      )
+      .map(async (id: URL) =>
+        id ? await this.databaseService.queryById(id) : null,
+      ),
   );
 
   const shared = streams.find((stream) => {

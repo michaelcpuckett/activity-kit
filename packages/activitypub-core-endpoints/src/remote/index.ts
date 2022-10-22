@@ -1,7 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'http';
-import {
-  LOCAL_DOMAIN,
-} from 'activitypub-core-utilities';
+import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import * as queryString from 'query-string';
 import type { Database, Auth } from 'activitypub-core-types';
 import { entityGetHandler } from '../entity';
@@ -22,7 +20,13 @@ export async function remoteHandler(
   const resource = query.resource ?? '';
 
   if (resource) {
-    return entityGetHandler(req, res, authenticationService, databaseService, new URL(query.resource));
+    return entityGetHandler(
+      req,
+      res,
+      authenticationService,
+      databaseService,
+      new URL(query.resource),
+    );
   }
 
   res.statusCode = 404;

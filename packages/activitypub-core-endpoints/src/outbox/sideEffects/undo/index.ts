@@ -10,9 +10,7 @@ import { OutboxPostHandler } from '../..';
  *     undone (outbox:undo:ensures-activity-and-actor-are-same) MUST
  */
 
-export async function handleUndo(
-  this: OutboxPostHandler
-) {
+export async function handleUndo(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {
     return;
   }
@@ -29,7 +27,9 @@ export async function handleUndo(
     throw new Error('Bad object: not found.');
   }
 
-  if (!isActorAuthorizedToModifyObject(this.actor, this.activity as AP.Activity)) {
+  if (
+    !isActorAuthorizedToModifyObject(this.actor, this.activity as AP.Activity)
+  ) {
     throw new Error('Not authorized to modify object!');
   }
 

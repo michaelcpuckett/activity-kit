@@ -68,7 +68,11 @@ export async function sharedInboxHandler(
       }
 
       if (isType(activity, AP.ActivityTypes.FOLLOW)) {
-        await handleFollow(activity as AP.Follow, databaseService, deliveryService);
+        await handleFollow(
+          activity as AP.Follow,
+          databaseService,
+          deliveryService,
+        );
       }
     }
 

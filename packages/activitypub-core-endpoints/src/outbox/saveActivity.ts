@@ -1,6 +1,6 @@
-import { OutboxPostHandler } from ".";
+import { OutboxPostHandler } from '.';
 import { AP } from 'activitypub-core-types';
-import { getId, ACTIVITYSTREAMS_CONTEXT } from "activitypub-core-utilities";
+import { getId, ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
 
 export async function saveActivity(this: OutboxPostHandler) {
   if (!this.activity) {
@@ -63,6 +63,9 @@ export async function saveActivity(this: OutboxPostHandler) {
     this.databaseService.saveEntity(replies),
     this.databaseService.saveEntity(likes),
     this.databaseService.saveEntity(shares),
-    this.databaseService.insertOrderedItem(getId(this.actor?.outbox), activityId),
+    this.databaseService.insertOrderedItem(
+      getId(this.actor?.outbox),
+      activityId,
+    ),
   ]);
-};
+}

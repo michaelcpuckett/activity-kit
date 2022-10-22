@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.entityGetHandler = void 0;
-const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
@@ -34,73 +33,25 @@ async function entityGetHandler(request, response, authenticationService, databa
         return handleBadRequest();
     }
     const cookies = cookie_1.default.parse(request.headers.cookie ?? '');
-    const actor = await databaseService.getActorByUserId(await authenticationService.getUserIdByToken(cookies.__session ?? ''));
+    const authorizedActor = await databaseService.getActorByUserId(await authenticationService.getUserIdByToken(cookies.__session ?? ''));
     const url = providedUrl ?? new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${request.url}`);
     const foundEntity = await databaseService.queryById(url);
     if (!foundEntity) {
         return handleNotFound();
     }
-    const typedEntity = (0, activitypub_core_utilities_2.getTypedEntity)(foundEntity);
-    if (!typedEntity) {
-        return handleNotFound();
-    }
-    let entity = await databaseService.expandEntity(typedEntity);
+    const entity = (0, activitypub_core_utilities_2.getTypedEntity)(foundEntity);
     if (!entity) {
         return handleNotFound();
     }
-    if (entity.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION ||
-        entity.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
-        (Array.isArray(entity.type) &&
-            (entity.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
-                entity.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)))) {
-        const collection = await databaseService.expandCollection(entity);
-        if (collection) {
-            entity = collection;
-        }
-    }
-    if ('likes' in entity && entity.likes instanceof URL) {
-        const foundLikesCollection = await databaseService.findEntityById(entity.likes);
-        if ((foundLikesCollection &&
-            foundLikesCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) ||
-            (Array.isArray(foundLikesCollection.type) &&
-                foundLikesCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
-            const expandedLikes = await databaseService.expandCollection(foundLikesCollection);
-            if ((expandedLikes &&
-                expandedLikes.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) ||
-                (Array.isArray(expandedLikes.type) &&
-                    expandedLikes.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
-                entity.likes = expandedLikes;
-            }
-        }
-    }
-    if ('shares' in entity && entity.shares instanceof URL) {
-        const foundSharesCollection = await databaseService.findEntityById(entity.shares);
-        if ((foundSharesCollection &&
-            foundSharesCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) ||
-            (Array.isArray(foundSharesCollection.type) &&
-                foundSharesCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
-            const expandedShares = await databaseService.expandCollection(foundSharesCollection);
-            if ((expandedShares &&
-                expandedShares.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) ||
-                (Array.isArray(expandedShares.type) &&
-                    expandedShares.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
-                entity.shares = expandedShares;
-            }
-        }
-    }
-    const compressedEntity = (0, activitypub_core_utilities_1.compressEntity)((0, activitypub_core_utilities_4.applyContext)(entity));
-    if (entity.publicKey && 'publicKey' in compressedEntity) {
-        compressedEntity.publicKey = entity.publicKey;
+    if ('publicKey' in entity && entity.publicKey) {
+        entity.publicKey = entity.publicKey;
     }
     if (request.headers.accept?.includes(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE) ||
         request.headers.accept?.includes(activitypub_core_utilities_1.LINKED_DATA_CONTENT_TYPE) ||
         request.headers.accept?.includes(activitypub_core_utilities_1.JSON_CONTENT_TYPE)) {
-        if (!entity) {
-            return handleNotFound();
-        }
         response.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);
         response.statusCode = 200;
-        response.write((0, activitypub_core_utilities_4.stringify)(compressedEntity));
+        response.write((0, activitypub_core_utilities_4.stringify)(entity));
         response.end();
         return {
             props: {},
@@ -109,7 +60,7 @@ async function entityGetHandler(request, response, authenticationService, databa
     return {
         props: {
             entity: (0, activitypub_core_utilities_3.convertUrlsToStrings)(entity),
-            actor: (0, activitypub_core_utilities_3.convertUrlsToStrings)(actor),
+            actor: (0, activitypub_core_utilities_3.convertUrlsToStrings)(authorizedActor),
         },
     };
 }

@@ -39,7 +39,13 @@ export async function outboxHandler(
   }
 
   if (req.method === 'POST') {
-    const handler = new OutboxPostHandler(req, res, authenticationService, databaseService, deliveryService);
+    const handler = new OutboxPostHandler(
+      req,
+      res,
+      authenticationService,
+      databaseService,
+      deliveryService,
+    );
     await handler.init();
 
     return {
@@ -61,16 +67,16 @@ export class OutboxPostHandler {
   authenticationService: Auth;
   databaseService: Database;
   deliveryService: DeliveryService;
-  
-  actor: AP.Actor|null = null;
-  activity: AP.Entity|null = null;
+
+  actor: AP.Actor | null = null;
+  activity: AP.Entity | null = null;
 
   constructor(
     req: IncomingMessage,
     res: ServerResponse,
     authenticationService: Auth,
     databaseService: Database,
-    deliveryService: DeliveryService
+    deliveryService: DeliveryService,
   ) {
     this.req = req;
     this.res = res;
@@ -94,7 +100,6 @@ export class OutboxPostHandler {
 
         // If the activity has an object...
         if ('object' in this.activity) {
-
           // First check that any attached `object` with ID really exists.
           const objectId = getId(this.activity.object);
 
@@ -119,7 +124,7 @@ export class OutboxPostHandler {
 
       // Commit to database.
       await this.saveActivity();
-      
+
       if (!this.activity.id) {
         throw new Error('Bad activity: No ID.');
       }
@@ -159,4 +164,3 @@ export class OutboxPostHandler {
   protected handleUndoLike = handleUndoLike;
   protected handleUndoAnnounce = handleUndoAnnounce;
 }
-

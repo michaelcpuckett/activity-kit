@@ -80,9 +80,7 @@ async function handleCreate() {
         }
     }
     else {
-        await Promise.all([
-            this.databaseService.saveEntity(object)
-        ]);
+        await Promise.all([this.databaseService.saveEntity(object)]);
     }
     this.activity.object = object.id;
 }

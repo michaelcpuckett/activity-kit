@@ -2,9 +2,7 @@ import { OutboxPostHandler } from '..';
 import { AP } from 'activitypub-core-types';
 import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
 
-export async function handleLike(
-  this: OutboxPostHandler
-) {
+export async function handleLike(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {
     return;
   }

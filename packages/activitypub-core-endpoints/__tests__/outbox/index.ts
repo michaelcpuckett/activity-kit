@@ -64,7 +64,7 @@ export const handleOutboxPost = async (activity, url) => {
   };
 
   const req = new IncomingMessage(new Socket());
-  req[Symbol.asyncIterator] = async function*() {
+  req[Symbol.asyncIterator] = async function* () {
     yield JSON.stringify(activity);
   };
   req.method = 'POST';
@@ -74,8 +74,15 @@ export const handleOutboxPost = async (activity, url) => {
   await handler.init();
 
   return {
-    req, res, auth, db, delivery,
-    saveEntity, insertOrderedItem, insertItem, broadcast,
+    req,
+    res,
+    auth,
+    db,
+    delivery,
+    saveEntity,
+    insertOrderedItem,
+    insertItem,
+    broadcast,
   };
 };
 
@@ -83,6 +90,6 @@ describe('Endpoints', () => {
   describe('Actor Outbox', () => {
     it('works', () => {
       expect(handleOutboxPost).toBeTruthy();
-    })
+    });
   });
 });

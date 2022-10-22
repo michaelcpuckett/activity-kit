@@ -39,7 +39,7 @@ async function handleUndoAnnounce() {
     }
     const streams = await Promise.all(actor.streams
         .map((stream) => (stream instanceof URL ? stream : stream.id))
-        .map(async (id) => (id ? await this.databaseService.queryById(id) : null)));
+        .map(async (id) => id ? await this.databaseService.queryById(id) : null));
     const shared = streams.find((stream) => {
         if (stream && 'name' in stream) {
             if (stream.name === 'Shared') {

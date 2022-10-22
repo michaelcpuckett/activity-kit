@@ -2,9 +2,7 @@ import { AP } from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
 import { OutboxPostHandler } from '../..';
 
-export async function handleUndoLike(
-  this: OutboxPostHandler
-) {
+export async function handleUndoLike(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {
     return;
   }

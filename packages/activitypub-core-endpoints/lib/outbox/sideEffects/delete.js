@@ -21,9 +21,11 @@ async function handleDelete() {
         type: activitypub_core_types_1.AP.CoreObjectTypes.TOMBSTONE,
         deleted: new Date(),
         formerType: object.type,
-        ...object.created ? {
-            created: object.created
-        } : null,
+        ...(object.created
+            ? {
+                created: object.created,
+            }
+            : null),
     };
     await this.databaseService.saveEntity(this.activity.object);
 }

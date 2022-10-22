@@ -8,7 +8,7 @@ export const collection1Url = `${aliceUrl}/collection/abc`;
 export const note1Url = `${aliceUrl}/object/123`;
 
 export const alice: AP.Person = {
-  "@context": new URL(ACTIVITYSTREAMS_CONTEXT),
+  '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
   id: new URL(aliceUrl),
   url: new URL(aliceUrl),
   type: 'Person',

@@ -2,9 +2,7 @@ import { AP } from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
 import { OutboxPostHandler } from '..';
 
-export async function handleUpdate(
-  this: OutboxPostHandler
-) {
+export async function handleUpdate(this: OutboxPostHandler) {
   if (!('object' in this.activity)) {
     return;
   }
@@ -21,16 +19,25 @@ export async function handleUpdate(
     throw new Error('Bad actor: not found.');
   }
 
-  if (!isActorAuthorizedToModifyObject(actor as AP.Actor, this.activity as AP.Activity)) {
+  if (
+    !isActorAuthorizedToModifyObject(
+      actor as AP.Actor,
+      this.activity as AP.Activity,
+    )
+  ) {
     throw new Error('Not authorized to modify object!');
   }
 
   if (this.activity.object instanceof URL) {
-    throw new Error('Bad activity: Providing a URL for the object is not sufficient for Update.')
+    throw new Error(
+      'Bad activity: Providing a URL for the object is not sufficient for Update.',
+    );
   }
-  
+
   if (Array.isArray(this.activity.object)) {
-    throw new Error('Internal server error: Object arrays not supported. TODO.');
+    throw new Error(
+      'Internal server error: Object arrays not supported. TODO.',
+    );
   }
 
   const objectId = getId(this.activity.object);
@@ -48,15 +55,20 @@ export async function handleUpdate(
   const updatedObject = {
     ...object,
     ...this.activity.object,
-    ...(object.type !== 'Link' && object.type !== 'Mention') ? {
-        updated: new Date(),
-      } : null,
+    ...(object.type !== 'Link' && object.type !== 'Mention'
+      ? {
+          updated: new Date(),
+        }
+      : null),
   };
 
   await this.databaseService.saveEntity(updatedObject);
 }
 
-function isActorAuthorizedToModifyObject(initiator: AP.Actor, activity: AP.Activity) {
+function isActorAuthorizedToModifyObject(
+  initiator: AP.Actor,
+  activity: AP.Activity,
+) {
   const initiatorId = getId(initiator);
 
   if (!initiatorId) {
