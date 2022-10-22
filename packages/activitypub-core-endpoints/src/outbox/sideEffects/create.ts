@@ -117,5 +117,5 @@ export async function handleCreate(this: OutboxPostHandler) {
     await Promise.all([this.databaseService.saveEntity(object)]);
   }
 
-  this.activity.object = object.id;
+  this.activity.object = object;
 }

@@ -82,7 +82,7 @@ async function handleCreate() {
     else {
         await Promise.all([this.databaseService.saveEntity(object)]);
     }
-    this.activity.object = object.id;
+    this.activity.object = object;
 }
 exports.handleCreate = handleCreate;
 //# sourceMappingURL=create.js.map
