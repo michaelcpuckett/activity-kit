@@ -81,7 +81,7 @@ export async function handleCreate(
     published: publishedDate,
   };
 
-  if (isTypeOf(object, typeof AP.CoreObjectTypes)) {
+  if (isTypeOf(object, AP.CoreObjectTypes)) {
     const typedObject = object as AP.CoreObject;
     typedObject.attributedTo = (this.activity as AP.Activity).actor;
     typedObject.replies = objectReplies;
