@@ -52,7 +52,7 @@ export async function handleUpdate(this: OutboxPostHandler) {
     throw new Error('Bad object: Not found.');
   }
 
-  const updatedObject = {
+  this.activity.object = {
     ...object,
     ...this.activity.object,
     ...(object.type !== 'Link' && object.type !== 'Mention'
@@ -62,7 +62,7 @@ export async function handleUpdate(this: OutboxPostHandler) {
       : null),
   };
 
-  await this.databaseService.saveEntity(updatedObject);
+  await this.databaseService.saveEntity(this.activity.object);
 }
 
 function isActorAuthorizedToModifyObject(

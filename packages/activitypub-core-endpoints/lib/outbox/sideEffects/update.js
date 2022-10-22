@@ -31,7 +31,7 @@ async function handleUpdate() {
     if (!object) {
         throw new Error('Bad object: Not found.');
     }
-    const updatedObject = {
+    this.activity.object = {
         ...object,
         ...this.activity.object,
         ...(object.type !== 'Link' && object.type !== 'Mention'
@@ -40,7 +40,7 @@ async function handleUpdate() {
             }
             : null),
     };
-    await this.databaseService.saveEntity(updatedObject);
+    await this.databaseService.saveEntity(this.activity.object);
 }
 exports.handleUpdate = handleUpdate;
 function isActorAuthorizedToModifyObject(initiator, activity) {
