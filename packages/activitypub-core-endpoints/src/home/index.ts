@@ -37,8 +37,8 @@ export const homeGetHandler = async (
     throw new Error('Bad actor.');
   }
 
-  actor.inbox = await databaseService.expandEntity(actor.inbox);
-  actor.outbox = await databaseService.expandEntity(actor.outbox);
+  actor.inbox = await databaseService.findEntityById(actor.inbox);
+  actor.outbox = await databaseService.findEntityById(actor.outbox);
 
   let data: {
     props?: {
