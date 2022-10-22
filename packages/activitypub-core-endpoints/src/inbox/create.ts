@@ -17,17 +17,13 @@ export async function handleCreate(
   }
 
   if ('inReplyTo' in typedObject && typedObject.inReplyTo) {
-    const objectInReplyTo = await databaseService.queryById(getId(typedObject.inReplyTo));
+    const objectInReplyTo = await databaseService.findEntityById(getId(typedObject.inReplyTo));
 
     if (objectInReplyTo) {
-      const isLocal = getCollectionNameByUrl(objectInReplyTo) !== 'remote-object';
+      const repliesCollectionId = getId(objectInReplyTo.replies);
 
-      if (isLocal) {
-        const repliesCollectionId = getId(objectInReplyTo.replies);
-
-        if (repliesCollectionId) {
-          await databaseService.insertOrderedItem(repliesCollectionId, typedObject.id);
-        }
+      if (repliesCollectionId) {
+        await databaseService.insertOrderedItem(repliesCollectionId, typedObject.id);
       }
     }
   }

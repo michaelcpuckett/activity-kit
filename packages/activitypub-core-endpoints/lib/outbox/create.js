@@ -71,14 +71,11 @@ async function handleCreate(activity, databaseService) {
                 databaseService.saveEntity(objectShares),
             ]);
             if (typedObject.inReplyTo) {
-                const objectInReplyTo = await databaseService.queryById((0, activitypub_core_utilities_3.getId)(typedObject.inReplyTo));
+                const objectInReplyTo = await databaseService.findEntityById((0, activitypub_core_utilities_3.getId)(typedObject.inReplyTo));
                 if (objectInReplyTo) {
-                    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectInReplyTo) !== 'remote-object';
-                    if (isLocal) {
-                        const repliesCollectionId = (0, activitypub_core_utilities_3.getId)(objectInReplyTo.replies);
-                        if (repliesCollectionId) {
-                            await databaseService.insertOrderedItem(repliesCollectionId, typedObject.id);
-                        }
+                    const repliesCollectionId = (0, activitypub_core_utilities_3.getId)(objectInReplyTo.replies);
+                    if (repliesCollectionId) {
+                        await databaseService.insertOrderedItem(repliesCollectionId, typedObject.id);
                     }
                 }
             }

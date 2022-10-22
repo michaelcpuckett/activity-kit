@@ -11,14 +11,11 @@ async function handleCreate(activity, databaseService) {
         throw new Error('No object');
     }
     if ('inReplyTo' in typedObject && typedObject.inReplyTo) {
-        const objectInReplyTo = await databaseService.queryById((0, activitypub_core_utilities_1.getId)(typedObject.inReplyTo));
+        const objectInReplyTo = await databaseService.findEntityById((0, activitypub_core_utilities_1.getId)(typedObject.inReplyTo));
         if (objectInReplyTo) {
-            const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectInReplyTo) !== 'remote-object';
-            if (isLocal) {
-                const repliesCollectionId = (0, activitypub_core_utilities_1.getId)(objectInReplyTo.replies);
-                if (repliesCollectionId) {
-                    await databaseService.insertOrderedItem(repliesCollectionId, typedObject.id);
-                }
+            const repliesCollectionId = (0, activitypub_core_utilities_1.getId)(objectInReplyTo.replies);
+            if (repliesCollectionId) {
+                await databaseService.insertOrderedItem(repliesCollectionId, typedObject.id);
             }
         }
     }
