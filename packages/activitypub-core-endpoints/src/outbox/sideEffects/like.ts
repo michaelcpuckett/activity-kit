@@ -55,7 +55,7 @@ export async function handleLike(
     this.databaseService.insertOrderedItem(likedId, object.id),
   ]);
 
-  const isLocal = getCollectionNameByUrl(object.id) !== 'remote-object';
+  const isLocal = getCollectionNameByUrl(object.id) !== 'foreign-object';
 
   if (isLocal) {
     if (!('likes' in object) || !object.likes) {

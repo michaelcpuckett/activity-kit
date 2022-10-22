@@ -71,7 +71,7 @@ export async function handleAnnounce(
     this.databaseService.insertOrderedItem(shared.id, object.id),
   ]);
 
-  const isLocal = getCollectionNameByUrl(object.id) !== 'remote-object';
+  const isLocal = getCollectionNameByUrl(object.id) !== 'foreign-object';
 
   if (isLocal) {
     if (!('shares' in object) || !object.shares) {

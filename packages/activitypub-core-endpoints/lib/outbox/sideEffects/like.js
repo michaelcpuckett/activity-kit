@@ -38,7 +38,7 @@ async function handleLike() {
     await Promise.all([
         this.databaseService.insertOrderedItem(likedId, object.id),
     ]);
-    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(object.id) !== 'remote-object';
+    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(object.id) !== 'foreign-object';
     if (isLocal) {
         if (!('likes' in object) || !object.likes) {
             throw new Error('Object is local, but has no `likes` collection.');

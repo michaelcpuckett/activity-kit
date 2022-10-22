@@ -46,7 +46,7 @@ async function handleAnnounce(activity, databaseService) {
     await Promise.all([
         databaseService.insertOrderedItem(actorSharedCollection.id, object.id),
     ]);
-    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(object.id) !== 'remote-object';
+    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(object.id) !== 'foreign-object';
     if (isLocal) {
         if (!('shares' in object) || !object.shares) {
             throw new Error('Bad request 4');

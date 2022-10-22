@@ -49,7 +49,7 @@ async function handleAnnounce() {
     await Promise.all([
         this.databaseService.insertOrderedItem(shared.id, object.id),
     ]);
-    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(object.id) !== 'remote-object';
+    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(object.id) !== 'foreign-object';
     if (isLocal) {
         if (!('shares' in object) || !object.shares) {
             throw new Error('Object is local, but `shares` is not in this object.');
