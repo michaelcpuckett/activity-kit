@@ -32,8 +32,16 @@ export const handleOutboxPost = async (activity, url) => {
         return data.alice;
       }
 
+      if (_id === data.bobUrl) {
+        return data.bob;
+      }
+
       if (outbox === data.aliceOutboxUrl) {
         return data.alice;
+      }
+
+      if (_id === data.aliceLikedUrl) {
+        return data.aliceLiked;
       }
 
       if (_id === data.collection1Url) {
@@ -42,6 +50,14 @@ export const handleOutboxPost = async (activity, url) => {
 
       if (_id === data.note1Url) {
         return data.note1;
+      }
+
+      if (_id === data.note2Url) {
+        return data.note2;
+      }
+
+      if (_id === data.note2LikesUrl) {
+        return data.note2Likes;
       }
 
       return null;
