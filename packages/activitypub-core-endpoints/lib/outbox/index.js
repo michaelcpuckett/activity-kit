@@ -1,176 +1,110 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.outboxHandler = void 0;
+exports.OutboxPostHandler = exports.outboxHandler = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const entity_1 = require("../entity");
-const delete_1 = require("./delete");
-const create_1 = require("./create");
-const update_1 = require("./update");
-const like_1 = require("./like");
-const announce_1 = require("./announce");
-const add_1 = require("./add");
-const undo_1 = require("./undo");
-const remove_1 = require("./remove");
-const activitypub_core_utilities_2 = require("activitypub-core-utilities");
-const activitypub_core_utilities_3 = require("activitypub-core-utilities");
-const activitypub_core_utilities_4 = require("activitypub-core-utilities");
-const activitypub_core_utilities_5 = require("activitypub-core-utilities");
-const activitypub_core_utilities_6 = require("activitypub-core-utilities");
-const cookie_1 = __importDefault(require("cookie"));
+const runSideEffects_1 = require("./runSideEffects");
+const authenticateActor_1 = require("./authenticateActor");
+const wrapInActivity_1 = require("./wrapInActivity");
+const saveActivity_1 = require("./saveActivity");
+const parseBody_1 = require("./parseBody");
+const getActor_1 = require("./getActor");
+const delete_1 = require("./sideEffects/delete");
+const create_1 = require("./sideEffects/create");
+const update_1 = require("./sideEffects/update");
+const like_1 = require("./sideEffects/like");
+const announce_1 = require("./sideEffects/announce");
+const add_1 = require("./sideEffects/add");
+const undo_1 = require("./sideEffects/undo");
+const remove_1 = require("./sideEffects/remove");
+const undoLike_1 = require("./sideEffects/undo/undoLike");
+const undoAnnounce_1 = require("./sideEffects/undo/undoAnnounce");
 async function outboxHandler(req, res, authenticationService, databaseService, deliveryService) {
     if (!req) {
-        throw new Error('No request object.');
+        throw new Error('Bad request: not found.');
     }
     if (req.method === 'POST') {
-        return await handleOutboxPost(req, res, authenticationService, databaseService, deliveryService);
-    }
-    return await (0, entity_1.entityGetHandler)(req, res, authenticationService, databaseService);
-}
-exports.outboxHandler = outboxHandler;
-async function handleOutboxPost(req, res, authenticationService, databaseService, deliveryService) {
-    if (!req || !res) {
-        throw new Error('No response object.');
-    }
-    const url = `${activitypub_core_utilities_1.LOCAL_DOMAIN}${req.url}`;
-    try {
-        const initiator = await databaseService.findOne('actor', {
-            outbox: url,
-        });
-        if (!initiator || !initiator.id || !('outbox' in initiator)) {
-            throw new Error('No actor with this outbox.');
-        }
-        const cookies = cookie_1.default.parse(req.headers.cookie ?? '');
-        const actor = await databaseService.getActorByUserId(await authenticationService.getUserIdByToken(cookies.__session ?? ''));
-        if (!actor || actor.id.toString() !== initiator.id.toString()) {
-            throw new Error('Not authorized.');
-        }
-        const initiatorOutboxId = new URL(url);
-        const entity = await (0, activitypub_core_utilities_5.parseStream)(req);
-        if (!entity) {
-            throw new Error('bad JSONLD?');
-        }
-        const activity = (0, activitypub_core_utilities_4.combineAddresses)(entity);
-        const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}/activity/${(0, activitypub_core_utilities_2.getGuid)()}`);
-        activity.id = activityId;
-        if ('object' in activity) {
-            const objectId = (0, activitypub_core_utilities_3.getId)(activity.object);
-            if (objectId) {
-                const remoteObject = await databaseService.queryById(objectId);
-                if (!remoteObject) {
-                    throw new Error('Remote object does not exist!');
-                }
-            }
-        }
-        if ('object' in activity) {
-            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
-                activity.object = await (0, create_1.handleCreate)(activity, databaseService);
-            }
-            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.DELETE)) {
-                await (0, delete_1.handleDelete)(activity, databaseService);
-            }
-            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.UPDATE)) {
-                await (0, update_1.handleUpdate)(activity, databaseService);
-            }
-            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.LIKE)) {
-                await (0, like_1.handleLike)(activity, databaseService);
-            }
-            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE)) {
-                await (0, announce_1.handleAnnounce)(activity, databaseService);
-            }
-            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.ADD)) {
-                await (0, add_1.handleAdd)(activity, databaseService);
-            }
-            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.REMOVE)) {
-                await (0, remove_1.handleRemove)(activity, databaseService);
-            }
-            if ((0, activitypub_core_utilities_6.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.UNDO)) {
-                await (0, undo_1.handleUndo)(activity, databaseService, initiator);
-            }
-        }
-        const saveActivity = async (activityToSave) => {
-            const activityToSaveId = activityToSave.id;
-            if (!activityToSaveId) {
-                throw new Error('No Activity ID');
-            }
-            activityToSave.url = activityToSaveId;
-            const publishedDate = new Date();
-            activityToSave.published = publishedDate;
-            const activityReplies = {
-                '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
-                id: new URL(`${activityToSaveId.toString()}/replies`),
-                url: new URL(`${activityToSaveId.toString()}/replies`),
-                name: 'Replies',
-                type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
-                totalItems: 0,
-                items: [],
-                published: publishedDate,
-            };
-            const activityLikes = {
-                '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
-                id: new URL(`${activityToSaveId.toString()}/likes`),
-                url: new URL(`${activityToSaveId.toString()}/likes`),
-                name: 'Likes',
-                type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-                totalItems: 0,
-                orderedItems: [],
-                published: publishedDate,
-            };
-            const activityShares = {
-                '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
-                id: new URL(`${activityToSaveId.toString()}/shares`),
-                url: new URL(`${activityToSaveId.toString()}/shares`),
-                name: 'Shares',
-                type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-                totalItems: 0,
-                orderedItems: [],
-                published: publishedDate,
-            };
-            activityToSave.replies = activityReplies.id;
-            activityToSave.likes = activityLikes.id;
-            activityToSave.shares = activityShares.id;
-            await Promise.all([
-                databaseService.saveEntity(activityToSave),
-                databaseService.saveEntity(activityReplies),
-                databaseService.saveEntity(activityLikes),
-                databaseService.saveEntity(activityShares),
-                databaseService.insertOrderedItem(initiatorOutboxId, activityToSaveId),
-            ]);
-            await deliveryService.broadcast(activityToSave, initiator);
-            res.statusCode = 201;
-            if (activityToSave.id) {
-                res.setHeader('Location', activityToSave.id.toString());
-            }
-            res.write((0, activitypub_core_utilities_6.stringify)(activityToSave));
-            res.end();
-            return {
-                props: {},
-            };
-        };
-        if ((0, activitypub_core_utilities_1.isTypeOf)(activity, typeof activitypub_core_types_1.AP.ActivityTypes)) {
-            return await saveActivity(activity);
-        }
-        const convertedActivity = {
-            id: activityId,
-            url: activityId,
-            type: activitypub_core_types_1.AP.ActivityTypes.CREATE,
-            actor: initiator.id,
-            object: activity,
-        };
-        convertedActivity.object = await (0, create_1.handleCreate)(convertedActivity, databaseService);
-        return await saveActivity(convertedActivity);
-    }
-    catch (error) {
-        console.log(error);
-        res.statusCode = 500;
-        res.write('Bad request');
-        res.end();
+        const handler = new OutboxPostHandler(req, res, authenticationService, databaseService, deliveryService);
+        await handler.init();
         return {
             props: {},
         };
     }
+    return await (0, entity_1.entityGetHandler)(req, res, authenticationService, databaseService);
 }
+exports.outboxHandler = outboxHandler;
+class OutboxPostHandler {
+    req;
+    res;
+    authenticationService;
+    databaseService;
+    deliveryService;
+    actor = null;
+    activity = null;
+    constructor(req, res, authenticationService, databaseService, deliveryService) {
+        this.req = req;
+        this.res = res;
+        this.authenticationService = authenticationService;
+        this.databaseService = databaseService;
+        this.deliveryService = deliveryService;
+    }
+    async init() {
+        try {
+            await this.parseBody();
+            await this.getActor();
+            await this.authenticateActor();
+            const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}/activity/${(0, activitypub_core_utilities_1.getGuid)()}`);
+            this.activity.id = activityId;
+            if ((0, activitypub_core_utilities_1.isTypeOf)(this.activity, activitypub_core_types_1.AP.ActivityTypes)) {
+                this.activity.url = activityId;
+                if ('object' in this.activity) {
+                    const objectId = (0, activitypub_core_utilities_1.getId)(this.activity.object);
+                    if (objectId) {
+                        const remoteObject = await this.databaseService.queryById(objectId);
+                        if (!remoteObject) {
+                            throw new Error('Bad object: Object with ID does not exist!');
+                        }
+                    }
+                    await this.runSideEffects();
+                }
+            }
+            else {
+                await this.wrapInActivity();
+            }
+            this.activity = (0, activitypub_core_utilities_1.combineAddresses)(this.activity);
+            await this.saveActivity();
+            if (!this.activity.id) {
+                throw new Error('Bad activity: No ID.');
+            }
+            await this.deliveryService.broadcast(this.activity, this.actor);
+            this.res.statusCode = 201;
+            this.res.setHeader('Location', this.activity.id.toString());
+            this.res.end();
+        }
+        catch (error) {
+            console.log(error);
+            this.res.statusCode = 500;
+            this.res.write(String(error));
+            this.res.end();
+        }
+    }
+    authenticateActor = authenticateActor_1.authenticateActor;
+    getActor = getActor_1.getActor;
+    runSideEffects = runSideEffects_1.runSideEffects;
+    saveActivity = saveActivity_1.saveActivity;
+    wrapInActivity = wrapInActivity_1.wrapInActivity;
+    parseBody = parseBody_1.parseBody;
+    handleAdd = add_1.handleAdd;
+    handleAnnounce = announce_1.handleAnnounce;
+    handleCreate = create_1.handleCreate;
+    handleDelete = delete_1.handleDelete;
+    handleLike = like_1.handleLike;
+    handleRemove = remove_1.handleRemove;
+    handleUpdate = update_1.handleUpdate;
+    handleUndo = undo_1.handleUndo;
+    handleUndoLike = undoLike_1.handleUndoLike;
+    handleUndoAnnounce = undoAnnounce_1.handleUndoAnnounce;
+}
+exports.OutboxPostHandler = OutboxPostHandler;
 //# sourceMappingURL=index.js.map
