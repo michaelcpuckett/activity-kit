@@ -2,6 +2,7 @@ import { AP } from 'activitypub-core-types';
 import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   CONTENT_TYPE_HEADER,
+  getHttpSignature,
   JSON_CONTENT_TYPE,
   LINKED_DATA_CONTENT_TYPE,
   LOCAL_DOMAIN,
@@ -78,6 +79,8 @@ export async function entityGetHandler(
     request.headers.accept?.includes(LINKED_DATA_CONTENT_TYPE) ||
     request.headers.accept?.includes(JSON_CONTENT_TYPE)
   ) {
+    // TODO sign HTTP signature
+
     response.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
     response.statusCode = 200;
     response.write(stringify(entity));

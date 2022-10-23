@@ -1,10 +1,10 @@
 import { AP } from 'activitypub-core-types';
-import * as crypto from 'crypto';
 import {
   CONTENT_TYPE_HEADER,
   ACTIVITYSTREAMS_CONTENT_TYPE,
   ACCEPT_HEADER,
   convertUrlsToStrings,
+  getHttpSignature,
 } from 'activitypub-core-utilities';
 import { DeliveryService } from '.';
 
@@ -14,40 +14,25 @@ export async function signAndSendToForeignActorInbox(
   actor: AP.Actor,
   activity: AP.Activity,
 ) {
-  console.log('SENDING TO...', foreignActorInbox.toString());
-  const privateKey = await this.getPrivateKey(actor);
-  const foreignDomain = foreignActorInbox.hostname;
-  const foreignPathName = foreignActorInbox.pathname;
-  const stringifiedActivity = JSON.stringify(convertUrlsToStrings(activity));
-
-  // sign
-  const digestHash = crypto
-    .createHash('sha256')
-    .update(stringifiedActivity)
-    .digest('base64');
-  const signer = crypto.createSign('sha256');
-  const dateString = new Date().toUTCString();
-  const stringToSign = `(request-target): post ${foreignPathName}\nhost: ${foreignDomain}\ndate: ${dateString}\ndigest: SHA-256=${digestHash}`;
-  signer.update(stringToSign);
-  signer.end();
-  const signature = signer.sign(privateKey);
-  const signature_b64 = signature.toString('base64');
-  const signatureHeader = `keyId="${actor.id.toString()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest",signature="${signature_b64}"`;
-
   if (typeof this.fetch !== 'function') {
     return null;
   }
 
+  console.log('SENDING TO...', foreignActorInbox.toString());
+
+  const convertedActivity = convertUrlsToStrings(activity);
+  const { dateHeader, digestHeader, signatureHeader } = await getHttpSignature(foreignActorInbox, actor, convertedActivity);
+
   // send
   return await this.fetch(foreignActorInbox.toString(), {
     method: 'post',
-    body: stringifiedActivity,
+    body: JSON.stringify(convertedActivity),
     headers: {
       [CONTENT_TYPE_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
       [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
-      Host: foreignDomain,
-      Date: dateString,
-      Digest: `SHA-256=${digestHash}`,
+      Host: foreignActorInbox.hostname,
+      Date: dateHeader,
+      Digest: digestHeader,
       Signature: signatureHeader,
     },
   }).then(async (res) => {

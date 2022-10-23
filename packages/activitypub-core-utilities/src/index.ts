@@ -15,4 +15,5 @@ export { parseStream } from './parseStream';
 export { removeContext } from './removeContext';
 export { streamToString } from './streamToString';
 export { stringify } from './stringify';
+export { getHttpSignature } from './getHttpSignature';
 export * from './globals';

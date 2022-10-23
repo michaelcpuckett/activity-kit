@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stringify = exports.streamToString = exports.removeContext = exports.parseStream = exports.isType = exports.isTypeOf = exports.getTypedEntity = exports.getId = exports.getGuid = exports.getCollectionNameByUrl = exports.generateKeyPair = exports.convertUrlsToStrings = exports.convertStringsToUrls = exports.convertFromJsonLd = exports.compressEntity = exports.combineAddresses = exports.cleanProps = exports.applyContext = void 0;
+exports.getHttpSignature = exports.stringify = exports.streamToString = exports.removeContext = exports.parseStream = exports.isType = exports.isTypeOf = exports.getTypedEntity = exports.getId = exports.getGuid = exports.getCollectionNameByUrl = exports.generateKeyPair = exports.convertUrlsToStrings = exports.convertStringsToUrls = exports.convertFromJsonLd = exports.compressEntity = exports.combineAddresses = exports.cleanProps = exports.applyContext = void 0;
 var applyContext_1 = require("./applyContext");
 Object.defineProperty(exports, "applyContext", { enumerable: true, get: function () { return applyContext_1.applyContext; } });
 var cleanProps_1 = require("./cleanProps");
@@ -50,5 +50,7 @@ var streamToString_1 = require("./streamToString");
 Object.defineProperty(exports, "streamToString", { enumerable: true, get: function () { return streamToString_1.streamToString; } });
 var stringify_1 = require("./stringify");
 Object.defineProperty(exports, "stringify", { enumerable: true, get: function () { return stringify_1.stringify; } });
+var getHttpSignature_1 = require("./getHttpSignature");
+Object.defineProperty(exports, "getHttpSignature", { enumerable: true, get: function () { return getHttpSignature_1.getHttpSignature; } });
 __exportStar(require("./globals"), exports);
 //# sourceMappingURL=index.js.map

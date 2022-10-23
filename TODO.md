@@ -1,8 +1,14 @@
-* Full integration with i.e. Mastodon
-* replies / inReplyTo
+* Full integration with:
+    * Mastodon
+    * Friendica
+* HTTPS Signatures and Linked Data Signatures
+* block
 * performance issues
-* http signatures
 * ostatus
+* as:sensitive
 * foaf / schema.org / others
-* /api/v1/instance
 * /.well-known/host-meta
+
+Mastodon secure mode: all cross-server HTTP requests to Mastodon must be signed (in other words, even GET requests to public resources).
+
+Collection-Synchronization HTTP header
