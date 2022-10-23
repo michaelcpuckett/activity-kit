@@ -12,6 +12,7 @@ import { handleFollow } from './sideEffects/follow';
 import { handleLike } from './sideEffects/like';
 import { handleCreate } from './sideEffects/create';
 import { shouldForwardActivity } from './shouldForwardActivity';
+import { broadcastActivity } from './broadcastActivity';
 import { stringify } from 'activitypub-core-utilities';
 import { DeliveryService } from 'activitypub-core-delivery';
 
@@ -52,6 +53,7 @@ export class InboxEndpoint {
   protected runSideEffects = runSideEffects;
   protected parseBody = parseBody;
   protected saveActivity = saveActivity;
+  protected broadcastActivity = broadcastActivity;
   protected shouldForwardActivity = shouldForwardActivity;
 
   protected handleCreate = handleCreate;
@@ -77,16 +79,8 @@ export class InboxEndpoint {
       await this.getActor();
       await this.parseBody();
       await this.runSideEffects();
-
-      if (!('actor' in this.activity)) {
-        throw new Error('Bad activity: no actor.');
-      }
-
-      if (await this.shouldForwardActivity()) {
-        await this.deliveryService.broadcast(this.activity, this.actor);
-      }
-
       await this.saveActivity();
+      await this.broadcastActivity();
 
       this.res.statusCode = 200;
       this.res.write(stringify(this.activity));

@@ -12,6 +12,7 @@ import { handleFollow } from './sideEffects/follow';
 import { handleLike } from './sideEffects/like';
 import { handleCreate } from './sideEffects/create';
 import { shouldForwardActivity } from './shouldForwardActivity';
+import { broadcastActivity } from './broadcastActivity';
 import { DeliveryService } from 'activitypub-core-delivery';
 export declare function inboxHandler(req: IncomingMessage, res: ServerResponse, authenticationService: Auth, databaseService: Database, deliveryService: DeliveryService): Promise<{
     props?: {
@@ -32,6 +33,7 @@ export declare class InboxEndpoint {
     protected runSideEffects: typeof runSideEffects;
     protected parseBody: typeof parseBody;
     protected saveActivity: typeof saveActivity;
+    protected broadcastActivity: typeof broadcastActivity;
     protected shouldForwardActivity: typeof shouldForwardActivity;
     protected handleCreate: typeof handleCreate;
     protected handleAccept: typeof handleAccept;

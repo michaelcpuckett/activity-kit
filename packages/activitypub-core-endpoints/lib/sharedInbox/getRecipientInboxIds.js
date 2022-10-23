@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRecipientInboxIds = void 0;
+const activitypub_core_types_1 = require("activitypub-core-types");
+const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function getRecipientInboxIds() {
     if (!this.activity) {
         throw new Error('No activity.');
     }
-    const recipients = [
+    const recipientIds = [
         ...(this.activity.to
             ? await this.deliveryService.getRecipientsList(this.activity.to)
             : []),
@@ -22,22 +24,18 @@ async function getRecipientInboxIds() {
             ? await this.deliveryService.getRecipientsList(this.activity.audience)
             : []),
     ];
-    const recipientInboxes = await Promise.all(recipients.map(async (recipient) => {
-        if (!this.actor) {
-            throw new Error('No actor.');
-        }
-        if (recipient.toString() === this.actor.id?.toString()) {
+    const recipientInboxes = await Promise.all(recipientIds.map(async (recipientId) => {
+        if (recipientId.toString() === (0, activitypub_core_utilities_1.getId)(this.activity.actor).toString()) {
             return null;
         }
-        const foundThing = await this.databaseService.findEntityById(recipient);
-        if (!foundThing) {
+        const recipient = await this.databaseService.findEntityById(recipientId);
+        if (!recipient) {
             return null;
         }
-        if (typeof foundThing === 'object' &&
-            'inbox' in foundThing &&
-            foundThing.inbox) {
-            return foundThing.inbox;
+        if ((0, activitypub_core_utilities_1.isTypeOf)(recipient, activitypub_core_types_1.AP.ActorTypes)) {
+            return recipient.inbox;
         }
+        return null;
     }));
     const recipientInboxIds = [];
     for (const recipientInbox of recipientInboxes) {

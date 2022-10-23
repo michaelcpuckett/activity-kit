@@ -12,6 +12,7 @@ const follow_1 = require("./sideEffects/follow");
 const like_1 = require("./sideEffects/like");
 const create_1 = require("./sideEffects/create");
 const shouldForwardActivity_1 = require("./shouldForwardActivity");
+const broadcastActivity_1 = require("./broadcastActivity");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function inboxHandler(req, res, authenticationService, databaseService, deliveryService) {
     if (req.method === 'POST') {
@@ -31,6 +32,7 @@ class InboxEndpoint {
     runSideEffects = runSideEffects_1.runSideEffects;
     parseBody = parseBody_1.parseBody;
     saveActivity = saveActivity_1.saveActivity;
+    broadcastActivity = broadcastActivity_1.broadcastActivity;
     shouldForwardActivity = shouldForwardActivity_1.shouldForwardActivity;
     handleCreate = create_1.handleCreate;
     handleAccept = accept_1.handleAccept;
@@ -48,13 +50,8 @@ class InboxEndpoint {
             await this.getActor();
             await this.parseBody();
             await this.runSideEffects();
-            if (!('actor' in this.activity)) {
-                throw new Error('Bad activity: no actor.');
-            }
-            if (await this.shouldForwardActivity()) {
-                await this.deliveryService.broadcast(this.activity, this.actor);
-            }
             await this.saveActivity();
+            await this.broadcastActivity();
             this.res.statusCode = 200;
             this.res.write((0, activitypub_core_utilities_1.stringify)(this.activity));
             this.res.end();

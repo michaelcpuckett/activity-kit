@@ -1,3 +1,5 @@
+import { AP } from 'activitypub-core-types';
+import { getId, isTypeOf } from 'activitypub-core-utilities';
 import { SharedInboxEndpoint } from '.';
 
 export async function getRecipientInboxIds(this: SharedInboxEndpoint) {
@@ -5,7 +7,7 @@ export async function getRecipientInboxIds(this: SharedInboxEndpoint) {
     throw new Error('No activity.')
   }
 
-  const recipients: URL[] = [
+  const recipientIds: URL[] = [
     ...(this.activity.to
       ? await this.deliveryService.getRecipientsList(this.activity.to)
       : []),
@@ -24,28 +26,22 @@ export async function getRecipientInboxIds(this: SharedInboxEndpoint) {
   ];
 
   const recipientInboxes = await Promise.all(
-    recipients.map(async (recipient) => {
-      if (!this.actor) {
-        throw new Error('No actor.');
-      }
-
-      if (recipient.toString() === this.actor.id?.toString()) {
+    recipientIds.map(async (recipientId) => {
+      if (recipientId.toString() === getId(this.activity.actor).toString()) {
         return null;
       }
 
-      const foundThing = await this.databaseService.findEntityById(recipient);
+      const recipient = await this.databaseService.findEntityById(recipientId);
 
-      if (!foundThing) {
+      if (!recipient) {
         return null;
       }
 
-      if (
-        typeof foundThing === 'object' &&
-        'inbox' in foundThing &&
-        foundThing.inbox
-      ) {
-        return foundThing.inbox;
+      if (isTypeOf(recipient, AP.ActorTypes)) {
+        return (recipient as AP.Actor).inbox;
       }
+
+      return null;
     }),
   );
 

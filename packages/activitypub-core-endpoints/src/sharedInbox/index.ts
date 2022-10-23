@@ -3,6 +3,8 @@ import { AP } from 'activitypub-core-types';
 import type { Database } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
 import { InboxEndpoint } from '../inbox';
+import { getActor } from './getActor';
+import { broadcastActivity } from './broadcastActivity';
 import { saveActivity } from './saveActivity';
 import { getRecipientInboxIds } from './getRecipientInboxIds';
 
@@ -19,5 +21,7 @@ export async function sharedInboxHandler(
 
 export class SharedInboxEndpoint extends InboxEndpoint {
   protected getRecipientInboxIds = getRecipientInboxIds;
+  protected override getActor = getActor;
+  protected override broadcastActivity = broadcastActivity;
   protected override saveActivity = saveActivity;
 }
