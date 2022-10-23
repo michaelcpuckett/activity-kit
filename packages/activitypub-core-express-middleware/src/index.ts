@@ -8,7 +8,6 @@ import {
   inboxHandler,
   sharedInboxHandler,
   webfingerHandler,
-  remoteHandler,
 } from 'activitypub-core-endpoints';
 import { AP } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
@@ -47,7 +46,7 @@ export const activityPub =
     },
   ) =>
   async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
-    console.log('INCOMING:', req.url);
+    console.log('INCOMING:', req.url, 'ORIGIN:', req.headers.origin);
 
     if (req.url === '/user' && req.method === 'POST') {
       await userPostHandler(req, res, authenticationService, databaseService);
@@ -57,12 +56,6 @@ export const activityPub =
 
     if (req.url.startsWith('/.well-known/webfinger')) {
       await webfingerHandler(req, res, databaseService);
-      next();
-      return;
-    }
-
-    if (req.url.startsWith('/remote')) {
-      await remoteHandler(req, res, authenticationService, databaseService);
       next();
       return;
     }
@@ -201,6 +194,6 @@ export const activityPub =
       return;
     }
 
-    console.log('404', req.url);
+    console.log('Not handled:', req.url);
     next();
   };

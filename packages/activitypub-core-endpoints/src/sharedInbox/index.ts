@@ -1,5 +1,4 @@
 import type { IncomingMessage, ServerResponse } from 'http';
-import { AP } from 'activitypub-core-types';
 import type { Database } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
 import { InboxEndpoint } from '../inbox';

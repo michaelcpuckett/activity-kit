@@ -5,4 +5,3 @@ export { outboxHandler } from './outbox';
 export { inboxHandler } from './inbox';
 export { sharedInboxHandler } from './sharedInbox';
 export { webfingerHandler } from './webfinger';
-export { remoteHandler } from './remote';

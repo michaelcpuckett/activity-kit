@@ -4,7 +4,7 @@ exports.activityPub = void 0;
 const activitypub_core_endpoints_1 = require("activitypub-core-endpoints");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activityPub = ({ renderLogin, renderHome, renderEntity, }, { authenticationService, databaseService, deliveryService, }) => async (req, res, next) => {
-    console.log('INCOMING:', req.url);
+    console.log('INCOMING:', req.url, 'ORIGIN:', req.headers.origin);
     if (req.url === '/user' && req.method === 'POST') {
         await (0, activitypub_core_endpoints_1.userPostHandler)(req, res, authenticationService, databaseService);
         next();
@@ -12,11 +12,6 @@ const activityPub = ({ renderLogin, renderHome, renderEntity, }, { authenticatio
     }
     if (req.url.startsWith('/.well-known/webfinger')) {
         await (0, activitypub_core_endpoints_1.webfingerHandler)(req, res, databaseService);
-        next();
-        return;
-    }
-    if (req.url.startsWith('/remote')) {
-        await (0, activitypub_core_endpoints_1.remoteHandler)(req, res, authenticationService, databaseService);
         next();
         return;
     }
@@ -92,7 +87,7 @@ const activityPub = ({ renderLogin, renderHome, renderEntity, }, { authenticatio
         res.end();
         return;
     }
-    console.log('404', req.url);
+    console.log('Not handled:', req.url);
     next();
 };
 exports.activityPub = activityPub;
