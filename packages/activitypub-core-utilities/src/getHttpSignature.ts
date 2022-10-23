@@ -1,8 +1,7 @@
 import { AP } from 'activitypub-core-types';
 import * as crypto from 'crypto';
 
-export async function getHttpSignature(foreignTarget: URL, actor: AP.Actor, entity: AP.Entity) {
-  const privateKey = await this.getPrivateKey(actor);
+export async function getHttpSignature(foreignTarget: URL, actorId: URL, privateKey: string, entity: AP.Entity) {
   const foreignDomain = foreignTarget.hostname;
   const foreignPathName = foreignTarget.pathname;
 
@@ -19,7 +18,7 @@ export async function getHttpSignature(foreignTarget: URL, actor: AP.Actor, enti
   signer.end();
   const signature = signer.sign(privateKey);
   const signature_b64 = signature.toString('base64');
-  const signatureHeader = `keyId="${actor.id?.toString()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest",signature="${signature_b64}"`;
+  const signatureHeader = `keyId="${actorId.toString()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest",signature="${signature_b64}"`;
 
   return {
     dateHeader: dateString,

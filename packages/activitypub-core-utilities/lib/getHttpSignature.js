@@ -25,8 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getHttpSignature = void 0;
 const crypto = __importStar(require("crypto"));
-async function getHttpSignature(foreignTarget, actor, entity) {
-    const privateKey = await this.getPrivateKey(actor);
+async function getHttpSignature(foreignTarget, actorId, privateKey, entity) {
     const foreignDomain = foreignTarget.hostname;
     const foreignPathName = foreignTarget.pathname;
     const digestHash = crypto
@@ -41,7 +40,7 @@ async function getHttpSignature(foreignTarget, actor, entity) {
     signer.end();
     const signature = signer.sign(privateKey);
     const signature_b64 = signature.toString('base64');
-    const signatureHeader = `keyId="${actor.id?.toString()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest",signature="${signature_b64}"`;
+    const signatureHeader = `keyId="${actorId.toString()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest",signature="${signature_b64}"`;
     return {
         dateHeader: dateString,
         digestHeader,

@@ -8,7 +8,7 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity
     }
     console.log('SENDING TO...', foreignActorInbox.toString());
     const convertedActivity = (0, activitypub_core_utilities_1.convertUrlsToStrings)(activity);
-    const { dateHeader, digestHeader, signatureHeader } = await (0, activitypub_core_utilities_1.getHttpSignature)(foreignActorInbox, actor, convertedActivity);
+    const { dateHeader, digestHeader, signatureHeader } = await (0, activitypub_core_utilities_1.getHttpSignature)(foreignActorInbox, actor.id, await this.getPrivateKey(actor), convertedActivity);
     return await this.fetch(foreignActorInbox.toString(), {
         method: 'post',
         body: JSON.stringify(convertedActivity),

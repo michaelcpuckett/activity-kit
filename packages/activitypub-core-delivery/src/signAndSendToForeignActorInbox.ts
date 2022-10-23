@@ -21,7 +21,7 @@ export async function signAndSendToForeignActorInbox(
   console.log('SENDING TO...', foreignActorInbox.toString());
 
   const convertedActivity = convertUrlsToStrings(activity);
-  const { dateHeader, digestHeader, signatureHeader } = await getHttpSignature(foreignActorInbox, actor, convertedActivity);
+  const { dateHeader, digestHeader, signatureHeader } = await getHttpSignature(foreignActorInbox, actor.id, await this.getPrivateKey(actor), convertedActivity);
 
   // send
   return await this.fetch(foreignActorInbox.toString(), {
