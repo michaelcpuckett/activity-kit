@@ -1,12 +1,18 @@
 import { AP } from 'activitypub-core-types';
-import type { Database } from 'activitypub-core-types';
-import { getId } from 'activitypub-core-utilities';
+import { getId, isTypeOf } from 'activitypub-core-utilities';
+import { InboxEndpoint } from '.';
 
-export async function shouldForwardActivity(
-  activity: AP.Activity,
-  recipient: AP.Actor,
-  databaseService: Database,
-) {
+export async function shouldForwardActivity(this: InboxEndpoint) {
+  if (!this.activity) {
+    return false;
+  }
+
+  if (!isTypeOf(this.activity, AP.ActivityTypes)) {
+    return false;
+  }
+
+  const activity = this.activity as AP.Activity;
+
   const to = activity.to
     ? Array.isArray(activity.to)
       ? activity.to
@@ -32,7 +38,7 @@ export async function shouldForwardActivity(
       continue;
     }
 
-    const foundItem = await databaseService.findEntityById(addresseeId);
+    const foundItem = await this.databaseService.findEntityById(addresseeId);
 
     if (!foundItem) {
       continue;
@@ -80,11 +86,11 @@ export async function shouldForwardActivity(
       continue;
     }
 
-    if (objectId.toString() === recipient.id?.toString()) {
+    if (objectId.toString() === this.actor?.id?.toString()) {
       continue;
     }
 
-    const foundItem = await databaseService.findEntityById(objectId);
+    const foundItem = await this.databaseService.findEntityById(objectId);
 
     if (!foundItem) {
       continue;

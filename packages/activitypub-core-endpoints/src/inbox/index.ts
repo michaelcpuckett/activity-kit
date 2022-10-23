@@ -1,18 +1,19 @@
 import { AP } from 'activitypub-core-types';
-import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import type { IncomingMessage, ServerResponse } from 'http';
+import type { Database, Auth } from 'activitypub-core-types';
 import { entityGetHandler } from '../entity';
-import { handleAccept } from './accept';
-import { handleAnnounce } from './announce';
-import { handleFollow } from './follow';
-import { handleLike } from './like';
-import { handleCreate } from './create';
+import { getActor } from './getActor';
+import { saveActivity } from './saveActivity';
+import { parseBody } from './parseBody';
+import { runSideEffects } from './runSideEffects';
+import { handleAccept } from './sideEffects/accept';
+import { handleAnnounce } from './sideEffects/announce';
+import { handleFollow } from './sideEffects/follow';
+import { handleLike } from './sideEffects/like';
+import { handleCreate } from './sideEffects/create';
 import { shouldForwardActivity } from './shouldForwardActivity';
 import { stringify } from 'activitypub-core-utilities';
-import { parseStream } from 'activitypub-core-utilities';
-import type { Database, Auth } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
-import { isType } from 'activitypub-core-utilities';
 
 export async function inboxHandler(
   req: IncomingMessage,
@@ -21,12 +22,13 @@ export async function inboxHandler(
   databaseService: Database,
   deliveryService: DeliveryService,
 ) {
-  if (!req) {
-    throw new Error('Bad request.');
-  }
-
   if (req.method === 'POST') {
-    return await handlePost(req, res, databaseService, deliveryService);
+    return await new InboxEndpoint(
+      req,
+      res,
+      databaseService,
+      deliveryService,
+    ).handlePost();
   }
 
   return await entityGetHandler(
@@ -37,93 +39,72 @@ export async function inboxHandler(
   );
 }
 
-async function handlePost(
-  req: IncomingMessage,
-  res: ServerResponse,
-  databaseService: Database,
-  deliveryService: DeliveryService,
-) {
-  if (!req || !res) {
-    throw new Error('No response object.');
+export class InboxEndpoint {
+  req: IncomingMessage;
+  res: ServerResponse;
+  databaseService: Database;
+  deliveryService: DeliveryService;
+
+  activity: AP.Activity | null = null;
+  actor: AP.Actor | null = null;
+
+  protected getActor = getActor;
+  protected runSideEffects = runSideEffects;
+  protected parseBody = parseBody;
+  protected saveActivity = saveActivity;
+  protected shouldForwardActivity = shouldForwardActivity;
+
+  protected handleCreate = handleCreate;
+  protected handleAccept = handleAccept;
+  protected handleAnnounce = handleAnnounce;
+  protected handleFollow = handleFollow;
+  protected handleLike = handleLike;
+
+  constructor(
+    req: IncomingMessage,
+    res: ServerResponse,
+    databaseService: Database,
+    deliveryService: DeliveryService
+  ) {
+    this.req = req;
+    this.res = res;
+    this.databaseService = databaseService;
+    this.deliveryService = deliveryService;
   }
 
-  const url = `${LOCAL_DOMAIN}${req.url}`;
+  async handlePost() {
+    try {
+      await this.getActor();
+      await this.parseBody();
+      await this.runSideEffects();
 
-  try {
-    const recipient = await databaseService.findOne('actor', {
-      inbox: url,
-    });
-
-    if (!recipient || !recipient.id || !('inbox' in recipient)) {
-      throw new Error('No actor with this inbox.');
-    }
-
-    const recipientInboxId = new URL(url);
-    const activity = await parseStream(req);
-
-    if (!activity) {
-      throw new Error('bad JSONLD?');
-    }
-
-    const activityId = activity.id;
-
-    if (!activityId) {
-      throw new Error('Activity does not have an ID?');
-    }
-
-    if (!('actor' in activity)) {
-      throw new Error('Bad activity, no actor.');
-    }
-
-    if ('object' in activity) {
-      if (isType(activity, AP.ActivityTypes.CREATE)) {
-        await handleCreate(activity as AP.Create, databaseService);
+      if (!('actor' in this.activity)) {
+        throw new Error('Bad activity: no actor.');
       }
 
-      if (isType(activity, AP.ActivityTypes.FOLLOW)) {
-        await handleFollow(
-          activity as AP.Follow,
-          databaseService,
-          deliveryService,
-        );
+      if (await this.shouldForwardActivity()) {
+        await this.deliveryService.broadcast(this.activity, this.actor);
       }
 
-      if (isType(activity, AP.ActivityTypes.ACCEPT)) {
-        await handleAccept(activity as AP.Accept, databaseService);
-      }
+      await this.saveActivity();
 
-      if (isType(activity, AP.ActivityTypes.LIKE)) {
-        await handleLike(activity as AP.Like, databaseService);
-      }
+      this.res.statusCode = 200;
+      this.res.write(stringify(this.activity));
+      this.res.end();
 
-      if (isType(activity, AP.ActivityTypes.ANNOUNCE)) {
-        await handleAnnounce(activity as AP.Announce, databaseService);
-      }
+      return {
+        props: {},
+      };
+    } catch (error: unknown) {
+      console.log(error);
+
+      this.res.statusCode = 500;
+      this.res.write(String(error));
+      this.res.end();
+
+      return {
+        props: {},
+      };
     }
-
-    if (await shouldForwardActivity(activity, recipient, databaseService)) {
-      await deliveryService.broadcast(activity, recipient);
-    }
-
-    await databaseService.saveEntity(activity);
-    await databaseService.insertOrderedItem(recipientInboxId, activityId);
-
-    res.statusCode = 200;
-    res.write(stringify(activity));
-    res.end();
-
-    return {
-      props: {},
-    };
-  } catch (error) {
-    console.log(error);
-
-    res.statusCode = 500;
-    res.write('Bad request');
-    res.end();
-
-    return {
-      props: {},
-    };
   }
 }

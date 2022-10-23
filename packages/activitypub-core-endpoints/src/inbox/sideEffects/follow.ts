@@ -1,6 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import type { Database } from 'activitypub-core-types';
-import { getTypedEntity } from 'activitypub-core-utilities';
+import { getTypedEntity, isTypeOf } from 'activitypub-core-utilities';
 import { getGuid } from 'activitypub-core-utilities';
 import {
   ACTIVITYSTREAMS_CONTEXT,
@@ -8,55 +7,50 @@ import {
   PUBLIC_ACTOR,
 } from 'activitypub-core-utilities';
 import { getId } from 'activitypub-core-utilities';
-import { DeliveryService } from 'activitypub-core-delivery';
+import { InboxEndpoint } from '..';
 
-export async function handleFollow(
-  activity: AP.Follow,
-  databaseService: Database,
-  deliveryService: DeliveryService,
-): Promise<void> {
-  if (!activity.id) {
-    throw new Error('bad request');
+export async function handleFollow(this: InboxEndpoint) {
+  const activity = this.activity;
+
+  if (!('object' in activity)) {
+    throw new Error('Bad activity: no object.');
   }
 
-  const activityObjectId = getId(activity.object);
+  const objectId = getId(activity.object);
 
-  if (!activityObjectId) {
-    throw new Error('No object id');
+  if (!objectId) {
+    throw new Error('Bad object: no ID.');
   }
 
-  const foundObject = await databaseService.queryById(activityObjectId);
+  const object = await this.databaseService.queryById(objectId);
 
-  if (!foundObject || !foundObject.type || !foundObject.id) {
-    throw new Error('No found object');
+  if (!object) {
+    throw new Error('Bad object: not found.');
   }
 
-  const typedObject = getTypedEntity(foundObject);
-
-  if (!typedObject || !('inbox' in typedObject)) {
+  if (!isTypeOf(object, AP.ActorTypes)) {
+    // Not applicable.
     return;
   }
 
-  const activityActorId = getId(activity.actor);
+  const actorId = getId(activity.actor);
 
-  if (!activityActorId) {
-    throw new Error('Bad request 1');
+  if (!actorId) {
+    throw new Error('Bad activity: No actor.');
   }
 
-  const foundActor = await databaseService.queryById(activityActorId);
+  const actor = await this.databaseService.queryById(actorId);
 
-  if (!foundActor || !foundActor.type) {
-    throw new Error('No actor found');
+  if (!actor) {
+    throw new Error('Bad actor: Not found.');
   }
 
-  const typedActor = getTypedEntity(foundActor);
-
-  if (!typedActor || !('inbox' in typedActor)) {
-    throw new Error('actor not an actor?');
+  if (!isTypeOf(actor, AP.ActorTypes)) {
+    throw new Error('Bad actor: Type not recognized as an actor.');
   }
 
-  const follower = typedActor;
-  const followee = typedObject;
+  const follower = actor;
+  const followee = object;
 
   if (!(follower.id && followee.id)) {
     return;
@@ -117,27 +111,23 @@ export async function handleFollow(
   const followeeOutboxId = getId(followee.outbox);
 
   if (!followeeOutboxId) {
-    throw new Error('No followee Outbox ID');
+    throw new Error('Bad followee: No outbox ID.');
   }
 
-  const followeeFollowersId = getId(followee.followers);
+  const followersId = getId(followee.followers);
 
-  if (!followeeFollowersId) {
-    throw new Error('no followee Followers ID');
-  }
-
-  if (!acceptActivity.id) {
-    throw new Error('bad request');
+  if (!followersId) {
+    throw new Error('Bad followee: No followers ID.');
   }
 
   await Promise.all([
-    databaseService.saveEntity(acceptActivity),
-    databaseService.saveEntity(acceptActivityReplies),
-    databaseService.saveEntity(acceptActivityLikes),
-    databaseService.saveEntity(acceptActivityShares),
-    databaseService.insertOrderedItem(followeeOutboxId, acceptActivity.id),
-    databaseService.insertItem(followeeFollowersId, follower.id),
+    this.databaseService.saveEntity(acceptActivity),
+    this.databaseService.saveEntity(acceptActivityReplies),
+    this.databaseService.saveEntity(acceptActivityLikes),
+    this.databaseService.saveEntity(acceptActivityShares),
+    this.databaseService.insertOrderedItem(followeeOutboxId, acceptActivity.id),
+    this.databaseService.insertItem(followersId, follower.id),
   ]);
 
-  await deliveryService.broadcast(acceptActivity, followee);
+  await this.deliveryService.broadcast(acceptActivity, followee);
 }

@@ -3,7 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.shouldForwardActivity = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
-async function shouldForwardActivity(activity, recipient, databaseService) {
+async function shouldForwardActivity() {
+    if (!this.activity) {
+        return false;
+    }
+    if (!(0, activitypub_core_utilities_1.isTypeOf)(this.activity, activitypub_core_types_1.AP.ActivityTypes)) {
+        return false;
+    }
+    const activity = this.activity;
     const to = activity.to
         ? Array.isArray(activity.to)
             ? activity.to
@@ -25,7 +32,7 @@ async function shouldForwardActivity(activity, recipient, databaseService) {
         if (!addresseeId) {
             continue;
         }
-        const foundItem = await databaseService.findEntityById(addresseeId);
+        const foundItem = await this.databaseService.findEntityById(addresseeId);
         if (!foundItem) {
             continue;
         }
@@ -63,10 +70,10 @@ async function shouldForwardActivity(activity, recipient, databaseService) {
         if (!objectId) {
             continue;
         }
-        if (objectId.toString() === recipient.id?.toString()) {
+        if (objectId.toString() === this.actor?.id?.toString()) {
             continue;
         }
-        const foundItem = await databaseService.findEntityById(objectId);
+        const foundItem = await this.databaseService.findEntityById(objectId);
         if (!foundItem) {
             continue;
         }

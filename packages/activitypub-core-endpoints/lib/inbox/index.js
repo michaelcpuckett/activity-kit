@@ -1,89 +1,77 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.inboxHandler = void 0;
-const activitypub_core_types_1 = require("activitypub-core-types");
-const activitypub_core_utilities_1 = require("activitypub-core-utilities");
+exports.InboxEndpoint = exports.inboxHandler = void 0;
 const entity_1 = require("../entity");
-const accept_1 = require("./accept");
-const announce_1 = require("./announce");
-const follow_1 = require("./follow");
-const like_1 = require("./like");
-const create_1 = require("./create");
+const getActor_1 = require("./getActor");
+const saveActivity_1 = require("./saveActivity");
+const parseBody_1 = require("./parseBody");
+const runSideEffects_1 = require("./runSideEffects");
+const accept_1 = require("./sideEffects/accept");
+const announce_1 = require("./sideEffects/announce");
+const follow_1 = require("./sideEffects/follow");
+const like_1 = require("./sideEffects/like");
+const create_1 = require("./sideEffects/create");
 const shouldForwardActivity_1 = require("./shouldForwardActivity");
-const activitypub_core_utilities_2 = require("activitypub-core-utilities");
-const activitypub_core_utilities_3 = require("activitypub-core-utilities");
-const activitypub_core_utilities_4 = require("activitypub-core-utilities");
+const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function inboxHandler(req, res, authenticationService, databaseService, deliveryService) {
-    if (!req) {
-        throw new Error('Bad request.');
-    }
     if (req.method === 'POST') {
-        return await handlePost(req, res, databaseService, deliveryService);
+        return await new InboxEndpoint(req, res, databaseService, deliveryService).handlePost();
     }
     return await (0, entity_1.entityGetHandler)(req, res, authenticationService, databaseService);
 }
 exports.inboxHandler = inboxHandler;
-async function handlePost(req, res, databaseService, deliveryService) {
-    if (!req || !res) {
-        throw new Error('No response object.');
+class InboxEndpoint {
+    req;
+    res;
+    databaseService;
+    deliveryService;
+    activity = null;
+    actor = null;
+    getActor = getActor_1.getActor;
+    runSideEffects = runSideEffects_1.runSideEffects;
+    parseBody = parseBody_1.parseBody;
+    saveActivity = saveActivity_1.saveActivity;
+    shouldForwardActivity = shouldForwardActivity_1.shouldForwardActivity;
+    handleCreate = create_1.handleCreate;
+    handleAccept = accept_1.handleAccept;
+    handleAnnounce = announce_1.handleAnnounce;
+    handleFollow = follow_1.handleFollow;
+    handleLike = like_1.handleLike;
+    constructor(req, res, databaseService, deliveryService) {
+        this.req = req;
+        this.res = res;
+        this.databaseService = databaseService;
+        this.deliveryService = deliveryService;
     }
-    const url = `${activitypub_core_utilities_1.LOCAL_DOMAIN}${req.url}`;
-    try {
-        const recipient = await databaseService.findOne('actor', {
-            inbox: url,
-        });
-        if (!recipient || !recipient.id || !('inbox' in recipient)) {
-            throw new Error('No actor with this inbox.');
-        }
-        const recipientInboxId = new URL(url);
-        const activity = await (0, activitypub_core_utilities_3.parseStream)(req);
-        if (!activity) {
-            throw new Error('bad JSONLD?');
-        }
-        const activityId = activity.id;
-        if (!activityId) {
-            throw new Error('Activity does not have an ID?');
-        }
-        if (!('actor' in activity)) {
-            throw new Error('Bad activity, no actor.');
-        }
-        if ('object' in activity) {
-            if ((0, activitypub_core_utilities_4.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
-                await (0, create_1.handleCreate)(activity, databaseService);
+    async handlePost() {
+        try {
+            await this.getActor();
+            await this.parseBody();
+            await this.runSideEffects();
+            if (!('actor' in this.activity)) {
+                throw new Error('Bad activity: no actor.');
             }
-            if ((0, activitypub_core_utilities_4.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.FOLLOW)) {
-                await (0, follow_1.handleFollow)(activity, databaseService, deliveryService);
+            if (await this.shouldForwardActivity()) {
+                await this.deliveryService.broadcast(this.activity, this.actor);
             }
-            if ((0, activitypub_core_utilities_4.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.ACCEPT)) {
-                await (0, accept_1.handleAccept)(activity, databaseService);
-            }
-            if ((0, activitypub_core_utilities_4.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.LIKE)) {
-                await (0, like_1.handleLike)(activity, databaseService);
-            }
-            if ((0, activitypub_core_utilities_4.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE)) {
-                await (0, announce_1.handleAnnounce)(activity, databaseService);
-            }
+            await this.saveActivity();
+            this.res.statusCode = 200;
+            this.res.write((0, activitypub_core_utilities_1.stringify)(this.activity));
+            this.res.end();
+            return {
+                props: {},
+            };
         }
-        if (await (0, shouldForwardActivity_1.shouldForwardActivity)(activity, recipient, databaseService)) {
-            await deliveryService.broadcast(activity, recipient);
+        catch (error) {
+            console.log(error);
+            this.res.statusCode = 500;
+            this.res.write(String(error));
+            this.res.end();
+            return {
+                props: {},
+            };
         }
-        await databaseService.saveEntity(activity);
-        await databaseService.insertOrderedItem(recipientInboxId, activityId);
-        res.statusCode = 200;
-        res.write((0, activitypub_core_utilities_2.stringify)(activity));
-        res.end();
-        return {
-            props: {},
-        };
-    }
-    catch (error) {
-        console.log(error);
-        res.statusCode = 500;
-        res.write('Bad request');
-        res.end();
-        return {
-            props: {},
-        };
     }
 }
+exports.InboxEndpoint = InboxEndpoint;
 //# sourceMappingURL=index.js.map
