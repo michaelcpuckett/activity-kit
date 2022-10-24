@@ -332,7 +332,9 @@ No special handling for Remove Activity.
 
 **Status**: Complete?
 
-* [ ] Validate the content they receive to avoid content spoofing attacks (`inbox:accept:validate-content`) *SHOULD* 
+#### Validate the content they receive to avoid content spoofing attacks (`inbox:accept:validate-content`) *SHOULD* 
+
+**Status**: Incomplete?
 
 # Common server support
 
@@ -364,7 +366,7 @@ No special handling for Remove Activity.
 
 **Status**: Complete.
 
-### [ ] Responds with response body that is an ActivityStreams Object of type `Tombstone` (if the server is choosing to disclose that the object has been removed)  (`server:object-retrieval:deleted-object:tombstone`) *MAY* 
+### Responds with response body that is an ActivityStreams Object of type `Tombstone` (if the server is choosing to disclose that the object has been removed)  (`server:object-retrieval:deleted-object:tombstone`) *MAY* 
 
 **Status**: Complete?
 
