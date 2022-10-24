@@ -3,12 +3,14 @@
 This is a Lerna project that holds packages related to an implementation of the
 ActivityPub protocol specification.
 
-ActivityPub is a standardized method of exchanging social data.
+[ActivityPub](https://activitypub.rocks) is a standardized method of exchanging social data.
 
 ## Current Status
 
 This is a toy project at the moment. It's not fully working and it changes
 frequently.
+
+See [TODO.md](TODO.md) and [CHECKLIST.md](CHECKLIST.md).
 
 ## Running in a Project
 

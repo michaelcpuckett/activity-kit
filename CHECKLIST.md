@@ -374,7 +374,7 @@ No special handling for Remove Activity.
 
 **Status**: Incomplete/TODO.
 
-### [ ] Respond with 404 status code for Object URIs that have never existed (`server:object-retrieval:deleted-object:404-status`) *SHOULD* 
+### Respond with 404 status code for Object URIs that have never existed (`server:object-retrieval:deleted-object:404-status`) *SHOULD* 
 
 **Status**: Complete?
 

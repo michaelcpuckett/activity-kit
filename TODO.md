@@ -1,3 +1,5 @@
+See CHECKLIST.md
+
 * Full integration with:
     * Mastodon
     * Friendica
