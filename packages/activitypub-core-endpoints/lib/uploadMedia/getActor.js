@@ -4,9 +4,9 @@ exports.getActor = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function getActor() {
     const url = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.req.url}`);
-    const [actor] = await this.databaseService.findAll('actor', {
+    const actor = await this.databaseService.findOne('actor', {
         endpoints: {
-            "$in": [url.toString()],
+            uploadMedia: url.toString(),
         }
     });
     if (!actor || !actor.id || !('outbox' in actor)) {
