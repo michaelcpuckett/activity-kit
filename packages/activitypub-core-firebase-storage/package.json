@@ -1,0 +1,32 @@
+{
+  "name": "activitypub-core-firebase-storage",
+  "version": "0.0.133",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michaelcpuckett@gmail.com>",
+  "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelcpuckett/activitypub-core.git"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "format": "prettier --config .prettierrc \"**/*.ts\" --write",
+    "lint": "eslint src/**/*.ts"
+  },
+  "bugs": {
+    "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
+  },
+  "dependencies": {
+    "activitypub-core-types": "^0.0.133",
+    "firebase-admin": "^11.2.0",
+    "formidable": "^2.0.1"
+  }
+}

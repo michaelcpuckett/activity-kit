@@ -47,7 +47,7 @@ export const activityPub =
     },
   ) =>
     async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
-      console.log('INCOMING:', req.url, 'FROM:', req.headers.referer);
+      console.log('INCOMING:', req.url, 'FROM:', req.headers.referer ?? req.socket.remoteAddress);
 
       if (req.url === '/user' && req.method === 'POST') {
         await userPostHandler(req, res, authenticationService, databaseService);
