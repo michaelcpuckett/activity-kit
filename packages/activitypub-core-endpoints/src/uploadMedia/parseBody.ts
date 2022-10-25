@@ -25,8 +25,9 @@ export async function parseBody(this: UploadMediaEndpoint) {
     });
   });
 
-  const object = fields.object;
+  if (typeof fields.object === 'string') {
+    this.object = JSON.parse(fields.object);
+  }
 
-  console.log(object, typeof object);
-  console.log(JSON.stringify(files));
+  console.log(files);
 }

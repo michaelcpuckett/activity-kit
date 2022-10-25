@@ -42,9 +42,10 @@ async function parseBody() {
             }
         });
     });
-    const object = fields.object;
-    console.log(object, typeof object);
-    console.log(JSON.stringify(files));
+    if (typeof fields.object === 'string') {
+        this.object = JSON.parse(fields.object);
+    }
+    console.log(files);
 }
 exports.parseBody = parseBody;
 //# sourceMappingURL=parseBody.js.map
