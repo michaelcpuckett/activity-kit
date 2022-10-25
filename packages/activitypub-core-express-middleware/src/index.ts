@@ -12,7 +12,7 @@ import {
 } from 'activitypub-core-endpoints';
 import { AP } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
-import type { Database, Auth } from 'activitypub-core-types';
+import type { Database, Auth, Storage } from 'activitypub-core-types';
 import {
   CONTENT_TYPE_HEADER,
   HTML_CONTENT_TYPE,
@@ -40,10 +40,12 @@ export const activityPub =
       authenticationService,
       databaseService,
       deliveryService,
+      storageService,
     }: {
       authenticationService: Auth;
       databaseService: Database;
       deliveryService: DeliveryService;
+      storageService: Storage;
     },
   ) =>
     async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
@@ -98,11 +100,7 @@ export const activityPub =
           res,
           authenticationService,
           databaseService,
-          {
-            upload: () => {
-              return void 0;
-            }
-          }
+          storageService,
         );
         next();
         return;
