@@ -5,9 +5,7 @@ export async function getActor(this: UploadMediaEndpoint) {
   const url = new URL(`${LOCAL_DOMAIN}${this.req.url}`);
 
   const actor = await this.databaseService.findOne('actor', {
-    endpoints: {
-      uploadMedia: url.toString(),
-    }
+    'endpoints.uploadMedia': url.toString(),
   });
 
   if (!actor || !actor.id || !('outbox' in actor)) {

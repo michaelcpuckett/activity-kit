@@ -5,9 +5,7 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function getActor() {
     const url = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.req.url}`);
     const actor = await this.databaseService.findOne('actor', {
-        endpoints: {
-            uploadMedia: url.toString(),
-        }
+        'endpoints.uploadMedia': url.toString(),
     });
     if (!actor || !actor.id || !('outbox' in actor)) {
         throw new Error('No actor with this endpoint.');
