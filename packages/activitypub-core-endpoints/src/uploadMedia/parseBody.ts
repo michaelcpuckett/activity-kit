@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import { getGuid, LOCAL_DOMAIN, PUBLIC_ACTOR } from 'activitypub-core-utilities';
+import { ACTIVITYSTREAMS_CONTEXT, getGuid, LOCAL_DOMAIN, PUBLIC_ACTOR } from 'activitypub-core-utilities';
 import * as formidable from 'formidable';
 import { UploadMediaEndpoint } from '.';
 
@@ -27,20 +27,47 @@ export async function parseBody(this: UploadMediaEndpoint) {
     });
   });
 
-  if (typeof fields.object === 'string') {
-    const objectId = `${LOCAL_DOMAIN}/object/${getGuid()}`;
+  if (typeof fields.object === 'string' && (files.file && !Array.isArray(files.file))) {
+    this.file = files.file;
 
-    this.object = {
+    const objectId = `${LOCAL_DOMAIN}/object/${getGuid()}`;
+    const activityId = `${LOCAL_DOMAIN}/activity/${getGuid()}`;
+
+    const object: AP.Image | AP.Document | AP.Audio | AP.Video = {
+      "@context": ACTIVITYSTREAMS_CONTEXT,
+      to: new URL(PUBLIC_ACTOR),
+      type: getType(this.file.mimetype),
+      mediaType: this.file.mimetype,
       ...JSON.parse(fields.object),
-      type: 'Image',
       id: new URL(objectId),
-      url: new URL(`/uploads/${this.file.newFilename}`),
+      url: new URL(`https://puckett.storage/${this.file.newFilename}`), // TODO
       attributedTo: this.actor.id,
-      published: new Date(),
+    };
+
+    this.activity = {
+      "@context": ACTIVITYSTREAMS_CONTEXT,
+      to: new URL(PUBLIC_ACTOR),
+      type: 'Create',
+      id: new URL(activityId),
+      url: new URL(activityId),
+      actor: this.actor.id,
+      object,
     };
   }
+}
 
-  if (files.file && !Array.isArray(files.file)) {
-    this.file = files.file;
+function getType(mimeType: string) {
+  if (mimeType.startsWith('image')) {
+    return 'Image';
   }
+
+  if (mimeType.startsWith('video')) {
+    return 'Video';
+  }
+
+  if (mimeType.startsWith('audio')) {
+    return 'Audio';
+  }
+
+  return 'Document';
 }

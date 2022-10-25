@@ -43,20 +43,42 @@ async function parseBody() {
             }
         });
     });
-    if (typeof fields.object === 'string') {
-        const objectId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/object/${(0, activitypub_core_utilities_1.getGuid)()}`;
-        this.object = {
-            ...JSON.parse(fields.object),
-            type: 'Image',
-            id: new URL(objectId),
-            url: new URL(`/uploads/${this.file.newFilename}`),
-            attributedTo: this.actor.id,
-            published: new Date(),
-        };
-    }
-    if (files.file && !Array.isArray(files.file)) {
+    if (typeof fields.object === 'string' && (files.file && !Array.isArray(files.file))) {
         this.file = files.file;
+        const objectId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/object/${(0, activitypub_core_utilities_1.getGuid)()}`;
+        const activityId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/activity/${(0, activitypub_core_utilities_1.getGuid)()}`;
+        const object = {
+            "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+            to: new URL(activitypub_core_utilities_1.PUBLIC_ACTOR),
+            type: getType(this.file.mimetype),
+            mediaType: this.file.mimetype,
+            ...JSON.parse(fields.object),
+            id: new URL(objectId),
+            url: new URL(`https://puckett.storage/${this.file.newFilename}`),
+            attributedTo: this.actor.id,
+        };
+        this.activity = {
+            "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+            to: new URL(activitypub_core_utilities_1.PUBLIC_ACTOR),
+            type: 'Create',
+            id: new URL(activityId),
+            url: new URL(activityId),
+            actor: this.actor.id,
+            object,
+        };
     }
 }
 exports.parseBody = parseBody;
+function getType(mimeType) {
+    if (mimeType.startsWith('image')) {
+        return 'Image';
+    }
+    if (mimeType.startsWith('video')) {
+        return 'Video';
+    }
+    if (mimeType.startsWith('audio')) {
+        return 'Audio';
+    }
+    return 'Document';
+}
 //# sourceMappingURL=parseBody.js.map

@@ -5,6 +5,7 @@ const getActor_1 = require("./getActor");
 const authenticateActor_1 = require("./authenticateActor");
 const parseBody_1 = require("./parseBody");
 const cleanup_1 = require("./cleanup");
+const saveActivity_1 = require("./saveActivity");
 async function uploadMediaHandler(req, res, authenticationService, databaseService, storageService) {
     return await new UploadMediaEndpoint(req, res, authenticationService, databaseService, storageService).handlePost();
 }
@@ -16,12 +17,13 @@ class UploadMediaEndpoint {
     databaseService;
     storageService;
     actor = null;
-    object = null;
+    activity = null;
     file = null;
     getActor = getActor_1.getActor;
     authenticateActor = authenticateActor_1.authenticateActor;
     parseBody = parseBody_1.parseBody;
     cleanup = cleanup_1.cleanup;
+    saveActivity = saveActivity_1.saveActivity;
     constructor(req, res, authenticationService, databaseService, storageService) {
         this.req = req;
         this.res = res;
@@ -36,9 +38,9 @@ class UploadMediaEndpoint {
             await this.parseBody();
             await this.storageService.upload();
             await this.cleanup();
-            await this.databaseService.saveEntity(this.object);
+            await this.saveActivity();
             this.res.statusCode = 201;
-            this.res.setHeader('Location', this.object.id.toString());
+            this.res.setHeader('Location', this.activity.id.toString());
             this.res.end();
         }
         catch (error) {

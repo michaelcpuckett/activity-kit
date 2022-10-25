@@ -6,6 +6,7 @@ import { getActor } from './getActor';
 import { authenticateActor } from './authenticateActor';
 import { parseBody } from './parseBody';
 import { cleanup } from './cleanup';
+import { saveActivity } from './saveActivity';
 
 export async function uploadMediaHandler(
   req: IncomingMessage,
@@ -25,13 +26,16 @@ export class UploadMediaEndpoint {
   storageService: Storage;
 
   actor: AP.Actor | null = null;
-  object: AP.Entity | null = null;
+  activity: AP.Create & {
+    object: AP.Image | AP.Document | AP.Video | AP.Audio
+  } | null = null;
   file: formidable.File | null = null;
 
   protected getActor = getActor;
   protected authenticateActor = authenticateActor;
   protected parseBody = parseBody;
   protected cleanup = cleanup;
+  protected saveActivity = saveActivity;
 
   constructor(
     req: IncomingMessage,
@@ -54,10 +58,10 @@ export class UploadMediaEndpoint {
       await this.parseBody();
       await this.storageService.upload();
       await this.cleanup();
-      await this.databaseService.saveEntity(this.object);
+      await this.saveActivity();
 
       this.res.statusCode = 201;
-      this.res.setHeader('Location', this.object.id.toString());
+      this.res.setHeader('Location', this.activity.id.toString());
       this.res.end();
     } catch (error: unknown) {
       console.log(error);
