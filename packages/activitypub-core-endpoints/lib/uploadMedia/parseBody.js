@@ -24,6 +24,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseBody = void 0;
+const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const formidable = __importStar(require("formidable"));
 async function parseBody() {
     const form = formidable.default({
@@ -43,9 +44,19 @@ async function parseBody() {
         });
     });
     if (typeof fields.object === 'string') {
-        this.object = JSON.parse(fields.object);
+        const objectId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/object/${(0, activitypub_core_utilities_1.getGuid)()}`;
+        this.object = {
+            ...JSON.parse(fields.object),
+            type: 'Image',
+            id: new URL(objectId),
+            url: new URL(`/uploads/${this.file.newFilename}`),
+            attributedTo: this.actor.id,
+            published: new Date(),
+        };
     }
-    console.log(files);
+    if (files.file && !Array.isArray(files.file)) {
+        this.file = files.file;
+    }
 }
 exports.parseBody = parseBody;
 //# sourceMappingURL=parseBody.js.map

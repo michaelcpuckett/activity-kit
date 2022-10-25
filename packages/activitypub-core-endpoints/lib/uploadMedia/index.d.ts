@@ -6,6 +6,7 @@ import formidable from 'formidable';
 import { getActor } from './getActor';
 import { authenticateActor } from './authenticateActor';
 import { parseBody } from './parseBody';
+import { cleanup } from './cleanup';
 export declare function uploadMediaHandler(req: IncomingMessage, res: ServerResponse, authenticationService: Auth, databaseService: Database, storageService: Storage): Promise<void>;
 export declare class UploadMediaEndpoint {
     req: IncomingMessage;
@@ -19,6 +20,7 @@ export declare class UploadMediaEndpoint {
     protected getActor: typeof getActor;
     protected authenticateActor: typeof authenticateActor;
     protected parseBody: typeof parseBody;
+    protected cleanup: typeof cleanup;
     constructor(req: IncomingMessage, res: ServerResponse, authenticationService: Auth, databaseService: Database, storageService: Storage);
     handlePost(): Promise<void>;
 }

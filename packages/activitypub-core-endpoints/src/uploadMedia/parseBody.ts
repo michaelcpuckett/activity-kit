@@ -1,3 +1,5 @@
+import { AP } from 'activitypub-core-types';
+import { getGuid, LOCAL_DOMAIN, PUBLIC_ACTOR } from 'activitypub-core-utilities';
 import * as formidable from 'formidable';
 import { UploadMediaEndpoint } from '.';
 
@@ -26,8 +28,19 @@ export async function parseBody(this: UploadMediaEndpoint) {
   });
 
   if (typeof fields.object === 'string') {
-    this.object = JSON.parse(fields.object);
+    const objectId = `${LOCAL_DOMAIN}/object/${getGuid()}`;
+
+    this.object = {
+      ...JSON.parse(fields.object),
+      type: 'Image',
+      id: new URL(objectId),
+      url: new URL(`/uploads/${this.file.newFilename}`),
+      attributedTo: this.actor.id,
+      published: new Date(),
+    };
   }
 
-  console.log(files);
+  if (files.file && !Array.isArray(files.file)) {
+    this.file = files.file;
+  }
 }
