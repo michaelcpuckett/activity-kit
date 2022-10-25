@@ -30,6 +30,11 @@ const activityPub = ({ renderLogin, renderHome, renderEntity, }, { authenticatio
         }
         return;
     }
+    if (req.url.startsWith('/actor/') && req.url.endsWith('/uploadMedia')) {
+        await (0, activitypub_core_endpoints_1.uploadMediaHandler)(req, res, authenticationService, databaseService);
+        next();
+        return;
+    }
     if (req.url.startsWith('/actor/') && req.url.endsWith('/outbox')) {
         const result = await (0, activitypub_core_endpoints_1.outboxHandler)(req, res, authenticationService, databaseService, deliveryService);
         if (result.props &&

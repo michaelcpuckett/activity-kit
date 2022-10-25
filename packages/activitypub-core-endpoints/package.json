@@ -25,12 +25,14 @@
     "activitypub-core-types": "^0.0.123",
     "activitypub-core-utilities": "^0.0.123",
     "cookie": "^0.5.0",
+    "formidable": "^2.0.1",
     "http": "^0.0.1-security",
     "query-string": "^7.1.1",
     "superjson": "^1.10.1"
   },
   "devDependencies": {
     "@types/cookie": "^0.5.1",
+    "@types/formidable": "^2.0.5",
     "@types/isomorphic-fetch": "^0.0.36",
     "@types/jest": "^29.1.2",
     "@types/jsonld": "^1.5.6",

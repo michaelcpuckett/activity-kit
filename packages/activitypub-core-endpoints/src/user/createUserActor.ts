@@ -167,6 +167,7 @@ export async function createUserActor(
     streams: [userShared.id, userBlocked.id, userGroups.id, userBookmarks.id],
     endpoints: {
       sharedInbox: new URL(SHARED_INBOX_ID),
+      uploadMedia: new URL(`${id}/uploadMedia`),
     },
     publicKey: {
       id: `${id}#main-key`,

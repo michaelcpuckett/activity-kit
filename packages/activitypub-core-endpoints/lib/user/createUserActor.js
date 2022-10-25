@@ -147,6 +147,7 @@ async function createUserActor(databaseService, user) {
         streams: [userShared.id, userBlocked.id, userGroups.id, userBookmarks.id],
         endpoints: {
             sharedInbox: new URL(activitypub_core_utilities_3.SHARED_INBOX_ID),
+            uploadMedia: new URL(`${id}/uploadMedia`),
         },
         publicKey: {
             id: `${id}#main-key`,

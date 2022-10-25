@@ -8,6 +8,7 @@ import {
   inboxHandler,
   sharedInboxHandler,
   webfingerHandler,
+  uploadMediaHandler,
 } from 'activitypub-core-endpoints';
 import { AP } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
@@ -88,6 +89,17 @@ export const activityPub =
           );
           res.end();
         }
+        return;
+      }
+
+      if (req.url.startsWith('/actor/') && req.url.endsWith('/uploadMedia')) {
+        await uploadMediaHandler(
+          req,
+          res,
+          authenticationService,
+          databaseService,
+        );
+        next();
         return;
       }
 
