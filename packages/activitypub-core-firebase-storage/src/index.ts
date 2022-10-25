@@ -5,14 +5,16 @@ import { upload } from './upload';
 
 export class FirebaseStorage implements Storage {
   appOptions: AppOptions;
+  bucketName: string;
 
   public upload = upload;
 
-  constructor(serviceAccount: ServiceAccount, projectId: string, storageBucket: string) {
+  constructor(serviceAccount: ServiceAccount, projectId: string, storageUrl: string, bucketName: string) {
     this.appOptions = {
       credential: firebaseAdmin.credential.cert(serviceAccount),
       projectId,
-      storageBucket,
+      storageBucket: storageUrl,
     };
+    this.bucketName = bucketName;
   }
 }

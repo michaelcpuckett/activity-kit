@@ -7,5 +7,5 @@ export async function upload(file: File) {
     firebaseAdmin.initializeApp(this.appOptions);
   }
 
-  await firebaseAdmin.storage().bucket().file(file.newFilename).save(fs.readFileSync(file.filepath));
+  await firebaseAdmin.storage().bucket(this.bucket).file(file.newFilename).save(fs.readFileSync(file.filepath));
 }

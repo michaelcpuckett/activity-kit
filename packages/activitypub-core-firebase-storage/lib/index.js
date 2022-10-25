@@ -28,13 +28,15 @@ const firebaseAdmin = __importStar(require("firebase-admin"));
 const upload_1 = require("./upload");
 class FirebaseStorage {
     appOptions;
+    bucketName;
     upload = upload_1.upload;
-    constructor(serviceAccount, projectId, storageBucket) {
+    constructor(serviceAccount, projectId, storageUrl, bucketName) {
         this.appOptions = {
             credential: firebaseAdmin.credential.cert(serviceAccount),
             projectId,
-            storageBucket,
+            storageBucket: storageUrl,
         };
+        this.bucketName = bucketName;
     }
 }
 exports.FirebaseStorage = FirebaseStorage;

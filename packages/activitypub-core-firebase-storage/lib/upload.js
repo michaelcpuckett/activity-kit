@@ -30,7 +30,7 @@ async function upload(file) {
     if (!firebaseAdmin.apps.length) {
         firebaseAdmin.initializeApp(this.appOptions);
     }
-    await firebaseAdmin.storage().bucket().file(file.newFilename).save(fs.readFileSync(file.filepath));
+    await firebaseAdmin.storage().bucket(this.bucket).file(file.newFilename).save(fs.readFileSync(file.filepath));
 }
 exports.upload = upload;
 //# sourceMappingURL=upload.js.map
