@@ -2,7 +2,9 @@ import * as formidable from 'formidable';
 import { UploadMediaEndpoint } from '.';
 
 export async function parseBody(this: UploadMediaEndpoint) {
-  const form = formidable.default({ multiples: true });
+  const form = formidable.default({
+    multiples: true,
+  });
 
   const {
     fields,
@@ -23,9 +25,8 @@ export async function parseBody(this: UploadMediaEndpoint) {
     });
   });
 
-
   const object = fields.object;
 
-  console.log(object);
-  console.log(files);
+  console.log(object, typeof object);
+  console.log(JSON.stringify(files));
 }

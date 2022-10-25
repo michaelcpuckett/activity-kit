@@ -26,7 +26,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseBody = void 0;
 const formidable = __importStar(require("formidable"));
 async function parseBody() {
-    const form = formidable.default({ multiples: true });
+    const form = formidable.default({
+        multiples: true,
+    });
     const { fields, files, } = await new Promise((resolve, reject) => {
         form.parse(this.req, (err, fields, files) => {
             if (err) {
@@ -41,8 +43,8 @@ async function parseBody() {
         });
     });
     const object = fields.object;
-    console.log(object);
-    console.log(files);
+    console.log(object, typeof object);
+    console.log(JSON.stringify(files));
 }
 exports.parseBody = parseBody;
 //# sourceMappingURL=parseBody.js.map

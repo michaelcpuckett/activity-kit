@@ -5,6 +5,7 @@ import formidable from 'formidable';
 import { getActor } from './getActor';
 import { authenticateActor } from './authenticateActor';
 import { parseBody } from './parseBody';
+import * as path from 'path';
 
 export async function uploadMediaHandler(
   req: IncomingMessage,
