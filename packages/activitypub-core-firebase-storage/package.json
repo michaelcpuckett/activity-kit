@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-firebase-storage",
-  "version": "0.0.134",
+  "version": "0.0.135",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -25,7 +25,7 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "activitypub-core-types": "^0.0.134",
+    "activitypub-core-types": "^0.0.135",
     "firebase-admin": "^11.2.0",
     "formidable": "^2.0.1"
   }
