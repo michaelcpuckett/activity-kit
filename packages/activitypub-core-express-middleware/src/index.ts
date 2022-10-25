@@ -98,6 +98,11 @@ export const activityPub =
           res,
           authenticationService,
           databaseService,
+          {
+            upload: () => {
+              return void 0;
+            }
+          }
         );
         next();
         return;

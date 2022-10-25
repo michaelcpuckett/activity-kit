@@ -31,7 +31,11 @@ const activityPub = ({ renderLogin, renderHome, renderEntity, }, { authenticatio
         return;
     }
     if (req.url.startsWith('/actor/') && req.url.endsWith('/uploadMedia')) {
-        await (0, activitypub_core_endpoints_1.uploadMediaHandler)(req, res, authenticationService, databaseService);
+        await (0, activitypub_core_endpoints_1.uploadMediaHandler)(req, res, authenticationService, databaseService, {
+            upload: () => {
+                return void 0;
+            }
+        });
         next();
         return;
     }

@@ -27,3 +27,6 @@ export interface DatabaseService {
         [key: string]: unknown;
     }): Promise<Database>;
 }
+export interface Storage {
+    upload: Function;
+}

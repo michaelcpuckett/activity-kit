@@ -1,19 +1,19 @@
 import { AP } from 'activitypub-core-types';
-import type { Auth, Database } from 'activitypub-core-types';
+import type { Auth, Database, Storage } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import formidable from 'formidable';
 import { getActor } from './getActor';
 import { authenticateActor } from './authenticateActor';
 import { parseBody } from './parseBody';
-import * as path from 'path';
 
 export async function uploadMediaHandler(
   req: IncomingMessage,
   res: ServerResponse,
   authenticationService: Auth,
   databaseService: Database,
+  storageService: Storage,
 ) {
-  return await new UploadMediaEndpoint(req, res, authenticationService, databaseService).handlePost();
+  return await new UploadMediaEndpoint(req, res, authenticationService, databaseService, storageService).handlePost();
 }
 
 export class UploadMediaEndpoint {
@@ -21,6 +21,7 @@ export class UploadMediaEndpoint {
   res: ServerResponse;
   authenticationService: Auth;
   databaseService: Database;
+  storageService: Storage;
 
   actor: AP.Actor | null = null;
   object: AP.Entity | null = null;
@@ -35,11 +36,13 @@ export class UploadMediaEndpoint {
     res: ServerResponse,
     authenticationService: Auth,
     databaseService: Database,
+    storageService: Storage,
   ) {
     this.req = req;
     this.res = res;
     this.authenticationService = authenticationService;
     this.databaseService = databaseService;
+    this.storageService = storageService;
   }
 
   public async handlePost() {

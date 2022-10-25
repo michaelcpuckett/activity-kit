@@ -28,3 +28,7 @@ export type Database = {
 export interface DatabaseService {
   connect(config?: { [key: string]: unknown }): Promise<Database>;
 }
+
+export interface Storage {
+  upload: Function;
+}
