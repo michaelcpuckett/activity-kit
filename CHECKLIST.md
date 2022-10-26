@@ -47,16 +47,37 @@ The wording is ambiguous here ("new object") but the spec is clear that that the
 
 # Accepts Uploaded Media in submissions (`outbox:upload-media`) *MUST*
 
-Status: **Not Started**
+**Status**: Complete? Not tested.
 
-This will require a new package to handle file storage.
+#### Accepts `uploadedMedia` file parameter (`outbox:upload-media:file-parameter`) *MUST*
 
-* [ ] Accepts `uploadedMedia` file parameter (`outbox:upload-media:file-parameter`) *MUST*
-* [ ] Accepts `uploadedMedia` object parameter (`outbox:upload-media:object-parameter`) *MUST*
-* [ ] Responds with status code of 201 Created or 202 Accepted as described in 6. (`outbox:upload-media:201-or-202-status`) *MUST*
-* [ ] Response contains a Location header pointing to the to-be-created object's id (`outbox:upload-media:location-header`) *MUST*
-* [ ] Appends an `id` property to the new object (`outbox:upload-media:appends-id`) *MUST*
-* [ ] After receiving submission with uploaded media, the server should include the upload's new URL in the submitted object's `url` property (`outbox:upload-media:url`) *SHOULD*
+**Status**: Complete? Not tested.
+
+The `uploadMedia` endpoint handles mutli-part form data and accepts a `file` field as part of that payload.
+
+#### Accepts `uploadedMedia` object parameter (`outbox:upload-media:object-parameter`) *MUST*
+
+**Status**: Complete? Not tested.
+
+The `uploadMedia` endpoint handles mutli-part form data and accepts a `file` field as part of that payload.
+
+#### Responds with status code of 201 Created or 202 Accepted as described in 6. (`outbox:upload-media:201-or-202-status`) *MUST*
+
+**Status**: Partially complete/TODO(202) Not tested.
+
+Currently with the FTP package all the uploading/transferring happens before a 201 response, but if we were to handle video transcoding etc (!) we would want to handle 202.
+
+#### Response contains a Location header pointing to the to-be-created object's id (`outbox:upload-media:location-header`) *MUST*
+
+**Status**: Complete. Not tested.
+
+#### Appends an `id` property to the new object (`outbox:upload-media:appends-id`) *MUST*
+
+**Status**: Complete. Not tested.
+
+#### After receiving submission with uploaded media, the server should include the upload's new URL in the submitted object's `url` property (`outbox:upload-media:url`) *SHOULD*
+
+**Status**: Complete. Not tested.
 
 # `Update`
 
