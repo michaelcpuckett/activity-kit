@@ -29,7 +29,6 @@
   },
   "devDependencies": {
     "@types/formidable": "^2.0.5",
-    "@types/ftp": "^0.3.33",
-    "formidable": "^2.0.1"
+    "@types/ftp": "^0.3.33"
   }
 }
