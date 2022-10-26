@@ -15,11 +15,15 @@ async function upload(file) {
                     reject(error);
                 }
                 else {
-                    resolve(new URL(`https://${this.config.host}/${file.newFilename}`));
+                    resolve(new URL(`https://${this.host}/${file.newFilename}`));
                 }
             });
         });
-        client.connect(this.config);
+        client.connect({
+            host: this.host,
+            user: this.user,
+            password: this.password,
+        });
     });
 }
 exports.upload = upload;

@@ -3,10 +3,15 @@ import { upload } from './upload';
 import { default as FtpClient } from 'ftp';
 
 export class FtpStorage implements Storage {
-  config: FtpClient.Options;
+  host: FtpClient.Options['host'];
+  user: FtpClient.Options['user'];
+  password: FtpClient.Options['password'];
+
   public upload = upload;
 
   constructor(config: FtpClient.Options) {
-    this.config = config;
+    this.host = config.host;
+    this.user = config.user;
+    this.password = config.password;
   }
 }

@@ -1,7 +1,8 @@
 import type { File } from 'formidable';
 import { default as FtpClient } from 'ftp';
+import { FtpStorage } from '.';
 
-export async function upload(file: File) {
+export async function upload(this: FtpStorage, file: File) {
   return await new Promise<URL>((resolve, reject) => {
     const client = new FtpClient();
     client.on('ready', function() {
@@ -11,10 +12,14 @@ export async function upload(file: File) {
         if (error) {
           reject(error);
         } else {
-          resolve(new URL(`https://${this.config.host}/${file.newFilename}`));
+          resolve(new URL(`https://${this.host}/${file.newFilename}`));
         }
       });
     });
-    client.connect(this.config);
+    client.connect({
+      host: this.host,
+      user: this.user,
+      password: this.password,
+    });
   });
 }
