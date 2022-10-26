@@ -5,7 +5,7 @@ import { FtpStorage } from '.';
 export async function upload(this: FtpStorage, file: File) {
   return await new Promise<URL>((resolve, reject) => {
     const client = new FtpClient();
-    client.on('ready', function() {
+    client.on('ready', () => {
       client.put(file.filepath, file.newFilename, error => {
         client.end();
 

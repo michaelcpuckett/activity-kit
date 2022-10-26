@@ -8,7 +8,7 @@ const ftp_1 = __importDefault(require("ftp"));
 async function upload(file) {
     return await new Promise((resolve, reject) => {
         const client = new ftp_1.default();
-        client.on('ready', function () {
+        client.on('ready', () => {
             client.put(file.filepath, file.newFilename, error => {
                 client.end();
                 if (error) {
