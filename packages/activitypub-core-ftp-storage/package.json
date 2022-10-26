@@ -25,7 +25,8 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "activitypub-core-types": "^0.0.140"
+    "activitypub-core-types": "^0.0.140",
+    "ftp": "^0.3.10"
   },
   "devDependencies": {
     "@types/formidable": "^2.0.5",
