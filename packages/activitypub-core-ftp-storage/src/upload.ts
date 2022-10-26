@@ -11,7 +11,7 @@ export async function upload(file: File) {
         if (error) {
           reject(error);
         } else {
-          resolve(void 0);
+          resolve(`https://${this.config.host}/${file.newFilename}`);
         }
       });
     });

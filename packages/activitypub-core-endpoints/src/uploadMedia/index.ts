@@ -56,7 +56,8 @@ export class UploadMediaEndpoint {
       await this.getActor();
       await this.authenticateActor();
       await this.parseBody();
-      await this.storageService.upload();
+      const url = await this.storageService.upload();
+      this.activity.object.url = url;
       await this.cleanup();
       await this.saveActivity();
 

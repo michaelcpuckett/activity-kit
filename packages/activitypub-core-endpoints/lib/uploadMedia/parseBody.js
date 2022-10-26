@@ -54,7 +54,6 @@ async function parseBody() {
             mediaType: this.file.mimetype,
             ...JSON.parse(fields.object),
             id: new URL(objectId),
-            url: new URL(`https://puckett.storage/${this.file.newFilename}`),
             attributedTo: this.actor.id,
         };
         this.activity = {

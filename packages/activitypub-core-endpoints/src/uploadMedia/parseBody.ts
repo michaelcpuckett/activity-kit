@@ -40,7 +40,6 @@ export async function parseBody(this: UploadMediaEndpoint) {
       mediaType: this.file.mimetype,
       ...JSON.parse(fields.object),
       id: new URL(objectId),
-      url: new URL(`https://puckett.storage/${this.file.newFilename}`), // TODO
       attributedTo: this.actor.id,
     };
 
