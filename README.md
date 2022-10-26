@@ -109,14 +109,14 @@ interfaces with the rest of the Fediverse.
 ## Architecture
 
 This project aims to be agnostic as to how the data is stored, which server is
-used, etc. Plugins that conform to a specific interface can be mixed and matched.
+used, etc. Plugins/adapters that conform to a specific interface can be mixed and matched.
 
 ### Logic Layer
 
 The logic layer that get included in all projects include these packages:
 
 - `activitypub-core-types`
-  - The Activity Vocabulary converted to TypeScript types.
+  - The Activity vocabularies converted to TypeScript types.
 - `activitypub-core-endpoints`
   - The logic for carrying out the bulk of the ActivityPub protocol.
 - `activitypub-core-delivery`
@@ -130,15 +130,23 @@ Currently this project comes with:
 
 - `activitypub-core-mongodb`
 
+* TODO: PostreSQL
+
 ### Authentication Layer
 
 Current this project comes with:
 
 - `activitypub-core-firebase-auth`
 
+* TODO: Passport.js
+
 ### Storage Layer
 
-TBD.
+Currently this project comes with:
+
+- `activitypub-core-ftp-storage`
+
+* TODO: AWS S3, Firebase Storage
 
 ### Server Layer
 
@@ -146,6 +154,8 @@ Currently this project comes with:
 
 - `activitypub-core-express-middleware`
 
-### Rendering Layer
+* TODO: Fastify, Next.js
 
-TBD. Currently using JSX (React) on the Server.
+### Client/Rendering Layer
+
+TBD. Currently using JSX (React) server-side.
