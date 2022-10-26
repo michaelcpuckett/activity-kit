@@ -12,7 +12,7 @@ export async function upload(this: FtpStorage, file: File) {
         if (error) {
           reject(error);
         } else {
-          resolve(new URL(`https://${this.host}/${file.newFilename}`));
+          resolve(new URL(`https://${this.host}/media/${file.newFilename}`));
         }
       });
     });
