@@ -15,7 +15,6 @@ export async function upload(file: File) {
         }
       });
     });
-    // connect to localhost:21 as anonymous
     client.connect(this.config);
   });
 }
