@@ -1,3 +1,4 @@
+/// <reference types="node" />
 export * as AP from './activitypub';
 export declare type Auth = {
     createUser: Function;
@@ -28,5 +29,5 @@ export interface DatabaseService {
     }): Promise<Database>;
 }
 export interface Storage {
-    upload: Function;
+    upload: (...args: unknown[]) => Promise<URL>;
 }

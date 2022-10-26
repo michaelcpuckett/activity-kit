@@ -2,7 +2,7 @@ import type { File } from 'formidable';
 import { default as FtpClient } from 'ftp';
 
 export async function upload(file: File) {
-  return await new Promise((resolve, reject) => {
+  return await new Promise<URL>((resolve, reject) => {
     const client = new FtpClient();
     client.on('ready', function() {
       client.put(file.filepath, file.newFilename, error => {
@@ -11,7 +11,7 @@ export async function upload(file: File) {
         if (error) {
           reject(error);
         } else {
-          resolve(`https://${this.config.host}/${file.newFilename}`);
+          resolve(new URL(`https://${this.config.host}/${file.newFilename}`));
         }
       });
     });

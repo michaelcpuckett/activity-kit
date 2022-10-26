@@ -30,5 +30,5 @@ export interface DatabaseService {
 }
 
 export interface Storage {
-  upload: Function;
+  upload: (...args: unknown[]) => Promise<URL>;
 }
