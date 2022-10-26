@@ -1,5 +1,5 @@
 {
-  "name": "activitypub-core-firebase-storage",
+  "name": "activitypub-core-ftp-storage",
   "version": "0.0.136",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
@@ -25,8 +25,11 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "activitypub-core-types": "^0.0.136",
-    "firebase-admin": "^11.2.0",
+    "activitypub-core-types": "^0.0.136"
+  },
+  "devDependencies": {
+    "@types/formidable": "^2.0.5",
+    "@types/ftp": "^0.3.33",
     "formidable": "^2.0.1"
   }
 }
