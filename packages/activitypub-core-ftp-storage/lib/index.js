@@ -6,11 +6,13 @@ class FtpStorage {
     host;
     user;
     password;
+    path;
     upload = upload_1.upload;
-    constructor(config) {
+    constructor(config, path) {
         this.host = config.host;
         this.user = config.user;
         this.password = config.password;
+        this.path = path;
     }
 }
 exports.FtpStorage = FtpStorage;

@@ -6,12 +6,14 @@ export class FtpStorage implements Storage {
   host: FtpClient.Options['host'];
   user: FtpClient.Options['user'];
   password: FtpClient.Options['password'];
+  path?: string;
 
   public upload = upload;
 
-  constructor(config: FtpClient.Options) {
+  constructor(config: FtpClient.Options, path?: string) {
     this.host = config.host;
     this.user = config.user;
     this.password = config.password;
+    this.path = path;
   }
 }

@@ -5,6 +5,7 @@ export declare class FtpStorage implements Storage {
     host: FtpClient.Options['host'];
     user: FtpClient.Options['user'];
     password: FtpClient.Options['password'];
+    path?: string;
     upload: typeof upload;
-    constructor(config: FtpClient.Options);
+    constructor(config: FtpClient.Options, path?: string);
 }
