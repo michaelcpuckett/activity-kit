@@ -2,7 +2,7 @@
 export * as AP from './activitypub';
 export declare type Auth = {
     createUser: Function;
-    getUserIdByToken: Function;
+    getUserIdByToken: (...args: unknown[]) => Promise<string | null>;
 };
 export declare type Database = {
     expandCollection: Function;
