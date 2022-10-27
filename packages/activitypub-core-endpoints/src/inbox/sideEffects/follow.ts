@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import { getTypedEntity, isTypeOf } from 'activitypub-core-utilities';
+import { isTypeOf } from 'activitypub-core-utilities';
 import { getGuid } from 'activitypub-core-utilities';
 import {
   ACTIVITYSTREAMS_CONTEXT,

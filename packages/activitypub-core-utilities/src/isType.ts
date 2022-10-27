@@ -1,16 +1,8 @@
-import { getTypedEntity } from './getTypedEntity';
-import { AP } from 'activitypub-core-types';
-
-export function isTypeOf(entity: AP.Entity, values: Object): boolean {
+export function isTypeOf(entity: unknown & {
+  type: string | string[];
+}, values: Object): boolean {
   for (const type of Object.values(values)) {
-    const typedObject = getTypedEntity(
-      entity as { [key: string]: unknown },
-    ) as AP.ExtendedObject;
-    if (
-      Array.isArray(typedObject.type)
-        ? typedObject.type.includes(type)
-        : type === typedObject.type
-    ) {
+    if (isType(entity, type)) {
       return true;
     }
   }
@@ -18,15 +10,13 @@ export function isTypeOf(entity: AP.Entity, values: Object): boolean {
   return false;
 }
 
-export function isType(entity: AP.Entity, type: string): boolean {
-  const typedObject = getTypedEntity(
-    entity as { [key: string]: unknown },
-  ) as AP.ExtendedObject;
-  const typedObjectType = typedObject as unknown as string | string[];
+export function isType(entity: unknown & {
+  type: string | string[];
+}, type: string): boolean {
   if (
-    Array.isArray(typedObjectType)
-      ? typedObjectType.includes(type)
-      : type === typedObject.type
+    Array.isArray(entity.type)
+      ? entity.type.includes(type)
+      : type === entity.type
   ) {
     return true;
   }

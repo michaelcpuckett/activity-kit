@@ -19,6 +19,6 @@ export async function findOne(
   delete (value as Partial<typeof value>)._id;
 
   return getTypedEntity(
-    convertStringsToUrls(value) as { [key: string]: unknown },
+    convertStringsToUrls(value) as AP.Entity,
   );
 }

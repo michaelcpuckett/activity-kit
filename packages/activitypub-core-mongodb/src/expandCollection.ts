@@ -18,9 +18,7 @@ export async function expandCollection(
     return null;
   }
 
-  const foundCollection = getTypedEntity(
-    foundThing as { [key: string]: unknown },
-  ) as AP.Collection | AP.OrderedCollection;
+  const foundCollection = getTypedEntity(foundThing) as AP.Collection | AP.OrderedCollection;
 
   const items = await this.getCollectionItems(foundCollection);
 
@@ -33,9 +31,7 @@ export async function expandCollection(
     (Array.isArray(foundCollection.type) &&
       foundCollection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
   ) {
-    const orderedCollection = getTypedEntity(
-      foundCollection as unknown as { [key: string]: unknown },
-    ) as AP.OrderedCollection;
+    const orderedCollection = getTypedEntity(foundCollection) as AP.OrderedCollection;
 
     return {
       ...orderedCollection,
@@ -48,9 +44,7 @@ export async function expandCollection(
     (Array.isArray(foundCollection.type) &&
       foundCollection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
   ) {
-    const collection = getTypedEntity(
-      foundCollection as unknown as { [key: string]: unknown },
-    ) as AP.Collection;
+    const collection = getTypedEntity(foundCollection) as AP.Collection;
 
     return {
       ...collection,
