@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { AP } from 'activitypub-core-types';
-import type { Auth, Database } from 'activitypub-core-types';
+import type { Auth, Database, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { DeliveryService } from 'activitypub-core-delivery';
 import { runSideEffects } from './runSideEffects';
@@ -19,7 +19,7 @@ import { handleUndo } from './sideEffects/undo';
 import { handleRemove } from './sideEffects/remove';
 import { handleUndoLike } from './sideEffects/undo/undoLike';
 import { handleUndoAnnounce } from './sideEffects/undo/undoAnnounce';
-export declare function outboxHandler(req: IncomingMessage, res: ServerResponse, authenticationService: Auth, databaseService: Database, deliveryService: DeliveryService): Promise<{
+export declare function outboxHandler(req: IncomingMessage, res: ServerResponse, authenticationService: Auth, databaseService: Database, deliveryService: DeliveryService, plugins?: Plugin[]): Promise<{
     props?: {
         entity?: AP.Entity;
         actor?: AP.Actor;
@@ -31,9 +31,10 @@ export declare class OutboxPostHandler {
     authenticationService: Auth;
     databaseService: Database;
     deliveryService: DeliveryService;
+    plugins?: Plugin[];
     actor: AP.Actor | null;
     activity: AP.Entity | null;
-    constructor(req: IncomingMessage, res: ServerResponse, authenticationService: Auth, databaseService: Database, deliveryService: DeliveryService);
+    constructor(req: IncomingMessage, res: ServerResponse, authenticationService: Auth, databaseService: Database, deliveryService: DeliveryService, plugins?: Plugin[]);
     init(): Promise<void>;
     protected authenticateActor: typeof authenticateActor;
     protected getActor: typeof getActor;

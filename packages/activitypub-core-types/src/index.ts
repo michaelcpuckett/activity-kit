@@ -1,5 +1,10 @@
 export * as AP from './activitypub';
 
+export type Plugin = {
+  handleCreateUserActor?: Function;
+  handleOutboxActivity?: Function;
+};
+
 export type Auth = {
   createUser: Function;
   getUserIdByToken: (...args: unknown[]) => Promise<string|null>;

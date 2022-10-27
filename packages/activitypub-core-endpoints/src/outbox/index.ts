@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import type { Auth, Database } from 'activitypub-core-types';
+import type { Auth, Database, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import {
   isTypeOf,
@@ -33,6 +33,7 @@ export async function outboxHandler(
   authenticationService: Auth,
   databaseService: Database,
   deliveryService: DeliveryService,
+  plugins?: Plugin[]
 ) {
   if (!req) {
     throw new Error('Bad request: not found.');
@@ -45,6 +46,7 @@ export async function outboxHandler(
       authenticationService,
       databaseService,
       deliveryService,
+      plugins,
     );
     await handler.init();
 
@@ -67,6 +69,7 @@ export class OutboxPostHandler {
   authenticationService: Auth;
   databaseService: Database;
   deliveryService: DeliveryService;
+  plugins?: Plugin[];
 
   actor: AP.Actor | null = null;
   activity: AP.Entity | null = null;
@@ -77,12 +80,14 @@ export class OutboxPostHandler {
     authenticationService: Auth,
     databaseService: Database,
     deliveryService: DeliveryService,
+    plugins?: Plugin[]
   ) {
     this.req = req;
     this.res = res;
     this.authenticationService = authenticationService;
     this.databaseService = databaseService;
     this.deliveryService = deliveryService;
+    this.plugins = plugins;
   }
 
   async init() {

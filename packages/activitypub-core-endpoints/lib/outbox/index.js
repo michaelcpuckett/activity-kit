@@ -20,12 +20,12 @@ const undo_1 = require("./sideEffects/undo");
 const remove_1 = require("./sideEffects/remove");
 const undoLike_1 = require("./sideEffects/undo/undoLike");
 const undoAnnounce_1 = require("./sideEffects/undo/undoAnnounce");
-async function outboxHandler(req, res, authenticationService, databaseService, deliveryService) {
+async function outboxHandler(req, res, authenticationService, databaseService, deliveryService, plugins) {
     if (!req) {
         throw new Error('Bad request: not found.');
     }
     if (req.method === 'POST') {
-        const handler = new OutboxPostHandler(req, res, authenticationService, databaseService, deliveryService);
+        const handler = new OutboxPostHandler(req, res, authenticationService, databaseService, deliveryService, plugins);
         await handler.init();
         return {
             props: {},
@@ -40,14 +40,16 @@ class OutboxPostHandler {
     authenticationService;
     databaseService;
     deliveryService;
+    plugins;
     actor = null;
     activity = null;
-    constructor(req, res, authenticationService, databaseService, deliveryService) {
+    constructor(req, res, authenticationService, databaseService, deliveryService, plugins) {
         this.req = req;
         this.res = res;
         this.authenticationService = authenticationService;
         this.databaseService = databaseService;
         this.deliveryService = deliveryService;
+        this.plugins = plugins;
     }
     async init() {
         try {

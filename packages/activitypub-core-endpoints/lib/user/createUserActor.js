@@ -187,7 +187,7 @@ async function createUserActor(databaseService, user) {
         orderedItems: [],
         published: publishedDate,
     };
-    const createActorActivity = {
+    let createActorActivity = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(createActorActivityId),
         url: new URL(createActorActivityId),
@@ -199,6 +199,15 @@ async function createUserActor(databaseService, user) {
         shares: createActorActivityShares.id,
         published: publishedDate,
     };
+    if (this.plugins) {
+        for (const plugin of this.plugins) {
+            if ('handleCreateUserActor' in plugin) {
+                createActorActivity = await plugin.handleCreateUserActor.call({
+                    activity: createActorActivity,
+                });
+            }
+        }
+    }
     await Promise.all([
         databaseService.saveEntity(createActorActivity),
         databaseService.saveEntity(createActorActivityReplies),

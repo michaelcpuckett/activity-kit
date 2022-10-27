@@ -212,7 +212,7 @@ export async function createUserActor(
     published: publishedDate,
   };
 
-  const createActorActivity: AP.Create = {
+  let createActorActivity: AP.Create = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(createActorActivityId),
     url: new URL(createActorActivityId),
@@ -224,6 +224,17 @@ export async function createUserActor(
     shares: createActorActivityShares.id,
     published: publishedDate,
   };
+
+  if (this.plugins) {
+    for (const plugin of this.plugins) {
+      if ('handleCreateUserActor' in plugin) {
+        createActorActivity = await plugin.handleCreateUserActor.call({
+          activity: createActorActivity,
+        });
+      }
+    }
+  }
+
 
   await Promise.all([
     databaseService.saveEntity(createActorActivity),

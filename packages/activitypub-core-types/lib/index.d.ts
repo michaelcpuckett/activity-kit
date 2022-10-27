@@ -1,5 +1,9 @@
 /// <reference types="node" />
 export * as AP from './activitypub';
+export declare type Plugin = {
+    handleCreateUserActor?: Function;
+    handleOutboxActivity?: Function;
+};
 export declare type Auth = {
     createUser: Function;
     getUserIdByToken: (...args: unknown[]) => Promise<string | null>;

@@ -49,6 +49,13 @@ async function saveActivity() {
     if (shares.id instanceof URL) {
         this.activity.shares = shares.id;
     }
+    if (this.plugins) {
+        for (const plugin of this.plugins) {
+            if ('handleOutboxActivity' in plugin) {
+                await plugin.handleOutboxActivity.call(this);
+            }
+        }
+    }
     await Promise.all([
         this.databaseService.saveEntity(this.activity),
         this.databaseService.saveEntity(replies),

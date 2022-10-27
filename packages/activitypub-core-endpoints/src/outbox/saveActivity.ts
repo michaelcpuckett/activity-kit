@@ -58,6 +58,14 @@ export async function saveActivity(this: OutboxPostHandler) {
     (this.activity as AP.Activity).shares = shares.id;
   }
 
+  if (this.plugins) {
+    for (const plugin of this.plugins) {
+      if ('handleOutboxActivity' in plugin) {
+        await plugin.handleOutboxActivity.call(this);
+      }
+    }
+  }
+
   await Promise.all([
     this.databaseService.saveEntity(this.activity),
     this.databaseService.saveEntity(replies),

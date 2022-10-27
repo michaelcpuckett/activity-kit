@@ -1,0 +1,32 @@
+{
+  "name": "activitypub-core-plugin-foaf",
+  "version": "0.0.147",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michaelcpuckett@gmail.com>",
+  "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelcpuckett/activitypub-core.git"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "format": "prettier --config .prettierrc \"**/*.ts\" --write",
+    "lint": "eslint src/**/*.ts"
+  },
+  "bugs": {
+    "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
+  },
+  "dependencies": {
+    "activitypub-core-endpoints": "^0.0.147",
+    "activitypub-core-types": "^0.0.147",
+    "activitypub-core-utilities": "^0.0.147"
+  }
+}
