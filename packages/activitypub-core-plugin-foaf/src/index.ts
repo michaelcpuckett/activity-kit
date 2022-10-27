@@ -1,33 +1,36 @@
 import { AP } from 'activitypub-core-types';
 import type { Plugin } from 'activitypub-core-types';
-import { OutboxPostHandler } from 'activitypub-core-endpoints/lib/outbox';
-import { ACTIVITYSTREAMS_CONTEXT, W3ID_SECURITY_CONTEXT } from 'activitypub-core-utilities';
+import { ACTIVITYSTREAMS_CONTEXT, convertStringsToUrls, W3ID_SECURITY_CONTEXT } from 'activitypub-core-utilities';
 
 export const foafPlugin = function(config: {
   newPerson?: JSON
 }) {
-  return new (class FoafPlugin implements Plugin {
-    handleCreateUserActor(this: OutboxPostHandler) {
-    }
-    createUserActor(this: {
-      activity: AP.Create
-    }) {
+  const foafPlugin: Plugin = {
+    handleCreateUserActor(this: {
+      activity: AP.Activity
+    }): AP.Activity {
       if (!config.newPerson) {
+        return this.activity;
+      }
+
+      if (!('object' in this.activity) || this.activity.object instanceof URL || Array.isArray(this.activity.object)) {
         return this.activity;
       }
 
       return {
         ...this.activity,
         '@context': [
-          ACTIVITYSTREAMS_CONTEXT,
-          W3ID_SECURITY_CONTEXT,
-          { "foaf": "http://xmlns.com/foaf/0.1/" }
+          new URL(ACTIVITYSTREAMS_CONTEXT),
+          new URL(W3ID_SECURITY_CONTEXT),
+          { "foaf": new URL("http://xmlns.com/foaf/0.1/") }
         ],
         object: {
           ...this.activity.object,
-          ...config.newPerson,
+          ...convertStringsToUrls(JSON.parse(JSON.stringify(config.newPerson))),
         }
       };
     }
-  })();
+  }
+
+  return foafPlugin;
 }

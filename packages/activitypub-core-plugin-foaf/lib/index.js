@@ -3,27 +3,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.foafPlugin = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const foafPlugin = function (config) {
-    return new (class FoafPlugin {
+    const foafPlugin = {
         handleCreateUserActor() {
-        }
-        createUserActor() {
             if (!config.newPerson) {
+                return this.activity;
+            }
+            if (!('object' in this.activity) || this.activity.object instanceof URL || Array.isArray(this.activity.object)) {
                 return this.activity;
             }
             return {
                 ...this.activity,
                 '@context': [
-                    activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-                    activitypub_core_utilities_1.W3ID_SECURITY_CONTEXT,
-                    { "foaf": "http://xmlns.com/foaf/0.1/" }
+                    new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
+                    new URL(activitypub_core_utilities_1.W3ID_SECURITY_CONTEXT),
+                    { "foaf": new URL("http://xmlns.com/foaf/0.1/") }
                 ],
                 object: {
                     ...this.activity.object,
-                    ...config.newPerson,
+                    ...(0, activitypub_core_utilities_1.convertStringsToUrls)(JSON.parse(JSON.stringify(config.newPerson))),
                 }
             };
         }
-    })();
+    };
+    return foafPlugin;
 };
 exports.foafPlugin = foafPlugin;
 //# sourceMappingURL=index.js.map
