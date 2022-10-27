@@ -12,16 +12,29 @@ export const foafPlugin = function(config: {
       console.log('handleCreateUserActor');
       console.log(config.newPerson);
       if (!config.newPerson) {
-        console.log(config);
         return this.activity;
       }
 
       console.log(this.activity);
-      console.log('^ the activity')
+      console.log('^ the activity');
 
       if (!('object' in this.activity) || this.activity.object instanceof URL || Array.isArray(this.activity.object)) {
         return this.activity;
       }
+
+      console.log({
+        ...this.activity,
+        '@context': [
+          new URL(ACTIVITYSTREAMS_CONTEXT),
+          new URL(W3ID_SECURITY_CONTEXT),
+          { "foaf": new URL("http://xmlns.com/foaf/0.1/") }
+        ],
+        object: {
+          ...this.activity.object,
+          ...convertStringsToUrls(config.newPerson as unknown as {[key: string]: unknown}),
+        }
+      })
+      console.log('will return a value')
 
       return {
         ...this.activity,
@@ -33,6 +46,10 @@ export const foafPlugin = function(config: {
         object: {
           ...this.activity.object,
           ...convertStringsToUrls(config.newPerson as unknown as {[key: string]: unknown}),
+          '@context': [
+            new URL(ACTIVITYSTREAMS_CONTEXT),
+            { "foaf": new URL("http://xmlns.com/foaf/0.1/") }
+          ],
         }
       };
     }

@@ -129,7 +129,7 @@ async function createUserActor(databaseService, user, plugins) {
         orderedItems: [],
         published: publishedDate,
     };
-    const userActor = {
+    let userActor = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(id),
         url: new URL(id),
@@ -205,6 +205,7 @@ async function createUserActor(databaseService, user, plugins) {
                 createActorActivity = await plugin.handleCreateUserActor.call({
                     activity: createActorActivity,
                 });
+                userActor = createActorActivity.object;
             }
         }
     }
