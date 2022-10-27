@@ -11,6 +11,8 @@ const foafPlugin = function (config) {
                 console.log(config);
                 return this.activity;
             }
+            console.log(this.activity);
+            console.log('^ the activity');
             if (!('object' in this.activity) || this.activity.object instanceof URL || Array.isArray(this.activity.object)) {
                 return this.activity;
             }
