@@ -35,7 +35,7 @@ async function entityGetHandler(request, response, authenticationService, databa
     const cookies = cookie_1.default.parse(request.headers.cookie ?? '');
     const authorizedActor = await databaseService.getActorByUserId(await authenticationService.getUserIdByToken(cookies.__session ?? ''));
     const url = providedUrl ?? new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${request.url}`);
-    const foundEntity = await databaseService.queryById(url);
+    const foundEntity = await databaseService.findEntityById(url);
     if (!foundEntity) {
         return handleNotFound();
     }

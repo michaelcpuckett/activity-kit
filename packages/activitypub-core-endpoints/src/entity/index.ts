@@ -58,7 +58,7 @@ export async function entityGetHandler(
   // TODO authorize foundEntity posts by actor.
 
   const url = providedUrl ?? new URL(`${LOCAL_DOMAIN}${request.url}`);
-  const foundEntity = await databaseService.queryById(url);
+  const foundEntity = await databaseService.findEntityById(url);
 
   if (!foundEntity) {
     return handleNotFound();
