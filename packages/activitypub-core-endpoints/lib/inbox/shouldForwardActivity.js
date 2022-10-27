@@ -36,11 +36,8 @@ async function shouldForwardActivity() {
         if (!foundItem) {
             continue;
         }
-        if (foundItem.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION ||
-            foundItem.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
-            (Array.isArray(foundItem.type) &&
-                (foundItem.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
-                    foundItem.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)))) {
+        if ((0, activitypub_core_utilities_1.isType)(foundItem, activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
+            (0, activitypub_core_utilities_1.isType)(foundItem, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
             return true;
         }
     }

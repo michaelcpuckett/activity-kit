@@ -7,7 +7,6 @@ exports.entityGetHandler = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
-const activitypub_core_utilities_4 = require("activitypub-core-utilities");
 const cookie_1 = __importDefault(require("cookie"));
 async function entityGetHandler(request, response, authenticationService, databaseService, providedUrl) {
     if (!response) {
@@ -35,11 +34,7 @@ async function entityGetHandler(request, response, authenticationService, databa
     const cookies = cookie_1.default.parse(request.headers.cookie ?? '');
     const authorizedActor = await databaseService.getActorByUserId(await authenticationService.getUserIdByToken(cookies.__session ?? ''));
     const url = providedUrl ?? new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${request.url}`);
-    const foundEntity = await databaseService.findEntityById(url);
-    if (!foundEntity) {
-        return handleNotFound();
-    }
-    const entity = (0, activitypub_core_utilities_2.getTypedEntity)(foundEntity);
+    const entity = await databaseService.findEntityById(url);
     if (!entity) {
         return handleNotFound();
     }
@@ -51,7 +46,7 @@ async function entityGetHandler(request, response, authenticationService, databa
         request.headers.accept?.includes(activitypub_core_utilities_1.JSON_CONTENT_TYPE)) {
         response.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);
         response.statusCode = 200;
-        response.write((0, activitypub_core_utilities_4.stringify)(entity));
+        response.write((0, activitypub_core_utilities_3.stringify)(entity));
         response.end();
         return {
             props: {},
@@ -59,8 +54,8 @@ async function entityGetHandler(request, response, authenticationService, databa
     }
     return {
         props: {
-            entity: (0, activitypub_core_utilities_3.convertUrlsToStrings)(entity),
-            actor: (0, activitypub_core_utilities_3.convertUrlsToStrings)(authorizedActor),
+            entity: (0, activitypub_core_utilities_2.convertUrlsToStrings)(entity),
+            actor: (0, activitypub_core_utilities_2.convertUrlsToStrings)(authorizedActor),
         },
     };
 }

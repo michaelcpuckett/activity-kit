@@ -27,14 +27,10 @@ async function handleAnnounce() {
     if (!shares) {
         throw new Error('Bad shares collection: not found');
     }
-    if (shares.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION ||
-        (Array.isArray(shares.type) &&
-            shares.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION))) {
+    if ((0, activitypub_core_utilities_1.isType)(shares, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
         await this.databaseService.insertItem(sharesId, activity.id);
     }
-    else if (shares.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
-        (Array.isArray(shares.type) &&
-            shares.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
+    else if ((0, activitypub_core_utilities_1.isType)(shares.type, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
         await this.databaseService.insertOrderedItem(sharesId, activity.id);
     }
 }

@@ -34,5 +34,8 @@ export const getTypedEntity = (entity: AP.Entity) => {
     return entity as AP.ExtendedObject;
   }
 
+  console.log(entity);
+  console.log('^-- entity is null?');
+
   return null;
 };

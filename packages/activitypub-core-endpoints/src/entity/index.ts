@@ -55,16 +55,10 @@ export async function entityGetHandler(
     await authenticationService.getUserIdByToken(cookies.__session ?? ''),
   );
 
-  // TODO authorize foundEntity posts by actor.
+  // TODO authorize entity posts by actor.
 
   const url = providedUrl ?? new URL(`${LOCAL_DOMAIN}${request.url}`);
-  const foundEntity = await databaseService.findEntityById(url);
-
-  if (!foundEntity) {
-    return handleNotFound();
-  }
-
-  const entity = getTypedEntity(foundEntity);
+  const entity = await databaseService.findEntityById(url);
 
   if (!entity) {
     return handleNotFound();

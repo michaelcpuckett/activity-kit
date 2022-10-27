@@ -17,18 +17,14 @@ async function expandCollection(collection) {
     if (!items) {
         return foundCollection;
     }
-    if (foundCollection.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
-        (Array.isArray(foundCollection.type) &&
-            foundCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
+    if ((0, activitypub_core_utilities_1.isType)(foundCollection, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
         const orderedCollection = (0, activitypub_core_utilities_1.getTypedEntity)(foundCollection);
         return {
             ...orderedCollection,
             orderedItems: items,
         };
     }
-    if (foundCollection.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION ||
-        (Array.isArray(foundCollection.type) &&
-            foundCollection.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
+    if ((0, activitypub_core_utilities_1.isType)(foundCollection, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
         const collection = (0, activitypub_core_utilities_1.getTypedEntity)(foundCollection);
         return {
             ...collection,

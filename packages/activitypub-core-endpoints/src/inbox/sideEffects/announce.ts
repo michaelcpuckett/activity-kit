@@ -1,6 +1,6 @@
 import { AP } from 'activitypub-core-types';
 import type { Database } from 'activitypub-core-types';
-import { getId } from 'activitypub-core-utilities';
+import { getId, isType } from 'activitypub-core-utilities';
 import { InboxEndpoint } from '..';
 
 export async function handleAnnounce(this: InboxEndpoint) {
@@ -41,15 +41,11 @@ export async function handleAnnounce(this: InboxEndpoint) {
   }
 
   if (
-    shares.type === AP.CollectionTypes.COLLECTION ||
-    (Array.isArray(shares.type) &&
-      shares.type.includes(AP.CollectionTypes.COLLECTION))
+    isType(shares, AP.CollectionTypes.COLLECTION)
   ) {
     await this.databaseService.insertItem(sharesId, activity.id);
   } else if (
-    shares.type === AP.CollectionTypes.ORDERED_COLLECTION ||
-    (Array.isArray(shares.type) &&
-      shares.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
+    isType(shares.type, AP.CollectionTypes.ORDERED_COLLECTION)
   ) {
     await this.databaseService.insertOrderedItem(sharesId, activity.id);
   }

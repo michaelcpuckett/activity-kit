@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import { getId } from 'activitypub-core-utilities';
+import { getId, isType } from 'activitypub-core-utilities';
 import type { Database } from 'activitypub-core-types';
 import { InboxEndpoint } from '..';
 
@@ -40,15 +40,11 @@ export async function handleLike(this: InboxEndpoint) {
   }
 
   if (
-    likes.type === AP.CollectionTypes.COLLECTION ||
-    (Array.isArray(likes.type) &&
-      likes.type.includes(AP.CollectionTypes.COLLECTION))
+    isType(likes, AP.CollectionTypes.COLLECTION)
   ) {
     await this.databaseService.insertItem(likesId, activity.id);
   } else if (
-    likes.type === AP.CollectionTypes.ORDERED_COLLECTION ||
-    (Array.isArray(likes.type) &&
-      likes.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
+    isType(likes, AP.CollectionTypes.ORDERED_COLLECTION)
   ) {
     await this.databaseService.insertOrderedItem(likesId, activity.id);
   }

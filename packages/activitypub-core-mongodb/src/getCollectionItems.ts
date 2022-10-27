@@ -1,6 +1,6 @@
 import { MongoDatabase } from '.';
 import { AP } from 'activitypub-core-types';
-import { getId } from 'activitypub-core-utilities';
+import { getId, isType } from 'activitypub-core-utilities';
 
 export async function getCollectionItems(
   this: MongoDatabase,
@@ -35,9 +35,7 @@ export async function getCollectionItems(
   }
 
   const collectionItems =
-    collection.type === AP.CollectionTypes.ORDERED_COLLECTION ||
-    (Array.isArray(collection.type) &&
-      collection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
+    isType(collection, AP.CollectionTypes.ORDERED_COLLECTION)
       ? (collection as AP.OrderedCollection).orderedItems
       : collection.items;
 

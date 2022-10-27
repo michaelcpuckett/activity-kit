@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import { PUBLIC_ACTOR } from 'activitypub-core-utilities';
+import { isType, PUBLIC_ACTOR } from 'activitypub-core-utilities';
 import { DeliveryService } from '.';
 
 export async function getRecipientsList(
@@ -30,10 +30,8 @@ export async function getRecipientsList(
           }
 
           if (
-            (typeof foundThing === 'object' &&
-              foundThing.type === AP.CollectionTypes.ORDERED_COLLECTION) ||
-            (Array.isArray(foundThing.type) &&
-              foundThing.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
+            typeof foundThing === 'object' &&
+            isType(foundThing, AP.CollectionTypes.ORDERED_COLLECTION)
           ) {
             if (foundThing.orderedItems) {
               return foundThing.orderedItems;
@@ -41,10 +39,8 @@ export async function getRecipientsList(
           }
 
           if (
-            (typeof foundThing === 'object' &&
-              foundThing.type === AP.CollectionTypes.COLLECTION) ||
-            (Array.isArray(foundThing.type) &&
-              foundThing.type.includes(AP.CollectionTypes.COLLECTION))
+            typeof foundThing === 'object' &&
+            isType(foundThing, AP.CollectionTypes.COLLECTION)
           ) {
             if (foundThing.items) {
               return foundThing.items;
@@ -53,13 +49,10 @@ export async function getRecipientsList(
 
           if (
             typeof foundThing === 'object' &&
-            (foundThing.type === AP.CollectionTypes.ORDERED_COLLECTION ||
-              foundThing.type === AP.CollectionTypes.COLLECTION ||
-              (Array.isArray(foundThing.type) &&
-                (foundThing.type.includes(
-                  AP.CollectionTypes.ORDERED_COLLECTION,
-                ) ||
-                  foundThing.type.includes(AP.CollectionTypes.COLLECTION))))
+            (
+              isType(foundThing, AP.CollectionTypes.COLLECTION) ||
+              isType(foundThing, AP.CollectionTypes.ORDERED_COLLECTION)
+            )
           ) {
             if (foundThing.first) {
               const foundCollectionPage = await this.databaseService.queryById(
@@ -68,12 +61,7 @@ export async function getRecipientsList(
 
               if (
                 typeof foundCollectionPage === 'object' &&
-                (foundCollectionPage.type ===
-                  AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE ||
-                  (Array.isArray(foundCollectionPage.type) &&
-                    foundCollectionPage.type.includes(
-                      AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE,
-                    ))) &&
+                isType(foundCollectionPage, AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE) &&
                 foundCollectionPage.orderedItems
               ) {
                 return foundCollectionPage.orderedItems;
@@ -81,12 +69,7 @@ export async function getRecipientsList(
 
               if (
                 typeof foundCollectionPage === 'object' &&
-                (foundCollectionPage.type ===
-                  AP.CollectionPageTypes.COLLECTION_PAGE ||
-                  (Array.isArray(foundCollectionPage.type) &&
-                    foundCollectionPage.type.includes(
-                      AP.CollectionPageTypes.COLLECTION_PAGE,
-                    ))) &&
+                isType(foundCollectionPage, AP.CollectionPageTypes.COLLECTION_PAGE) &&
                 foundCollectionPage.items
               ) {
                 return foundCollectionPage.items;

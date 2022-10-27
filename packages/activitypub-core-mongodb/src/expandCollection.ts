@@ -1,6 +1,6 @@
 import { MongoDatabase } from '.';
 import { AP } from 'activitypub-core-types';
-import { getId, getTypedEntity } from 'activitypub-core-utilities';
+import { getId, getTypedEntity, isType } from 'activitypub-core-utilities';
 
 export async function expandCollection(
   this: MongoDatabase,
@@ -27,9 +27,7 @@ export async function expandCollection(
   }
 
   if (
-    foundCollection.type === AP.CollectionTypes.ORDERED_COLLECTION ||
-    (Array.isArray(foundCollection.type) &&
-      foundCollection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
+    isType(foundCollection, AP.CollectionTypes.ORDERED_COLLECTION)
   ) {
     const orderedCollection = getTypedEntity(foundCollection) as AP.OrderedCollection;
 
@@ -40,9 +38,7 @@ export async function expandCollection(
   }
 
   if (
-    foundCollection.type === AP.CollectionTypes.COLLECTION ||
-    (Array.isArray(foundCollection.type) &&
-      foundCollection.type.includes(AP.CollectionTypes.ORDERED_COLLECTION))
+    isType(foundCollection, AP.CollectionTypes.COLLECTION)
   ) {
     const collection = getTypedEntity(foundCollection) as AP.Collection;
 

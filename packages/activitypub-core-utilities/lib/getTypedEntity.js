@@ -28,6 +28,8 @@ const getTypedEntity = (entity) => {
     if ((0, isType_1.isTypeOf)(entity, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
         return entity;
     }
+    console.log(entity);
+    console.log('^-- entity is null?');
     return null;
 };
 exports.getTypedEntity = getTypedEntity;

@@ -17,43 +17,30 @@ async function getRecipientsList(to) {
                 foundThing.inbox) {
                 return foundThing.id;
             }
-            if ((typeof foundThing === 'object' &&
-                foundThing.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) ||
-                (Array.isArray(foundThing.type) &&
-                    foundThing.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
+            if (typeof foundThing === 'object' &&
+                (0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
                 if (foundThing.orderedItems) {
                     return foundThing.orderedItems;
                 }
             }
-            if ((typeof foundThing === 'object' &&
-                foundThing.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
-                (Array.isArray(foundThing.type) &&
-                    foundThing.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION))) {
+            if (typeof foundThing === 'object' &&
+                (0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
                 if (foundThing.items) {
                     return foundThing.items;
                 }
             }
             if (typeof foundThing === 'object' &&
-                (foundThing.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
-                    foundThing.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION ||
-                    (Array.isArray(foundThing.type) &&
-                        (foundThing.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) ||
-                            foundThing.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION))))) {
+                ((0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
+                    (0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
                 if (foundThing.first) {
                     const foundCollectionPage = await this.databaseService.queryById(foundThing.first);
                     if (typeof foundCollectionPage === 'object' &&
-                        (foundCollectionPage.type ===
-                            activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE ||
-                            (Array.isArray(foundCollectionPage.type) &&
-                                foundCollectionPage.type.includes(activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE))) &&
+                        (0, activitypub_core_utilities_1.isType)(foundCollectionPage, activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE) &&
                         foundCollectionPage.orderedItems) {
                         return foundCollectionPage.orderedItems;
                     }
                     if (typeof foundCollectionPage === 'object' &&
-                        (foundCollectionPage.type ===
-                            activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE ||
-                            (Array.isArray(foundCollectionPage.type) &&
-                                foundCollectionPage.type.includes(activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE))) &&
+                        (0, activitypub_core_utilities_1.isType)(foundCollectionPage, activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE) &&
                         foundCollectionPage.items) {
                         return foundCollectionPage.items;
                     }

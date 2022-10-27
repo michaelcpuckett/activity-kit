@@ -27,14 +27,10 @@ async function handleLike() {
     if (!likes) {
         throw new Error('Bad likes collection: not found.');
     }
-    if (likes.type === activitypub_core_types_1.AP.CollectionTypes.COLLECTION ||
-        (Array.isArray(likes.type) &&
-            likes.type.includes(activitypub_core_types_1.AP.CollectionTypes.COLLECTION))) {
+    if ((0, activitypub_core_utilities_1.isType)(likes, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
         await this.databaseService.insertItem(likesId, activity.id);
     }
-    else if (likes.type === activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION ||
-        (Array.isArray(likes.type) &&
-            likes.type.includes(activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
+    else if ((0, activitypub_core_utilities_1.isType)(likes, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
         await this.databaseService.insertOrderedItem(likesId, activity.id);
     }
 }

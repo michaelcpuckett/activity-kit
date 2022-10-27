@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import { getId, isTypeOf } from 'activitypub-core-utilities';
+import { getId, isType, isTypeOf } from 'activitypub-core-utilities';
 import { InboxEndpoint } from '.';
 
 export async function shouldForwardActivity(this: InboxEndpoint) {
@@ -45,11 +45,8 @@ export async function shouldForwardActivity(this: InboxEndpoint) {
     }
 
     if (
-      foundItem.type === AP.CollectionTypes.COLLECTION ||
-      foundItem.type === AP.CollectionTypes.ORDERED_COLLECTION ||
-      (Array.isArray(foundItem.type) &&
-        (foundItem.type.includes(AP.CollectionTypes.COLLECTION) ||
-          foundItem.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)))
+      isType(foundItem, AP.CollectionTypes.COLLECTION) ||
+      isType(foundItem, AP.CollectionTypes.ORDERED_COLLECTION)
     ) {
       return true;
     }
