@@ -9,7 +9,10 @@ export const foafPlugin = function(config: {
     handleCreateUserActor(this: {
       activity: AP.Activity
     }): AP.Activity {
+      console.log('handleCreateUserActor');
+      console.log(config.newPerson);
       if (!config.newPerson) {
+        console.log(config);
         return this.activity;
       }
 
@@ -26,7 +29,7 @@ export const foafPlugin = function(config: {
         ],
         object: {
           ...this.activity.object,
-          ...convertStringsToUrls(JSON.parse(JSON.stringify(config.newPerson))),
+          ...convertStringsToUrls(config.newPerson as unknown as {[key: string]: unknown}),
         }
       };
     }

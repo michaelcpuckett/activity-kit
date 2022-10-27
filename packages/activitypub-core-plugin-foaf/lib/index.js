@@ -5,7 +5,10 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const foafPlugin = function (config) {
     const foafPlugin = {
         handleCreateUserActor() {
+            console.log('handleCreateUserActor');
+            console.log(config.newPerson);
             if (!config.newPerson) {
+                console.log(config);
                 return this.activity;
             }
             if (!('object' in this.activity) || this.activity.object instanceof URL || Array.isArray(this.activity.object)) {
@@ -20,7 +23,7 @@ const foafPlugin = function (config) {
                 ],
                 object: {
                     ...this.activity.object,
-                    ...(0, activitypub_core_utilities_1.convertStringsToUrls)(JSON.parse(JSON.stringify(config.newPerson))),
+                    ...(0, activitypub_core_utilities_1.convertStringsToUrls)(config.newPerson),
                 }
             };
         }
