@@ -9,18 +9,18 @@ function convertStringsToUrls(originalEntity) {
         }
         if (typeof value === 'string') {
             try {
-                entity[key] = new URL(value);
-            }
-            catch (error) {
-                try {
+                if (value.startsWith('http')) {
+                    entity[key] = new URL(value);
+                }
+                else {
                     const date = Date.parse(value);
                     if (!Number.isNaN(date)) {
                         entity[key] = new Date(date);
                     }
                 }
-                catch (error) {
-                    continue;
-                }
+            }
+            catch (error) {
+                continue;
             }
         }
         else if (value instanceof URL || value instanceof Date) {
@@ -30,10 +30,10 @@ function convertStringsToUrls(originalEntity) {
             entity[key] = value.map((item) => {
                 if (typeof item === 'string') {
                     try {
-                        return new URL(item);
-                    }
-                    catch (error) {
-                        try {
+                        if (item.startsWith('http')) {
+                            return new URL(item);
+                        }
+                        else {
                             const date = Date.parse(item);
                             if (!Number.isNaN(date)) {
                                 return new Date(date);
@@ -42,9 +42,9 @@ function convertStringsToUrls(originalEntity) {
                                 return item;
                             }
                         }
-                        catch (error) {
-                            return item;
-                        }
+                    }
+                    catch (error) {
+                        return item;
                     }
                 }
                 else if (Array.isArray(item)) {

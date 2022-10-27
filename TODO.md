@@ -7,6 +7,7 @@ See CHECKLIST.md
 * block
 * performance issues
 * ostatus
+* oauth
 * as:sensitive
 * foaf / schema.org / others
 * /.well-known/host-meta
