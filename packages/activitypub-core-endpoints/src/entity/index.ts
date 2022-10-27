@@ -7,7 +7,6 @@ import {
   LINKED_DATA_CONTENT_TYPE,
   LOCAL_DOMAIN,
 } from 'activitypub-core-utilities';
-import { getTypedEntity } from 'activitypub-core-utilities';
 import { convertUrlsToStrings } from 'activitypub-core-utilities';
 import { stringify } from 'activitypub-core-utilities';
 import cookie from 'cookie';
