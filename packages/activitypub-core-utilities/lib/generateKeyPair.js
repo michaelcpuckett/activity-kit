@@ -26,29 +26,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateKeyPair = void 0;
 const crypto = __importStar(require("crypto"));
 async function generateKeyPair() {
-    const { publicKey, privateKey } = await crypto.subtle.generateKey({
-        name: 'RSASSA-PKCS1-v1_5',
-        modulusLength: 2048,
-        hash: { name: 'SHA-256' },
-        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-    }, true, ['encrypt', 'decrypt', 'sign', 'verify']);
-    return {
-        publicKey: arrayBufferToString(await crypto.subtle.exportKey('pkcs8', publicKey)),
-        privateKey: arrayBufferToString(await crypto.subtle.exportKey('pkcs8', privateKey)),
-    };
+    return await new Promise((resolve, reject) => {
+        const options = {
+            modulusLength: 2048,
+            publicKeyEncoding: {
+                type: 'pkcs1',
+                format: 'pem'
+            },
+            privateKeyEncoding: {
+                type: 'pkcs8',
+                format: 'pem'
+            }
+        };
+        crypto.generateKeyPair('rsa', options, (error, publicKey, privateKey) => {
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve({
+                    publicKey,
+                    privateKey,
+                });
+            }
+        });
+    });
 }
 exports.generateKeyPair = generateKeyPair;
-function arrayBufferToString(buffer) {
-    var bufView = new Uint16Array(buffer);
-    var length = bufView.length;
-    var result = '';
-    var addition = Math.pow(2, 16) - 1;
-    for (var i = 0; i < length; i += addition) {
-        if (i + addition > length) {
-            addition = length - i;
-        }
-        result += String.fromCharCode.apply(null, bufView.subarray(i, i + addition));
-    }
-    return result;
-}
 //# sourceMappingURL=generateKeyPair.js.map
