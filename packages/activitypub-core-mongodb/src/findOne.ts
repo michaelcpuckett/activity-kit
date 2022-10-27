@@ -18,7 +18,5 @@ export async function findOne(
 
   delete (value as Partial<typeof value>)._id;
 
-  return getTypedEntity(
-    convertStringsToUrls(value) as AP.Entity,
-  );
+  return convertStringsToUrls(value) as AP.Entity;
 }

@@ -8,7 +8,7 @@ async function findOne(collection, matchingObject) {
         return null;
     }
     delete value._id;
-    return (0, activitypub_core_utilities_1.getTypedEntity)((0, activitypub_core_utilities_1.convertStringsToUrls)(value));
+    return (0, activitypub_core_utilities_1.convertStringsToUrls)(value);
 }
 exports.findOne = findOne;
 //# sourceMappingURL=findOne.js.map
