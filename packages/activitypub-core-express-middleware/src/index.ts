@@ -10,7 +10,7 @@ import {
   webfingerHandler,
   uploadMediaHandler,
 } from 'activitypub-core-endpoints';
-import { AP } from 'activitypub-core-types';
+import { AP, Plugin } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
 import type { Database, Auth, Storage } from 'activitypub-core-types';
 import {
@@ -41,18 +41,20 @@ export const activityPub =
       databaseService,
       deliveryService,
       storageService,
+      plugins,
     }: {
       authenticationService: Auth;
       databaseService: Database;
       deliveryService: DeliveryService;
       storageService: Storage;
+      plugins?: Plugin[];
     },
   ) =>
     async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
       console.log('INCOMING:', req.url, 'FROM:', req.headers.referer ?? req.socket.remoteAddress);
 
       if (req.url === '/user' && req.method === 'POST') {
-        await userPostHandler(req, res, authenticationService, databaseService);
+        await userPostHandler(req, res, authenticationService, databaseService, plugins);
         next();
         return;
       }
@@ -113,6 +115,7 @@ export const activityPub =
           authenticationService,
           databaseService,
           deliveryService,
+          plugins,
         );
         if (
           result.props &&

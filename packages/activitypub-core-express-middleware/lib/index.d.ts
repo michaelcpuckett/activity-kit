@@ -1,6 +1,6 @@
 import type { NextFunction } from 'express';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { AP } from 'activitypub-core-types';
+import { AP, Plugin } from 'activitypub-core-types';
 import { DeliveryService } from 'activitypub-core-delivery';
 import type { Database, Auth, Storage } from 'activitypub-core-types';
 export declare const activityPub: ({ renderLogin, renderHome, renderEntity, }: {
@@ -12,9 +12,10 @@ export declare const activityPub: ({ renderLogin, renderHome, renderEntity, }: {
         entity: AP.Entity;
         actor?: AP.Actor;
     }) => Promise<string>;
-}, { authenticationService, databaseService, deliveryService, storageService, }: {
+}, { authenticationService, databaseService, deliveryService, storageService, plugins, }: {
     authenticationService: Auth;
     databaseService: Database;
     deliveryService: DeliveryService;
     storageService: Storage;
+    plugins?: Plugin[];
 }) => (req: IncomingMessage, res: ServerResponse, next: NextFunction) => Promise<void>;

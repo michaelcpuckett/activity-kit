@@ -5,7 +5,7 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
 const activitypub_core_types_1 = require("activitypub-core-types");
-async function createUserActor(databaseService, user) {
+async function createUserActor(databaseService, user, plugins) {
     const { publicKey, privateKey } = await (0, activitypub_core_utilities_2.generateKeyPair)();
     const id = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/actor/${user.preferredUsername}`;
     const publishedDate = new Date();
@@ -199,7 +199,7 @@ async function createUserActor(databaseService, user) {
         shares: createActorActivityShares.id,
         published: publishedDate,
     };
-    if (this.plugins) {
+    if (plugins) {
         for (const plugin of this.plugins) {
             if ('handleCreateUserActor' in plugin) {
                 createActorActivity = await plugin.handleCreateUserActor.call({

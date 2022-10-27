@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.activityPub = void 0;
 const activitypub_core_endpoints_1 = require("activitypub-core-endpoints");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
-const activityPub = ({ renderLogin, renderHome, renderEntity, }, { authenticationService, databaseService, deliveryService, storageService, }) => async (req, res, next) => {
+const activityPub = ({ renderLogin, renderHome, renderEntity, }, { authenticationService, databaseService, deliveryService, storageService, plugins, }) => async (req, res, next) => {
     console.log('INCOMING:', req.url, 'FROM:', req.headers.referer ?? req.socket.remoteAddress);
     if (req.url === '/user' && req.method === 'POST') {
-        await (0, activitypub_core_endpoints_1.userPostHandler)(req, res, authenticationService, databaseService);
+        await (0, activitypub_core_endpoints_1.userPostHandler)(req, res, authenticationService, databaseService, plugins);
         next();
         return;
     }
@@ -36,7 +36,7 @@ const activityPub = ({ renderLogin, renderHome, renderEntity, }, { authenticatio
         return;
     }
     if (req.url.startsWith('/actor/') && req.url.endsWith('/outbox')) {
-        const result = await (0, activitypub_core_endpoints_1.outboxHandler)(req, res, authenticationService, databaseService, deliveryService);
+        const result = await (0, activitypub_core_endpoints_1.outboxHandler)(req, res, authenticationService, databaseService, deliveryService, plugins);
         if (result.props &&
             Object.keys(result.props).length &&
             'entity' in result.props) {

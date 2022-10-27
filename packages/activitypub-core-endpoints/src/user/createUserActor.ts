@@ -5,12 +5,13 @@ import {
   SERVER_ACTOR_ID,
   SHARED_INBOX_ID,
 } from 'activitypub-core-utilities';
-import type { Database } from 'activitypub-core-types';
+import type { Database, Plugin } from 'activitypub-core-types';
 import { AP } from 'activitypub-core-types';
 
 export async function createUserActor(
   databaseService: Database,
   user: { uid: string; email: string; name: string; preferredUsername: string },
+  plugins?: Plugin[]
 ) {
   const { publicKey, privateKey } = await generateKeyPair();
 
@@ -225,7 +226,7 @@ export async function createUserActor(
     published: publishedDate,
   };
 
-  if (this.plugins) {
+  if (plugins) {
     for (const plugin of this.plugins) {
       if ('handleCreateUserActor' in plugin) {
         createActorActivity = await plugin.handleCreateUserActor.call({

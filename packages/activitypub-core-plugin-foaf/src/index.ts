@@ -4,7 +4,7 @@ import { OutboxPostHandler } from 'activitypub-core-endpoints/lib/outbox';
 import { ACTIVITYSTREAMS_CONTEXT, W3ID_SECURITY_CONTEXT } from 'activitypub-core-utilities';
 
 export const foafPlugin = function(config: {
-  newPerson: JSON
+  newPerson?: JSON
 }) {
   return new (class FoafPlugin implements Plugin {
     handleCreateUserActor(this: OutboxPostHandler) {
@@ -12,6 +12,10 @@ export const foafPlugin = function(config: {
     createUserActor(this: {
       activity: AP.Create
     }) {
+      if (!config.newPerson) {
+        return this.activity;
+      }
+
       return {
         ...this.activity,
         '@context': [

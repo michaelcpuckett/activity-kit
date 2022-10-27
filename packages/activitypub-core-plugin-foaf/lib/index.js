@@ -7,6 +7,9 @@ const foafPlugin = function (config) {
         handleCreateUserActor() {
         }
         createUserActor() {
+            if (!config.newPerson) {
+                return this.activity;
+            }
             return {
                 ...this.activity,
                 '@context': [

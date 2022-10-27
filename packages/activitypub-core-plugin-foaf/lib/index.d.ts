@@ -2,12 +2,12 @@
 import { AP } from 'activitypub-core-types';
 import { OutboxPostHandler } from 'activitypub-core-endpoints/lib/outbox';
 export declare const foafPlugin: (config: {
-    newPerson: JSON;
+    newPerson?: JSON;
 }) => {
     handleCreateUserActor(this: OutboxPostHandler): void;
     createUserActor(this: {
         activity: AP.Create;
-    }): {
+    }): AP.Create | {
         '@context': (string | {
             foaf: string;
         })[];

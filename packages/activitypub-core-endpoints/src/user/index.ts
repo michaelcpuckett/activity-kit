@@ -5,7 +5,7 @@ import {
 } from 'activitypub-core-utilities';
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
-import { AP } from 'activitypub-core-types';
+import { AP, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import type { Database, Auth } from 'activitypub-core-types';
 
@@ -14,10 +14,7 @@ export async function userPostHandler(
   res: ServerResponse,
   authenticationService: Auth,
   databaseService: Database,
-  setup?: (
-    actor: AP.Entity,
-    databaseService: Database,
-  ) => Promise<{ actor: AP.Actor }>,
+  plugins?: Plugin[]
 ) {
   const body: { [key: string]: string } = await new Promise(
     (resolve, reject) => {
@@ -73,17 +70,7 @@ export async function userPostHandler(
     email,
     preferredUsername,
     name,
-  });
-
-  if (setup) {
-    const actor = await databaseService.findOne('actor', {
-      preferredUsername,
-    });
-
-    if (actor && 'outbox' in actor) {
-      await setup(actor, databaseService);
-    }
-  }
+  }, plugins);
 
   res.statusCode = 200;
   res.write(

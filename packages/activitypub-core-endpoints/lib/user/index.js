@@ -4,7 +4,7 @@ exports.userPostHandler = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const createServerActor_1 = require("./createServerActor");
 const createUserActor_1 = require("./createUserActor");
-async function userPostHandler(req, res, authenticationService, databaseService, setup) {
+async function userPostHandler(req, res, authenticationService, databaseService, plugins) {
     const body = await new Promise((resolve, reject) => {
         let data = '';
         req.on('data', function (chunk) {
@@ -45,15 +45,7 @@ async function userPostHandler(req, res, authenticationService, databaseService,
         email,
         preferredUsername,
         name,
-    });
-    if (setup) {
-        const actor = await databaseService.findOne('actor', {
-            preferredUsername,
-        });
-        if (actor && 'outbox' in actor) {
-            await setup(actor, databaseService);
-        }
-    }
+    }, plugins);
     res.statusCode = 200;
     res.write(JSON.stringify({
         success: true,
