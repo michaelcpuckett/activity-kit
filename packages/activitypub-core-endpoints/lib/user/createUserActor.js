@@ -200,7 +200,7 @@ async function createUserActor(databaseService, user, plugins) {
         published: publishedDate,
     };
     if (plugins) {
-        for (const plugin of this.plugins) {
+        for (const plugin of plugins) {
             if ('handleCreateUserActor' in plugin) {
                 createActorActivity = await plugin.handleCreateUserActor.call({
                     activity: createActorActivity,

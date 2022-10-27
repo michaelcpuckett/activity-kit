@@ -227,7 +227,7 @@ export async function createUserActor(
   };
 
   if (plugins) {
-    for (const plugin of this.plugins) {
+    for (const plugin of plugins) {
       if ('handleCreateUserActor' in plugin) {
         createActorActivity = await plugin.handleCreateUserActor.call({
           activity: createActorActivity,
