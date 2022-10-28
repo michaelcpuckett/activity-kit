@@ -45,6 +45,9 @@ export class HomeGetEndpoint {
       await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''),
     );
 
+    console.log(actor?.id)
+    console.log('^actor.id');
+
     if (!actor) {
       this.res.statusCode = 302;
       this.res.setHeader('Location', '/login');
@@ -59,16 +62,6 @@ export class HomeGetEndpoint {
     actor.inbox = await this.adapters.db.findEntityById(actor.inbox);
     actor.outbox = await this.adapters.db.findEntityById(actor.outbox);
 
-    let data: {
-      props?: {
-        actor?: AP.Actor;
-      };
-    } = {
-      props: {
-        actor,
-      },
-    };
-
     this.res.statusCode = 200;
 
     if (
@@ -77,12 +70,12 @@ export class HomeGetEndpoint {
       this.req.headers.accept?.includes(JSON_CONTENT_TYPE)
     ) {
       this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
-      this.res.write(stringify(data.props.actor));
+      this.res.write(stringify(actor));
     } else {
       this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
       this.res.write(
         await render({
-          actor: convertUrlsToStrings(data.props.actor) as AP.Actor,
+          actor: convertUrlsToStrings(actor) as AP.Actor,
         }),
       );
     }

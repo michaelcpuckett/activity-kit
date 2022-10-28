@@ -21,6 +21,8 @@ class HomeGetEndpoint {
     async respond(render) {
         const cookies = cookie_1.default.parse(this.req.headers.cookie ?? '');
         const actor = await this.adapters.db.getActorByUserId(await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''));
+        console.log(actor?.id);
+        console.log('^actor.id');
         if (!actor) {
             this.res.statusCode = 302;
             this.res.setHeader('Location', '/login');
@@ -32,22 +34,17 @@ class HomeGetEndpoint {
         }
         actor.inbox = await this.adapters.db.findEntityById(actor.inbox);
         actor.outbox = await this.adapters.db.findEntityById(actor.outbox);
-        let data = {
-            props: {
-                actor,
-            },
-        };
         this.res.statusCode = 200;
         if (this.req.headers.accept?.includes(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE) ||
             this.req.headers.accept?.includes(activitypub_core_utilities_1.LINKED_DATA_CONTENT_TYPE) ||
             this.req.headers.accept?.includes(activitypub_core_utilities_1.JSON_CONTENT_TYPE)) {
             this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);
-            this.res.write((0, activitypub_core_utilities_2.stringify)(data.props.actor));
+            this.res.write((0, activitypub_core_utilities_2.stringify)(actor));
         }
         else {
             this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);
             this.res.write(await render({
-                actor: (0, activitypub_core_utilities_1.convertUrlsToStrings)(data.props.actor),
+                actor: (0, activitypub_core_utilities_1.convertUrlsToStrings)(actor),
             }));
         }
         this.res.end();
