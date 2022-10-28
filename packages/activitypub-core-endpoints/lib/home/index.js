@@ -22,12 +22,10 @@ class HomeGetEndpoint {
         const cookies = cookie_1.default.parse(this.req.headers.cookie ?? '');
         const actor = await this.adapters.db.getActorByUserId(await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''));
         if (!actor) {
-            return {
-                redirect: {
-                    permanent: false,
-                    destination: '/',
-                },
-            };
+            this.res.statusCode = 302;
+            this.res.setHeader('Location', '/login');
+            this.res.end();
+            return;
         }
         if (!actor.inbox || !actor.outbox) {
             throw new Error('Bad actor.');

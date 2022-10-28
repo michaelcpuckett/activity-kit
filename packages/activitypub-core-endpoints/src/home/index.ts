@@ -46,13 +46,10 @@ export class HomeGetEndpoint {
     );
 
     if (!actor) {
-      // TODO!
-      return {
-        redirect: {
-          permanent: false,
-          destination: '/',
-        },
-      };
+      this.res.statusCode = 302;
+      this.res.setHeader('Location', '/login');
+      this.res.end();
+      return;
     }
 
     if (!actor.inbox || !actor.outbox) {

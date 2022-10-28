@@ -15,10 +15,5 @@ export declare class HomeGetEndpoint {
         auth: AuthAdapter;
         db: DbAdapter;
     }, plugins?: Plugin[]);
-    respond(render: Function): Promise<{
-        redirect: {
-            permanent: boolean;
-            destination: string;
-        };
-    }>;
+    respond(render: Function): Promise<void>;
 }
