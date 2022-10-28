@@ -1,4 +1,5 @@
 import { AP } from 'activitypub-core-types';
+import { PUBLIC_ACTOR } from './globals';
 
 export function convertStringsToUrls(originalEntity: {
   [key: string]: unknown;
@@ -11,6 +12,9 @@ export function convertStringsToUrls(originalEntity: {
     }
 
     if (typeof value === 'string') {
+      if (value === 'as:Public') {
+        entity[key] = new URL(PUBLIC_ACTOR);
+      }
       try {
         if (value.startsWith('http')) {
           entity[key] = new URL(value);
@@ -29,6 +33,10 @@ export function convertStringsToUrls(originalEntity: {
     } else if (Array.isArray(value)) {
       entity[key] = value.map((item) => {
         if (typeof item === 'string') {
+          if (item === 'as:Public') {
+            return new URL(PUBLIC_ACTOR);
+          }
+
           try {
             if (item.startsWith('http')) {
               return new URL(item);

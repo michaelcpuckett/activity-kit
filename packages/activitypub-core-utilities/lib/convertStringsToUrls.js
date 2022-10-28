@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.convertStringsToUrls = void 0;
+const globals_1 = require("./globals");
 function convertStringsToUrls(originalEntity) {
     const entity = { ...originalEntity };
     for (const [key, value] of Object.entries(entity)) {
@@ -8,6 +9,9 @@ function convertStringsToUrls(originalEntity) {
             continue;
         }
         if (typeof value === 'string') {
+            if (value === 'as:Public') {
+                entity[key] = new URL(globals_1.PUBLIC_ACTOR);
+            }
             try {
                 if (value.startsWith('http')) {
                     entity[key] = new URL(value);
@@ -29,6 +33,9 @@ function convertStringsToUrls(originalEntity) {
         else if (Array.isArray(value)) {
             entity[key] = value.map((item) => {
                 if (typeof item === 'string') {
+                    if (item === 'as:Public') {
+                        return new URL(globals_1.PUBLIC_ACTOR);
+                    }
                     try {
                         if (item.startsWith('http')) {
                             return new URL(item);
