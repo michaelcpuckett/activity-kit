@@ -1,2 +1,2 @@
-import { FirebaseAuthenticationAdapter } from '.';
-export declare function getUserIdByToken(this: FirebaseAuthenticationAdapter, token: string): Promise<string | null>;
+import { FirebaseAuthAdapter } from '.';
+export declare function getUserIdByToken(this: FirebaseAuthAdapter, token: string): Promise<string | null>;

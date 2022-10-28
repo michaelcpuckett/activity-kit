@@ -1,6 +1,5 @@
-import { DB_NAME } from 'activitypub-core-utilities';
 import fetch from 'isomorphic-fetch';
-import { Db, MongoClient } from 'mongodb';
+import { Db } from 'mongodb';
 
 import { findOne } from './findOne';
 import { findEntityById } from './findEntityById';
@@ -21,15 +20,17 @@ import { getCollectionItems } from './getCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
-import type { Database, DatabaseAdapter } from 'activitypub-core-types';
+import type { DbAdapter } from 'activitypub-core-types';
 
-export class MongoDatabaseAdapterDb implements Database {
+export class MongoDbAdapter implements DbAdapter {
   db: Db;
   fetch: Function;
 
-  constructor(db: Db, fetchFn?: Function) {
+  constructor(db: Db, adapters?: {
+    fetch?: Function
+  }) {
     this.db = db;
-    this.fetch = fetchFn ?? fetch;
+    this.fetch = adapters?.fetch ?? fetch;
   }
 
   // Find.
@@ -66,21 +67,4 @@ export class MongoDatabaseAdapterDb implements Database {
   public expandEntity = expandEntity;
   public getCollectionItems = getCollectionItems;
   public expandCollection = expandCollection;
-}
-
-export class MongoDatabaseAdapter implements DatabaseAdapter {
-  async connect({
-    mongoClientUrl,
-    dbName,
-  }: {
-    mongoClientUrl: string;
-    dbName?: string;
-  }) {
-    const client = new MongoClient(mongoClientUrl, {
-      minPoolSize: 10,
-    });
-    await client.connect();
-    const db = client.db(dbName ?? DB_NAME);
-    return new MongoDatabaseAdapterDb(db, fetch);
-  }
 }

@@ -29,7 +29,7 @@ export async function handleAdd(
   }
 
   // Only find local targets
-  const target = await this.adapters.database.findEntityById(targetId);
+  const target = await this.adapters.db.findEntityById(targetId);
 
   if (!target) {
     throw new Error('Bad target: not found, only local allowed.');
@@ -38,9 +38,9 @@ export async function handleAdd(
   // TODO: Check if actor "owns" this collection.
 
   if ('orderedItems' in target && Array.isArray(target.orderedItems)) {
-    await this.adapters.database.insertOrderedItem(targetId, objectId);
+    await this.adapters.db.insertOrderedItem(targetId, objectId);
   } else if ('items' in target && Array.isArray(target.items)) {
-    await this.adapters.database.insertItem(targetId, objectId);
+    await this.adapters.db.insertItem(targetId, objectId);
   } else {
     throw new Error('Bad target: not a collection.');
   }

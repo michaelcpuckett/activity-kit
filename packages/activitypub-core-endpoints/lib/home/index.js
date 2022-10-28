@@ -20,7 +20,7 @@ class HomeGetEndpoint {
     }
     async respond(render) {
         const cookies = cookie_1.default.parse(this.req.headers.cookie ?? '');
-        const actor = await this.adapters.database.getActorByUserId(await this.adapters.authentication.getUserIdByToken(cookies.__session ?? ''));
+        const actor = await this.adapters.db.getActorByUserId(await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''));
         if (!actor) {
             return {
                 redirect: {
@@ -32,8 +32,8 @@ class HomeGetEndpoint {
         if (!actor.inbox || !actor.outbox) {
             throw new Error('Bad actor.');
         }
-        actor.inbox = await this.adapters.database.findEntityById(actor.inbox);
-        actor.outbox = await this.adapters.database.findEntityById(actor.outbox);
+        actor.inbox = await this.adapters.db.findEntityById(actor.inbox);
+        actor.outbox = await this.adapters.db.findEntityById(actor.outbox);
         let data = {
             props: {
                 actor,

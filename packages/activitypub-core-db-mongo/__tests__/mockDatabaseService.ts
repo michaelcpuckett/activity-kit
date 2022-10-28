@@ -1,7 +1,7 @@
 import { Db } from 'mongodb';
 import { MongoDatabase } from '../src';
 
-export function mockDatabaseAdapter({
+export function mockDbAdapter({
   getActorByToken,
   getPrivateKey,
   db,
@@ -49,8 +49,8 @@ export function mockDatabaseAdapter({
   return new ExtendedDatabase(mockDbInstance, fetchMock);
 }
 
-describe('mockDatabaseAdapter', () => {
+describe('mockDbAdapter', () => {
   it('works', () => {
-    expect(mockDatabaseAdapter).toBeTruthy();
+    expect(mockDbAdapter).toBeTruthy();
   });
 });

@@ -1,8 +1,8 @@
-import { FirebaseAuthenticationAdapter } from '.';
+import { FirebaseAuthAdapter } from '.';
 import * as firebaseAdmin from 'firebase-admin';
 
 export async function getUserIdByToken(
-  this: FirebaseAuthenticationAdapter,
+  this: FirebaseAuthAdapter,
   token: string,
 ): Promise<string | null> {
   if (!firebaseAdmin.apps.length) {

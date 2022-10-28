@@ -1,6 +1,6 @@
 import { AP, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
-import type { Database, Auth } from 'activitypub-core-types';
+import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
 import { getActor } from './getActor';
 import { saveActivity } from './saveActivity';
 import { parseBody } from './parseBody';
@@ -19,8 +19,8 @@ export class InboxPostEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
   adapters: {
-    authentication: Auth;
-    database: Database;
+    auth: AuthAdapter;
+    db: DbAdapter;
     delivery: DeliveryAdapter;
   };
   plugins?: Plugin[];
@@ -32,8 +32,8 @@ export class InboxPostEndpoint {
     req: IncomingMessage,
     res: ServerResponse,
     adapters: {
-      authentication: Auth;
-      database: Database;
+      auth: AuthAdapter;
+      db: DbAdapter;
       delivery: DeliveryAdapter;
     },
     plugins?: Plugin[],

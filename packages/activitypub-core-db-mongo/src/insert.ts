@@ -1,8 +1,8 @@
-import { MongoDatabaseAdapterDb } from '.';
+import { MongoDbAdapter } from '.';
 import { getCollectionNameByUrl } from 'activitypub-core-utilities';
 
 export async function insertOrderedItem(
-  this: MongoDatabaseAdapterDb,
+  this: MongoDbAdapter,
   path: URL,
   url: URL,
 ) {
@@ -29,7 +29,7 @@ export async function insertOrderedItem(
 }
 
 export async function removeOrderedItem(
-  this: MongoDatabaseAdapterDb,
+  this: MongoDbAdapter,
   path: URL,
   url: URL,
 ) {
@@ -52,7 +52,7 @@ export async function removeOrderedItem(
   );
 }
 
-export async function insertItem(this: MongoDatabaseAdapterDb, path: URL, url: URL) {
+export async function insertItem(this: MongoDbAdapter, path: URL, url: URL) {
   const collectionName = getCollectionNameByUrl(path);
   await this.db.collection(collectionName).updateOne(
     {
@@ -74,7 +74,7 @@ export async function insertItem(this: MongoDatabaseAdapterDb, path: URL, url: U
   );
 }
 
-export async function removeItem(this: MongoDatabaseAdapterDb, path: URL, url: URL) {
+export async function removeItem(this: MongoDbAdapter, path: URL, url: URL) {
   const collectionName = getCollectionNameByUrl(path);
   await this.db.collection(collectionName).updateOne(
     {

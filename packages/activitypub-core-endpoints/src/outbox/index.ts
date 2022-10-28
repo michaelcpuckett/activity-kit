@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import type { Auth, Database, Plugin } from 'activitypub-core-types';
+import type { AuthAdapter, DbAdapter, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import {
   isTypeOf,
@@ -30,8 +30,8 @@ export class OutboxPostEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
   adapters: {
-    authentication: Auth;
-    database: Database;
+    auth: AuthAdapter;
+    db: DbAdapter;
     delivery: DeliveryAdapter;
   };
   plugins?: Plugin[];
@@ -43,8 +43,8 @@ export class OutboxPostEndpoint {
     req: IncomingMessage,
     res: ServerResponse,
     adapters: {
-      authentication: Auth;
-      database: Database;
+      auth: AuthAdapter;
+      db: DbAdapter;
       delivery: DeliveryAdapter;
     },
     plugins?: Plugin[],
@@ -72,9 +72,7 @@ export class OutboxPostEndpoint {
           const objectId = getId(this.activity.object);
 
           if (objectId) {
-            const remoteObject = await this.adapters.database.queryById(
-              objectId,
-            );
+            const remoteObject = await this.adapters.db.queryById(objectId);
 
             if (!remoteObject) {
               throw new Error('Bad object: Object with ID does not exist!');

@@ -6,12 +6,12 @@ export async function getPrivateKey(this: DeliveryAdapter, actor: AP.Actor) {
     throw new Error('Actor has no `preferredUsername`.');
   }
 
-  const userId = await this.adapters.database.findStringIdByValue(
+  const userId = await this.adapters.db.findStringIdByValue(
     'username',
     actor.preferredUsername,
   );
 
-  const privateKey = await this.adapters.database.findStringValueById(
+  const privateKey = await this.adapters.db.findStringValueById(
     'private-key',
     userId,
   );

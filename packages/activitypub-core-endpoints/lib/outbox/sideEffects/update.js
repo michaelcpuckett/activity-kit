@@ -10,7 +10,7 @@ async function handleUpdate() {
     if (!actorId) {
         throw new Error('Bad actor: no ID.');
     }
-    const actor = await this.adapters.database.findEntityById(actorId);
+    const actor = await this.adapters.db.findEntityById(actorId);
     if (!actor) {
         throw new Error('Bad actor: not found.');
     }
@@ -27,7 +27,7 @@ async function handleUpdate() {
     if (!objectId) {
         throw new Error('Bad object: no ID.');
     }
-    const object = await this.adapters.database.findEntityById(objectId);
+    const object = await this.adapters.db.findEntityById(objectId);
     if (!object) {
         throw new Error('Bad object: Not found.');
     }
@@ -40,7 +40,7 @@ async function handleUpdate() {
             }
             : null),
     };
-    await this.adapters.database.saveEntity(this.activity.object);
+    await this.adapters.db.saveEntity(this.activity.object);
 }
 exports.handleUpdate = handleUpdate;
 function isActorAuthorizedToModifyObject(initiator, activity) {

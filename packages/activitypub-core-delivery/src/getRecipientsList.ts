@@ -15,7 +15,7 @@ export async function getRecipientsList(
     await Promise.all(
       filteredToArray.map(async (reference) => {
         if (reference instanceof URL) {
-          const foundThing = await this.adapters.database.queryById(reference);
+          const foundThing = await this.adapters.db.queryById(reference);
 
           if (!foundThing) {
             return null;
@@ -53,8 +53,9 @@ export async function getRecipientsList(
               isType(foundThing, AP.CollectionTypes.ORDERED_COLLECTION))
           ) {
             if (foundThing.first) {
-              const foundCollectionPage =
-                await this.adapters.database.queryById(foundThing.first);
+              const foundCollectionPage = await this.adapters.db.queryById(
+                foundThing.first,
+              );
 
               if (
                 typeof foundCollectionPage === 'object' &&

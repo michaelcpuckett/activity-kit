@@ -1,7 +1,7 @@
-import { MongoDatabaseAdapterDb } from '.';
+import { MongoDbAdapter } from '.';
 
 export async function saveString(
-  this: MongoDatabaseAdapterDb,
+  this: MongoDbAdapter,
   dbCollection: string,
   _id: string,
   value: string,

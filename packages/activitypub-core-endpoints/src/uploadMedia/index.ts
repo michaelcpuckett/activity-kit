@@ -1,5 +1,5 @@
 import { AP, Plugin } from 'activitypub-core-types';
-import type { Auth, Database, Storage } from 'activitypub-core-types';
+import type { AuthAdapter, DbAdapter, StorageAdapter } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import formidable from 'formidable';
 import { getActor } from './getActor';
@@ -12,9 +12,9 @@ export class UploadMediaPostEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
   adapters: {
-    authentication: Auth;
-    database: Database;
-    storage: Storage;
+    auth: AuthAdapter;
+    db: DbAdapter;
+    storage: StorageAdapter;
   };
   plugins?: Plugin[];
 
@@ -36,9 +36,9 @@ export class UploadMediaPostEndpoint {
     req: IncomingMessage,
     res: ServerResponse,
     adapters: {
-      authentication: Auth;
-      database: Database;
-      storage: Storage;
+      auth: AuthAdapter;
+      db: DbAdapter;
+      storage: StorageAdapter;
     },
     plugins?: Plugin[],
   ) {

@@ -5,12 +5,12 @@ export type Plugin = {
   handleOutboxActivity?: Function;
 };
 
-export type Auth = {
+export type AuthAdapter = {
   createUser: Function;
-  getUserIdByToken: (...args: unknown[]) => Promise<string | null>;
+  getUserIdByToken: Function;
 };
 
-export type Database = {
+export type DbAdapter = {
   expandCollection: Function;
   expandEntity: Function;
   fetchEntityById: Function;
@@ -30,10 +30,6 @@ export type Database = {
   saveString: Function;
 };
 
-export interface DatabaseAdapter {
-  connect(config?: { [key: string]: unknown }): Promise<Database>;
-}
-
-export interface Storage {
-  upload: (...args: unknown[]) => Promise<URL>;
+export interface StorageAdapter {
+  upload: Function;
 }

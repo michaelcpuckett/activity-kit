@@ -11,7 +11,7 @@ export async function handleCreate(this: InboxPostEndpoint) {
   const object = activity.object;
 
   if ('inReplyTo' in object && object.inReplyTo) {
-    const objectInReplyTo = await this.adapters.database.findEntityById(
+    const objectInReplyTo = await this.adapters.db.findEntityById(
       getId(object.inReplyTo),
     );
 
@@ -19,7 +19,7 @@ export async function handleCreate(this: InboxPostEndpoint) {
       const repliesCollectionId = getId(objectInReplyTo.replies);
 
       if (repliesCollectionId) {
-        await this.adapters.database.insertOrderedItem(
+        await this.adapters.db.insertOrderedItem(
           repliesCollectionId,
           object.id,
         );

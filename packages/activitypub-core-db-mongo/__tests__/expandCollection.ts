@@ -1,8 +1,8 @@
-import { mockDatabaseAdapter } from './mockDatabaseAdapter';
+import { mockDbAdapter } from './mockDbAdapter';
 import { AP } from 'activitypub-core-types';
 import { Db } from 'mongodb';
 
-describe('DatabaseAdapter', () => {
+describe('DbAdapter', () => {
   describe('getCollectionItems', () => {
     const collection1Url = 'https://test.com/activity/123';
     const collection1Result: AP.Collection = {
@@ -30,7 +30,7 @@ describe('DatabaseAdapter', () => {
       content: 'Test2',
     };
 
-    const databaseAdapter = mockDatabaseAdapter({
+    const dbAdapter = mockDbAdapter({
       db: {
         findOne: jest.fn((matchingObject: { [key: string]: unknown }) => {
           if (matchingObject._id === collection1Url) {
@@ -60,9 +60,7 @@ describe('DatabaseAdapter', () => {
     });
 
     it('handles local URLs', async () => {
-      const result = await databaseAdapter.expandCollection(
-        new URL(collection1Url),
-      );
+      const result = await dbAdapter.expandCollection(new URL(collection1Url));
       expect(result).toStrictEqual({
         ...collection1Result,
         items: [item1Result, item2Result],

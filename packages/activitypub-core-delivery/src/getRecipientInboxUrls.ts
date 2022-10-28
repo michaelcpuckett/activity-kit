@@ -23,7 +23,7 @@ export async function getRecipientInboxUrls(
         return null;
       }
 
-      const foundThing = await this.adapters.database.queryById(recipient);
+      const foundThing = await this.adapters.db.queryById(recipient);
 
       if (!foundThing) {
         return null;

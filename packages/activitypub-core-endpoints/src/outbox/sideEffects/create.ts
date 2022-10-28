@@ -87,14 +87,14 @@ export async function handleCreate(this: OutboxPostEndpoint) {
     typedObject.published = publishedDate;
 
     await Promise.all([
-      this.adapters.database.saveEntity(object),
-      this.adapters.database.saveEntity(objectReplies),
-      this.adapters.database.saveEntity(objectLikes),
-      this.adapters.database.saveEntity(objectShares),
+      this.adapters.db.saveEntity(object),
+      this.adapters.db.saveEntity(objectReplies),
+      this.adapters.db.saveEntity(objectLikes),
+      this.adapters.db.saveEntity(objectShares),
     ]);
 
     if (typedObject.inReplyTo) {
-      const objectInReplyTo = await this.adapters.database.findEntityById(
+      const objectInReplyTo = await this.adapters.db.findEntityById(
         getId(typedObject.inReplyTo),
       );
 
@@ -102,7 +102,7 @@ export async function handleCreate(this: OutboxPostEndpoint) {
         const repliesCollectionId = getId(objectInReplyTo.replies);
 
         if (repliesCollectionId) {
-          await this.adapters.database.insertOrderedItem(
+          await this.adapters.db.insertOrderedItem(
             repliesCollectionId,
             typedObject.id,
           );
@@ -111,7 +111,7 @@ export async function handleCreate(this: OutboxPostEndpoint) {
     }
   } else {
     // Link case.
-    await Promise.all([this.adapters.database.saveEntity(object)]);
+    await Promise.all([this.adapters.db.saveEntity(object)]);
   }
 
   this.activity.object = object;

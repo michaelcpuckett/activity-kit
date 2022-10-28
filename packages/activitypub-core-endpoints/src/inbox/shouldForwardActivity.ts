@@ -38,7 +38,7 @@ export async function shouldForwardActivity(this: InboxPostEndpoint) {
       continue;
     }
 
-    const foundItem = await this.adapters.database.findEntityById(addresseeId);
+    const foundItem = await this.adapters.db.findEntityById(addresseeId);
 
     if (!foundItem) {
       continue;
@@ -87,7 +87,7 @@ export async function shouldForwardActivity(this: InboxPostEndpoint) {
       continue;
     }
 
-    const foundItem = await this.adapters.database.findEntityById(objectId);
+    const foundItem = await this.adapters.db.findEntityById(objectId);
 
     if (!foundItem) {
       continue;

@@ -1,4 +1,4 @@
 /// <reference types="node" />
-import { MongoDatabaseAdapterDb } from '.';
+import { MongoDbAdapter } from '.';
 import { AP } from 'activitypub-core-types';
-export declare function findEntityById(this: MongoDatabaseAdapterDb, id: URL): Promise<AP.Entity | null>;
+export declare function findEntityById(this: MongoDbAdapter, id: URL): Promise<AP.Entity | null>;

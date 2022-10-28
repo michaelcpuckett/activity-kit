@@ -1,12 +1,12 @@
 import * as firebaseAdmin from 'firebase-admin';
-import { FirebaseAuthenticationAdapter } from '.';
+import { FirebaseAuthAdapter } from '.';
 
 export async function createUser({
   email,
   password,
   preferredUsername,
 }: {
-  this: FirebaseAuthenticationAdapter;
+  this: FirebaseAuthAdapter;
   email: string;
   password: string;
   preferredUsername: string;

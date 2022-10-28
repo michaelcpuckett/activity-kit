@@ -6,14 +6,14 @@ import {
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
 import type { IncomingMessage, ServerResponse } from 'http';
-import type { Database, Auth, Plugin } from 'activitypub-core-types';
+import type { DbAdapter, AuthAdapter, Plugin } from 'activitypub-core-types';
 
 export class UserPostEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
   adapters: {
-    authentication: Auth;
-    database: Database;
+    auth: AuthAdapter;
+    db: DbAdapter;
   };
   plugins?: Plugin[];
 
@@ -21,8 +21,8 @@ export class UserPostEndpoint {
     req: IncomingMessage,
     res: ServerResponse,
     adapters: {
-      authentication: Auth;
-      database: Database;
+      auth: AuthAdapter;
+      db: DbAdapter;
     },
     plugins?: Plugin[],
   ) {
@@ -56,7 +56,7 @@ export class UserPostEndpoint {
 
     const { email, password, name, preferredUsername } = body;
 
-    const isUsernameTaken = !!(await this.adapters.database.findOne('actor', {
+    const isUsernameTaken = !!(await this.adapters.db.findOne('actor', {
       preferredUsername,
     }));
 
@@ -71,13 +71,13 @@ export class UserPostEndpoint {
       return;
     }
 
-    const user = await this.adapters.authentication.createUser({
+    const user = await this.adapters.auth.createUser({
       email,
       password,
       preferredUsername,
     });
 
-    const isBotCreated = !!(await this.adapters.database.findOne('actor', {
+    const isBotCreated = !!(await this.adapters.db.findOne('actor', {
       preferredUsername: SERVER_ACTOR_USERNAME,
     }));
 

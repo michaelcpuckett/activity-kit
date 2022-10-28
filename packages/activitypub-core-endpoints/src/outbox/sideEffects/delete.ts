@@ -18,7 +18,7 @@ export async function handleDelete(
     throw new Error('Bad object: not ID.');
   }
 
-  const object = await this.adapters.database.findEntityById(objectId);
+  const object = await this.adapters.db.findEntityById(objectId);
 
   if (!object || !object.type) {
     throw new Error('Bad object: not found.');
@@ -37,5 +37,5 @@ export async function handleDelete(
       : null),
   };
 
-  await this.adapters.database.saveEntity(activity.object);
+  await this.adapters.db.saveEntity(activity.object);
 }

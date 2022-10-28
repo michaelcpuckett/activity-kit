@@ -1,9 +1,9 @@
-import { MongoDatabaseAdapterDb } from '.';
+import { MongoDbAdapter } from '.';
 import { AP } from 'activitypub-core-types';
 import { getCollectionNameByUrl } from 'activitypub-core-utilities';
 
 export async function findEntityById(
-  this: MongoDatabaseAdapterDb,
+  this: MongoDbAdapter,
   id: URL,
 ): Promise<AP.Entity | null> {
   const collectionName = getCollectionNameByUrl(id);

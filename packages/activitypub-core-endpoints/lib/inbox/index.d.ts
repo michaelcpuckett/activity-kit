@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { AP, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
-import type { Database, Auth } from 'activitypub-core-types';
+import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
 import { getActor } from './getActor';
 import { saveActivity } from './saveActivity';
 import { parseBody } from './parseBody';
@@ -18,16 +18,16 @@ export declare class InboxPostEndpoint {
     req: IncomingMessage;
     res: ServerResponse;
     adapters: {
-        authentication: Auth;
-        database: Database;
+        auth: AuthAdapter;
+        db: DbAdapter;
         delivery: DeliveryAdapter;
     };
     plugins?: Plugin[];
     actor: AP.Actor | null;
     activity: AP.Entity | null;
     constructor(req: IncomingMessage, res: ServerResponse, adapters: {
-        authentication: Auth;
-        database: Database;
+        auth: AuthAdapter;
+        db: DbAdapter;
         delivery: DeliveryAdapter;
     }, plugins?: Plugin[]);
     protected getActor: typeof getActor;

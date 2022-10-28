@@ -13,11 +13,13 @@ import { getCollectionItems } from './getCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
-import type { Database, DatabaseAdapter } from 'activitypub-core-types';
-export declare class MongoDatabaseAdapterDb implements Database {
+import type { DbAdapter } from 'activitypub-core-types';
+export declare class MongoDbAdapter implements DbAdapter {
     db: Db;
     fetch: Function;
-    constructor(db: Db, fetchFn?: Function);
+    constructor(db: Db, adapters?: {
+        fetch?: Function;
+    });
     findOne: typeof findOne;
     findAll: typeof findAll;
     findEntityById: typeof findEntityById;
@@ -35,10 +37,4 @@ export declare class MongoDatabaseAdapterDb implements Database {
     expandEntity: typeof expandEntity;
     getCollectionItems: typeof getCollectionItems;
     expandCollection: typeof expandCollection;
-}
-export declare class MongoDatabaseAdapter implements DatabaseAdapter {
-    connect({ mongoClientUrl, dbName, }: {
-        mongoClientUrl: string;
-        dbName?: string;
-    }): Promise<MongoDatabaseAdapterDb>;
 }

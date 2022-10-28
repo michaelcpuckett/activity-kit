@@ -39,8 +39,8 @@ class EntityGetEndpoint {
     }
     async respond(render) {
         const cookies = cookie_1.default.parse(this.req.headers.cookie ?? '');
-        const authorizedActor = await this.adapters.database.getActorByUserId(await this.adapters.authentication.getUserIdByToken(cookies.__session ?? ''));
-        const entity = await this.adapters.database.findEntityById(this.url);
+        const authorizedActor = await this.adapters.db.getActorByUserId(await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''));
+        const entity = await this.adapters.db.findEntityById(this.url);
         if (!entity) {
             return this.handleNotFound();
         }

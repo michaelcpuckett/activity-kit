@@ -20,7 +20,7 @@ export async function handleUndoLike(
     throw new Error('Bad actor: no ID.');
   }
 
-  const actor = await this.adapters.database.queryById(actorId);
+  const actor = await this.adapters.db.queryById(actorId);
 
   if (!actor || !('outbox' in actor)) {
     throw new Error('Bad actor: not found.');
@@ -32,7 +32,7 @@ export async function handleUndoLike(
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.adapters.database.queryById(objectId);
+  const object = await this.adapters.db.queryById(objectId);
 
   if (!object) {
     throw new Error('Bad object: not found.');
@@ -59,7 +59,7 @@ export async function handleUndoLike(
   }
 
   await Promise.all([
-    this.adapters.database.removeOrderedItem(likesId, activity.id),
-    this.adapters.database.removeOrderedItem(likedId, object.id),
+    this.adapters.db.removeOrderedItem(likesId, activity.id),
+    this.adapters.db.removeOrderedItem(likedId, object.id),
   ]);
 }

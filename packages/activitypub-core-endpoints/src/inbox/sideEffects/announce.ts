@@ -15,7 +15,7 @@ export async function handleAnnounce(this: InboxPostEndpoint) {
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.adapters.database.findEntityById(objectId);
+  const object = await this.adapters.db.findEntityById(objectId);
 
   if (!object || !object.type || !object.id) {
     // Not applicable.
@@ -33,15 +33,15 @@ export async function handleAnnounce(this: InboxPostEndpoint) {
     throw new Error('Bad shares collection: no ID.');
   }
 
-  const shares = await this.adapters.database.findEntityById(sharesId);
+  const shares = await this.adapters.db.findEntityById(sharesId);
 
   if (!shares) {
     throw new Error('Bad shares collection: not found');
   }
 
   if (isType(shares, AP.CollectionTypes.COLLECTION)) {
-    await this.adapters.database.insertItem(sharesId, activity.id);
+    await this.adapters.db.insertItem(sharesId, activity.id);
   } else if (isType(shares.type, AP.CollectionTypes.ORDERED_COLLECTION)) {
-    await this.adapters.database.insertOrderedItem(sharesId, activity.id);
+    await this.adapters.db.insertOrderedItem(sharesId, activity.id);
   }
 }

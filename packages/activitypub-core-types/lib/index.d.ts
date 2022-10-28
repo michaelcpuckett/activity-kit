@@ -1,14 +1,13 @@
-/// <reference types="node" />
 export * as AP from './activitypub';
 export declare type Plugin = {
     handleCreateUserActor?: Function;
     handleOutboxActivity?: Function;
 };
-export declare type Auth = {
+export declare type AuthAdapter = {
     createUser: Function;
-    getUserIdByToken: (...args: unknown[]) => Promise<string | null>;
+    getUserIdByToken: Function;
 };
-export declare type Database = {
+export declare type DbAdapter = {
     expandCollection: Function;
     expandEntity: Function;
     fetchEntityById: Function;
@@ -27,11 +26,6 @@ export declare type Database = {
     saveEntity: Function;
     saveString: Function;
 };
-export interface DatabaseAdapter {
-    connect(config?: {
-        [key: string]: unknown;
-    }): Promise<Database>;
-}
-export interface Storage {
-    upload: (...args: unknown[]) => Promise<URL>;
+export interface StorageAdapter {
+    upload: Function;
 }

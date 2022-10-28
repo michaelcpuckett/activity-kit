@@ -1,12 +1,12 @@
 import { Db } from 'mongodb';
-import { mockDatabaseAdapter } from './mockDatabaseAdapter';
+import { mockDbAdapter } from './mockDbAdapter';
 
-describe('DatabaseAdapter', () => {
+describe('DbAdapter', () => {
   describe('findStringValueById', () => {
     const stringId = 'https://test.com/123';
     const stringValue = 'Hello world';
 
-    const databaseAdapter = mockDatabaseAdapter({
+    const dbAdapter = mockDbAdapter({
       db: {
         findOne: jest.fn(() => ({
           _id: stringId,
@@ -16,13 +16,10 @@ describe('DatabaseAdapter', () => {
     });
 
     it('should get value', async () => {
-      const foundItem = await databaseAdapter.findStringValueById(
-        'foobar',
-        stringId,
-      );
+      const foundItem = await dbAdapter.findStringValueById('foobar', stringId);
 
       expect(foundItem).toBe(stringValue);
-      expect(databaseAdapter.db.collection).toBeCalledWith('foobar');
+      expect(dbAdapter.db.collection).toBeCalledWith('foobar');
     });
   });
 });

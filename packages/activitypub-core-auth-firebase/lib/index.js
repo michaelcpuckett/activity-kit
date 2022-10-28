@@ -23,11 +23,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FirebaseAuthenticationAdapter = void 0;
+exports.FirebaseAuthAdapter = void 0;
 const firebaseAdmin = __importStar(require("firebase-admin"));
 const createUser_1 = require("./createUser");
 const getUserIdByToken_1 = require("./getUserIdByToken");
-class FirebaseAuthenticationAdapter {
+class FirebaseAuthAdapter {
     appOptions;
     constructor(serviceAccount, projectId) {
         this.appOptions = {
@@ -38,5 +38,5 @@ class FirebaseAuthenticationAdapter {
     createUser = createUser_1.createUser;
     getUserIdByToken = getUserIdByToken_1.getUserIdByToken;
 }
-exports.FirebaseAuthenticationAdapter = FirebaseAuthenticationAdapter;
+exports.FirebaseAuthAdapter = FirebaseAuthAdapter;
 //# sourceMappingURL=index.js.map

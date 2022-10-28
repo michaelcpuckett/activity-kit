@@ -11,11 +11,11 @@ export async function saveActivity(
       continue;
     }
 
-    await this.adapters.database.insertOrderedItem(
+    await this.adapters.db.insertOrderedItem(
       recipientInboxId,
       this.activity.id,
     );
   }
 
-  await this.adapters.database.saveEntity(this.activity);
+  await this.adapters.db.saveEntity(this.activity);
 }

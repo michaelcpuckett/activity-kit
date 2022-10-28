@@ -15,7 +15,7 @@ export async function handleAccept(this: InboxPostEndpoint) {
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.adapters.database.queryById(objectId);
+  const object = await this.adapters.db.queryById(objectId);
 
   if (!object) {
     throw new Error('Bad object: not found.');
@@ -39,7 +39,7 @@ export async function handleAccept(this: InboxPostEndpoint) {
     throw new Error('Bad followee: no ID.');
   }
 
-  const follower = await this.adapters.database.queryById(followerId);
+  const follower = await this.adapters.db.queryById(followerId);
 
   if (!follower) {
     throw new Error('Bad follower: not found.');
@@ -49,7 +49,7 @@ export async function handleAccept(this: InboxPostEndpoint) {
     throw new Error('Bad follower: not an actor.');
   }
 
-  const followee = await this.adapters.database.queryById(followeeId);
+  const followee = await this.adapters.db.queryById(followeeId);
 
   if (!followee) {
     throw new Error('Bad followee: not found.');
@@ -72,7 +72,7 @@ export async function handleAccept(this: InboxPostEndpoint) {
   }
 
   await Promise.all([
-    this.adapters.database.insertItem(followeeFollowersId, followerId),
-    this.adapters.database.insertItem(followerFollowingId, followeeId),
+    this.adapters.db.insertItem(followeeFollowersId, followerId),
+    this.adapters.db.insertItem(followerFollowingId, followeeId),
   ]);
 }

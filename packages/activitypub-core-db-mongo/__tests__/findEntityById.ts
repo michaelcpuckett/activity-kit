@@ -1,8 +1,8 @@
 import { Db } from 'mongodb';
-import { mockDatabaseAdapter } from './mockDatabaseAdapter';
+import { mockDbAdapter } from './mockDbAdapter';
 import { AP } from 'activitypub-core-types';
 
-describe('DatabaseAdapter', () => {
+describe('DbAdapter', () => {
   describe('findOne', () => {
     const object1Url = 'https://test.com/object/123';
     const object1Result: AP.Note = {
@@ -12,7 +12,7 @@ describe('DatabaseAdapter', () => {
       content: 'Test',
     };
 
-    const databaseAdapter = mockDatabaseAdapter({
+    const dbAdapter = mockDbAdapter({
       db: {
         findOne: jest.fn(({ _id }) => {
           if (_id === object1Url) {
@@ -29,12 +29,10 @@ describe('DatabaseAdapter', () => {
     });
 
     it('should find local object and strip _id', async () => {
-      const foundItem = await databaseAdapter.findEntityById(
-        new URL(object1Url),
-      );
+      const foundItem = await dbAdapter.findEntityById(new URL(object1Url));
 
       expect(foundItem).toMatchObject(object1Result);
-      expect(databaseAdapter.db.collection).toBeCalledWith('object');
+      expect(dbAdapter.db.collection).toBeCalledWith('object');
     });
   });
 });

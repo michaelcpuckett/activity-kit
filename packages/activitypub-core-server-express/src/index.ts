@@ -12,7 +12,7 @@ import {
 } from 'activitypub-core-endpoints';
 import { AP, Plugin } from 'activitypub-core-types';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
-import type { Database, Auth, Storage } from 'activitypub-core-types';
+import type { DbAdapter, AuthAdapter, StorageAdapter } from 'activitypub-core-types';
 import {
   CONTENT_TYPE_HEADER,
   HTML_CONTENT_TYPE,
@@ -35,10 +35,10 @@ export const activityPub =
     };
 
     adapters: {
-      authentication: Auth;
-      database: Database;
+      auth: AuthAdapter;
+      db: DbAdapter;
       delivery: DeliveryAdapter;
-      storage: Storage;
+      storage: StorageAdapter;
     };
 
     plugins?: Plugin[];

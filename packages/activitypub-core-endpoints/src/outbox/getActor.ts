@@ -4,7 +4,7 @@ import { OutboxPostEndpoint } from '.';
 export async function getActor(this: OutboxPostEndpoint) {
   const url = new URL(`${LOCAL_DOMAIN}${this.req.url}`);
 
-  const actor = await this.adapters.database.findOne('actor', {
+  const actor = await this.adapters.db.findOne('actor', {
     outbox: url.toString(),
   });
 

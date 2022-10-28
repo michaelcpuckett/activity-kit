@@ -36,9 +36,7 @@ export async function getRecipientInboxIds(
         return null;
       }
 
-      const recipient = await this.adapters.database.findEntityById(
-        recipientId,
-      );
+      const recipient = await this.adapters.db.findEntityById(recipientId);
 
       if (!recipient) {
         return null;

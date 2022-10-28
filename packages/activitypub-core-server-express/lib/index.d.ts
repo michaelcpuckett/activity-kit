@@ -2,7 +2,7 @@ import type { NextFunction } from 'express';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { AP, Plugin } from 'activitypub-core-types';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
-import type { Database, Auth, Storage } from 'activitypub-core-types';
+import type { DbAdapter, AuthAdapter, StorageAdapter } from 'activitypub-core-types';
 export declare const activityPub: (config: {
     pages: {
         login: () => Promise<string>;
@@ -15,10 +15,10 @@ export declare const activityPub: (config: {
         }) => Promise<string>;
     };
     adapters: {
-        authentication: Auth;
-        database: Database;
+        auth: AuthAdapter;
+        db: DbAdapter;
         delivery: DeliveryAdapter;
-        storage: Storage;
+        storage: StorageAdapter;
     };
     plugins?: Plugin[];
 }) => (req: IncomingMessage, res: ServerResponse, next: NextFunction) => Promise<void>;

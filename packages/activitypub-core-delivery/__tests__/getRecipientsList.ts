@@ -37,7 +37,7 @@ describe('DeliveryAdapter', () => {
     it('follows collections/collection pages', async () => {
       const result = await getRecipientsList.call(
         {
-          databaseAdapter: {
+          dbAdapter: {
             async queryById(id: URL) {
               console.log(id.toString());
               return convertStringsToUrls(

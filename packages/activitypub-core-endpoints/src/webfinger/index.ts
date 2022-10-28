@@ -8,13 +8,13 @@ import {
   LOCAL_HOSTNAME,
 } from 'activitypub-core-utilities';
 import * as queryString from 'query-string';
-import { Database, Plugin } from 'activitypub-core-types';
+import type { DbAdapter, Plugin } from 'activitypub-core-types';
 
 export class WebfingerGetEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
   adapters: {
-    database: Database;
+    db: DbAdapter;
   };
   plugins: Plugin[];
 
@@ -22,7 +22,7 @@ export class WebfingerGetEndpoint {
     req: IncomingMessage,
     res: ServerResponse,
     adapters: {
-      database: Database;
+      db: DbAdapter;
     },
     plugins?: Plugin[],
   ) {
@@ -41,7 +41,7 @@ export class WebfingerGetEndpoint {
     const [, username] = account.split(':');
 
     if (username) {
-      const actor = await this.adapters.database.findOne('actor', {
+      const actor = await this.adapters.db.findOne('actor', {
         preferredUsername: username,
       });
 

@@ -10,15 +10,15 @@ import {
 import { convertUrlsToStrings } from 'activitypub-core-utilities';
 import { stringify } from 'activitypub-core-utilities';
 import cookie from 'cookie';
-import type { Database, Auth } from 'activitypub-core-types';
+import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 
 export class EntityGetEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
   adapters: {
-    authentication: Auth;
-    database: Database;
+    auth: AuthAdapter;
+    db: DbAdapter;
   };
   plugins?: Plugin[];
   url: URL;
@@ -27,8 +27,8 @@ export class EntityGetEndpoint {
     req: IncomingMessage,
     res: ServerResponse,
     adapters: {
-      authentication: Auth;
-      database: Database;
+      auth: AuthAdapter;
+      db: DbAdapter;
     },
     plugins?: Plugin[],
     url?: URL,
@@ -63,15 +63,13 @@ export class EntityGetEndpoint {
   public async respond(render: Function) {
     const cookies = cookie.parse(this.req.headers.cookie ?? '');
 
-    const authorizedActor = await this.adapters.database.getActorByUserId(
-      await this.adapters.authentication.getUserIdByToken(
-        cookies.__session ?? '',
-      ),
+    const authorizedActor = await this.adapters.db.getActorByUserId(
+      await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''),
     );
 
     // TODO authorize entity posts by actor.
 
-    const entity = await this.adapters.database.findEntityById(this.url);
+    const entity = await this.adapters.db.findEntityById(this.url);
 
     if (!entity) {
       return this.handleNotFound();

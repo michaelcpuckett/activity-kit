@@ -9,11 +9,11 @@ async function handleCreate() {
     }
     const object = activity.object;
     if ('inReplyTo' in object && object.inReplyTo) {
-        const objectInReplyTo = await this.adapters.database.findEntityById((0, activitypub_core_utilities_1.getId)(object.inReplyTo));
+        const objectInReplyTo = await this.adapters.db.findEntityById((0, activitypub_core_utilities_1.getId)(object.inReplyTo));
         if (objectInReplyTo) {
             const repliesCollectionId = (0, activitypub_core_utilities_1.getId)(objectInReplyTo.replies);
             if (repliesCollectionId) {
-                await this.adapters.database.insertOrderedItem(repliesCollectionId, object.id);
+                await this.adapters.db.insertOrderedItem(repliesCollectionId, object.id);
             }
         }
     }

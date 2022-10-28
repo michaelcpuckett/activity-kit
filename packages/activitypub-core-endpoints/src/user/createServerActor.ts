@@ -6,7 +6,7 @@ import {
 } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 import { generateKeyPair } from 'activitypub-core-utilities';
-import type { Database } from 'activitypub-core-types';
+import type { DbAdapter } from 'activitypub-core-types';
 import { UserPostEndpoint } from '.';
 
 export async function createServerActor(this: UserPostEndpoint) {
@@ -79,12 +79,12 @@ export async function createServerActor(this: UserPostEndpoint) {
   };
 
   await Promise.all([
-    this.adapters.database.saveEntity(botActor),
-    this.adapters.database.saveEntity(botInbox),
-    this.adapters.database.saveEntity(botOutbox),
-    this.adapters.database.saveEntity(botFollowing),
-    this.adapters.database.saveEntity(botFollowers),
-    this.adapters.database.saveString('username', 'bot', 'bot'),
-    this.adapters.database.saveString('private-key', 'bot', botPrivateKey),
+    this.adapters.db.saveEntity(botActor),
+    this.adapters.db.saveEntity(botInbox),
+    this.adapters.db.saveEntity(botOutbox),
+    this.adapters.db.saveEntity(botFollowing),
+    this.adapters.db.saveEntity(botFollowers),
+    this.adapters.db.saveString('username', 'bot', 'bot'),
+    this.adapters.db.saveString('private-key', 'bot', botPrivateKey),
   ]);
 }

@@ -17,7 +17,7 @@ export async function handleLike(this: OutboxPostEndpoint) {
     throw new Error('Bad actor: no ID.');
   }
 
-  const actor = await this.adapters.database.queryById(actorId);
+  const actor = await this.adapters.db.queryById(actorId);
 
   if (!actor || !('outbox' in actor)) {
     throw new Error('Bad actor: not found.');
@@ -29,7 +29,7 @@ export async function handleLike(this: OutboxPostEndpoint) {
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.adapters.database.queryById(objectId);
+  const object = await this.adapters.db.queryById(objectId);
 
   if (!object) {
     throw new Error('Bad object: Not found.');
@@ -49,9 +49,7 @@ export async function handleLike(this: OutboxPostEndpoint) {
     throw new Error('Bad liked collection: No ID.');
   }
 
-  await Promise.all([
-    this.adapters.database.insertOrderedItem(likedId, object.id),
-  ]);
+  await Promise.all([this.adapters.db.insertOrderedItem(likedId, object.id)]);
 
   const isLocal = getCollectionNameByUrl(object.id) !== 'foreign-object';
 
@@ -67,7 +65,7 @@ export async function handleLike(this: OutboxPostEndpoint) {
     }
 
     await Promise.all([
-      this.adapters.database.insertOrderedItem(likesId, this.activity.id),
+      this.adapters.db.insertOrderedItem(likesId, this.activity.id),
     ]);
   }
 }

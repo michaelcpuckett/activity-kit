@@ -17,7 +17,7 @@ export async function handleAnnounce(this: OutboxPostEndpoint) {
     throw new Error('Bad actor: no ID.');
   }
 
-  const actor = await this.adapters.database.queryById(actorId);
+  const actor = await this.adapters.db.queryById(actorId);
 
   if (!actor || !('outbox' in actor)) {
     throw new Error('Bad actor: not found or no outbox.');
@@ -29,7 +29,7 @@ export async function handleAnnounce(this: OutboxPostEndpoint) {
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.adapters.database.queryById(objectId);
+  const object = await this.adapters.db.queryById(objectId);
 
   if (!object) {
     throw new Error('Bad object: not found.');
@@ -53,7 +53,7 @@ export async function handleAnnounce(this: OutboxPostEndpoint) {
         stream instanceof URL ? stream : stream.id,
       )
       .map(async (id: URL) =>
-        id ? await this.adapters.database.findEntityById(id) : null,
+        id ? await this.adapters.db.findEntityById(id) : null,
       ),
   );
 
@@ -69,9 +69,7 @@ export async function handleAnnounce(this: OutboxPostEndpoint) {
     throw new Error('Bad shared collection: not found.');
   }
 
-  await Promise.all([
-    this.adapters.database.insertOrderedItem(shared.id, object.id),
-  ]);
+  await Promise.all([this.adapters.db.insertOrderedItem(shared.id, object.id)]);
 
   const isLocal = getCollectionNameByUrl(object.id) !== 'foreign-object';
 
@@ -87,7 +85,7 @@ export async function handleAnnounce(this: OutboxPostEndpoint) {
     }
 
     await Promise.all([
-      this.adapters.database.insertOrderedItem(sharesId, this.activity.id),
+      this.adapters.db.insertOrderedItem(sharesId, this.activity.id),
     ]);
   }
 }

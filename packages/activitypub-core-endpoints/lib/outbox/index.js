@@ -44,7 +44,7 @@ class OutboxPostEndpoint {
                 if ('object' in this.activity) {
                     const objectId = (0, activitypub_core_utilities_1.getId)(this.activity.object);
                     if (objectId) {
-                        const remoteObject = await this.adapters.database.queryById(objectId);
+                        const remoteObject = await this.adapters.db.queryById(objectId);
                         if (!remoteObject) {
                             throw new Error('Bad object: Object with ID does not exist!');
                         }

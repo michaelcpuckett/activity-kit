@@ -18,10 +18,10 @@ Canonical example using Firebase Auth, Express, MongoDB, JSX:
 (async () => {
   const app = express();
   const authenticationAdapter = new FirebaseAuthentication(serviceAccount, '<project-id>');
-  const databaseAdapter = await new MongoDatabaseAdapter().connect({
+  const dbAdapter = await new MongoDbAdapter().connect({
     mongoClientUrl: 'mongodb://localhost:27017',
   });
-  const deliveryAdapter = new DeliveryAdapter(databaseAdapter);
+  const deliveryAdapter = new DeliveryAdapter(dbAdapter);
 
   app.use(
     activityPub(
@@ -46,7 +46,7 @@ Canonical example using Firebase Auth, Express, MongoDB, JSX:
       },
       {
         authenticationAdapter,
-        databaseAdapter,
+        dbAdapter,
         deliveryAdapter,
       },
     ),

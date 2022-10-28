@@ -31,7 +31,7 @@ class UserPostEndpoint {
             });
         });
         const { email, password, name, preferredUsername } = body;
-        const isUsernameTaken = !!(await this.adapters.database.findOne('actor', {
+        const isUsernameTaken = !!(await this.adapters.db.findOne('actor', {
             preferredUsername,
         }));
         if (isUsernameTaken || activitypub_core_utilities_1.RESERVED_USERNAMES.includes(preferredUsername)) {
@@ -42,12 +42,12 @@ class UserPostEndpoint {
             this.res.end();
             return;
         }
-        const user = await this.adapters.authentication.createUser({
+        const user = await this.adapters.auth.createUser({
             email,
             password,
             preferredUsername,
         });
-        const isBotCreated = !!(await this.adapters.database.findOne('actor', {
+        const isBotCreated = !!(await this.adapters.db.findOne('actor', {
             preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
         }));
         if (!isBotCreated) {

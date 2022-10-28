@@ -29,7 +29,7 @@ async function getRecipientInboxIds() {
         if (recipientId.toString() === (0, activitypub_core_utilities_1.getId)(activity.actor).toString()) {
             return null;
         }
-        const recipient = await this.adapters.database.findEntityById(recipientId);
+        const recipient = await this.adapters.db.findEntityById(recipientId);
         if (!recipient) {
             return null;
         }

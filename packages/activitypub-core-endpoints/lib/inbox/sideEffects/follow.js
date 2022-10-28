@@ -15,7 +15,7 @@ async function handleFollow() {
     if (!objectId) {
         throw new Error('Bad object: no ID.');
     }
-    const object = await this.adapters.database.queryById(objectId);
+    const object = await this.adapters.db.queryById(objectId);
     if (!object) {
         throw new Error('Bad object: not found.');
     }
@@ -29,7 +29,7 @@ async function handleFollow() {
     if (!actorId) {
         throw new Error('Bad activity: No actor.');
     }
-    const actor = await this.adapters.database.queryById(actorId);
+    const actor = await this.adapters.db.queryById(actorId);
     if (!actor) {
         throw new Error('Bad actor: Not found.');
     }
@@ -95,12 +95,12 @@ async function handleFollow() {
         throw new Error('Bad followee: No followers ID.');
     }
     await Promise.all([
-        this.adapters.database.saveEntity(acceptActivity),
-        this.adapters.database.saveEntity(acceptActivityReplies),
-        this.adapters.database.saveEntity(acceptActivityLikes),
-        this.adapters.database.saveEntity(acceptActivityShares),
-        this.adapters.database.insertOrderedItem(followeeOutboxId, acceptActivity.id),
-        this.adapters.database.insertItem(followersId, follower.id),
+        this.adapters.db.saveEntity(acceptActivity),
+        this.adapters.db.saveEntity(acceptActivityReplies),
+        this.adapters.db.saveEntity(acceptActivityLikes),
+        this.adapters.db.saveEntity(acceptActivityShares),
+        this.adapters.db.insertOrderedItem(followeeOutboxId, acceptActivity.id),
+        this.adapters.db.insertItem(followersId, follower.id),
     ]);
     await this.adapters.delivery.broadcast(acceptActivity, followee);
 }

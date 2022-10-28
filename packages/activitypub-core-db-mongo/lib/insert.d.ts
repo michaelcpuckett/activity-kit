@@ -1,6 +1,6 @@
 /// <reference types="node" />
-import { MongoDatabaseAdapterDb } from '.';
-export declare function insertOrderedItem(this: MongoDatabaseAdapterDb, path: URL, url: URL): Promise<void>;
-export declare function removeOrderedItem(this: MongoDatabaseAdapterDb, path: URL, url: URL): Promise<void>;
-export declare function insertItem(this: MongoDatabaseAdapterDb, path: URL, url: URL): Promise<void>;
-export declare function removeItem(this: MongoDatabaseAdapterDb, path: URL, url: URL): Promise<void>;
+import { MongoDbAdapter } from '.';
+export declare function insertOrderedItem(this: MongoDbAdapter, path: URL, url: URL): Promise<void>;
+export declare function removeOrderedItem(this: MongoDbAdapter, path: URL, url: URL): Promise<void>;
+export declare function insertItem(this: MongoDbAdapter, path: URL, url: URL): Promise<void>;
+export declare function removeItem(this: MongoDbAdapter, path: URL, url: URL): Promise<void>;

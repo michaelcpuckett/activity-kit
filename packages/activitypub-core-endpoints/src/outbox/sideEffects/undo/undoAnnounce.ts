@@ -20,7 +20,7 @@ export async function handleUndoAnnounce(
     throw new Error('Bad actor: no ID.');
   }
 
-  const actor = await this.adapters.database.queryById(actorId);
+  const actor = await this.adapters.db.queryById(actorId);
 
   if (!actor || !('outbox' in actor)) {
     throw new Error('Bad actor: not found.');
@@ -32,7 +32,7 @@ export async function handleUndoAnnounce(
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.adapters.database.queryById(objectId);
+  const object = await this.adapters.db.queryById(objectId);
 
   if (!object) {
     throw new Error('Bad object: not found.');
@@ -60,7 +60,7 @@ export async function handleUndoAnnounce(
     actor.streams
       .map((stream: AP.Entity) => (stream instanceof URL ? stream : stream.id))
       .map(async (id: URL) =>
-        id ? await this.adapters.database.queryById(id) : null,
+        id ? await this.adapters.db.queryById(id) : null,
       ),
   );
 
@@ -77,7 +77,7 @@ export async function handleUndoAnnounce(
   }
 
   await Promise.all([
-    this.adapters.database.removeOrderedItem(sharesId, activity.id),
-    this.adapters.database.removeOrderedItem(shared.id, object.id),
+    this.adapters.db.removeOrderedItem(sharesId, activity.id),
+    this.adapters.db.removeOrderedItem(shared.id, object.id),
   ]);
 }

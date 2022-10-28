@@ -1,8 +1,8 @@
-import type { Storage } from 'activitypub-core-types';
+import type { StorageAdapter } from 'activitypub-core-types';
 import { upload } from './upload';
 import { default as FtpClient } from 'ftp';
 
-export class FtpStorageAdapter implements Storage {
+export class FtpStorageAdapter implements StorageAdapter {
   host: FtpClient.Options['host'];
   user: FtpClient.Options['user'];
   password: FtpClient.Options['password'];

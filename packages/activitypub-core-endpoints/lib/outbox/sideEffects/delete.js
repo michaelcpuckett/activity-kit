@@ -12,7 +12,7 @@ async function handleDelete(activity) {
     if (!objectId) {
         throw new Error('Bad object: not ID.');
     }
-    const object = await this.adapters.database.findEntityById(objectId);
+    const object = await this.adapters.db.findEntityById(objectId);
     if (!object || !object.type) {
         throw new Error('Bad object: not found.');
     }
@@ -28,7 +28,7 @@ async function handleDelete(activity) {
             }
             : null),
     };
-    await this.adapters.database.saveEntity(activity.object);
+    await this.adapters.db.saveEntity(activity.object);
 }
 exports.handleDelete = handleDelete;
 //# sourceMappingURL=delete.js.map

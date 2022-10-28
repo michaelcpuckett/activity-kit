@@ -11,15 +11,15 @@ import {
 } from 'activitypub-core-utilities';
 import cookie from 'cookie';
 import type { ServerResponse } from 'http';
-import type { Database, Auth } from 'activitypub-core-types';
+import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
 import { stringify } from 'activitypub-core-utilities';
 
 export class HomeGetEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
   adapters: {
-    authentication: Auth;
-    database: Database;
+    auth: AuthAdapter;
+    db: DbAdapter;
   };
   plugins?: Plugin[];
 
@@ -27,8 +27,8 @@ export class HomeGetEndpoint {
     req: IncomingMessage,
     res: ServerResponse,
     adapters: {
-      authentication: Auth;
-      database: Database;
+      auth: AuthAdapter;
+      db: DbAdapter;
     },
     plugins?: Plugin[],
   ) {
@@ -41,10 +41,8 @@ export class HomeGetEndpoint {
   public async respond(render: Function) {
     const cookies = cookie.parse(this.req.headers.cookie ?? '');
 
-    const actor = await this.adapters.database.getActorByUserId(
-      await this.adapters.authentication.getUserIdByToken(
-        cookies.__session ?? '',
-      ),
+    const actor = await this.adapters.db.getActorByUserId(
+      await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''),
     );
 
     if (!actor) {
@@ -61,8 +59,8 @@ export class HomeGetEndpoint {
       throw new Error('Bad actor.');
     }
 
-    actor.inbox = await this.adapters.database.findEntityById(actor.inbox);
-    actor.outbox = await this.adapters.database.findEntityById(actor.outbox);
+    actor.inbox = await this.adapters.db.findEntityById(actor.inbox);
+    actor.outbox = await this.adapters.db.findEntityById(actor.outbox);
 
     let data: {
       props?: {

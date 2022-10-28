@@ -1,10 +1,10 @@
 import * as firebaseAdmin from 'firebase-admin';
 import { AppOptions, ServiceAccount } from 'firebase-admin';
-import type { Auth } from 'activitypub-core-types';
+import type { AuthAdapter } from 'activitypub-core-types';
 import { createUser } from './createUser';
 import { getUserIdByToken } from './getUserIdByToken';
 
-export class FirebaseAuthenticationAdapter implements Auth {
+export class FirebaseAuthAdapter implements AuthAdapter {
   appOptions: AppOptions;
 
   constructor(serviceAccount: ServiceAccount, projectId: string) {

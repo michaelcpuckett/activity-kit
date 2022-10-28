@@ -13,7 +13,7 @@ async function handleLike() {
     if (!actorId) {
         throw new Error('Bad actor: no ID.');
     }
-    const actor = await this.adapters.database.queryById(actorId);
+    const actor = await this.adapters.db.queryById(actorId);
     if (!actor || !('outbox' in actor)) {
         throw new Error('Bad actor: not found.');
     }
@@ -21,7 +21,7 @@ async function handleLike() {
     if (!objectId) {
         throw new Error('Bad object: no ID.');
     }
-    const object = await this.adapters.database.queryById(objectId);
+    const object = await this.adapters.db.queryById(objectId);
     if (!object) {
         throw new Error('Bad object: Not found.');
     }
@@ -35,9 +35,7 @@ async function handleLike() {
     if (!likedId) {
         throw new Error('Bad liked collection: No ID.');
     }
-    await Promise.all([
-        this.adapters.database.insertOrderedItem(likedId, object.id),
-    ]);
+    await Promise.all([this.adapters.db.insertOrderedItem(likedId, object.id)]);
     const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(object.id) !== 'foreign-object';
     if (isLocal) {
         if (!('likes' in object) || !object.likes) {
@@ -48,7 +46,7 @@ async function handleLike() {
             throw new Error('Bad likes collection: No ID.');
         }
         await Promise.all([
-            this.adapters.database.insertOrderedItem(likesId, this.activity.id),
+            this.adapters.db.insertOrderedItem(likesId, this.activity.id),
         ]);
     }
 }

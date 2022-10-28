@@ -21,7 +21,7 @@ export async function handleUndo(this: OutboxPostEndpoint) {
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.adapters.database.findEntityById(objectId);
+  const object = await this.adapters.db.findEntityById(objectId);
 
   if (!object) {
     throw new Error('Bad object: not found.');

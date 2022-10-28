@@ -3,7 +3,7 @@ import { InboxPostEndpoint } from '.';
 
 export async function getActor(this: InboxPostEndpoint) {
   const url = `${LOCAL_DOMAIN}${this.req.url}`;
-  const actor = await this.adapters.database.findOne('actor', {
+  const actor = await this.adapters.db.findOne('actor', {
     inbox: url,
   });
 

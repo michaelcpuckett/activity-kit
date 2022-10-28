@@ -1,6 +1,5 @@
 import { AP } from 'activitypub-core-types';
 import { getId, isType } from 'activitypub-core-utilities';
-import type { Database } from 'activitypub-core-types';
 import { InboxPostEndpoint } from '..';
 
 export async function handleLike(this: InboxPostEndpoint) {
@@ -16,7 +15,7 @@ export async function handleLike(this: InboxPostEndpoint) {
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.adapters.database.findEntityById(objectId);
+  const object = await this.adapters.db.findEntityById(objectId);
 
   if (!object) {
     // Not applicable.
@@ -33,15 +32,15 @@ export async function handleLike(this: InboxPostEndpoint) {
     throw new Error('Bad likes collection: no ID.');
   }
 
-  const likes = await this.adapters.database.findEntityById(likesId);
+  const likes = await this.adapters.db.findEntityById(likesId);
 
   if (!likes) {
     throw new Error('Bad likes collection: not found.');
   }
 
   if (isType(likes, AP.CollectionTypes.COLLECTION)) {
-    await this.adapters.database.insertItem(likesId, activity.id);
+    await this.adapters.db.insertItem(likesId, activity.id);
   } else if (isType(likes, AP.CollectionTypes.ORDERED_COLLECTION)) {
-    await this.adapters.database.insertOrderedItem(likesId, activity.id);
+    await this.adapters.db.insertOrderedItem(likesId, activity.id);
   }
 }
