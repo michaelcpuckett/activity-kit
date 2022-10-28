@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FtpStorage = void 0;
+exports.FtpStorageAdapter = void 0;
 const upload_1 = require("./upload");
-class FtpStorage {
+class FtpStorageAdapter {
     host;
     user;
     password;
@@ -15,5 +15,5 @@ class FtpStorage {
         this.path = path;
     }
 }
-exports.FtpStorage = FtpStorage;
+exports.FtpStorageAdapter = FtpStorageAdapter;
 //# sourceMappingURL=index.js.map

@@ -1,4 +1,4 @@
 /// <reference types="node" />
 import type { File } from 'formidable';
-import { FtpStorage } from '.';
-export declare function upload(this: FtpStorage, file: File): Promise<URL>;
+import { FtpStorageAdapter } from '.';
+export declare function upload(this: FtpStorageAdapter, file: File): Promise<URL>;

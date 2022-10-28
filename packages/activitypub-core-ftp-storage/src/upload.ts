@@ -1,8 +1,8 @@
 import type { File } from 'formidable';
 import { default as FtpClient } from 'ftp';
-import { FtpStorage } from '.';
+import { FtpStorageAdapter } from '.';
 
-export async function upload(this: FtpStorage, file: File) {
+export async function upload(this: FtpStorageAdapter, file: File) {
   return await new Promise<URL>((resolve, reject) => {
     const client = new FtpClient();
     client.on('ready', () => {
