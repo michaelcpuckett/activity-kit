@@ -14,6 +14,7 @@ export function convertStringsToUrls(originalEntity: {
     if (typeof value === 'string') {
       if (value === 'as:Public') {
         entity[key] = new URL(PUBLIC_ACTOR);
+        continue;
       }
       try {
         if (value.startsWith('http')) {
