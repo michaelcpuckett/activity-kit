@@ -1,2 +1,2 @@
-import { UploadMediaEndpoint } from '.';
-export declare function saveActivity(this: UploadMediaEndpoint): Promise<void>;
+import { UploadMediaPostEndpoint } from '.';
+export declare function saveActivity(this: UploadMediaPostEndpoint): Promise<void>;

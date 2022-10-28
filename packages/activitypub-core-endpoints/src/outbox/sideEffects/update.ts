@@ -1,8 +1,8 @@
 import { AP } from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
-import { OutboxPostHandler } from '..';
+import { OutboxPostEndpoint } from '..';
 
-export async function handleUpdate(this: OutboxPostHandler) {
+export async function handleUpdate(this: OutboxPostEndpoint) {
   if (!('object' in this.activity)) {
     throw new Error('Bad activity: no object.');
   }
@@ -13,7 +13,7 @@ export async function handleUpdate(this: OutboxPostHandler) {
     throw new Error('Bad actor: no ID.');
   }
 
-  const actor = await this.databaseService.findEntityById(actorId);
+  const actor = await this.adapters.database.findEntityById(actorId);
 
   if (!actor) {
     throw new Error('Bad actor: not found.');
@@ -46,7 +46,7 @@ export async function handleUpdate(this: OutboxPostHandler) {
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.databaseService.findEntityById(objectId);
+  const object = await this.adapters.database.findEntityById(objectId);
 
   if (!object) {
     throw new Error('Bad object: Not found.');
@@ -62,7 +62,7 @@ export async function handleUpdate(this: OutboxPostHandler) {
       : null),
   };
 
-  await this.databaseService.saveEntity(this.activity.object);
+  await this.adapters.database.saveEntity(this.activity.object);
 }
 
 function isActorAuthorizedToModifyObject(

@@ -1,4 +1,4 @@
-import { OutboxPostHandler } from '..';
+import { OutboxPostEndpoint } from '..';
 import { AP } from 'activitypub-core-types';
 import {
   ACTIVITYSTREAMS_CONTEXT,
@@ -16,7 +16,7 @@ import { getId, getGuid } from 'activitypub-core-utilities';
  *    (outbox:create:actor-to-attributed-to) SHOULD
  */
 
-export async function handleCreate(this: OutboxPostHandler) {
+export async function handleCreate(this: OutboxPostEndpoint) {
   if (!('object' in this.activity)) {
     throw new Error('Bad activity: no object.');
   }
@@ -90,14 +90,14 @@ export async function handleCreate(this: OutboxPostHandler) {
     typedObject.published = publishedDate;
 
     await Promise.all([
-      this.databaseService.saveEntity(object),
-      this.databaseService.saveEntity(objectReplies),
-      this.databaseService.saveEntity(objectLikes),
-      this.databaseService.saveEntity(objectShares),
+      this.adapters.database.saveEntity(object),
+      this.adapters.database.saveEntity(objectReplies),
+      this.adapters.database.saveEntity(objectLikes),
+      this.adapters.database.saveEntity(objectShares),
     ]);
 
     if (typedObject.inReplyTo) {
-      const objectInReplyTo = await this.databaseService.findEntityById(
+      const objectInReplyTo = await this.adapters.database.findEntityById(
         getId(typedObject.inReplyTo),
       );
 
@@ -105,7 +105,7 @@ export async function handleCreate(this: OutboxPostHandler) {
         const repliesCollectionId = getId(objectInReplyTo.replies);
 
         if (repliesCollectionId) {
-          await this.databaseService.insertOrderedItem(
+          await this.adapters.database.insertOrderedItem(
             repliesCollectionId,
             typedObject.id,
           );
@@ -114,7 +114,7 @@ export async function handleCreate(this: OutboxPostHandler) {
     }
   } else {
     // Link case.
-    await Promise.all([this.databaseService.saveEntity(object)]);
+    await Promise.all([this.adapters.database.saveEntity(object)]);
   }
 
   this.activity.object = object;

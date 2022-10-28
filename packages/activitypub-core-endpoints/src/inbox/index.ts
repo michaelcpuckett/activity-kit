@@ -1,7 +1,6 @@
-import { AP } from 'activitypub-core-types';
+import { AP, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import type { Database, Auth } from 'activitypub-core-types';
-import { entityGetHandler } from '../entity';
 import { getActor } from './getActor';
 import { saveActivity } from './saveActivity';
 import { parseBody } from './parseBody';
@@ -14,40 +13,36 @@ import { handleCreate } from './sideEffects/create';
 import { shouldForwardActivity } from './shouldForwardActivity';
 import { broadcastActivity } from './broadcastActivity';
 import { stringify } from 'activitypub-core-utilities';
-import { DeliveryService } from 'activitypub-core-delivery';
+import { DeliveryAdapter } from 'activitypub-core-delivery';
 
-export async function inboxHandler(
-  req: IncomingMessage,
-  res: ServerResponse,
-  authenticationService: Auth,
-  databaseService: Database,
-  deliveryService: DeliveryService,
-) {
-  if (req.method === 'POST') {
-    return await new InboxEndpoint(
-      req,
-      res,
-      databaseService,
-      deliveryService,
-    ).handlePost();
-  }
-
-  return await entityGetHandler(
-    req,
-    res,
-    authenticationService,
-    databaseService,
-  );
-}
-
-export class InboxEndpoint {
+export class InboxPostEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
-  databaseService: Database;
-  deliveryService: DeliveryService;
+  adapters: {
+    authentication: Auth,
+    database: Database,
+    delivery: DeliveryAdapter
+  };
+  plugins?: Plugin[];
 
-  activity: AP.Activity | null = null;
   actor: AP.Actor | null = null;
+  activity: AP.Entity | null = null;
+
+  constructor(
+    req: IncomingMessage,
+    res: ServerResponse,
+    adapters: {
+      authentication: Auth,
+      database: Database,
+      delivery: DeliveryAdapter,
+    },
+    plugins?: Plugin[]
+  ) {
+    this.req = req;
+    this.res = res;
+    this.adapters = adapters;
+    this.plugins = plugins;
+  }
 
   protected getActor = getActor;
   protected runSideEffects = runSideEffects;
@@ -62,19 +57,7 @@ export class InboxEndpoint {
   protected handleFollow = handleFollow;
   protected handleLike = handleLike;
 
-  constructor(
-    req: IncomingMessage,
-    res: ServerResponse,
-    databaseService: Database,
-    deliveryService: DeliveryService
-  ) {
-    this.req = req;
-    this.res = res;
-    this.databaseService = databaseService;
-    this.deliveryService = deliveryService;
-  }
-
-  async handlePost() {
+  public async respond() {
     try {
       await this.getActor();
       await this.parseBody();
@@ -85,20 +68,12 @@ export class InboxEndpoint {
       this.res.statusCode = 200;
       this.res.write(stringify(this.activity));
       this.res.end();
-
-      return {
-        props: {},
-      };
     } catch (error: unknown) {
       console.log(error);
 
       this.res.statusCode = 500;
       this.res.write(String(error));
       this.res.end();
-
-      return {
-        props: {},
-      };
     }
   }
 }

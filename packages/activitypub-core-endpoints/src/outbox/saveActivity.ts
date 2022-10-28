@@ -1,8 +1,8 @@
-import { OutboxPostHandler } from '.';
+import { OutboxPostEndpoint } from '.';
 import { AP } from 'activitypub-core-types';
 import { getId, ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
 
-export async function saveActivity(this: OutboxPostHandler) {
+export async function saveActivity(this: OutboxPostEndpoint) {
   if (!this.activity) {
     throw new Error('No activity.');
   }
@@ -67,11 +67,11 @@ export async function saveActivity(this: OutboxPostHandler) {
   }
 
   await Promise.all([
-    this.databaseService.saveEntity(this.activity),
-    this.databaseService.saveEntity(replies),
-    this.databaseService.saveEntity(likes),
-    this.databaseService.saveEntity(shares),
-    this.databaseService.insertOrderedItem(
+    this.adapters.database.saveEntity(this.activity),
+    this.adapters.database.saveEntity(replies),
+    this.adapters.database.saveEntity(likes),
+    this.adapters.database.saveEntity(shares),
+    this.adapters.database.insertOrderedItem(
       getId(this.actor?.outbox),
       activityId,
     ),

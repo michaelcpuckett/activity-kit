@@ -1,2 +1,2 @@
-import { OutboxPostHandler } from '.';
-export declare function parseBody(this: OutboxPostHandler): Promise<void>;
+import { OutboxPostEndpoint } from '.';
+export declare function parseBody(this: OutboxPostEndpoint): Promise<void>;

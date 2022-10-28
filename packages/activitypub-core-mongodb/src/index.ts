@@ -21,7 +21,7 @@ import { getCollectionItems } from './getCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
-import type { Database, DatabaseService } from 'activitypub-core-types';
+import type { Database, DatabaseAdapter } from 'activitypub-core-types';
 
 export class MongoDatabase implements Database {
   db: Db;
@@ -68,7 +68,7 @@ export class MongoDatabase implements Database {
   public expandCollection = expandCollection;
 }
 
-export class MongoDatabaseService implements DatabaseService {
+export class MongoDatabaseAdapter implements DatabaseAdapter {
   async connect({
     mongoClientUrl,
     dbName,

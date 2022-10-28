@@ -1,9 +1,9 @@
 import { AP } from 'activitypub-core-types';
 import { isType, PUBLIC_ACTOR } from 'activitypub-core-utilities';
-import { DeliveryService } from '.';
+import { DeliveryAdapter } from '.';
 
 export async function getRecipientsList(
-  this: DeliveryService,
+  this: DeliveryAdapter,
   to: AP.EntityReference | AP.EntityReference[],
 ): Promise<URL[]> {
   const toArray = Array.isArray(to) ? to : [to];
@@ -15,7 +15,7 @@ export async function getRecipientsList(
     await Promise.all(
       filteredToArray.map(async (reference) => {
         if (reference instanceof URL) {
-          const foundThing = await this.databaseService.queryById(reference);
+          const foundThing = await this.adapters.database.queryById(reference);
 
           if (!foundThing) {
             return null;
@@ -55,7 +55,7 @@ export async function getRecipientsList(
             )
           ) {
             if (foundThing.first) {
-              const foundCollectionPage = await this.databaseService.queryById(
+              const foundCollectionPage = await this.adapters.database.queryById(
                 foundThing.first,
               );
 

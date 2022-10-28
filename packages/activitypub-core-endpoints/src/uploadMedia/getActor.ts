@@ -1,10 +1,10 @@
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
-import { UploadMediaEndpoint } from '.';
+import { UploadMediaPostEndpoint } from '.';
 
-export async function getActor(this: UploadMediaEndpoint) {
+export async function getActor(this: UploadMediaPostEndpoint) {
   const url = new URL(`${LOCAL_DOMAIN}${this.req.url}`);
 
-  const actor = await this.databaseService.findOne('actor', {
+  const actor = await this.adapters.database.findOne('actor', {
     'endpoints.uploadMedia': url.toString(),
   });
 

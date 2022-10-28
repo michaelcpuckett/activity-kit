@@ -1,2 +1,2 @@
-import { OutboxPostHandler } from '..';
-export declare function handleAnnounce(this: OutboxPostHandler): Promise<void>;
+import { OutboxPostEndpoint } from '..';
+export declare function handleAnnounce(this: OutboxPostEndpoint): Promise<void>;

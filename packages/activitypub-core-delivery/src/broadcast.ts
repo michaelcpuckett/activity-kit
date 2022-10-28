@@ -1,4 +1,4 @@
-import { DeliveryService } from '.';
+import { DeliveryAdapter } from '.';
 import { AP } from 'activitypub-core-types';
 import { cleanProps } from 'activitypub-core-utilities';
 import { applyContext } from 'activitypub-core-utilities';
@@ -8,7 +8,7 @@ import { applyContext } from 'activitypub-core-utilities';
  *        (`outbox:removes-bto-and-bcc`) *MUST*
  */
 export async function broadcast(
-  this: DeliveryService,
+  this: DeliveryAdapter,
   activity: AP.Activity,
   actor: AP.Actor,
 ) {

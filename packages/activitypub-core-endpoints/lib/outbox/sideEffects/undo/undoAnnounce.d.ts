@@ -1,3 +1,3 @@
 import { AP } from 'activitypub-core-types';
-import { OutboxPostHandler } from '../..';
-export declare function handleUndoAnnounce(this: OutboxPostHandler, activity: AP.Entity): Promise<void>;
+import { OutboxPostEndpoint } from '../..';
+export declare function handleUndoAnnounce(this: OutboxPostEndpoint, activity: AP.Entity): Promise<void>;

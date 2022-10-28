@@ -9,7 +9,7 @@ async function broadcastActivity() {
         throw new Error('No actor.');
     }
     if (await this.shouldForwardActivity()) {
-        await this.deliveryService.broadcast(this.activity, this.actor);
+        await this.adapters.delivery.broadcast(this.activity, this.actor);
     }
 }
 exports.broadcastActivity = broadcastActivity;

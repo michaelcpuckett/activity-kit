@@ -1,9 +1,9 @@
 import { LOCAL_DOMAIN } from "activitypub-core-utilities";
-import { InboxEndpoint } from ".";
+import { InboxPostEndpoint } from ".";
 
-export async function getActor(this: InboxEndpoint) {
+export async function getActor(this: InboxPostEndpoint) {
   const url = `${LOCAL_DOMAIN}${this.req.url}`;
-  const actor = await this.databaseService.findOne('actor', {
+  const actor = await this.adapters.database.findOne('actor', {
     inbox: url,
   });
 

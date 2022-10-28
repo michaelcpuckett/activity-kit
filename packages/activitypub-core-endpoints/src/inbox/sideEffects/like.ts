@@ -1,9 +1,9 @@
 import { AP } from 'activitypub-core-types';
 import { getId, isType } from 'activitypub-core-utilities';
 import type { Database } from 'activitypub-core-types';
-import { InboxEndpoint } from '..';
+import { InboxPostEndpoint } from "..";
 
-export async function handleLike(this: InboxEndpoint) {
+export async function handleLike(this: InboxPostEndpoint) {
   const activity = this.activity;
 
   if (!('object' in activity)) {
@@ -16,7 +16,7 @@ export async function handleLike(this: InboxEndpoint) {
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.databaseService.findEntityById(objectId);
+  const object = await this.adapters.database.findEntityById(objectId);
 
   if (!object) {
     // Not applicable.
@@ -33,7 +33,7 @@ export async function handleLike(this: InboxEndpoint) {
     throw new Error('Bad likes collection: no ID.');
   }
 
-  const likes = await this.databaseService.findEntityById(likesId);
+  const likes = await this.adapters.database.findEntityById(likesId);
 
   if (!likes) {
     throw new Error('Bad likes collection: not found.');
@@ -42,10 +42,10 @@ export async function handleLike(this: InboxEndpoint) {
   if (
     isType(likes, AP.CollectionTypes.COLLECTION)
   ) {
-    await this.databaseService.insertItem(likesId, activity.id);
+    await this.adapters.database.insertItem(likesId, activity.id);
   } else if (
     isType(likes, AP.CollectionTypes.ORDERED_COLLECTION)
   ) {
-    await this.databaseService.insertOrderedItem(likesId, activity.id);
+    await this.adapters.database.insertOrderedItem(likesId, activity.id);
   }
 }

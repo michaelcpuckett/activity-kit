@@ -7,9 +7,9 @@ async function saveActivity() {
         if (!recipientInboxId) {
             continue;
         }
-        await this.databaseService.insertOrderedItem(recipientInboxId, this.activity.id);
+        await this.adapters.database.insertOrderedItem(recipientInboxId, this.activity.id);
     }
-    await this.databaseService.saveEntity(this.activity);
+    await this.adapters.database.saveEntity(this.activity);
 }
 exports.saveActivity = saveActivity;
 //# sourceMappingURL=saveActivity.js.map

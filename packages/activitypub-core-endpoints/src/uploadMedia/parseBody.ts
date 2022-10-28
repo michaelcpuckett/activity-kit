@@ -1,9 +1,9 @@
 import { AP } from 'activitypub-core-types';
 import { ACTIVITYSTREAMS_CONTEXT, getGuid, LOCAL_DOMAIN, PUBLIC_ACTOR } from 'activitypub-core-utilities';
 import * as formidable from 'formidable';
-import { UploadMediaEndpoint } from '.';
+import { UploadMediaPostEndpoint } from '.';
 
-export async function parseBody(this: UploadMediaEndpoint) {
+export async function parseBody(this: UploadMediaPostEndpoint) {
   const form = formidable.default({
     multiples: true,
   });

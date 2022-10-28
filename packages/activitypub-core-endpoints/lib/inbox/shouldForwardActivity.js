@@ -32,7 +32,7 @@ async function shouldForwardActivity() {
         if (!addresseeId) {
             continue;
         }
-        const foundItem = await this.databaseService.findEntityById(addresseeId);
+        const foundItem = await this.adapters.database.findEntityById(addresseeId);
         if (!foundItem) {
             continue;
         }
@@ -70,7 +70,7 @@ async function shouldForwardActivity() {
         if (objectId.toString() === this.actor?.id?.toString()) {
             continue;
         }
-        const foundItem = await this.databaseService.findEntityById(objectId);
+        const foundItem = await this.adapters.database.findEntityById(objectId);
         if (!foundItem) {
             continue;
         }

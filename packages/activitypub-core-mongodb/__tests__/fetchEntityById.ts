@@ -1,8 +1,8 @@
-import { mockDatabaseService } from './mockDatabaseService';
+import { mockDatabaseAdapter } from './mockDatabaseAdapter';
 import { AP } from 'activitypub-core-types';
 import { ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
 
-describe('DatabaseService', () => {
+describe('DatabaseAdapter', () => {
   describe('fetchEntityById', () => {
     const actor1Url = 'https://foreign.test.com/456';
     const actor1Result: AP.Person = {
@@ -15,7 +15,7 @@ describe('DatabaseService', () => {
       outbox: new URL('https://foreign.test.com/456/inbox'),
     };
 
-    const databaseService = mockDatabaseService({
+    const databaseAdapter = mockDatabaseAdapter({
       fetch: async function (url: string) {
         return {
           json: async () => {
@@ -30,7 +30,7 @@ describe('DatabaseService', () => {
     });
 
     it('should fetch from remote host', async () => {
-      const result = await databaseService.fetchEntityById(new URL(actor1Url));
+      const result = await databaseAdapter.fetchEntityById(new URL(actor1Url));
       expect(result).toMatchObject(actor1Result);
     });
   });

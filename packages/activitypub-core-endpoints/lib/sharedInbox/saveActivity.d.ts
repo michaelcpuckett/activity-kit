@@ -1,2 +1,3 @@
-import { SharedInboxEndpoint } from ".";
-export declare function saveActivity(this: SharedInboxEndpoint): Promise<void>;
+import { SharedInboxPostEndpoint } from '.';
+import { InboxPostEndpoint } from '../inbox';
+export declare function saveActivity(this: InboxPostEndpoint & SharedInboxPostEndpoint): Promise<void>;

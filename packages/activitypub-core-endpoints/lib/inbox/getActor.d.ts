@@ -1,2 +1,2 @@
-import { InboxEndpoint } from ".";
-export declare function getActor(this: InboxEndpoint): Promise<void>;
+import { InboxPostEndpoint } from ".";
+export declare function getActor(this: InboxPostEndpoint): Promise<void>;

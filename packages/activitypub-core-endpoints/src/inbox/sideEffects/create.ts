@@ -1,7 +1,7 @@
 import { getId } from 'activitypub-core-utilities';
-import { InboxEndpoint } from '..';
+import { InboxPostEndpoint } from "..";
 
-export async function handleCreate(this: InboxEndpoint) {
+export async function handleCreate(this: InboxPostEndpoint) {
   const activity = this.activity;
 
   if (!('object' in activity)) {
@@ -11,7 +11,7 @@ export async function handleCreate(this: InboxEndpoint) {
   const object = activity.object;
 
   if ('inReplyTo' in object && object.inReplyTo) {
-    const objectInReplyTo = await this.databaseService.findEntityById(
+    const objectInReplyTo = await this.adapters.database.findEntityById(
       getId(object.inReplyTo),
     );
 
@@ -19,7 +19,7 @@ export async function handleCreate(this: InboxEndpoint) {
       const repliesCollectionId = getId(objectInReplyTo.replies);
 
       if (repliesCollectionId) {
-        await this.databaseService.insertOrderedItem(
+        await this.adapters.database.insertOrderedItem(
           repliesCollectionId,
           object.id,
         );

@@ -57,11 +57,11 @@ async function saveActivity() {
         }
     }
     await Promise.all([
-        this.databaseService.saveEntity(this.activity),
-        this.databaseService.saveEntity(replies),
-        this.databaseService.saveEntity(likes),
-        this.databaseService.saveEntity(shares),
-        this.databaseService.insertOrderedItem((0, activitypub_core_utilities_1.getId)(this.actor?.outbox), activityId),
+        this.adapters.database.saveEntity(this.activity),
+        this.adapters.database.saveEntity(replies),
+        this.adapters.database.saveEntity(likes),
+        this.adapters.database.saveEntity(shares),
+        this.adapters.database.insertOrderedItem((0, activitypub_core_utilities_1.getId)(this.actor?.outbox), activityId),
     ]);
 }
 exports.saveActivity = saveActivity;

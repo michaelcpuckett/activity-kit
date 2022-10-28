@@ -13,7 +13,7 @@ import { getCollectionItems } from './getCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
-import type { Database, DatabaseService } from 'activitypub-core-types';
+import type { Database, DatabaseAdapter } from 'activitypub-core-types';
 export declare class MongoDatabase implements Database {
     db: Db;
     fetch: Function;
@@ -36,7 +36,7 @@ export declare class MongoDatabase implements Database {
     getCollectionItems: typeof getCollectionItems;
     expandCollection: typeof expandCollection;
 }
-export declare class MongoDatabaseService implements DatabaseService {
+export declare class MongoDatabaseAdapter implements DatabaseAdapter {
     connect({ mongoClientUrl, dbName, }: {
         mongoClientUrl: string;
         dbName?: string;

@@ -64,23 +64,23 @@ async function handleCreate() {
         typedObject.attributedTo = this.activity.actor;
         typedObject.published = publishedDate;
         await Promise.all([
-            this.databaseService.saveEntity(object),
-            this.databaseService.saveEntity(objectReplies),
-            this.databaseService.saveEntity(objectLikes),
-            this.databaseService.saveEntity(objectShares),
+            this.adapters.database.saveEntity(object),
+            this.adapters.database.saveEntity(objectReplies),
+            this.adapters.database.saveEntity(objectLikes),
+            this.adapters.database.saveEntity(objectShares),
         ]);
         if (typedObject.inReplyTo) {
-            const objectInReplyTo = await this.databaseService.findEntityById((0, activitypub_core_utilities_3.getId)(typedObject.inReplyTo));
+            const objectInReplyTo = await this.adapters.database.findEntityById((0, activitypub_core_utilities_3.getId)(typedObject.inReplyTo));
             if (objectInReplyTo) {
                 const repliesCollectionId = (0, activitypub_core_utilities_3.getId)(objectInReplyTo.replies);
                 if (repliesCollectionId) {
-                    await this.databaseService.insertOrderedItem(repliesCollectionId, typedObject.id);
+                    await this.adapters.database.insertOrderedItem(repliesCollectionId, typedObject.id);
                 }
             }
         }
     }
     else {
-        await Promise.all([this.databaseService.saveEntity(object)]);
+        await Promise.all([this.adapters.database.saveEntity(object)]);
     }
     this.activity.object = object;
 }

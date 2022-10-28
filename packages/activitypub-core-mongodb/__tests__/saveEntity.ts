@@ -1,9 +1,9 @@
-import { mockDatabaseService } from './mockDatabaseService';
+import { mockDatabaseAdapter } from './mockDatabaseAdapter';
 import { AP } from 'activitypub-core-types';
 import { Db } from 'mongodb';
 import { ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
 
-describe('DatabaseService', () => {
+describe('DatabaseAdapter', () => {
   describe('saveEntity', () => {
     const date = new Date('2022-01-01');
     const object1Url = 'https://test.com/object/123';
@@ -29,7 +29,7 @@ describe('DatabaseService', () => {
       const replaceOne = jest.fn(async (object) => {
         return true;
       });
-      const databaseService = mockDatabaseService({
+      const databaseAdapter = mockDatabaseAdapter({
         db: {
           findOne: jest.fn(() => null),
           replaceOne,
@@ -45,7 +45,7 @@ describe('DatabaseService', () => {
         },
       });
 
-      await databaseService.saveEntity(object1);
+      await databaseAdapter.saveEntity(object1);
       expect(replaceOne).toBeCalledTimes(1);
       expect(replaceOne.mock.calls[0][1]).toBeTruthy();
       expect(replaceOne.mock.calls[0][1]).toStrictEqual(object1Result);

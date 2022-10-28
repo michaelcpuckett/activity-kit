@@ -7,8 +7,9 @@ import {
 import { AP } from 'activitypub-core-types';
 import { generateKeyPair } from 'activitypub-core-utilities';
 import type { Database } from 'activitypub-core-types';
+import { UserPostEndpoint } from '.';
 
-export async function createServerActor(databaseService: Database) {
+export async function createServerActor(this: UserPostEndpoint) {
   const { publicKey: botPublicKey, privateKey: botPrivateKey } =
     await generateKeyPair();
   const publishedDate = new Date();
@@ -78,12 +79,12 @@ export async function createServerActor(databaseService: Database) {
   };
 
   await Promise.all([
-    databaseService.saveEntity(botActor),
-    databaseService.saveEntity(botInbox),
-    databaseService.saveEntity(botOutbox),
-    databaseService.saveEntity(botFollowing),
-    databaseService.saveEntity(botFollowers),
-    databaseService.saveString('username', 'bot', 'bot'),
-    databaseService.saveString('private-key', 'bot', botPrivateKey),
+    this.adapters.database.saveEntity(botActor),
+    this.adapters.database.saveEntity(botInbox),
+    this.adapters.database.saveEntity(botOutbox),
+    this.adapters.database.saveEntity(botFollowing),
+    this.adapters.database.saveEntity(botFollowers),
+    this.adapters.database.saveString('username', 'bot', 'bot'),
+    this.adapters.database.saveString('private-key', 'bot', botPrivateKey),
   ]);
 }

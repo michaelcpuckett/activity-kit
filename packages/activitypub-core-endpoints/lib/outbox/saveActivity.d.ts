@@ -1,2 +1,2 @@
-import { OutboxPostHandler } from '.';
-export declare function saveActivity(this: OutboxPostHandler): Promise<void>;
+import { OutboxPostEndpoint } from '.';
+export declare function saveActivity(this: OutboxPostEndpoint): Promise<void>;

@@ -8,8 +8,7 @@ import {
   LOCAL_DOMAIN,
   getId,
 } from 'activitypub-core-utilities';
-import { entityGetHandler } from '../entity';
-import { DeliveryService } from 'activitypub-core-delivery';
+import { DeliveryAdapter } from 'activitypub-core-delivery';
 import { runSideEffects } from './runSideEffects';
 import { authenticateActor } from './authenticateActor';
 import { wrapInActivity } from './wrapInActivity';
@@ -27,48 +26,14 @@ import { handleRemove } from './sideEffects/remove';
 import { handleUndoLike } from './sideEffects/undo/undoLike';
 import { handleUndoAnnounce } from './sideEffects/undo/undoAnnounce';
 
-export async function outboxHandler(
-  req: IncomingMessage,
-  res: ServerResponse,
-  authenticationService: Auth,
-  databaseService: Database,
-  deliveryService: DeliveryService,
-  plugins?: Plugin[]
-) {
-  if (!req) {
-    throw new Error('Bad request: not found.');
-  }
-
-  if (req.method === 'POST') {
-    const handler = new OutboxPostHandler(
-      req,
-      res,
-      authenticationService,
-      databaseService,
-      deliveryService,
-      plugins,
-    );
-    await handler.init();
-
-    return {
-      props: {},
-    };
-  }
-
-  return await entityGetHandler(
-    req,
-    res,
-    authenticationService,
-    databaseService,
-  );
-}
-
-export class OutboxPostHandler {
+export class OutboxPostEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
-  authenticationService: Auth;
-  databaseService: Database;
-  deliveryService: DeliveryService;
+  adapters: {
+    authentication: Auth,
+    database: Database,
+    delivery: DeliveryAdapter,
+  };
   plugins?: Plugin[];
 
   actor: AP.Actor | null = null;
@@ -77,20 +42,20 @@ export class OutboxPostHandler {
   constructor(
     req: IncomingMessage,
     res: ServerResponse,
-    authenticationService: Auth,
-    databaseService: Database,
-    deliveryService: DeliveryService,
+    adapters: {
+      authentication: Auth,
+      database: Database,
+      delivery: DeliveryAdapter,
+    },
     plugins?: Plugin[]
   ) {
     this.req = req;
     this.res = res;
-    this.authenticationService = authenticationService;
-    this.databaseService = databaseService;
-    this.deliveryService = deliveryService;
+    this.adapters = adapters;
     this.plugins = plugins;
   }
 
-  async init() {
+  public async respond() {
     try {
       await this.parseBody();
       await this.getActor();
@@ -99,17 +64,15 @@ export class OutboxPostHandler {
       const activityId = new URL(`${LOCAL_DOMAIN}/activity/${getGuid()}`);
       this.activity.id = activityId; // Overwrite ID
 
-      // If this is an activity...
       if (isTypeOf(this.activity, AP.ActivityTypes)) {
         (this.activity as AP.Activity).url = activityId;
 
-        // If the activity has an object...
         if ('object' in this.activity) {
           // Check that any attached `object` with ID really exists.
           const objectId = getId(this.activity.object);
 
           if (objectId) {
-            const remoteObject = await this.databaseService.queryById(objectId);
+            const remoteObject = await this.adapters.database.queryById(objectId);
 
             if (!remoteObject) {
               throw new Error('Bad object: Object with ID does not exist!');
@@ -134,13 +97,14 @@ export class OutboxPostHandler {
       }
 
       // Broadcast to Fediverse.
-      await this.deliveryService.broadcast(this.activity, this.actor);
+      await this.adapters.delivery.broadcast(this.activity, this.actor);
 
       this.res.statusCode = 201;
       this.res.setHeader('Location', this.activity.id.toString());
       this.res.end();
     } catch (error: unknown) {
       console.log(error);
+
       this.res.statusCode = 500;
       this.res.write(String(error));
       this.res.end();
@@ -153,8 +117,6 @@ export class OutboxPostHandler {
   protected saveActivity = saveActivity;
   protected wrapInActivity = wrapInActivity;
   protected parseBody = parseBody;
-
-  // Side effects.
 
   protected handleAdd = handleAdd;
   protected handleAnnounce = handleAnnounce;

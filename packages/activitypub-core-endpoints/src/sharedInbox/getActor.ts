@@ -1,3 +1,4 @@
-import { SharedInboxEndpoint } from '.';
+import { SharedInboxPostEndpoint } from '.';
+import { InboxPostEndpoint } from '../inbox';
 
-export async function getActor(this: SharedInboxEndpoint) {}
+export async function getActor(this: InboxPostEndpoint & SharedInboxPostEndpoint) {}

@@ -30,7 +30,7 @@ export type Database = {
   saveString: Function;
 };
 
-export interface DatabaseService {
+export interface DatabaseAdapter {
   connect(config?: { [key: string]: unknown }): Promise<Database>;
 }
 

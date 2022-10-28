@@ -1,8 +1,8 @@
-import { OutboxPostHandler } from '..';
+import { OutboxPostEndpoint } from '..';
 import { AP } from 'activitypub-core-types';
 import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
 
-export async function handleAnnounce(this: OutboxPostHandler) {
+export async function handleAnnounce(this: OutboxPostEndpoint) {
   if (!('object' in this.activity)) {
     throw new Error('Bad activity: no object.');
   }
@@ -17,7 +17,7 @@ export async function handleAnnounce(this: OutboxPostHandler) {
     throw new Error('Bad actor: no ID.');
   }
 
-  const actor = await this.databaseService.queryById(actorId);
+  const actor = await this.adapters.database.queryById(actorId);
 
   if (!actor || !('outbox' in actor)) {
     throw new Error('Bad actor: not found or no outbox.');
@@ -29,7 +29,7 @@ export async function handleAnnounce(this: OutboxPostHandler) {
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.databaseService.queryById(objectId);
+  const object = await this.adapters.database.queryById(objectId);
 
   if (!object) {
     throw new Error('Bad object: not found.');
@@ -53,7 +53,7 @@ export async function handleAnnounce(this: OutboxPostHandler) {
         stream instanceof URL ? stream : stream.id,
       )
       .map(async (id: URL) =>
-        id ? await this.databaseService.findEntityById(id) : null,
+        id ? await this.adapters.database.findEntityById(id) : null,
       ),
   );
 
@@ -70,7 +70,7 @@ export async function handleAnnounce(this: OutboxPostHandler) {
   }
 
   await Promise.all([
-    this.databaseService.insertOrderedItem(shared.id, object.id),
+    this.adapters.database.insertOrderedItem(shared.id, object.id),
   ]);
 
   const isLocal = getCollectionNameByUrl(object.id) !== 'foreign-object';
@@ -87,7 +87,7 @@ export async function handleAnnounce(this: OutboxPostHandler) {
     }
 
     await Promise.all([
-      this.databaseService.insertOrderedItem(sharesId, this.activity.id),
+      this.adapters.database.insertOrderedItem(sharesId, this.activity.id),
     ]);
   }
 }

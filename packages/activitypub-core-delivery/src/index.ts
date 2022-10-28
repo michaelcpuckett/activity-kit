@@ -6,13 +6,22 @@ import { getRecipientsList } from './getRecipientsList';
 import { signAndSendToForeignActorInbox } from './signAndSendToForeignActorInbox';
 import fetch from 'isomorphic-fetch';
 
-export class DeliveryService {
-  databaseService: Database;
-  fetch: Function;
+export class DeliveryAdapter {
+  adapters: {
+    database: Database;
+    fetch: Function;
+  };
 
-  constructor(databaseService: Database, fetchFn?: Function) {
-    this.databaseService = databaseService;
-    this.fetch = fetchFn ?? fetch;
+  constructor(config: {
+    adapters: {
+      database: Database;
+      fetch?: Function;
+    }
+  }) {
+    this.adapters = {
+      ...config.adapters,
+      fetch: config.adapters.fetch ?? fetch,
+    };
   }
 
   public getPrivateKey = getPrivateKey;

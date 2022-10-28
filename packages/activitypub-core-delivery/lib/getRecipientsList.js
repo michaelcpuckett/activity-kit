@@ -8,7 +8,7 @@ async function getRecipientsList(to) {
     const filteredToArray = toArray.filter((recipient) => recipient.toString() !== activitypub_core_utilities_1.PUBLIC_ACTOR);
     const unfilteredInboxArray = (await Promise.all(filteredToArray.map(async (reference) => {
         if (reference instanceof URL) {
-            const foundThing = await this.databaseService.queryById(reference);
+            const foundThing = await this.adapters.database.queryById(reference);
             if (!foundThing) {
                 return null;
             }
@@ -33,7 +33,7 @@ async function getRecipientsList(to) {
                 ((0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
                     (0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
                 if (foundThing.first) {
-                    const foundCollectionPage = await this.databaseService.queryById(foundThing.first);
+                    const foundCollectionPage = await this.adapters.database.queryById(foundThing.first);
                     if (typeof foundCollectionPage === 'object' &&
                         (0, activitypub_core_utilities_1.isType)(foundCollectionPage, activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE) &&
                         foundCollectionPage.orderedItems) {

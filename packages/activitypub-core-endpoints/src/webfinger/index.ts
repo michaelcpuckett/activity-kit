@@ -8,57 +8,69 @@ import {
   LOCAL_HOSTNAME,
 } from 'activitypub-core-utilities';
 import * as queryString from 'query-string';
-import { Database } from 'activitypub-core-types';
+import { Database, Plugin } from 'activitypub-core-types';
 
-export async function webfingerHandler(
-  req: IncomingMessage,
-  res: ServerResponse,
-  databaseService: Database,
-) {
-  if (!req || !req.url) {
-    throw new Error('Bad request');
+export class WebfingerGetEndpoint {
+  req: IncomingMessage;
+  res: ServerResponse;
+  adapters: {
+    database: Database;
+  };
+  plugins: Plugin[];
+
+  constructor(
+    req: IncomingMessage,
+    res: ServerResponse,
+    adapters: {
+      database: Database;
+    },
+    plugins?: Plugin[]
+  ) {
+    this.req = req;
+    this.res = res;
+    this.adapters = adapters;
+    this.plugins = plugins;
   }
 
-  console.log(new URL(req.url, LOCAL_DOMAIN));
-  console.log(req.headers.accept);
+  public async respond() {
+    const query = {
+      ...queryString.parse(new URL(this.req.url, LOCAL_DOMAIN).search),
+    } as { [key: string]: string };
+    const resource = query.resource ?? '';
+    const [account] = resource.split('@');
+    const [, username] = account.split(':');
 
-  const query = {
-    ...queryString.parse(new URL(req.url, LOCAL_DOMAIN).search),
-  } as { [key: string]: string };
-  const resource = query.resource ?? '';
-  const [account] = resource.split('@');
-  const [, username] = account.split(':');
+    if (username) {
+      const actor = await this.adapters.database.findOne('actor', {
+        preferredUsername: username,
+      });
 
-  if (username) {
-    const actor = await databaseService.findOne('actor', {
-      preferredUsername: username,
-    });
+      if (actor) {
+        const finger = {
+          subject: `acct:${username}@${LOCAL_HOSTNAME}`,
+          links: [
+            {
+              rel: 'http://webfinger.net/rel/profile-page',
+              type: HTML_CONTENT_TYPE,
+              href: actor.url.toString(),
+            },
+            {
+              rel: 'self',
+              type: ACTIVITYSTREAMS_CONTENT_TYPE,
+              href: actor.url.toString(),
+            },
+          ],
+        };
 
-    if (actor) {
-      const finger = {
-        subject: `acct:${username}@${LOCAL_HOSTNAME}`,
-        links: [
-          {
-            rel: 'http://webfinger.net/rel/profile-page',
-            type: HTML_CONTENT_TYPE,
-            href: actor.url.toString(),
-          },
-          {
-            rel: 'self',
-            type: ACTIVITYSTREAMS_CONTENT_TYPE,
-            href: actor.url.toString(),
-          },
-        ],
-      };
-
-      res.statusCode = 200;
-      res.setHeader(CONTENT_TYPE_HEADER, JRD_CONTENT_TYPE);
-      res.write(JSON.stringify(finger));
-      res.end();
-      return;
+        this.res.statusCode = 200;
+        this.res.setHeader(CONTENT_TYPE_HEADER, JRD_CONTENT_TYPE);
+        this.res.write(JSON.stringify(finger));
+        this.res.end();
+        return;
+      }
     }
-  }
 
-  res.statusCode = 404;
-  res.end();
+    this.res.statusCode = 404;
+    this.res.end();
+  }
 }

@@ -1,2 +1,2 @@
-import { InboxEndpoint } from '.';
-export declare function runSideEffects(this: InboxEndpoint): Promise<void>;
+import { InboxPostEndpoint } from ".";
+export declare function runSideEffects(this: InboxPostEndpoint): Promise<void>;

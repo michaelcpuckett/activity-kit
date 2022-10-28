@@ -1,6 +1,7 @@
-import { SharedInboxEndpoint } from ".";
+import { SharedInboxPostEndpoint } from '.';
+import { InboxPostEndpoint } from '../inbox';
 
-export async function saveActivity(this: SharedInboxEndpoint) {
+export async function saveActivity(this: InboxPostEndpoint & SharedInboxPostEndpoint) {
   const recipientInboxIds = await this.getRecipientInboxIds();
 
   for (const recipientInboxId of recipientInboxIds) {
@@ -8,8 +9,8 @@ export async function saveActivity(this: SharedInboxEndpoint) {
       continue;
     }
 
-    await this.databaseService.insertOrderedItem(recipientInboxId, this.activity.id);
+    await this.adapters.database.insertOrderedItem(recipientInboxId, this.activity.id);
   }
 
-  await this.databaseService.saveEntity(this.activity);
+  await this.adapters.database.saveEntity(this.activity);
 }

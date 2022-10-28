@@ -1,4 +1,4 @@
-import { OutboxPostHandler } from '.';
+import { OutboxPostEndpoint } from '.';
 import {
   LOCAL_DOMAIN,
   combineAddresses,

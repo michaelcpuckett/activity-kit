@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OutboxPostHandler = exports.outboxHandler = void 0;
+exports.OutboxPostEndpoint = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
-const entity_1 = require("../entity");
 const runSideEffects_1 = require("./runSideEffects");
 const authenticateActor_1 = require("./authenticateActor");
 const wrapInActivity_1 = require("./wrapInActivity");
@@ -20,38 +19,20 @@ const undo_1 = require("./sideEffects/undo");
 const remove_1 = require("./sideEffects/remove");
 const undoLike_1 = require("./sideEffects/undo/undoLike");
 const undoAnnounce_1 = require("./sideEffects/undo/undoAnnounce");
-async function outboxHandler(req, res, authenticationService, databaseService, deliveryService, plugins) {
-    if (!req) {
-        throw new Error('Bad request: not found.');
-    }
-    if (req.method === 'POST') {
-        const handler = new OutboxPostHandler(req, res, authenticationService, databaseService, deliveryService, plugins);
-        await handler.init();
-        return {
-            props: {},
-        };
-    }
-    return await (0, entity_1.entityGetHandler)(req, res, authenticationService, databaseService);
-}
-exports.outboxHandler = outboxHandler;
-class OutboxPostHandler {
+class OutboxPostEndpoint {
     req;
     res;
-    authenticationService;
-    databaseService;
-    deliveryService;
+    adapters;
     plugins;
     actor = null;
     activity = null;
-    constructor(req, res, authenticationService, databaseService, deliveryService, plugins) {
+    constructor(req, res, adapters, plugins) {
         this.req = req;
         this.res = res;
-        this.authenticationService = authenticationService;
-        this.databaseService = databaseService;
-        this.deliveryService = deliveryService;
+        this.adapters = adapters;
         this.plugins = plugins;
     }
-    async init() {
+    async respond() {
         try {
             await this.parseBody();
             await this.getActor();
@@ -63,7 +44,7 @@ class OutboxPostHandler {
                 if ('object' in this.activity) {
                     const objectId = (0, activitypub_core_utilities_1.getId)(this.activity.object);
                     if (objectId) {
-                        const remoteObject = await this.databaseService.queryById(objectId);
+                        const remoteObject = await this.adapters.database.queryById(objectId);
                         if (!remoteObject) {
                             throw new Error('Bad object: Object with ID does not exist!');
                         }
@@ -79,7 +60,7 @@ class OutboxPostHandler {
             if (!this.activity.id) {
                 throw new Error('Bad activity: No ID.');
             }
-            await this.deliveryService.broadcast(this.activity, this.actor);
+            await this.adapters.delivery.broadcast(this.activity, this.actor);
             this.res.statusCode = 201;
             this.res.setHeader('Location', this.activity.id.toString());
             this.res.end();
@@ -108,5 +89,5 @@ class OutboxPostHandler {
     handleUndoLike = undoLike_1.handleUndoLike;
     handleUndoAnnounce = undoAnnounce_1.handleUndoAnnounce;
 }
-exports.OutboxPostHandler = OutboxPostHandler;
+exports.OutboxPostEndpoint = OutboxPostEndpoint;
 //# sourceMappingURL=index.js.map

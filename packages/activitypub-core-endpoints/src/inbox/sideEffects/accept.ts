@@ -1,8 +1,8 @@
 import { AP } from 'activitypub-core-types';
 import { getId, isTypeOf } from 'activitypub-core-utilities';
-import { InboxEndpoint } from '..';
+import { InboxPostEndpoint } from "..";
 
-export async function handleAccept(this: InboxEndpoint) {
+export async function handleAccept(this: InboxPostEndpoint) {
   const activity = this.activity;
 
   if (!('object' in activity)) {
@@ -15,7 +15,7 @@ export async function handleAccept(this: InboxEndpoint) {
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.databaseService.queryById(objectId);
+  const object = await this.adapters.database.queryById(objectId);
 
   if (!object) {
     throw new Error('Bad object: not found.');
@@ -39,7 +39,7 @@ export async function handleAccept(this: InboxEndpoint) {
     throw new Error('Bad followee: no ID.');
   }
 
-  const follower = await this.databaseService.queryById(followerId);
+  const follower = await this.adapters.database.queryById(followerId);
 
   if (!follower) {
     throw new Error('Bad follower: not found.');
@@ -49,7 +49,7 @@ export async function handleAccept(this: InboxEndpoint) {
     throw new Error('Bad follower: not an actor.');
   }
 
-  const followee = await this.databaseService.queryById(followeeId);
+  const followee = await this.adapters.database.queryById(followeeId);
 
   if (!followee) {
     throw new Error('Bad followee: not found.');
@@ -72,7 +72,7 @@ export async function handleAccept(this: InboxEndpoint) {
   }
 
   await Promise.all([
-    this.databaseService.insertItem(followeeFollowersId, followerId),
-    this.databaseService.insertItem(followerFollowingId, followeeId)
+    this.adapters.database.insertItem(followeeFollowersId, followerId),
+    this.adapters.database.insertItem(followerFollowingId, followeeId)
   ]);
 }

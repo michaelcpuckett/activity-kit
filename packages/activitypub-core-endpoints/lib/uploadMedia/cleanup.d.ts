@@ -1,2 +1,2 @@
-import { UploadMediaEndpoint } from '.';
-export declare function cleanup(this: UploadMediaEndpoint): Promise<void>;
+import { UploadMediaPostEndpoint } from '.';
+export declare function cleanup(this: UploadMediaPostEndpoint): Promise<void>;

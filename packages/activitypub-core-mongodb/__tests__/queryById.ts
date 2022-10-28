@@ -1,9 +1,9 @@
-import { mockDatabaseService } from './mockDatabaseService';
+import { mockDatabaseAdapter } from './mockDatabaseAdapter';
 import { AP } from 'activitypub-core-types';
 import { Db } from 'mongodb';
 import { ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
 
-describe('DatabaseService', () => {
+describe('DatabaseAdapter', () => {
   describe('queryById', () => {
     const object1Url = 'https://test.com/object/123';
     const object1Result: AP.Note = {
@@ -14,7 +14,7 @@ describe('DatabaseService', () => {
       content: 'Test',
     };
 
-    const databaseService = mockDatabaseService({
+    const databaseAdapter = mockDatabaseAdapter({
       db: {
         findOne: jest.fn(() => null),
       } as unknown as Db,
@@ -32,7 +32,7 @@ describe('DatabaseService', () => {
     });
 
     it('should expand remote object', async () => {
-      const result = await databaseService.queryById(new URL(object1Url));
+      const result = await databaseAdapter.queryById(new URL(object1Url));
       expect(result).toMatchObject(object1Result);
     });
   });

@@ -1,2 +1,2 @@
-import { OutboxPostHandler } from '.';
-export declare function getActor(this: OutboxPostHandler): Promise<void>;
+import { OutboxPostEndpoint } from '.';
+export declare function getActor(this: OutboxPostEndpoint): Promise<void>;

@@ -1,2 +1,2 @@
-import { InboxEndpoint } from ".";
-export declare function parseBody(this: InboxEndpoint): Promise<void>;
+import { InboxPostEndpoint } from ".";
+export declare function parseBody(this: InboxPostEndpoint): Promise<void>;

@@ -1,8 +1,8 @@
 import { getId } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
-import { OutboxPostHandler } from '../..';
+import { OutboxPostEndpoint } from '../..';
 
-export async function handleUndoAnnounce(this: OutboxPostHandler, activity: AP.Entity) {
+export async function handleUndoAnnounce(this: OutboxPostEndpoint, activity: AP.Entity) {
   if (!('object' in activity)) {
     throw new Error('Bad activity: no object.');
   }
@@ -17,7 +17,7 @@ export async function handleUndoAnnounce(this: OutboxPostHandler, activity: AP.E
     throw new Error('Bad actor: no ID.');
   }
 
-  const actor = await this.databaseService.queryById(actorId);
+  const actor = await this.adapters.database.queryById(actorId);
 
   if (!actor || !('outbox' in actor)) {
     throw new Error('Bad actor: not found.');
@@ -29,7 +29,7 @@ export async function handleUndoAnnounce(this: OutboxPostHandler, activity: AP.E
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.databaseService.queryById(objectId);
+  const object = await this.adapters.database.queryById(objectId);
 
   if (!object) {
     throw new Error('Bad object: not found.');
@@ -57,7 +57,7 @@ export async function handleUndoAnnounce(this: OutboxPostHandler, activity: AP.E
     actor.streams
       .map((stream: AP.Entity) => (stream instanceof URL ? stream : stream.id))
       .map(async (id: URL) =>
-        id ? await this.databaseService.queryById(id) : null,
+        id ? await this.adapters.database.queryById(id) : null,
       ),
   );
 
@@ -74,7 +74,7 @@ export async function handleUndoAnnounce(this: OutboxPostHandler, activity: AP.E
   }
 
   await Promise.all([
-    this.databaseService.removeOrderedItem(sharesId, activity.id),
-    this.databaseService.removeOrderedItem(shared.id, object.id),
+    this.adapters.database.removeOrderedItem(sharesId, activity.id),
+    this.adapters.database.removeOrderedItem(shared.id, object.id),
   ]);
 }

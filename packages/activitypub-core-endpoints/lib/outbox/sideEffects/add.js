@@ -18,15 +18,15 @@ async function handleAdd(activity) {
     if (!targetId) {
         throw new Error('Bad target: no ID.');
     }
-    const target = await this.databaseService.findEntityById(targetId);
+    const target = await this.adapters.database.findEntityById(targetId);
     if (!target) {
         throw new Error('Bad target: not found, only local allowed.');
     }
     if ('orderedItems' in target && Array.isArray(target.orderedItems)) {
-        await this.databaseService.insertOrderedItem(targetId, objectId);
+        await this.adapters.database.insertOrderedItem(targetId, objectId);
     }
     else if ('items' in target && Array.isArray(target.items)) {
-        await this.databaseService.insertItem(targetId, objectId);
+        await this.adapters.database.insertItem(targetId, objectId);
     }
     else {
         throw new Error('Bad target: not a collection.');

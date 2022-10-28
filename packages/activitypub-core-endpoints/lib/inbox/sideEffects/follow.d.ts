@@ -1,2 +1,2 @@
-import { InboxEndpoint } from '..';
-export declare function handleFollow(this: InboxEndpoint): Promise<void>;
+import { InboxPostEndpoint } from "..";
+export declare function handleFollow(this: InboxPostEndpoint): Promise<void>;

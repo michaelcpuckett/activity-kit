@@ -6,25 +6,21 @@ import {
   convertUrlsToStrings,
   getHttpSignature,
 } from 'activitypub-core-utilities';
-import { DeliveryService } from '.';
+import { DeliveryAdapter } from '.';
 
 export async function signAndSendToForeignActorInbox(
-  this: DeliveryService,
+  this: DeliveryAdapter,
   foreignActorInbox: URL,
   actor: AP.Actor,
   activity: AP.Activity,
 ) {
-  if (typeof this.fetch !== 'function') {
-    return null;
-  }
-
   console.log('SENDING TO...', foreignActorInbox.toString());
 
   const convertedActivity = convertUrlsToStrings(activity);
   const { dateHeader, digestHeader, signatureHeader } = await getHttpSignature(foreignActorInbox, actor.id, await this.getPrivateKey(actor), convertedActivity);
 
   // send
-  return await this.fetch(foreignActorInbox.toString(), {
+  return await this.adapters.fetch(foreignActorInbox.toString(), {
     method: 'post',
     body: JSON.stringify(convertedActivity),
     headers: {

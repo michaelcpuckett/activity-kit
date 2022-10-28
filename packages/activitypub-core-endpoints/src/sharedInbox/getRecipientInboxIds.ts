@@ -1,37 +1,40 @@
 import { AP } from 'activitypub-core-types';
 import { getId, isTypeOf } from 'activitypub-core-utilities';
-import { SharedInboxEndpoint } from '.';
+import { SharedInboxPostEndpoint } from '.';
+import { InboxPostEndpoint } from '../inbox';
 
-export async function getRecipientInboxIds(this: SharedInboxEndpoint) {
-  if (!this.activity) {
-    throw new Error('No activity.')
+export async function getRecipientInboxIds(this: InboxPostEndpoint & SharedInboxPostEndpoint) {
+  if (!isTypeOf(this.activity, AP.ActivityTypes)) {
+    throw new Error('Not an activity.')
   }
 
+  const activity = this.activity as AP.Activity;
+
   const recipientIds: URL[] = [
-    ...(this.activity.to
-      ? await this.deliveryService.getRecipientsList(this.activity.to)
+    ...(activity.to
+      ? await this.adapters.delivery.getRecipientsList(activity.to)
       : []),
-    ...(this.activity.cc
-      ? await this.deliveryService.getRecipientsList(this.activity.cc)
+    ...(activity.cc
+      ? await this.adapters.delivery.getRecipientsList(activity.cc)
       : []),
-    ...(this.activity.bto
-      ? await this.deliveryService.getRecipientsList(this.activity.bto)
+    ...(activity.bto
+      ? await this.adapters.delivery.getRecipientsList(activity.bto)
       : []),
-    ...(this.activity.bcc
-      ? await this.deliveryService.getRecipientsList(this.activity.bcc)
+    ...(activity.bcc
+      ? await this.adapters.delivery.getRecipientsList(activity.bcc)
       : []),
-    ...(this.activity.audience
-      ? await this.deliveryService.getRecipientsList(this.activity.audience)
+    ...(activity.audience
+      ? await this.adapters.delivery.getRecipientsList(activity.audience)
       : []),
   ];
 
   const recipientInboxes = await Promise.all(
     recipientIds.map(async (recipientId) => {
-      if (recipientId.toString() === getId(this.activity.actor).toString()) {
+      if (recipientId.toString() === getId(activity.actor).toString()) {
         return null;
       }
 
-      const recipient = await this.databaseService.findEntityById(recipientId);
+      const recipient = await this.adapters.database.findEntityById(recipientId);
 
       if (!recipient) {
         return null;

@@ -1,8 +1,8 @@
-import { OutboxPostHandler } from '..';
+import { OutboxPostEndpoint } from '..';
 import { AP } from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
 
-export async function handleDelete(this: OutboxPostHandler, activity?: AP.Entity) {
+export async function handleDelete(this: OutboxPostEndpoint, activity?: AP.Entity) {
   activity = activity || this.activity;
 
   if (!('object' in activity)) {
@@ -15,7 +15,7 @@ export async function handleDelete(this: OutboxPostHandler, activity?: AP.Entity
     throw new Error('Bad object: not ID.');
   }
 
-  const object = await this.databaseService.findEntityById(objectId);
+  const object = await this.adapters.database.findEntityById(objectId);
 
   if (!object || !object.type) {
     throw new Error('Bad object: not found.');
@@ -34,5 +34,5 @@ export async function handleDelete(this: OutboxPostHandler, activity?: AP.Entity
       : null),
   };
 
-  await this.databaseService.saveEntity(activity.object);
+  await this.adapters.database.saveEntity(activity.object);
 }

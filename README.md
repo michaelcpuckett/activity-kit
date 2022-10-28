@@ -17,11 +17,11 @@ Canonical example using Firebase Auth, Express, MongoDB, JSX:
 ```ts
 (async () => {
   const app = express();
-  const authenticationService = new FirebaseAuthentication(serviceAccount, '<project-id>');
-  const databaseService = await new MongoDatabaseService().connect({
+  const authenticationAdapter = new FirebaseAuthentication(serviceAccount, '<project-id>');
+  const databaseAdapter = await new MongoDatabaseAdapter().connect({
     mongoClientUrl: 'mongodb://localhost:27017',
   });
-  const deliveryService = new DeliveryService(databaseService);
+  const deliveryAdapter = new DeliveryAdapter(databaseAdapter);
 
   app.use(
     activityPub(
@@ -45,9 +45,9 @@ Canonical example using Firebase Auth, Express, MongoDB, JSX:
         },
       },
       {
-        authenticationService,
-        databaseService,
-        deliveryService,
+        authenticationAdapter,
+        databaseAdapter,
+        deliveryAdapter,
       },
     ),
   );

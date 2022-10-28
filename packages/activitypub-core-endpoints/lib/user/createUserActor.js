@@ -5,7 +5,7 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
 const activitypub_core_types_1 = require("activitypub-core-types");
-async function createUserActor(databaseService, user, plugins) {
+async function createUserActor(user) {
     const { publicKey, privateKey } = await (0, activitypub_core_utilities_2.generateKeyPair)();
     const id = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/actor/${user.preferredUsername}`;
     const publishedDate = new Date();
@@ -199,8 +199,8 @@ async function createUserActor(databaseService, user, plugins) {
         shares: createActorActivityShares.id,
         published: publishedDate,
     };
-    if (plugins) {
-        for (const plugin of plugins) {
+    if (this.plugins) {
+        for (const plugin of this.plugins) {
             if ('handleCreateUserActor' in plugin) {
                 createActorActivity = await plugin.handleCreateUserActor.call({
                     activity: createActorActivity,
@@ -210,26 +210,26 @@ async function createUserActor(databaseService, user, plugins) {
         }
     }
     await Promise.all([
-        databaseService.saveEntity(createActorActivity),
-        databaseService.saveEntity(createActorActivityReplies),
-        databaseService.saveEntity(createActorActivityLikes),
-        databaseService.saveEntity(createActorActivityShares),
-        databaseService.saveEntity(userActor),
-        databaseService.saveEntity(userInbox),
-        databaseService.saveEntity(userOutbox),
-        databaseService.saveEntity(userLiked),
-        databaseService.saveEntity(userReplies),
-        databaseService.saveEntity(userLikes),
-        databaseService.saveEntity(userShares),
-        databaseService.saveEntity(userFollowers),
-        databaseService.saveEntity(userFollowing),
-        databaseService.saveEntity(userShared),
-        databaseService.saveEntity(userBlocked),
-        databaseService.saveEntity(userGroups),
-        databaseService.saveEntity(userBookmarks),
-        databaseService.saveString('account', user.uid, user.email),
-        databaseService.saveString('private-key', user.uid, privateKey),
-        databaseService.saveString('username', user.uid, user.preferredUsername),
+        this.adapters.database.saveEntity(createActorActivity),
+        this.adapters.database.saveEntity(createActorActivityReplies),
+        this.adapters.database.saveEntity(createActorActivityLikes),
+        this.adapters.database.saveEntity(createActorActivityShares),
+        this.adapters.database.saveEntity(userActor),
+        this.adapters.database.saveEntity(userInbox),
+        this.adapters.database.saveEntity(userOutbox),
+        this.adapters.database.saveEntity(userLiked),
+        this.adapters.database.saveEntity(userReplies),
+        this.adapters.database.saveEntity(userLikes),
+        this.adapters.database.saveEntity(userShares),
+        this.adapters.database.saveEntity(userFollowers),
+        this.adapters.database.saveEntity(userFollowing),
+        this.adapters.database.saveEntity(userShared),
+        this.adapters.database.saveEntity(userBlocked),
+        this.adapters.database.saveEntity(userGroups),
+        this.adapters.database.saveEntity(userBookmarks),
+        this.adapters.database.saveString('account', user.uid, user.email),
+        this.adapters.database.saveString('private-key', user.uid, privateKey),
+        this.adapters.database.saveString('username', user.uid, user.preferredUsername),
     ]);
     const friendsGroupId = `${id}/groups/friends`;
     const friendsGroupInbox = {
@@ -342,33 +342,33 @@ async function createUserActor(databaseService, user, plugins) {
         object: friendsGroupActor,
     };
     await Promise.all([
-        databaseService.saveEntity(friendsGroupActor),
-        databaseService.saveEntity(friendsGroupInbox),
-        databaseService.saveEntity(friendsGroupOutbox),
-        databaseService.saveEntity(friendsGroupReplies),
-        databaseService.saveEntity(friendsGroupLikes),
-        databaseService.saveEntity(friendsGroupShares),
-        databaseService.saveEntity(friendsGroupMembers),
-        databaseService.saveEntity(createFriendsGroupActorActivity),
-        databaseService.saveEntity(createFriendsGroupActivityReplies),
-        databaseService.saveEntity(createFriendsGroupActivityLikes),
-        databaseService.saveEntity(createFriendsGroupActivityShares),
+        this.adapters.database.saveEntity(friendsGroupActor),
+        this.adapters.database.saveEntity(friendsGroupInbox),
+        this.adapters.database.saveEntity(friendsGroupOutbox),
+        this.adapters.database.saveEntity(friendsGroupReplies),
+        this.adapters.database.saveEntity(friendsGroupLikes),
+        this.adapters.database.saveEntity(friendsGroupShares),
+        this.adapters.database.saveEntity(friendsGroupMembers),
+        this.adapters.database.saveEntity(createFriendsGroupActorActivity),
+        this.adapters.database.saveEntity(createFriendsGroupActivityReplies),
+        this.adapters.database.saveEntity(createFriendsGroupActivityLikes),
+        this.adapters.database.saveEntity(createFriendsGroupActivityShares),
     ]);
     if (userGroups.id) {
         await Promise.all([
-            databaseService.insertItem(userGroups.id, new URL(friendsGroupId)),
+            this.adapters.database.insertItem(userGroups.id, new URL(friendsGroupId)),
         ]);
     }
     if (createFriendsGroupActorActivity.id && friendsGroupInbox.id) {
         await Promise.all([
-            databaseService.insertOrderedItem(new URL(`${activitypub_core_utilities_3.SERVER_ACTOR_ID}/outbox`), createFriendsGroupActorActivity.id),
-            databaseService.insertOrderedItem(friendsGroupInbox.id, createFriendsGroupActorActivity.id),
+            this.adapters.database.insertOrderedItem(new URL(`${activitypub_core_utilities_3.SERVER_ACTOR_ID}/outbox`), createFriendsGroupActorActivity.id),
+            this.adapters.database.insertOrderedItem(friendsGroupInbox.id, createFriendsGroupActorActivity.id),
         ]);
     }
     if (createActorActivity.id && userInbox.id) {
         await Promise.all([
-            databaseService.insertOrderedItem(new URL(`${activitypub_core_utilities_3.SERVER_ACTOR_ID}/outbox`), createActorActivity.id),
-            databaseService.insertOrderedItem(userInbox.id, createActorActivity.id),
+            this.adapters.database.insertOrderedItem(new URL(`${activitypub_core_utilities_3.SERVER_ACTOR_ID}/outbox`), createActorActivity.id),
+            this.adapters.database.insertOrderedItem(userInbox.id, createActorActivity.id),
         ]);
     }
 }

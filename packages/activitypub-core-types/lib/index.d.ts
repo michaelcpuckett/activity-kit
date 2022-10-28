@@ -27,7 +27,7 @@ export declare type Database = {
     saveEntity: Function;
     saveString: Function;
 };
-export interface DatabaseService {
+export interface DatabaseAdapter {
     connect(config?: {
         [key: string]: unknown;
     }): Promise<Database>;

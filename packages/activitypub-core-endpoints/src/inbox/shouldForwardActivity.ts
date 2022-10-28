@@ -1,8 +1,8 @@
 import { AP } from 'activitypub-core-types';
 import { getId, isType, isTypeOf } from 'activitypub-core-utilities';
-import { InboxEndpoint } from '.';
+import { InboxPostEndpoint } from ".";
 
-export async function shouldForwardActivity(this: InboxEndpoint) {
+export async function shouldForwardActivity(this: InboxPostEndpoint) {
   if (!this.activity) {
     return false;
   }
@@ -38,7 +38,7 @@ export async function shouldForwardActivity(this: InboxEndpoint) {
       continue;
     }
 
-    const foundItem = await this.databaseService.findEntityById(addresseeId);
+    const foundItem = await this.adapters.database.findEntityById(addresseeId);
 
     if (!foundItem) {
       continue;
@@ -87,7 +87,7 @@ export async function shouldForwardActivity(this: InboxEndpoint) {
       continue;
     }
 
-    const foundItem = await this.databaseService.findEntityById(objectId);
+    const foundItem = await this.adapters.database.findEntityById(objectId);
 
     if (!foundItem) {
       continue;

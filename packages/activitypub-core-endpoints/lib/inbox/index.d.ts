@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { AP } from 'activitypub-core-types';
+import { AP, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import type { Database, Auth } from 'activitypub-core-types';
 import { getActor } from './getActor';
@@ -13,22 +13,23 @@ import { handleLike } from './sideEffects/like';
 import { handleCreate } from './sideEffects/create';
 import { shouldForwardActivity } from './shouldForwardActivity';
 import { broadcastActivity } from './broadcastActivity';
-import { DeliveryService } from 'activitypub-core-delivery';
-export declare function inboxHandler(req: IncomingMessage, res: ServerResponse, authenticationService: Auth, databaseService: Database, deliveryService: DeliveryService): Promise<{
-    props?: {
-        entity?: AP.Entity;
-        actor?: AP.Actor;
-    };
-} | {
-    props: {};
-}>;
-export declare class InboxEndpoint {
+import { DeliveryAdapter } from 'activitypub-core-delivery';
+export declare class InboxPostEndpoint {
     req: IncomingMessage;
     res: ServerResponse;
-    databaseService: Database;
-    deliveryService: DeliveryService;
-    activity: AP.Activity | null;
+    adapters: {
+        authentication: Auth;
+        database: Database;
+        delivery: DeliveryAdapter;
+    };
+    plugins?: Plugin[];
     actor: AP.Actor | null;
+    activity: AP.Entity | null;
+    constructor(req: IncomingMessage, res: ServerResponse, adapters: {
+        authentication: Auth;
+        database: Database;
+        delivery: DeliveryAdapter;
+    }, plugins?: Plugin[]);
     protected getActor: typeof getActor;
     protected runSideEffects: typeof runSideEffects;
     protected parseBody: typeof parseBody;
@@ -40,8 +41,5 @@ export declare class InboxEndpoint {
     protected handleAnnounce: typeof handleAnnounce;
     protected handleFollow: typeof handleFollow;
     protected handleLike: typeof handleLike;
-    constructor(req: IncomingMessage, res: ServerResponse, databaseService: Database, deliveryService: DeliveryService);
-    handlePost(): Promise<{
-        props: {};
-    }>;
+    respond(): Promise<void>;
 }

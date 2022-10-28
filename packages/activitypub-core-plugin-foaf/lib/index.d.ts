@@ -1,4 +1,2 @@
 import type { Plugin } from 'activitypub-core-types';
-export declare const foafPlugin: (config: {
-    newPerson?: JSON;
-}) => Plugin;
+export declare const FoafPlugin: (config?: {}) => Plugin;

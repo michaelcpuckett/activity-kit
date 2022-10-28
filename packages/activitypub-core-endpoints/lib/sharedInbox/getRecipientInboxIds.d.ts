@@ -1,3 +1,4 @@
 /// <reference types="node" />
-import { SharedInboxEndpoint } from '.';
-export declare function getRecipientInboxIds(this: SharedInboxEndpoint): Promise<URL[]>;
+import { SharedInboxPostEndpoint } from '.';
+import { InboxPostEndpoint } from '../inbox';
+export declare function getRecipientInboxIds(this: InboxPostEndpoint & SharedInboxPostEndpoint): Promise<URL[]>;

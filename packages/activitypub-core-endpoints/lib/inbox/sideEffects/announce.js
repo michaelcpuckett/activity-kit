@@ -12,7 +12,7 @@ async function handleAnnounce() {
     if (!objectId) {
         throw new Error('Bad object: no ID.');
     }
-    const object = await this.databaseService.findEntityById(objectId);
+    const object = await this.adapters.database.findEntityById(objectId);
     if (!object || !object.type || !object.id) {
         return;
     }
@@ -23,15 +23,15 @@ async function handleAnnounce() {
     if (!sharesId) {
         throw new Error('Bad shares collection: no ID.');
     }
-    const shares = await this.databaseService.findEntityById(sharesId);
+    const shares = await this.adapters.database.findEntityById(sharesId);
     if (!shares) {
         throw new Error('Bad shares collection: not found');
     }
     if ((0, activitypub_core_utilities_1.isType)(shares, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
-        await this.databaseService.insertItem(sharesId, activity.id);
+        await this.adapters.database.insertItem(sharesId, activity.id);
     }
     else if ((0, activitypub_core_utilities_1.isType)(shares.type, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
-        await this.databaseService.insertOrderedItem(sharesId, activity.id);
+        await this.adapters.database.insertOrderedItem(sharesId, activity.id);
     }
 }
 exports.handleAnnounce = handleAnnounce;

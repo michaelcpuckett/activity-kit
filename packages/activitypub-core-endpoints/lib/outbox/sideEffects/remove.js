@@ -19,15 +19,15 @@ async function handleRemove(activity) {
     if (!targetId) {
         throw new Error('Bad target: no ID.');
     }
-    const target = await this.databaseService.findEntityById(targetId);
+    const target = await this.adapters.database.findEntityById(targetId);
     if (!target) {
         throw new Error('Bad target: not found.');
     }
     if ('orderedItems' in target && Array.isArray(target.orderedItems)) {
-        await this.databaseService.removeOrderedItem(targetId, objectId);
+        await this.adapters.database.removeOrderedItem(targetId, objectId);
     }
     else if ('items' in target && Array.isArray(target.items)) {
-        await this.databaseService.removeItem(targetId, objectId);
+        await this.adapters.database.removeItem(targetId, objectId);
     }
     else {
         throw new Error('Bad target: not a collection.');

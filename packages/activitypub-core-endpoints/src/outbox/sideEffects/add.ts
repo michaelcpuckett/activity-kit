@@ -1,8 +1,8 @@
-import { OutboxPostHandler } from '..';
+import { OutboxPostEndpoint } from '..';
 import { getId } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 
-export async function handleAdd(this: OutboxPostHandler, activity?: AP.Entity) {
+export async function handleAdd(this: OutboxPostEndpoint, activity?: AP.Entity) {
   activity = activity || this.activity;
 
   if (!('object' in activity) || !('target' in activity)) {
@@ -26,7 +26,7 @@ export async function handleAdd(this: OutboxPostHandler, activity?: AP.Entity) {
   }
 
   // Only find local targets
-  const target = await this.databaseService.findEntityById(targetId);
+  const target = await this.adapters.database.findEntityById(targetId);
 
   if (!target) {
     throw new Error('Bad target: not found, only local allowed.');
@@ -35,9 +35,9 @@ export async function handleAdd(this: OutboxPostHandler, activity?: AP.Entity) {
   // TODO: Check if actor "owns" this collection.
 
   if ('orderedItems' in target && Array.isArray(target.orderedItems)) {
-    await this.databaseService.insertOrderedItem(targetId, objectId);
+    await this.adapters.database.insertOrderedItem(targetId, objectId);
   } else if ('items' in target && Array.isArray(target.items)) {
-    await this.databaseService.insertItem(targetId, objectId);
+    await this.adapters.database.insertItem(targetId, objectId);
   } else {
     throw new Error('Bad target: not a collection.');
   }

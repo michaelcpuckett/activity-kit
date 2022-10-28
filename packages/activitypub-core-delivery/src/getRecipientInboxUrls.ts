@@ -1,8 +1,8 @@
-import { DeliveryService } from '.';
+import { DeliveryAdapter } from '.';
 import { AP } from 'activitypub-core-types';
 
 export async function getRecipientInboxUrls(
-  this: DeliveryService,
+  this: DeliveryAdapter,
   activity: AP.Activity,
   actor: AP.Actor,
 ): Promise<URL[]> {
@@ -23,7 +23,7 @@ export async function getRecipientInboxUrls(
         return null;
       }
 
-      const foundThing = await this.databaseService.queryById(recipient);
+      const foundThing = await this.adapters.database.queryById(recipient);
 
       if (!foundThing) {
         return null;

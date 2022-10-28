@@ -4,10 +4,17 @@ import { getPrivateKey } from './getPrivateKey';
 import { getRecipientInboxUrls } from './getRecipientInboxUrls';
 import { getRecipientsList } from './getRecipientsList';
 import { signAndSendToForeignActorInbox } from './signAndSendToForeignActorInbox';
-export declare class DeliveryService {
-    databaseService: Database;
-    fetch: Function;
-    constructor(databaseService: Database, fetchFn?: Function);
+export declare class DeliveryAdapter {
+    adapters: {
+        database: Database;
+        fetch: Function;
+    };
+    constructor(config: {
+        adapters: {
+            database: Database;
+            fetch?: Function;
+        };
+    });
     getPrivateKey: typeof getPrivateKey;
     signAndSendToForeignActorInbox: typeof signAndSendToForeignActorInbox;
     broadcast: typeof broadcast;

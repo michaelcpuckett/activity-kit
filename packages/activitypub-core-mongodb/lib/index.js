@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MongoDatabaseService = exports.MongoDatabase = void 0;
+exports.MongoDatabaseAdapter = exports.MongoDatabase = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const isomorphic_fetch_1 = __importDefault(require("isomorphic-fetch"));
 const mongodb_1 = require("mongodb");
@@ -47,7 +47,7 @@ class MongoDatabase {
     expandCollection = expandCollection_1.expandCollection;
 }
 exports.MongoDatabase = MongoDatabase;
-class MongoDatabaseService {
+class MongoDatabaseAdapter {
     async connect({ mongoClientUrl, dbName, }) {
         const client = new mongodb_1.MongoClient(mongoClientUrl, {
             minPoolSize: 10,
@@ -57,5 +57,5 @@ class MongoDatabaseService {
         return new MongoDatabase(db, isomorphic_fetch_1.default);
     }
 }
-exports.MongoDatabaseService = MongoDatabaseService;
+exports.MongoDatabaseAdapter = MongoDatabaseAdapter;
 //# sourceMappingURL=index.js.map

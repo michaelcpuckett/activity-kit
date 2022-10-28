@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { AP } from 'activitypub-core-types';
+import { AP, Plugin } from 'activitypub-core-types';
 import type { Auth, Database, Storage } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import formidable from 'formidable';
@@ -8,13 +8,15 @@ import { authenticateActor } from './authenticateActor';
 import { parseBody } from './parseBody';
 import { cleanup } from './cleanup';
 import { saveActivity } from './saveActivity';
-export declare function uploadMediaHandler(req: IncomingMessage, res: ServerResponse, authenticationService: Auth, databaseService: Database, storageService: Storage): Promise<void>;
-export declare class UploadMediaEndpoint {
+export declare class UploadMediaPostEndpoint {
     req: IncomingMessage;
     res: ServerResponse;
-    authenticationService: Auth;
-    databaseService: Database;
-    storageService: Storage;
+    adapters: {
+        authentication: Auth;
+        database: Database;
+        storage: Storage;
+    };
+    plugins?: Plugin[];
     actor: AP.Actor | null;
     activity: AP.Create & {
         object: AP.Image | AP.Document | AP.Video | AP.Audio;
@@ -25,6 +27,10 @@ export declare class UploadMediaEndpoint {
     protected parseBody: typeof parseBody;
     protected cleanup: typeof cleanup;
     protected saveActivity: typeof saveActivity;
-    constructor(req: IncomingMessage, res: ServerResponse, authenticationService: Auth, databaseService: Database, storageService: Storage);
-    handlePost(): Promise<void>;
+    constructor(req: IncomingMessage, res: ServerResponse, adapters: {
+        authentication: Auth;
+        database: Database;
+        storage: Storage;
+    }, plugins?: Plugin[]);
+    respond(): Promise<void>;
 }

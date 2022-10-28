@@ -1,2 +1,2 @@
-import { UploadMediaEndpoint } from '.';
-export declare function parseBody(this: UploadMediaEndpoint): Promise<void>;
+import { UploadMediaPostEndpoint } from '.';
+export declare function parseBody(this: UploadMediaPostEndpoint): Promise<void>;

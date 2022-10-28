@@ -15,7 +15,7 @@ async function getRecipientInboxUrls(activity, actor) {
         if (recipient.toString() === actor.id?.toString()) {
             return null;
         }
-        const foundThing = await this.databaseService.queryById(recipient);
+        const foundThing = await this.adapters.database.queryById(recipient);
         if (!foundThing) {
             return null;
         }

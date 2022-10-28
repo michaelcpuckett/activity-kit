@@ -7,9 +7,9 @@ import {
   PUBLIC_ACTOR,
 } from 'activitypub-core-utilities';
 import { getId } from 'activitypub-core-utilities';
-import { InboxEndpoint } from '..';
+import { InboxPostEndpoint } from "..";
 
-export async function handleFollow(this: InboxEndpoint) {
+export async function handleFollow(this: InboxPostEndpoint) {
   const activity = this.activity;
 
   if (!('object' in activity)) {
@@ -22,7 +22,7 @@ export async function handleFollow(this: InboxEndpoint) {
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.databaseService.queryById(objectId);
+  const object = await this.adapters.database.queryById(objectId);
 
   if (!object) {
     throw new Error('Bad object: not found.');
@@ -33,13 +33,17 @@ export async function handleFollow(this: InboxEndpoint) {
     return;
   }
 
+  if (!('actor' in activity)) {
+    throw new Error('Bad activity: no actor.')
+  }
+
   const actorId = getId(activity.actor);
 
   if (!actorId) {
     throw new Error('Bad activity: No actor.');
   }
 
-  const actor = await this.databaseService.queryById(actorId);
+  const actor = await this.adapters.database.queryById(actorId);
 
   if (!actor) {
     throw new Error('Bad actor: Not found.');
@@ -121,13 +125,13 @@ export async function handleFollow(this: InboxEndpoint) {
   }
 
   await Promise.all([
-    this.databaseService.saveEntity(acceptActivity),
-    this.databaseService.saveEntity(acceptActivityReplies),
-    this.databaseService.saveEntity(acceptActivityLikes),
-    this.databaseService.saveEntity(acceptActivityShares),
-    this.databaseService.insertOrderedItem(followeeOutboxId, acceptActivity.id),
-    this.databaseService.insertItem(followersId, follower.id),
+    this.adapters.database.saveEntity(acceptActivity),
+    this.adapters.database.saveEntity(acceptActivityReplies),
+    this.adapters.database.saveEntity(acceptActivityLikes),
+    this.adapters.database.saveEntity(acceptActivityShares),
+    this.adapters.database.insertOrderedItem(followeeOutboxId, acceptActivity.id),
+    this.adapters.database.insertItem(followersId, follower.id),
   ]);
 
-  await this.deliveryService.broadcast(acceptActivity, followee);
+  await this.adapters.delivery.broadcast(acceptActivity, followee);
 }

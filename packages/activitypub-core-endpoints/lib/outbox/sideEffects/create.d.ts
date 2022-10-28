@@ -1,2 +1,2 @@
-import { OutboxPostHandler } from '..';
-export declare function handleCreate(this: OutboxPostHandler): Promise<void>;
+import { OutboxPostEndpoint } from '..';
+export declare function handleCreate(this: OutboxPostEndpoint): Promise<void>;

@@ -1,2 +1,2 @@
-import { UploadMediaEndpoint } from '.';
-export declare function authenticateActor(this: UploadMediaEndpoint): Promise<void>;
+import { UploadMediaPostEndpoint } from '.';
+export declare function authenticateActor(this: UploadMediaPostEndpoint): Promise<void>;

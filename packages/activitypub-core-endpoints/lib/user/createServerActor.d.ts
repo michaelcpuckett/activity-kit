@@ -1,2 +1,2 @@
-import type { Database } from 'activitypub-core-types';
-export declare function createServerActor(databaseService: Database): Promise<void>;
+import { UserPostEndpoint } from '.';
+export declare function createServerActor(this: UserPostEndpoint): Promise<void>;

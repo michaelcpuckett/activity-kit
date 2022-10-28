@@ -1,2 +1,2 @@
-import { InboxEndpoint } from '.';
-export declare function shouldForwardActivity(this: InboxEndpoint): Promise<boolean>;
+import { InboxPostEndpoint } from ".";
+export declare function shouldForwardActivity(this: InboxPostEndpoint): Promise<boolean>;

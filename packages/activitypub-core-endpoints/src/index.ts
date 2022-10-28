@@ -1,8 +1,8 @@
-export { userPostHandler } from './user';
-export { homeGetHandler } from './home';
-export { entityGetHandler } from './entity';
-export { outboxHandler } from './outbox';
-export { inboxHandler } from './inbox';
-export { sharedInboxHandler } from './sharedInbox';
-export { webfingerHandler } from './webfinger';
-export { uploadMediaHandler } from './uploadMedia';
+export { UserPostEndpoint } from './user';
+export { HomeGetEndpoint } from './home';
+export { EntityGetEndpoint } from './entity';
+export { OutboxPostEndpoint } from './outbox';
+export { InboxPostEndpoint } from './inbox';
+export { SharedInboxPostEndpoint } from './sharedInbox';
+export { WebfingerGetEndpoint } from './webfinger';
+export { UploadMediaPostEndpoint } from './uploadMedia';

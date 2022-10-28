@@ -1,4 +1,4 @@
-import { AP } from 'activitypub-core-types';
+import { AP, Plugin } from 'activitypub-core-types';
 import type { Auth, Database, Storage } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import formidable from 'formidable';
@@ -8,22 +8,15 @@ import { parseBody } from './parseBody';
 import { cleanup } from './cleanup';
 import { saveActivity } from './saveActivity';
 
-export async function uploadMediaHandler(
-  req: IncomingMessage,
-  res: ServerResponse,
-  authenticationService: Auth,
-  databaseService: Database,
-  storageService: Storage,
-) {
-  return await new UploadMediaEndpoint(req, res, authenticationService, databaseService, storageService).handlePost();
-}
-
-export class UploadMediaEndpoint {
+export class UploadMediaPostEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
-  authenticationService: Auth;
-  databaseService: Database;
-  storageService: Storage;
+  adapters: {
+    authentication: Auth;
+    database: Database;
+    storage: Storage;
+  };
+  plugins?: Plugin[];
 
   actor: AP.Actor | null = null;
   activity: AP.Create & {
@@ -40,23 +33,25 @@ export class UploadMediaEndpoint {
   constructor(
     req: IncomingMessage,
     res: ServerResponse,
-    authenticationService: Auth,
-    databaseService: Database,
-    storageService: Storage,
+    adapters: {
+      authentication: Auth;
+      database: Database;
+      storage: Storage;
+    },
+    plugins?: Plugin[]
   ) {
     this.req = req;
     this.res = res;
-    this.authenticationService = authenticationService;
-    this.databaseService = databaseService;
-    this.storageService = storageService;
+    this.adapters = adapters;
+    this.plugins = plugins;
   }
 
-  public async handlePost() {
+  public async respond() {
     try {
       await this.getActor();
       await this.authenticateActor();
       await this.parseBody();
-      const url = await this.storageService.upload(this.file);
+      const url = await this.adapters.storage.upload(this.file);
       this.activity.object.url = url;
       await this.cleanup();
       await this.saveActivity();

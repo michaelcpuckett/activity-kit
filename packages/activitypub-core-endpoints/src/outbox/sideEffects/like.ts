@@ -1,8 +1,8 @@
-import { OutboxPostHandler } from '..';
+import { OutboxPostEndpoint } from '..';
 import { AP } from 'activitypub-core-types';
 import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
 
-export async function handleLike(this: OutboxPostHandler) {
+export async function handleLike(this: OutboxPostEndpoint) {
   if (!('object' in this.activity)) {
     throw new Error('Bad activity: no object.');
   }
@@ -17,7 +17,7 @@ export async function handleLike(this: OutboxPostHandler) {
     throw new Error('Bad actor: no ID.');
   }
 
-  const actor = await this.databaseService.queryById(actorId);
+  const actor = await this.adapters.database.queryById(actorId);
 
   if (!actor || !('outbox' in actor)) {
     throw new Error('Bad actor: not found.');
@@ -29,7 +29,7 @@ export async function handleLike(this: OutboxPostHandler) {
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.databaseService.queryById(objectId);
+  const object = await this.adapters.database.queryById(objectId);
 
   if (!object) {
     throw new Error('Bad object: Not found.');
@@ -50,7 +50,7 @@ export async function handleLike(this: OutboxPostHandler) {
   }
 
   await Promise.all([
-    this.databaseService.insertOrderedItem(likedId, object.id),
+    this.adapters.database.insertOrderedItem(likedId, object.id),
   ]);
 
   const isLocal = getCollectionNameByUrl(object.id) !== 'foreign-object';
@@ -67,7 +67,7 @@ export async function handleLike(this: OutboxPostHandler) {
     }
 
     await Promise.all([
-      this.databaseService.insertOrderedItem(likesId, this.activity.id),
+      this.adapters.database.insertOrderedItem(likesId, this.activity.id),
     ]);
   }
 }

@@ -1,8 +1,8 @@
 import { AP } from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
-import { OutboxPostHandler } from '../..';
+import { OutboxPostEndpoint } from '../..';
 
-export async function handleUndoLike(this: OutboxPostHandler, activity: AP.Entity) {
+export async function handleUndoLike(this: OutboxPostEndpoint, activity: AP.Entity) {
   if (!('object' in activity)) {
     throw new Error('Bad activity: no object.');
   }
@@ -17,7 +17,7 @@ export async function handleUndoLike(this: OutboxPostHandler, activity: AP.Entit
     throw new Error('Bad actor: no ID.');
   }
 
-  const actor = await this.databaseService.queryById(actorId);
+  const actor = await this.adapters.database.queryById(actorId);
 
   if (!actor || !('outbox' in actor)) {
     throw new Error('Bad actor: not found.');
@@ -29,7 +29,7 @@ export async function handleUndoLike(this: OutboxPostHandler, activity: AP.Entit
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.databaseService.queryById(objectId);
+  const object = await this.adapters.database.queryById(objectId);
 
   if (!object) {
     throw new Error('Bad object: not found.');
@@ -56,7 +56,7 @@ export async function handleUndoLike(this: OutboxPostHandler, activity: AP.Entit
   }
 
   await Promise.all([
-    this.databaseService.removeOrderedItem(likesId, activity.id),
-    this.databaseService.removeOrderedItem(likedId, object.id),
+    this.adapters.database.removeOrderedItem(likesId, activity.id),
+    this.adapters.database.removeOrderedItem(likedId, object.id),
   ]);
 }

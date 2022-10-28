@@ -4,7 +4,7 @@ exports.createServerActor = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
-async function createServerActor(databaseService) {
+async function createServerActor() {
     const { publicKey: botPublicKey, privateKey: botPrivateKey } = await (0, activitypub_core_utilities_2.generateKeyPair)();
     const publishedDate = new Date();
     const botInbox = {
@@ -67,13 +67,13 @@ async function createServerActor(databaseService) {
         published: publishedDate,
     };
     await Promise.all([
-        databaseService.saveEntity(botActor),
-        databaseService.saveEntity(botInbox),
-        databaseService.saveEntity(botOutbox),
-        databaseService.saveEntity(botFollowing),
-        databaseService.saveEntity(botFollowers),
-        databaseService.saveString('username', 'bot', 'bot'),
-        databaseService.saveString('private-key', 'bot', botPrivateKey),
+        this.adapters.database.saveEntity(botActor),
+        this.adapters.database.saveEntity(botInbox),
+        this.adapters.database.saveEntity(botOutbox),
+        this.adapters.database.saveEntity(botFollowing),
+        this.adapters.database.saveEntity(botFollowers),
+        this.adapters.database.saveString('username', 'bot', 'bot'),
+        this.adapters.database.saveString('private-key', 'bot', botPrivateKey),
     ]);
 }
 exports.createServerActor = createServerActor;

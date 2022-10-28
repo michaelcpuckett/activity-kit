@@ -1,7 +1,7 @@
-import type { Database, Plugin } from 'activitypub-core-types';
-export declare function createUserActor(databaseService: Database, user: {
+import { UserPostEndpoint } from '.';
+export declare function createUserActor(this: UserPostEndpoint, user: {
     uid: string;
     email: string;
     name: string;
     preferredUsername: string;
-}, plugins?: Plugin[]): Promise<void>;
+}): Promise<void>;

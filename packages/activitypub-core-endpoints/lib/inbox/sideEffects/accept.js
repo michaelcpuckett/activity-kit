@@ -12,7 +12,7 @@ async function handleAccept() {
     if (!objectId) {
         throw new Error('Bad object: no ID.');
     }
-    const object = await this.databaseService.queryById(objectId);
+    const object = await this.adapters.database.queryById(objectId);
     if (!object) {
         throw new Error('Bad object: not found.');
     }
@@ -28,14 +28,14 @@ async function handleAccept() {
     if (!followerId) {
         throw new Error('Bad followee: no ID.');
     }
-    const follower = await this.databaseService.queryById(followerId);
+    const follower = await this.adapters.database.queryById(followerId);
     if (!follower) {
         throw new Error('Bad follower: not found.');
     }
     if (!(0, activitypub_core_utilities_1.isTypeOf)(follower, activitypub_core_types_1.AP.ActorTypes)) {
         throw new Error('Bad follower: not an actor.');
     }
-    const followee = await this.databaseService.queryById(followeeId);
+    const followee = await this.adapters.database.queryById(followeeId);
     if (!followee) {
         throw new Error('Bad followee: not found.');
     }
@@ -51,8 +51,8 @@ async function handleAccept() {
         throw new Error('Bad followee: No following collection.');
     }
     await Promise.all([
-        this.databaseService.insertItem(followeeFollowersId, followerId),
-        this.databaseService.insertItem(followerFollowingId, followeeId)
+        this.adapters.database.insertItem(followeeFollowersId, followerId),
+        this.adapters.database.insertItem(followerFollowingId, followeeId)
     ]);
 }
 exports.handleAccept = handleAccept;

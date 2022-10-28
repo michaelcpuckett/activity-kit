@@ -1,6 +1,6 @@
 import { AP } from 'activitypub-core-types';
 import { getId, isType } from 'activitypub-core-utilities';
-import { OutboxPostHandler } from '../..';
+import { OutboxPostEndpoint } from '../..';
 
 /**
  * Undo
@@ -10,7 +10,7 @@ import { OutboxPostHandler } from '../..';
  *     undone (outbox:undo:ensures-activity-and-actor-are-same) MUST
  */
 
-export async function handleUndo(this: OutboxPostHandler) {
+export async function handleUndo(this: OutboxPostEndpoint) {
   if (!('object' in this.activity)) {
     throw new Error('Bad activity: no object.');
   }
@@ -21,7 +21,7 @@ export async function handleUndo(this: OutboxPostHandler) {
     throw new Error('Bad object: no ID.');
   }
 
-  const object = await this.databaseService.findEntityById(objectId);
+  const object = await this.adapters.database.findEntityById(objectId);
 
   if (!object) {
     throw new Error('Bad object: not found.');

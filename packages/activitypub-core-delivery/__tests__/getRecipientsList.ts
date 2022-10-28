@@ -2,7 +2,7 @@ import { AP } from 'activitypub-core-types';
 import { convertStringsToUrls } from 'activitypub-core-utilities';
 import { getRecipientsList } from '../src/getRecipientsList';
 
-describe('DeliveryService', () => {
+describe('DeliveryAdapter', () => {
   describe('getRecipientsList', () => {
     const actor1FollowingUrl = 'https://test.com/actor/following';
     const actor1FollowingPageUrl = 'https://test.com/actor/following/page/1';
@@ -37,7 +37,7 @@ describe('DeliveryService', () => {
     it('follows collections/collection pages', async () => {
       const result = await getRecipientsList.call(
         {
-          databaseService: {
+          databaseAdapter: {
             async queryById(id: URL) {
               console.log(id.toString());
               return convertStringsToUrls(

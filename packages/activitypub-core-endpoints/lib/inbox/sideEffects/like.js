@@ -12,7 +12,7 @@ async function handleLike() {
     if (!objectId) {
         throw new Error('Bad object: no ID.');
     }
-    const object = await this.databaseService.findEntityById(objectId);
+    const object = await this.adapters.database.findEntityById(objectId);
     if (!object) {
         return;
     }
@@ -23,15 +23,15 @@ async function handleLike() {
     if (!likesId) {
         throw new Error('Bad likes collection: no ID.');
     }
-    const likes = await this.databaseService.findEntityById(likesId);
+    const likes = await this.adapters.database.findEntityById(likesId);
     if (!likes) {
         throw new Error('Bad likes collection: not found.');
     }
     if ((0, activitypub_core_utilities_1.isType)(likes, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
-        await this.databaseService.insertItem(likesId, activity.id);
+        await this.adapters.database.insertItem(likesId, activity.id);
     }
     else if ((0, activitypub_core_utilities_1.isType)(likes, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
-        await this.databaseService.insertOrderedItem(likesId, activity.id);
+        await this.adapters.database.insertOrderedItem(likesId, activity.id);
     }
 }
 exports.handleLike = handleLike;

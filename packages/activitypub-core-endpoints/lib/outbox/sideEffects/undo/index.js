@@ -11,7 +11,7 @@ async function handleUndo() {
     if (!objectId) {
         throw new Error('Bad object: no ID.');
     }
-    const object = await this.databaseService.findEntityById(objectId);
+    const object = await this.adapters.database.findEntityById(objectId);
     if (!object) {
         throw new Error('Bad object: not found.');
     }

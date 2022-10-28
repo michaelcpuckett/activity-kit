@@ -1,8 +1,8 @@
 import { AP } from 'activitypub-core-types';
 import { ACTIVITYSTREAMS_CONTEXT, getId } from 'activitypub-core-utilities';
-import { UploadMediaEndpoint } from '.';
+import { UploadMediaPostEndpoint } from '.';
 
-export async function saveActivity(this: UploadMediaEndpoint) {
+export async function saveActivity(this: UploadMediaPostEndpoint) {
   if (!this.activity || !this.activity.id || !this.activity.object || this.activity.object instanceof URL || Array.isArray(this.activity.object) || !this.activity.object.id) {
     throw new Error('Bad activity / bad object.');
   }
@@ -104,15 +104,15 @@ export async function saveActivity(this: UploadMediaEndpoint) {
   this.activity.published = publishedDate;
 
   await Promise.all([
-    this.databaseService.saveEntity(objectReplies),
-    this.databaseService.saveEntity(objectLikes),
-    this.databaseService.saveEntity(objectShares),
-    this.databaseService.saveEntity(this.activity.object),
-    this.databaseService.saveEntity(activityReplies),
-    this.databaseService.saveEntity(activityLikes),
-    this.databaseService.saveEntity(activityShares),
-    this.databaseService.saveEntity(this.activity),
-    this.databaseService.insertOrderedItem(
+    this.adapters.database.saveEntity(objectReplies),
+    this.adapters.database.saveEntity(objectLikes),
+    this.adapters.database.saveEntity(objectShares),
+    this.adapters.database.saveEntity(this.activity.object),
+    this.adapters.database.saveEntity(activityReplies),
+    this.adapters.database.saveEntity(activityLikes),
+    this.adapters.database.saveEntity(activityShares),
+    this.adapters.database.saveEntity(this.activity),
+    this.adapters.database.insertOrderedItem(
       getId(this.actor?.outbox),
       this.activity.id,
     ),

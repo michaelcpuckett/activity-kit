@@ -1,2 +1,2 @@
-import { InboxEndpoint } from '.';
-export declare function broadcastActivity(this: InboxEndpoint): Promise<void>;
+import { InboxPostEndpoint } from ".";
+export declare function broadcastActivity(this: InboxPostEndpoint): Promise<void>;

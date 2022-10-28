@@ -1,9 +1,9 @@
-import { mockDatabaseService } from './mockDatabaseService';
+import { mockDatabaseAdapter } from './mockDatabaseAdapter';
 import { AP } from 'activitypub-core-types';
 import { Db } from 'mongodb';
 import { ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
 
-describe('DatabaseService', () => {
+describe('DatabaseAdapter', () => {
   describe('expandEntity', () => {
     const activity1Url = 'https://test.com/activity/123';
     const actor1Url = 'https://test.com/actor/123';
@@ -40,7 +40,7 @@ describe('DatabaseService', () => {
       object: object1,
     };
 
-    const databaseService = mockDatabaseService({
+    const databaseAdapter = mockDatabaseAdapter({
       db: {
         findOne: jest.fn((matchingObject: { [key: string]: unknown }) => {
           if (matchingObject._id === object1Url) {
@@ -58,7 +58,7 @@ describe('DatabaseService', () => {
     });
 
     it('should expand local activity', async () => {
-      const result = await databaseService.expandEntity(activity1);
+      const result = await databaseAdapter.expandEntity(activity1);
       expect(result).toMatchObject(activity1Result);
     });
   });

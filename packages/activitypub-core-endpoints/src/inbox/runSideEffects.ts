@@ -1,8 +1,8 @@
-import { InboxEndpoint } from '.';
+import { InboxPostEndpoint } from ".";
 import { isType } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 
-export async function runSideEffects(this: InboxEndpoint) {
+export async function runSideEffects(this: InboxPostEndpoint) {
   if (isType(this.activity, AP.ActivityTypes.CREATE)) {
     await this.handleCreate();
   }

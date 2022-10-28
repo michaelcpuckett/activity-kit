@@ -1,21 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UploadMediaEndpoint = exports.uploadMediaHandler = void 0;
+exports.UploadMediaPostEndpoint = void 0;
 const getActor_1 = require("./getActor");
 const authenticateActor_1 = require("./authenticateActor");
 const parseBody_1 = require("./parseBody");
 const cleanup_1 = require("./cleanup");
 const saveActivity_1 = require("./saveActivity");
-async function uploadMediaHandler(req, res, authenticationService, databaseService, storageService) {
-    return await new UploadMediaEndpoint(req, res, authenticationService, databaseService, storageService).handlePost();
-}
-exports.uploadMediaHandler = uploadMediaHandler;
-class UploadMediaEndpoint {
+class UploadMediaPostEndpoint {
     req;
     res;
-    authenticationService;
-    databaseService;
-    storageService;
+    adapters;
+    plugins;
     actor = null;
     activity = null;
     file = null;
@@ -24,19 +19,18 @@ class UploadMediaEndpoint {
     parseBody = parseBody_1.parseBody;
     cleanup = cleanup_1.cleanup;
     saveActivity = saveActivity_1.saveActivity;
-    constructor(req, res, authenticationService, databaseService, storageService) {
+    constructor(req, res, adapters, plugins) {
         this.req = req;
         this.res = res;
-        this.authenticationService = authenticationService;
-        this.databaseService = databaseService;
-        this.storageService = storageService;
+        this.adapters = adapters;
+        this.plugins = plugins;
     }
-    async handlePost() {
+    async respond() {
         try {
             await this.getActor();
             await this.authenticateActor();
             await this.parseBody();
-            const url = await this.storageService.upload(this.file);
+            const url = await this.adapters.storage.upload(this.file);
             this.activity.object.url = url;
             await this.cleanup();
             await this.saveActivity();
@@ -52,5 +46,5 @@ class UploadMediaEndpoint {
         }
     }
 }
-exports.UploadMediaEndpoint = UploadMediaEndpoint;
+exports.UploadMediaPostEndpoint = UploadMediaPostEndpoint;
 //# sourceMappingURL=index.js.map
