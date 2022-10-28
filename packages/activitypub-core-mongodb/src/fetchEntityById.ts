@@ -1,4 +1,4 @@
-import { MongoDatabase } from '.';
+import { MongoDatabaseAdapterDb } from '.';
 import { AP } from 'activitypub-core-types';
 import {
   ACCEPT_HEADER,
@@ -10,7 +10,7 @@ import { convertStringsToUrls } from 'activitypub-core-utilities';
 import { compressEntity } from 'activitypub-core-utilities';
 
 export async function fetchEntityById(
-  this: MongoDatabase,
+  this: MongoDatabaseAdapterDb,
   id: URL,
 ): Promise<AP.Entity | null> {
   if (typeof this.fetch !== 'function') {

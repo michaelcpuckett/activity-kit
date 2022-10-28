@@ -1,4 +1,4 @@
-import { MongoDatabase } from '.';
+import { MongoDatabaseAdapterDb } from '.';
 import { AP } from 'activitypub-core-types';
 import {
   convertStringsToUrls,
@@ -6,7 +6,7 @@ import {
 } from 'activitypub-core-utilities';
 
 export async function findOne(
-  this: MongoDatabase,
+  this: MongoDatabaseAdapterDb,
   collection: string,
   matchingObject: { [key: string]: unknown },
 ): Promise<AP.Entity | null> {

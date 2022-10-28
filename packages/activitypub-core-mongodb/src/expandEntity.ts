@@ -1,9 +1,9 @@
-import { MongoDatabase } from '.';
+import { MongoDatabaseAdapterDb } from '.';
 import { AP } from 'activitypub-core-types';
 import { CONTEXT, PUBLIC_ACTOR } from 'activitypub-core-utilities';
 
 export async function expandEntity(
-  this: MongoDatabase,
+  this: MongoDatabaseAdapterDb,
   originalEntity: AP.Entity,
 ): Promise<AP.Entity> {
   const entity: { [key: string]: unknown } = { ...originalEntity };

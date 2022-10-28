@@ -1,9 +1,9 @@
-import { MongoDatabase } from '.';
+import { MongoDatabaseAdapterDb } from '.';
 import { AP } from 'activitypub-core-types';
 import { getId, isType } from 'activitypub-core-utilities';
 
 export async function getCollectionItems(
-  this: MongoDatabase,
+  this: MongoDatabaseAdapterDb,
   entity: URL | AP.Collection | AP.OrderedCollection,
 ): Promise<AP.EntityReference[]> {
   const id = getId(entity);

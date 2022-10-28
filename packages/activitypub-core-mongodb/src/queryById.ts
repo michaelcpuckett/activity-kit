@@ -1,8 +1,8 @@
-import { MongoDatabase } from '.';
+import { MongoDatabaseAdapterDb } from '.';
 import { AP } from 'activitypub-core-types';
 
 export async function queryById(
-  this: MongoDatabase,
+  this: MongoDatabaseAdapterDb,
   id: URL,
 ): Promise<AP.Entity | null> {
   try {

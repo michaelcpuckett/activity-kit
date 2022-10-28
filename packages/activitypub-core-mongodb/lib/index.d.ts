@@ -14,7 +14,7 @@ import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
 import type { Database, DatabaseAdapter } from 'activitypub-core-types';
-export declare class MongoDatabase implements Database {
+export declare class MongoDatabaseAdapterDb implements Database {
     db: Db;
     fetch: Function;
     constructor(db: Db, fetchFn?: Function);
@@ -40,5 +40,5 @@ export declare class MongoDatabaseAdapter implements DatabaseAdapter {
     connect({ mongoClientUrl, dbName, }: {
         mongoClientUrl: string;
         dbName?: string;
-    }): Promise<MongoDatabase>;
+    }): Promise<MongoDatabaseAdapterDb>;
 }

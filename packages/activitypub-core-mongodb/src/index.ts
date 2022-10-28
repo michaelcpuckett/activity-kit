@@ -23,7 +23,7 @@ import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
 import type { Database, DatabaseAdapter } from 'activitypub-core-types';
 
-export class MongoDatabase implements Database {
+export class MongoDatabaseAdapterDb implements Database {
   db: Db;
   fetch: Function;
 
@@ -81,6 +81,6 @@ export class MongoDatabaseAdapter implements DatabaseAdapter {
     });
     await client.connect();
     const db = client.db(dbName ?? DB_NAME);
-    return new MongoDatabase(db, fetch);
+    return new MongoDatabaseAdapterDb(db, fetch);
   }
 }

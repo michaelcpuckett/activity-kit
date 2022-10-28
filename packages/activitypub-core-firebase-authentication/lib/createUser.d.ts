@@ -1,6 +1,6 @@
-import { FirebaseAuthentication } from '.';
+import { FirebaseAuthenticationAdapter } from '.';
 export declare function createUser({ email, password, preferredUsername, }: {
-    this: FirebaseAuthentication;
+    this: FirebaseAuthenticationAdapter;
     email: string;
     password: string;
     preferredUsername: string;

@@ -1,8 +1,8 @@
-import { MongoDatabase } from '.';
+import { MongoDatabaseAdapterDb } from '.';
 import { AP } from 'activitypub-core-types';
 
 export async function getActorByUserId(
-  this: MongoDatabase,
+  this: MongoDatabaseAdapterDb,
   userId: string,
 ): Promise<AP.Actor | null> {
   if (!userId) {

@@ -1,8 +1,8 @@
-import { MongoDatabase } from '.';
+import { MongoDatabaseAdapterDb } from '.';
 import { AP } from 'activitypub-core-types';
 
 export async function findAll(
-  this: MongoDatabase,
+  this: MongoDatabaseAdapterDb,
   collection: string,
   matchingObject: { [key: string]: unknown },
 ): Promise<AP.Entity[] | null> {

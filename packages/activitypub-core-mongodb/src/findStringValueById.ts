@@ -1,7 +1,7 @@
-import { MongoDatabase } from '.';
+import { MongoDatabaseAdapterDb } from '.';
 
 export async function findStringValueById(
-  this: MongoDatabase,
+  this: MongoDatabaseAdapterDb,
   dbCollection: string,
   _id: string,
 ): Promise<string> {

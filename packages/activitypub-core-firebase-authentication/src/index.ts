@@ -4,7 +4,7 @@ import type { Auth } from 'activitypub-core-types';
 import { createUser } from './createUser';
 import { getUserIdByToken } from './getUserIdByToken';
 
-export class FirebaseAuthentication implements Auth {
+export class FirebaseAuthenticationAdapter implements Auth {
   appOptions: AppOptions;
 
   constructor(serviceAccount: ServiceAccount, projectId: string) {

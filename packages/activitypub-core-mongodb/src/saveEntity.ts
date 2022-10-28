@@ -1,4 +1,4 @@
-import { MongoDatabase } from '.';
+import { MongoDatabaseAdapterDb } from '.';
 import { AP } from 'activitypub-core-types';
 import {
   applyContext,
@@ -7,7 +7,7 @@ import {
   getCollectionNameByUrl,
 } from 'activitypub-core-utilities';
 
-export async function saveEntity(this: MongoDatabase, entity: AP.Entity) {
+export async function saveEntity(this: MongoDatabaseAdapterDb, entity: AP.Entity) {
   if (!entity.id) {
     throw new Error('No ID.');
   }

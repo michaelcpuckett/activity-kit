@@ -1,9 +1,9 @@
-import { MongoDatabase } from '.';
+import { MongoDatabaseAdapterDb } from '.';
 import { AP } from 'activitypub-core-types';
 import { getId, getTypedEntity, isType } from 'activitypub-core-utilities';
 
 export async function expandCollection(
-  this: MongoDatabase,
+  this: MongoDatabaseAdapterDb,
   collection: AP.EitherCollectionReference,
 ): Promise<null | AP.EitherCollection> {
   const id = getId(collection);

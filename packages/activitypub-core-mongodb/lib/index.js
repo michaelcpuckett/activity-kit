@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MongoDatabaseAdapter = exports.MongoDatabase = void 0;
+exports.MongoDatabaseAdapter = exports.MongoDatabaseAdapterDb = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const isomorphic_fetch_1 = __importDefault(require("isomorphic-fetch"));
 const mongodb_1 = require("mongodb");
@@ -21,7 +21,7 @@ const getCollectionItems_1 = require("./getCollectionItems");
 const expandCollection_1 = require("./expandCollection");
 const findAll_1 = require("./findAll");
 const getActorByUserId_1 = require("./getActorByUserId");
-class MongoDatabase {
+class MongoDatabaseAdapterDb {
     db;
     fetch;
     constructor(db, fetchFn) {
@@ -46,7 +46,7 @@ class MongoDatabase {
     getCollectionItems = getCollectionItems_1.getCollectionItems;
     expandCollection = expandCollection_1.expandCollection;
 }
-exports.MongoDatabase = MongoDatabase;
+exports.MongoDatabaseAdapterDb = MongoDatabaseAdapterDb;
 class MongoDatabaseAdapter {
     async connect({ mongoClientUrl, dbName, }) {
         const client = new mongodb_1.MongoClient(mongoClientUrl, {
@@ -54,7 +54,7 @@ class MongoDatabaseAdapter {
         });
         await client.connect();
         const db = client.db(dbName ?? activitypub_core_utilities_1.DB_NAME);
-        return new MongoDatabase(db, isomorphic_fetch_1.default);
+        return new MongoDatabaseAdapterDb(db, isomorphic_fetch_1.default);
     }
 }
 exports.MongoDatabaseAdapter = MongoDatabaseAdapter;
