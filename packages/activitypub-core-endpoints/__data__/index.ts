@@ -31,9 +31,7 @@ export const alice: AP.Person = {
   inbox: new URL(aliceInboxUrl),
   outbox: new URL(aliceOutboxUrl),
   liked: new URL(aliceLikedUrl),
-  streams: [
-    new URL(aliceSharedUrl),
-  ]
+  streams: [new URL(aliceSharedUrl)],
 };
 
 export const aliceLiked: AP.OrderedCollection = {

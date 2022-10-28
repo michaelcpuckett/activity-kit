@@ -52,7 +52,7 @@ async function handleAccept() {
     }
     await Promise.all([
         this.adapters.database.insertItem(followeeFollowersId, followerId),
-        this.adapters.database.insertItem(followerFollowingId, followeeId)
+        this.adapters.database.insertItem(followerFollowingId, followeeId),
     ]);
 }
 exports.handleAccept = handleAccept;

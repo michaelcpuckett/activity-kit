@@ -16,7 +16,7 @@ export class DeliveryAdapter {
     adapters: {
       database: Database;
       fetch?: Function;
-    }
+    };
   }) {
     this.adapters = {
       ...config.adapters,

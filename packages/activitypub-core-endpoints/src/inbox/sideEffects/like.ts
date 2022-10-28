@@ -1,7 +1,7 @@
 import { AP } from 'activitypub-core-types';
 import { getId, isType } from 'activitypub-core-utilities';
 import type { Database } from 'activitypub-core-types';
-import { InboxPostEndpoint } from "..";
+import { InboxPostEndpoint } from '..';
 
 export async function handleLike(this: InboxPostEndpoint) {
   const activity = this.activity;
@@ -39,13 +39,9 @@ export async function handleLike(this: InboxPostEndpoint) {
     throw new Error('Bad likes collection: not found.');
   }
 
-  if (
-    isType(likes, AP.CollectionTypes.COLLECTION)
-  ) {
+  if (isType(likes, AP.CollectionTypes.COLLECTION)) {
     await this.adapters.database.insertItem(likesId, activity.id);
-  } else if (
-    isType(likes, AP.CollectionTypes.ORDERED_COLLECTION)
-  ) {
+  } else if (isType(likes, AP.CollectionTypes.ORDERED_COLLECTION)) {
     await this.adapters.database.insertOrderedItem(likesId, activity.id);
   }
 }

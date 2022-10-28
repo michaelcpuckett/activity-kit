@@ -24,7 +24,7 @@ export class UserPostEndpoint {
       authentication: Auth;
       database: Database;
     },
-    plugins?: Plugin[]
+    plugins?: Plugin[],
   ) {
     this.req = req;
     this.res = res;

@@ -3,9 +3,11 @@ import { getId, isTypeOf } from 'activitypub-core-utilities';
 import { SharedInboxPostEndpoint } from '.';
 import { InboxPostEndpoint } from '../inbox';
 
-export async function getRecipientInboxIds(this: InboxPostEndpoint & SharedInboxPostEndpoint) {
+export async function getRecipientInboxIds(
+  this: InboxPostEndpoint & SharedInboxPostEndpoint,
+) {
   if (!isTypeOf(this.activity, AP.ActivityTypes)) {
-    throw new Error('Not an activity.')
+    throw new Error('Not an activity.');
   }
 
   const activity = this.activity as AP.Activity;
@@ -34,7 +36,9 @@ export async function getRecipientInboxIds(this: InboxPostEndpoint & SharedInbox
         return null;
       }
 
-      const recipient = await this.adapters.database.findEntityById(recipientId);
+      const recipient = await this.adapters.database.findEntityById(
+        recipientId,
+      );
 
       if (!recipient) {
         return null;

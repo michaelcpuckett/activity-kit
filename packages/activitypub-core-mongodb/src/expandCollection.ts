@@ -18,7 +18,9 @@ export async function expandCollection(
     return null;
   }
 
-  const foundCollection = getTypedEntity(foundThing) as AP.Collection | AP.OrderedCollection;
+  const foundCollection = getTypedEntity(foundThing) as
+    | AP.Collection
+    | AP.OrderedCollection;
 
   const items = await this.getCollectionItems(foundCollection);
 
@@ -26,10 +28,10 @@ export async function expandCollection(
     return foundCollection;
   }
 
-  if (
-    isType(foundCollection, AP.CollectionTypes.ORDERED_COLLECTION)
-  ) {
-    const orderedCollection = getTypedEntity(foundCollection) as AP.OrderedCollection;
+  if (isType(foundCollection, AP.CollectionTypes.ORDERED_COLLECTION)) {
+    const orderedCollection = getTypedEntity(
+      foundCollection,
+    ) as AP.OrderedCollection;
 
     return {
       ...orderedCollection,
@@ -37,9 +39,7 @@ export async function expandCollection(
     };
   }
 
-  if (
-    isType(foundCollection, AP.CollectionTypes.COLLECTION)
-  ) {
+  if (isType(foundCollection, AP.CollectionTypes.COLLECTION)) {
     const collection = getTypedEntity(foundCollection) as AP.Collection;
 
     return {

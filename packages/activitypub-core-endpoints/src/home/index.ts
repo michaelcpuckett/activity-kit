@@ -1,6 +1,14 @@
 import { IncomingMessage } from 'http';
 import { AP, Plugin } from 'activitypub-core-types';
-import { ACTIVITYSTREAMS_CONTENT_TYPE, ACTIVITYSTREAMS_CONTENT_TYPE_WITH_PROFILE, CONTENT_TYPE_HEADER, convertUrlsToStrings, HTML_CONTENT_TYPE, JSON_CONTENT_TYPE, LINKED_DATA_CONTENT_TYPE } from 'activitypub-core-utilities';
+import {
+  ACTIVITYSTREAMS_CONTENT_TYPE,
+  ACTIVITYSTREAMS_CONTENT_TYPE_WITH_PROFILE,
+  CONTENT_TYPE_HEADER,
+  convertUrlsToStrings,
+  HTML_CONTENT_TYPE,
+  JSON_CONTENT_TYPE,
+  LINKED_DATA_CONTENT_TYPE,
+} from 'activitypub-core-utilities';
 import cookie from 'cookie';
 import type { ServerResponse } from 'http';
 import type { Database, Auth } from 'activitypub-core-types';
@@ -10,11 +18,11 @@ export class HomeGetEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
   adapters: {
-    authentication: Auth,
-    database: Database,
+    authentication: Auth;
+    database: Database;
   };
   plugins?: Plugin[];
-  
+
   constructor(
     req: IncomingMessage,
     res: ServerResponse,
@@ -22,19 +30,21 @@ export class HomeGetEndpoint {
       authentication: Auth;
       database: Database;
     },
-    plugins?: Plugin[]
+    plugins?: Plugin[],
   ) {
     this.req = req;
     this.res = res;
     this.adapters = adapters;
     this.plugins = plugins;
   }
-  
+
   public async respond(render: Function) {
     const cookies = cookie.parse(this.req.headers.cookie ?? '');
 
     const actor = await this.adapters.database.getActorByUserId(
-      await this.adapters.authentication.getUserIdByToken(cookies.__session ?? ''),
+      await this.adapters.authentication.getUserIdByToken(
+        cookies.__session ?? '',
+      ),
     );
 
     if (!actor) {
@@ -75,9 +85,11 @@ export class HomeGetEndpoint {
       this.res.write(stringify(data.props.actor));
     } else {
       this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
-      this.res.write(await render({
-        actor: convertUrlsToStrings(data.props.actor) as AP.Actor,
-      }));
+      this.res.write(
+        await render({
+          actor: convertUrlsToStrings(data.props.actor) as AP.Actor,
+        }),
+      );
     }
 
     this.res.end();

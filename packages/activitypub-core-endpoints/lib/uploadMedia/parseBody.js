@@ -30,7 +30,7 @@ async function parseBody() {
     const form = formidable.default({
         multiples: true,
     });
-    const { fields, files, } = await new Promise((resolve, reject) => {
+    const { fields, files } = await new Promise((resolve, reject) => {
         form.parse(this.req, (err, fields, files) => {
             if (err) {
                 reject(err);
@@ -43,12 +43,14 @@ async function parseBody() {
             }
         });
     });
-    if (typeof fields.object === 'string' && (files.file && !Array.isArray(files.file))) {
+    if (typeof fields.object === 'string' &&
+        files.file &&
+        !Array.isArray(files.file)) {
         this.file = files.file;
         const objectId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/object/${(0, activitypub_core_utilities_1.getGuid)()}`;
         const activityId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/activity/${(0, activitypub_core_utilities_1.getGuid)()}`;
         const object = {
-            "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+            '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
             to: new URL(activitypub_core_utilities_1.PUBLIC_ACTOR),
             type: getType(this.file.mimetype),
             mediaType: this.file.mimetype,
@@ -57,7 +59,7 @@ async function parseBody() {
             attributedTo: this.actor.id,
         };
         this.activity = {
-            "@context": activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+            '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
             to: new URL(activitypub_core_utilities_1.PUBLIC_ACTOR),
             type: 'Create',
             id: new URL(activityId),

@@ -17,8 +17,8 @@ export class EntityGetEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
   adapters: {
-    authentication: Auth,
-    database: Database,
+    authentication: Auth;
+    database: Database;
   };
   plugins?: Plugin[];
   url: URL;
@@ -27,11 +27,11 @@ export class EntityGetEndpoint {
     req: IncomingMessage,
     res: ServerResponse,
     adapters: {
-      authentication: Auth,
-      database: Database,
+      authentication: Auth;
+      database: Database;
     },
     plugins?: Plugin[],
-    url?: URL
+    url?: URL,
   ) {
     this.req = req;
     this.res = res;
@@ -40,7 +40,7 @@ export class EntityGetEndpoint {
     this.url = url ?? new URL(`${LOCAL_DOMAIN}${req.url}`);
   }
 
-  protected handleBadRequest () {
+  protected handleBadRequest() {
     this.res.statusCode = 500;
     this.res.write('Bad request');
     this.res.end();
@@ -48,9 +48,9 @@ export class EntityGetEndpoint {
     return {
       props: {},
     };
-  };
+  }
 
-  protected handleNotFound () {
+  protected handleNotFound() {
     this.res.statusCode = 400;
     this.res.write('Not found');
     this.res.end();
@@ -58,14 +58,15 @@ export class EntityGetEndpoint {
     return {
       props: {},
     };
-  };
-
+  }
 
   public async respond(render: Function) {
     const cookies = cookie.parse(this.req.headers.cookie ?? '');
 
     const authorizedActor = await this.adapters.database.getActorByUserId(
-      await this.adapters.authentication.getUserIdByToken(cookies.__session ?? ''),
+      await this.adapters.authentication.getUserIdByToken(
+        cookies.__session ?? '',
+      ),
     );
 
     // TODO authorize entity posts by actor.
@@ -94,10 +95,12 @@ export class EntityGetEndpoint {
       this.res.end();
     } else {
       this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
-      this.res.write(await render({
-        entity: convertUrlsToStrings(entity),
-        actor: convertUrlsToStrings(authorizedActor) as AP.Actor,
-      }));
+      this.res.write(
+        await render({
+          entity: convertUrlsToStrings(entity),
+          actor: convertUrlsToStrings(authorizedActor) as AP.Actor,
+        }),
+      );
     }
 
     this.res.end();

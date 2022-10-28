@@ -1,7 +1,12 @@
 import { AP } from 'activitypub-core-types';
 import * as crypto from 'crypto';
 
-export async function getHttpSignature(foreignTarget: URL, actorId: URL, privateKey: string, entity: AP.Entity) {
+export async function getHttpSignature(
+  foreignTarget: URL,
+  actorId: URL,
+  privateKey: string,
+  entity: AP.Entity,
+) {
   const foreignDomain = foreignTarget.hostname;
   const foreignPathName = foreignTarget.pathname;
 
@@ -24,5 +29,5 @@ export async function getHttpSignature(foreignTarget: URL, actorId: URL, private
     dateHeader: dateString,
     digestHeader,
     signatureHeader,
-  }
+  };
 }

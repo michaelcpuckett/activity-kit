@@ -1,5 +1,5 @@
 import { getId } from 'activitypub-core-utilities';
-import { InboxPostEndpoint } from "..";
+import { InboxPostEndpoint } from '..';
 
 export async function handleCreate(this: InboxPostEndpoint) {
   const activity = this.activity;

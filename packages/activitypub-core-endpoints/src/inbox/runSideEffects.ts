@@ -1,4 +1,4 @@
-import { InboxPostEndpoint } from ".";
+import { InboxPostEndpoint } from '.';
 import { isType } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 

@@ -19,7 +19,7 @@ export const handleOutboxPost = async (activity, url) => {
   const insertItem = jest.fn(async () => {
     return true;
   });
-  
+
   const removeOrderedItem = jest.fn(async () => {
     return true;
   });

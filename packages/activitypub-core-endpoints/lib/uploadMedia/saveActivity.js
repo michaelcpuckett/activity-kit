@@ -4,7 +4,12 @@ exports.saveActivity = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function saveActivity() {
-    if (!this.activity || !this.activity.id || !this.activity.object || this.activity.object instanceof URL || Array.isArray(this.activity.object) || !this.activity.object.id) {
+    if (!this.activity ||
+        !this.activity.id ||
+        !this.activity.object ||
+        this.activity.object instanceof URL ||
+        Array.isArray(this.activity.object) ||
+        !this.activity.object.id) {
         throw new Error('Bad activity / bad object.');
     }
     const publishedDate = new Date();

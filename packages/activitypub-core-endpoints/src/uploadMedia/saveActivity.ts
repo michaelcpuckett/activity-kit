@@ -3,7 +3,14 @@ import { ACTIVITYSTREAMS_CONTEXT, getId } from 'activitypub-core-utilities';
 import { UploadMediaPostEndpoint } from '.';
 
 export async function saveActivity(this: UploadMediaPostEndpoint) {
-  if (!this.activity || !this.activity.id || !this.activity.object || this.activity.object instanceof URL || Array.isArray(this.activity.object) || !this.activity.object.id) {
+  if (
+    !this.activity ||
+    !this.activity.id ||
+    !this.activity.object ||
+    this.activity.object instanceof URL ||
+    Array.isArray(this.activity.object) ||
+    !this.activity.object.id
+  ) {
     throw new Error('Bad activity / bad object.');
   }
 

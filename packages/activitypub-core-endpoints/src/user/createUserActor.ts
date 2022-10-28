@@ -256,7 +256,11 @@ export async function createUserActor(
     this.adapters.database.saveEntity(userBookmarks),
     this.adapters.database.saveString('account', user.uid, user.email),
     this.adapters.database.saveString('private-key', user.uid, privateKey),
-    this.adapters.database.saveString('username', user.uid, user.preferredUsername),
+    this.adapters.database.saveString(
+      'username',
+      user.uid,
+      user.preferredUsername,
+    ),
   ]);
 
   const friendsGroupId = `${id}/groups/friends`;
@@ -421,7 +425,10 @@ export async function createUserActor(
         new URL(`${SERVER_ACTOR_ID}/outbox`),
         createActorActivity.id,
       ),
-      this.adapters.database.insertOrderedItem(userInbox.id, createActorActivity.id),
+      this.adapters.database.insertOrderedItem(
+        userInbox.id,
+        createActorActivity.id,
+      ),
     ]);
   }
 }

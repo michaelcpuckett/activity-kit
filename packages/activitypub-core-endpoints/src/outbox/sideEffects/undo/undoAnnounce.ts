@@ -2,7 +2,10 @@ import { getId } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 import { OutboxPostEndpoint } from '../..';
 
-export async function handleUndoAnnounce(this: OutboxPostEndpoint, activity: AP.Entity) {
+export async function handleUndoAnnounce(
+  this: OutboxPostEndpoint,
+  activity: AP.Entity,
+) {
   if (!('object' in activity)) {
     throw new Error('Bad activity: no object.');
   }

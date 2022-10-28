@@ -18,9 +18,9 @@ export declare class UploadMediaPostEndpoint {
     };
     plugins?: Plugin[];
     actor: AP.Actor | null;
-    activity: AP.Create & {
+    activity: (AP.Create & {
         object: AP.Image | AP.Document | AP.Video | AP.Audio;
-    } | null;
+    }) | null;
     file: formidable.File | null;
     protected getActor: typeof getActor;
     protected authenticateActor: typeof authenticateActor;

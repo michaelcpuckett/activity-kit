@@ -7,7 +7,10 @@ import { AP } from 'activitypub-core-types';
  * requirements in 7.5 (outbox:remove:removes-from-target) SHOULD
  */
 
-export async function handleRemove(this: OutboxPostEndpoint, activity?: AP.Entity) {
+export async function handleRemove(
+  this: OutboxPostEndpoint,
+  activity?: AP.Entity,
+) {
   activity = activity || this.activity;
 
   if (!('object' in activity) || !('target' in activity)) {

@@ -7,7 +7,7 @@ export type Plugin = {
 
 export type Auth = {
   createUser: Function;
-  getUserIdByToken: (...args: unknown[]) => Promise<string|null>;
+  getUserIdByToken: (...args: unknown[]) => Promise<string | null>;
 };
 
 export type Database = {

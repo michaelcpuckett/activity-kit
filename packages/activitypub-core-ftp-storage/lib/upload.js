@@ -9,7 +9,7 @@ async function upload(file) {
     return await new Promise((resolve, reject) => {
         const client = new ftp_1.default();
         client.on('ready', () => {
-            client.put(file.filepath, file.newFilename, error => {
+            client.put(file.filepath, file.newFilename, (error) => {
                 client.end();
                 if (error) {
                     reject(error);

@@ -1,6 +1,6 @@
 import { AP } from 'activitypub-core-types';
 import { getId, isType, isTypeOf } from 'activitypub-core-utilities';
-import { InboxPostEndpoint } from ".";
+import { InboxPostEndpoint } from '.';
 
 export async function shouldForwardActivity(this: InboxPostEndpoint) {
   if (!this.activity) {

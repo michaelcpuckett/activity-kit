@@ -7,7 +7,7 @@ import {
   PUBLIC_ACTOR,
 } from 'activitypub-core-utilities';
 import { getId } from 'activitypub-core-utilities';
-import { InboxPostEndpoint } from "..";
+import { InboxPostEndpoint } from '..';
 
 export async function handleFollow(this: InboxPostEndpoint) {
   const activity = this.activity;
@@ -34,7 +34,7 @@ export async function handleFollow(this: InboxPostEndpoint) {
   }
 
   if (!('actor' in activity)) {
-    throw new Error('Bad activity: no actor.')
+    throw new Error('Bad activity: no actor.');
   }
 
   const actorId = getId(activity.actor);
@@ -129,7 +129,10 @@ export async function handleFollow(this: InboxPostEndpoint) {
     this.adapters.database.saveEntity(acceptActivityReplies),
     this.adapters.database.saveEntity(acceptActivityLikes),
     this.adapters.database.saveEntity(acceptActivityShares),
-    this.adapters.database.insertOrderedItem(followeeOutboxId, acceptActivity.id),
+    this.adapters.database.insertOrderedItem(
+      followeeOutboxId,
+      acceptActivity.id,
+    ),
     this.adapters.database.insertItem(followersId, follower.id),
   ]);
 

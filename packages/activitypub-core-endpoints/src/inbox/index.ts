@@ -19,9 +19,9 @@ export class InboxPostEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
   adapters: {
-    authentication: Auth,
-    database: Database,
-    delivery: DeliveryAdapter
+    authentication: Auth;
+    database: Database;
+    delivery: DeliveryAdapter;
   };
   plugins?: Plugin[];
 
@@ -32,11 +32,11 @@ export class InboxPostEndpoint {
     req: IncomingMessage,
     res: ServerResponse,
     adapters: {
-      authentication: Auth,
-      database: Database,
-      delivery: DeliveryAdapter,
+      authentication: Auth;
+      database: Database;
+      delivery: DeliveryAdapter;
     },
-    plugins?: Plugin[]
+    plugins?: Plugin[],
   ) {
     this.req = req;
     this.res = res;

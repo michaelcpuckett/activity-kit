@@ -1,6 +1,9 @@
-export function isTypeOf(entity: unknown & {
-  type: string | string[];
-}, values: Object): boolean {
+export function isTypeOf(
+  entity: unknown & {
+    type: string | string[];
+  },
+  values: Object,
+): boolean {
   for (const type of Object.values(values)) {
     if (isType(entity, type)) {
       return true;
@@ -10,9 +13,12 @@ export function isTypeOf(entity: unknown & {
   return false;
 }
 
-export function isType(entity: unknown & {
-  type: string | string[];
-}, type: string): boolean {
+export function isType(
+  entity: unknown & {
+    type: string | string[];
+  },
+  type: string,
+): boolean {
   if (
     Array.isArray(entity.type)
       ? entity.type.includes(type)

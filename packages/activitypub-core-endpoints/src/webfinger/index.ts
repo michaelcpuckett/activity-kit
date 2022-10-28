@@ -24,7 +24,7 @@ export class WebfingerGetEndpoint {
     adapters: {
       database: Database;
     },
-    plugins?: Plugin[]
+    plugins?: Plugin[],
   ) {
     this.req = req;
     this.res = res;

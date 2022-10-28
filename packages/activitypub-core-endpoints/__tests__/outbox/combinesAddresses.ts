@@ -33,14 +33,16 @@ describe('Endpoints', () => {
           type: AP.ExtendedObjectTypes.PLACE,
           name: 'Disney World',
         },
-      }
+      };
 
-      const { res, saveEntity, broadcast } =
-        await handleOutboxPost(activity, data.aliceOutboxUrl);
+      const { res, saveEntity, broadcast } = await handleOutboxPost(
+        activity,
+        data.aliceOutboxUrl,
+      );
 
-      const [ objectCall, _, __, ___, activityCall ] = saveEntity.mock.calls;
-      const [ objectResult ] = objectCall;
-      const [ activityResult ] = activityCall;
+      const [objectCall, _, __, ___, activityCall] = saveEntity.mock.calls;
+      const [objectResult] = objectCall;
+      const [activityResult] = activityCall;
 
       expect(res.statusCode).toBe(201);
       expect(objectResult.to).toStrictEqual(combinedAddressesActivity.to);

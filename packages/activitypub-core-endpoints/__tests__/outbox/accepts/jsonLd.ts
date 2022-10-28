@@ -10,22 +10,19 @@ describe('Endpoints', () => {
   describe('Actor Outbox', () => {
     it('Accepts JSON-LD Objects', async () => {
       const activity = {
-        "@context": {
-          "as": `${ACTIVITYSTREAMS_CONTEXT}#`,
-          "schema": "https://schema.org/",
+        '@context': {
+          as: `${ACTIVITYSTREAMS_CONTEXT}#`,
+          schema: 'https://schema.org/',
         },
-        "@type": [
-          "as:Arrive",
-          "schema:Person",
-        ],
-        "as:actor": [
+        '@type': ['as:Arrive', 'schema:Person'],
+        'as:actor': [
           {
-            "@id": new URL(data.aliceUrl),
+            '@id': new URL(data.aliceUrl),
           },
         ],
-        "as:location": {
-          "@type": "Place",
-          "as:name": "Disney World",
+        'as:location': {
+          '@type': 'Place',
+          'as:name': 'Disney World',
         },
       };
 

@@ -2,11 +2,14 @@ import { OutboxPostEndpoint } from '..';
 import { getId } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 
-export async function handleAdd(this: OutboxPostEndpoint, activity?: AP.Entity) {
+export async function handleAdd(
+  this: OutboxPostEndpoint,
+  activity?: AP.Entity,
+) {
   activity = activity || this.activity;
 
   if (!('object' in activity) || !('target' in activity)) {
-    throw new Error('Bad activity: no object / target.'); 
+    throw new Error('Bad activity: no object / target.');
   }
 
   const objectId = getId(activity.object);

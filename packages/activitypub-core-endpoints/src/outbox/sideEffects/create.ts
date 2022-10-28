@@ -1,9 +1,6 @@
 import { OutboxPostEndpoint } from '..';
 import { AP } from 'activitypub-core-types';
-import {
-  ACTIVITYSTREAMS_CONTEXT,
-  isTypeOf,
-} from 'activitypub-core-utilities';
+import { ACTIVITYSTREAMS_CONTEXT, isTypeOf } from 'activitypub-core-utilities';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { getId, getGuid } from 'activitypub-core-utilities';
 

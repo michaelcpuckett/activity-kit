@@ -6,13 +6,19 @@ export async function upload(this: FtpStorageAdapter, file: File) {
   return await new Promise<URL>((resolve, reject) => {
     const client = new FtpClient();
     client.on('ready', () => {
-      client.put(file.filepath, file.newFilename, error => {
+      client.put(file.filepath, file.newFilename, (error) => {
         client.end();
 
         if (error) {
           reject(error);
         } else {
-          resolve(new URL(`https://${this.host}${this.path ? `${this.path}/` : '/'}${file.newFilename}`));
+          resolve(
+            new URL(
+              `https://${this.host}${this.path ? `${this.path}/` : '/'}${
+                file.newFilename
+              }`,
+            ),
+          );
         }
       });
     });

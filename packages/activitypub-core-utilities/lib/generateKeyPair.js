@@ -31,12 +31,12 @@ async function generateKeyPair() {
             modulusLength: 2048,
             publicKeyEncoding: {
                 type: 'pkcs1',
-                format: 'pem'
+                format: 'pem',
             },
             privateKeyEncoding: {
                 type: 'pkcs8',
-                format: 'pem'
-            }
+                format: 'pem',
+            },
         };
         crypto.generateKeyPair('rsa', options, (error, publicKey, privateKey) => {
             if (error) {

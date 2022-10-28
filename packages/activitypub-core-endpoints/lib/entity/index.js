@@ -29,7 +29,6 @@ class EntityGetEndpoint {
             props: {},
         };
     }
-    ;
     handleNotFound() {
         this.res.statusCode = 400;
         this.res.write('Not found');
@@ -38,7 +37,6 @@ class EntityGetEndpoint {
             props: {},
         };
     }
-    ;
     async respond(render) {
         const cookies = cookie_1.default.parse(this.req.headers.cookie ?? '');
         const authorizedActor = await this.adapters.database.getActorByUserId(await this.adapters.authentication.getUserIdByToken(cookies.__session ?? ''));

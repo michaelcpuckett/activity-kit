@@ -30,9 +30,9 @@ export class OutboxPostEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
   adapters: {
-    authentication: Auth,
-    database: Database,
-    delivery: DeliveryAdapter,
+    authentication: Auth;
+    database: Database;
+    delivery: DeliveryAdapter;
   };
   plugins?: Plugin[];
 
@@ -43,11 +43,11 @@ export class OutboxPostEndpoint {
     req: IncomingMessage,
     res: ServerResponse,
     adapters: {
-      authentication: Auth,
-      database: Database,
-      delivery: DeliveryAdapter,
+      authentication: Auth;
+      database: Database;
+      delivery: DeliveryAdapter;
     },
-    plugins?: Plugin[]
+    plugins?: Plugin[],
   ) {
     this.req = req;
     this.res = res;
@@ -72,7 +72,9 @@ export class OutboxPostEndpoint {
           const objectId = getId(this.activity.object);
 
           if (objectId) {
-            const remoteObject = await this.adapters.database.queryById(objectId);
+            const remoteObject = await this.adapters.database.queryById(
+              objectId,
+            );
 
             if (!remoteObject) {
               throw new Error('Bad object: Object with ID does not exist!');

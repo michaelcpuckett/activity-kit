@@ -1,6 +1,6 @@
 import { AP } from 'activitypub-core-types';
 import { getId, isTypeOf } from 'activitypub-core-utilities';
-import { InboxPostEndpoint } from "..";
+import { InboxPostEndpoint } from '..';
 
 export async function handleAccept(this: InboxPostEndpoint) {
   const activity = this.activity;
@@ -44,7 +44,7 @@ export async function handleAccept(this: InboxPostEndpoint) {
   if (!follower) {
     throw new Error('Bad follower: not found.');
   }
-  
+
   if (!isTypeOf(follower, AP.ActorTypes)) {
     throw new Error('Bad follower: not an actor.');
   }
@@ -54,7 +54,7 @@ export async function handleAccept(this: InboxPostEndpoint) {
   if (!followee) {
     throw new Error('Bad followee: not found.');
   }
-  
+
   if (!('outbox' in followee)) {
     throw new Error('Bad followee: not an actor.');
   }
@@ -73,6 +73,6 @@ export async function handleAccept(this: InboxPostEndpoint) {
 
   await Promise.all([
     this.adapters.database.insertItem(followeeFollowersId, followerId),
-    this.adapters.database.insertItem(followerFollowingId, followeeId)
+    this.adapters.database.insertItem(followerFollowingId, followeeId),
   ]);
 }

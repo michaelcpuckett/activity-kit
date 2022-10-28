@@ -34,10 +34,12 @@ export async function getCollectionItems(
     return [];
   }
 
-  const collectionItems =
-    isType(collection, AP.CollectionTypes.ORDERED_COLLECTION)
-      ? (collection as AP.OrderedCollection).orderedItems
-      : collection.items;
+  const collectionItems = isType(
+    collection,
+    AP.CollectionTypes.ORDERED_COLLECTION,
+  )
+    ? (collection as AP.OrderedCollection).orderedItems
+    : collection.items;
 
   if (!Array.isArray(collectionItems)) {
     return [];

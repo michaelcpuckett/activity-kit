@@ -62,7 +62,9 @@ export async function fetchEntityById(
     type: convertedEntity.type,
   };
 
-  const typedThing = getTypedEntity(convertedEntityWithType as unknown as AP.Entity);
+  const typedThing = getTypedEntity(
+    convertedEntityWithType as unknown as AP.Entity,
+  );
 
   if (!typedThing) {
     return null;

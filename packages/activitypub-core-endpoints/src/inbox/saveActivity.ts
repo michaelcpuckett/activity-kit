@@ -1,5 +1,5 @@
-import { LOCAL_DOMAIN } from "activitypub-core-utilities";
-import { InboxPostEndpoint } from ".";
+import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
+import { InboxPostEndpoint } from '.';
 
 export async function saveActivity(this: InboxPostEndpoint) {
   await this.adapters.database.saveEntity(this.activity);

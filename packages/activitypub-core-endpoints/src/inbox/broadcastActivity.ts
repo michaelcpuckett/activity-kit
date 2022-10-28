@@ -1,5 +1,5 @@
-import { AP } from "activitypub-core-types";
-import { InboxPostEndpoint } from ".";
+import { AP } from 'activitypub-core-types';
+import { InboxPostEndpoint } from '.';
 
 export async function broadcastActivity(this: InboxPostEndpoint) {
   if (!this.activity) {
@@ -11,6 +11,9 @@ export async function broadcastActivity(this: InboxPostEndpoint) {
   }
 
   if (await this.shouldForwardActivity()) {
-    await this.adapters.delivery.broadcast(this.activity as AP.Activity, this.actor);
+    await this.adapters.delivery.broadcast(
+      this.activity as AP.Activity,
+      this.actor,
+    );
   }
 }

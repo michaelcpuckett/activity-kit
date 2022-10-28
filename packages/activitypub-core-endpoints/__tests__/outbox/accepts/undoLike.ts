@@ -13,14 +13,19 @@ describe('Endpoints', () => {
         object: new URL(data.likeActivityUrl),
       };
 
-      const { res, saveEntity, insertOrderedItem, removeOrderedItem, broadcast } =
-        await handleOutboxPost(activity, data.aliceOutboxUrl);
+      const {
+        res,
+        saveEntity,
+        insertOrderedItem,
+        removeOrderedItem,
+        broadcast,
+      } = await handleOutboxPost(activity, data.aliceOutboxUrl);
 
-        expect(res.statusCode).toBe(201);
-        expect(saveEntity).toBeCalledTimes(4);
-        expect(insertOrderedItem).toBeCalledTimes(1);
-        expect(removeOrderedItem).toBeCalledTimes(2);
-        expect(broadcast).toBeCalledTimes(1);
+      expect(res.statusCode).toBe(201);
+      expect(saveEntity).toBeCalledTimes(4);
+      expect(insertOrderedItem).toBeCalledTimes(1);
+      expect(removeOrderedItem).toBeCalledTimes(2);
+      expect(broadcast).toBeCalledTimes(1);
     });
   });
 });
