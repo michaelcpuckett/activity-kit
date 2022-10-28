@@ -138,7 +138,9 @@ export const activityPub =
       if (
         req.url.startsWith('/object/') ||
         req.url.startsWith('/actor/') ||
-        req.url.startsWith('/activity/')
+        req.url.startsWith('/activity/') ||
+        (req.url.startsWith('/actor/') && req.url.endsWith('/inbox')) ||
+        (req.url.startsWith('/actor/') && req.url.endsWith('/outbox'))
       ) {
         await new EntityGetEndpoint(
           req,

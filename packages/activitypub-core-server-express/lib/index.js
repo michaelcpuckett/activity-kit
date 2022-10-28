@@ -53,7 +53,9 @@ const activityPub = (config) => async (req, res, next) => {
         }
         if (req.url.startsWith('/object/') ||
             req.url.startsWith('/actor/') ||
-            req.url.startsWith('/activity/')) {
+            req.url.startsWith('/activity/') ||
+            (req.url.startsWith('/actor/') && req.url.endsWith('/inbox')) ||
+            (req.url.startsWith('/actor/') && req.url.endsWith('/outbox'))) {
             await new activitypub_core_endpoints_1.EntityGetEndpoint(req, res, config.adapters, config.plugins).respond(config.pages.entity);
             next();
             return;
