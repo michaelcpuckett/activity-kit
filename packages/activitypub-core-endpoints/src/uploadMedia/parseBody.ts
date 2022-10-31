@@ -37,7 +37,7 @@ export async function parseBody(this: UploadMediaPostEndpoint) {
     this.file = files.file;
 
     const objectId = `${LOCAL_DOMAIN}/object/${getGuid()}`;
-    const activityId = `${LOCAL_DOMAIN}/activity/${getGuid()}`;
+    const activityId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
 
     const object: AP.Image | AP.Document | AP.Audio | AP.Video = {
       '@context': ACTIVITYSTREAMS_CONTEXT,

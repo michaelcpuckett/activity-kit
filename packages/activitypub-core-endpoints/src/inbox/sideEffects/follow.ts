@@ -62,7 +62,7 @@ export async function handleFollow(this: InboxPostEndpoint) {
 
   // Now we're in outbox, because this is auto-generated:
 
-  const acceptActivityId = `${LOCAL_DOMAIN}/activity/${getGuid()}`;
+  const acceptActivityId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
   const publishedDate = new Date();
 
   const acceptActivityReplies: AP.Collection = {

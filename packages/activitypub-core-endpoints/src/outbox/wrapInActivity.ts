@@ -14,7 +14,7 @@ export async function wrapInActivity() {
     object: this.activity,
   });
 
-  const activityId = new URL(`${LOCAL_DOMAIN}/activity/${getGuid()}`);
+  const activityId = new URL(`${LOCAL_DOMAIN}/entity/${getGuid()}`);
   this.activity.id = activityId; // Overwrite ID
   this.activity.url = activityId;
 

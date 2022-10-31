@@ -23,7 +23,7 @@ describe('Utilities', () => {
       type: 'Note',
       content: 'Test2',
     };
-    const activity1Url = 'https://test.com/activity/456';
+    const activity1Url = 'https://test.com/entity/456';
     const activity1Result: AP.Create = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(activity1Url),

@@ -9,7 +9,7 @@ async function wrapInActivity() {
         actor: this.actor.id,
         object: this.activity,
     });
-    const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}/activity/${(0, activitypub_core_utilities_1.getGuid)()}`);
+    const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`);
     this.activity.id = activityId;
     this.activity.url = activityId;
     await this.handleCreate();

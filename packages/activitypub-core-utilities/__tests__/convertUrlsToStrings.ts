@@ -5,9 +5,9 @@ import { convertUrlsToStrings } from '../src/convertUrlsToStrings';
 describe('utilities', () => {
   describe('convertUrlsToStrings', () => {
     const date = new Date('2021-01-01');
-    const collection1Url = 'https://test.com/activity/123';
-    const item1Url = 'https://test.com/activity/456';
-    const item2Url = 'https://test.com/activity/789';
+    const collection1Url = 'https://test.com/entity/123';
+    const item1Url = 'https://test.com/entity/456';
+    const item2Url = 'https://test.com/entity/789';
     const collection1: AP.Collection = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(collection1Url),

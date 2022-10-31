@@ -41,7 +41,7 @@ async function handleFollow() {
     if (!(follower.id && followee.id)) {
         return;
     }
-    const acceptActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/activity/${(0, activitypub_core_utilities_2.getGuid)()}`;
+    const acceptActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_2.getGuid)()}`;
     const publishedDate = new Date();
     const acceptActivityReplies = {
         '@context': new URL(activitypub_core_utilities_3.ACTIVITYSTREAMS_CONTEXT),

@@ -5,7 +5,7 @@ import { ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
 
 describe('DbAdapter', () => {
   describe('expandEntity', () => {
-    const activity1Url = 'https://test.com/activity/123';
+    const activity1Url = 'https://test.com/entity/123';
     const actor1Url = 'https://test.com/actor/123';
     const object1Url = 'https://test.com/object/123';
     const activity1: AP.Create = {

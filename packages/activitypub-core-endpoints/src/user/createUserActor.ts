@@ -186,7 +186,7 @@ export async function createUserActor(
     published: publishedDate,
   };
 
-  const createActorActivityId = `${LOCAL_DOMAIN}/activity/${getGuid()}`;
+  const createActorActivityId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
 
   const createActorActivityReplies: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
@@ -350,7 +350,7 @@ export async function createUserActor(
     },
   };
 
-  const createFriendsGroupActorActivityId = `${LOCAL_DOMAIN}/activity/${getGuid()}`;
+  const createFriendsGroupActorActivityId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
 
   const createFriendsGroupActivityReplies: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,

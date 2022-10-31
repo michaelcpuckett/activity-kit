@@ -4,25 +4,25 @@ import { Db } from 'mongodb';
 
 describe('DbAdapter', () => {
   describe('getCollectionItems', () => {
-    const collection1Url = 'https://test.com/activity/123';
+    const collection1Url = 'https://test.com/entity/123';
     const collection1Result: AP.Collection = {
       id: new URL(collection1Url),
       url: new URL(collection1Url),
       type: 'Collection',
       totalItems: 1,
       items: [
-        new URL('https://test.com/activity/456'),
-        new URL('https://test.com/activity/789'),
+        new URL('https://test.com/entity/456'),
+        new URL('https://test.com/entity/789'),
       ],
     };
-    const item1Url = 'https://test.com/activity/456';
+    const item1Url = 'https://test.com/entity/456';
     const item1Result: AP.Note = {
       id: new URL(item1Url),
       url: new URL(item1Url),
       type: 'Note',
       content: 'Test',
     };
-    const item2Url = 'https://test.com/activity/789';
+    const item2Url = 'https://test.com/entity/789';
     const item2Result: AP.Document = {
       id: new URL(item2Url),
       url: new URL(item2Url),

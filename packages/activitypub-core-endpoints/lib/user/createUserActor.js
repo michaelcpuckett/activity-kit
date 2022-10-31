@@ -163,7 +163,7 @@ async function createUserActor(user) {
         },
         published: publishedDate,
     };
-    const createActorActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/activity/${(0, activitypub_core_utilities_1.getGuid)()}`;
+    const createActorActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`;
     const createActorActivityReplies = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${createActorActivityId}/replies`),
@@ -312,7 +312,7 @@ async function createUserActor(user) {
             sharedInbox: new URL(activitypub_core_utilities_3.SHARED_INBOX_ID),
         },
     };
-    const createFriendsGroupActorActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/activity/${(0, activitypub_core_utilities_1.getGuid)()}`;
+    const createFriendsGroupActorActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`;
     const createFriendsGroupActivityReplies = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${createFriendsGroupActorActivityId}/replies`),

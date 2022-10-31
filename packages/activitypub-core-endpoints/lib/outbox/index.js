@@ -37,7 +37,7 @@ class OutboxPostEndpoint {
             await this.parseBody();
             await this.getActor();
             await this.authenticateActor();
-            const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}/activity/${(0, activitypub_core_utilities_1.getGuid)()}`);
+            const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`);
             this.activity.id = activityId;
             if ((0, activitypub_core_utilities_1.isTypeOf)(this.activity, activitypub_core_types_1.AP.ActivityTypes)) {
                 this.activity.url = activityId;

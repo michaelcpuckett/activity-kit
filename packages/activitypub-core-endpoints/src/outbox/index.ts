@@ -61,7 +61,7 @@ export class OutboxPostEndpoint {
       await this.getActor();
       await this.authenticateActor();
 
-      const activityId = new URL(`${LOCAL_DOMAIN}/activity/${getGuid()}`);
+      const activityId = new URL(`${LOCAL_DOMAIN}/entity/${getGuid()}`);
       this.activity.id = activityId; // Overwrite ID
 
       if (isTypeOf(this.activity, AP.ActivityTypes)) {

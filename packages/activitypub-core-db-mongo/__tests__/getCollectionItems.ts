@@ -5,7 +5,7 @@ import { ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
 
 describe('DbAdapter', () => {
   describe('getCollectionItems', () => {
-    const item1Url = 'https://test.com/activity/456';
+    const item1Url = 'https://test.com/entity/456';
     const item1Result: AP.Note = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(item1Url),
@@ -13,7 +13,7 @@ describe('DbAdapter', () => {
       type: 'Note',
       content: 'Test',
     };
-    const item2Url = 'https://test.com/activity/789';
+    const item2Url = 'https://test.com/entity/789';
     const item2Result: AP.Document = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(item2Url),
@@ -22,7 +22,7 @@ describe('DbAdapter', () => {
       content: 'Test2',
     };
 
-    const collection1Url = 'https://test.com/activity/123';
+    const collection1Url = 'https://test.com/entity/123';
     const collection1Result: AP.Collection = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(collection1Url),
