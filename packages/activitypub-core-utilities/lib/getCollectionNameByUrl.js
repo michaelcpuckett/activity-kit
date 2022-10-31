@@ -7,8 +7,7 @@ const getCollectionNameByUrl = (url) => {
     if (!isLocal) {
         return 'foreign-entity';
     }
-    const [, collectionName] = url.pathname.split('/');
-    return collectionName ?? 'entity';
+    return 'entity';
 };
 exports.getCollectionNameByUrl = getCollectionNameByUrl;
 //# sourceMappingURL=getCollectionNameByUrl.js.map

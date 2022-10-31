@@ -7,7 +7,9 @@ export const getCollectionNameByUrl = (url: URL) => {
     return 'foreign-entity';
   }
 
-  const [, collectionName] = url.pathname.split('/'); // TODO
+  return 'entity';
 
-  return collectionName ?? 'entity';
+  //const [, collectionName] = url.pathname.split('/'); // TODO
+
+  //return collectionName ?? 'entity';
 };
