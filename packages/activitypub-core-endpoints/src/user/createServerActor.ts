@@ -20,6 +20,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     url: new URL(`${SERVER_ACTOR_ID}/inbox`),
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(SERVER_ACTOR_ID),
     orderedItems: [],
     published: publishedDate,
   };
@@ -30,6 +31,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     url: new URL(`${SERVER_ACTOR_ID}/outbox`),
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(SERVER_ACTOR_ID),
     orderedItems: [],
     published: publishedDate,
   };
@@ -41,6 +43,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     name: 'Followers',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(SERVER_ACTOR_ID),
     items: [],
     published: publishedDate,
   };
@@ -52,6 +55,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     name: 'Following',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(SERVER_ACTOR_ID),
     items: [],
     published: publishedDate,
   };

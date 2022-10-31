@@ -35,6 +35,7 @@ class HomeGetEndpoint {
         actor.inbox = await this.adapters.db.findEntityById(actor.inbox);
         actor.outbox = await this.adapters.db.findEntityById(actor.outbox);
         this.res.statusCode = 200;
+        this.res.setHeader('Vary', 'Accept');
         if (this.req.headers.accept?.includes(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE) ||
             this.req.headers.accept?.includes(activitypub_core_utilities_1.LINKED_DATA_CONTENT_TYPE) ||
             this.req.headers.accept?.includes(activitypub_core_utilities_1.JSON_CONTENT_TYPE)) {

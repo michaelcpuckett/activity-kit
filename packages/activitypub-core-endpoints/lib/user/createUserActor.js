@@ -23,6 +23,7 @@ async function createUserActor(user) {
         name: 'Inbox',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
         published: publishedDate,
     };
@@ -33,6 +34,7 @@ async function createUserActor(user) {
         name: 'Outbox',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
         published: publishedDate,
     };
@@ -43,6 +45,7 @@ async function createUserActor(user) {
         name: 'Followers',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         items: [],
         published: publishedDate,
     };
@@ -53,6 +56,7 @@ async function createUserActor(user) {
         name: 'Following',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         items: [],
         published: publishedDate,
     };
@@ -63,6 +67,7 @@ async function createUserActor(user) {
         name: 'Liked',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
         published: publishedDate,
     };
@@ -73,6 +78,7 @@ async function createUserActor(user) {
         name: 'Shared',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
         published: publishedDate,
     };
@@ -83,6 +89,7 @@ async function createUserActor(user) {
         name: 'Blocked',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         items: [],
         published: publishedDate,
     };
@@ -93,6 +100,7 @@ async function createUserActor(user) {
         name: 'Groups',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         items: [],
         published: publishedDate,
     };
@@ -103,6 +111,7 @@ async function createUserActor(user) {
         name: 'Replies',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         items: [],
         published: publishedDate,
     };
@@ -113,6 +122,7 @@ async function createUserActor(user) {
         name: 'Likes',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
         published: publishedDate,
     };
@@ -123,6 +133,7 @@ async function createUserActor(user) {
         name: 'Shares',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
         published: publishedDate,
     };
@@ -133,6 +144,7 @@ async function createUserActor(user) {
         name: 'Bookmarks',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
         published: publishedDate,
     };
@@ -171,6 +183,7 @@ async function createUserActor(user) {
         name: 'Replies',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         items: [],
         published: publishedDate,
     };
@@ -181,6 +194,7 @@ async function createUserActor(user) {
         name: 'Likes',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
         published: publishedDate,
     };
@@ -191,6 +205,7 @@ async function createUserActor(user) {
         name: 'Shares',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
         published: publishedDate,
     };
@@ -246,6 +261,7 @@ async function createUserActor(user) {
         name: 'Inbox',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
     };
     const friendsGroupOutbox = {
@@ -255,6 +271,7 @@ async function createUserActor(user) {
         name: 'Outbox',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
     };
     const friendsGroupReplies = {
@@ -264,6 +281,7 @@ async function createUserActor(user) {
         name: 'Likes',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         items: [],
     };
     const friendsGroupLikes = {
@@ -273,6 +291,7 @@ async function createUserActor(user) {
         name: 'Likes',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
     };
     const friendsGroupShares = {
@@ -282,6 +301,7 @@ async function createUserActor(user) {
         name: 'Shares',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
     };
     const friendsGroupMembers = {
@@ -291,6 +311,7 @@ async function createUserActor(user) {
         name: 'Members',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         items: [],
     };
     const friendsGroupActor = {
@@ -320,6 +341,7 @@ async function createUserActor(user) {
         name: 'Replies',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         items: [],
     };
     const createFriendsGroupActivityLikes = {
@@ -329,6 +351,7 @@ async function createUserActor(user) {
         name: 'Likes',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
     };
     const createFriendsGroupActivityShares = {
@@ -338,6 +361,7 @@ async function createUserActor(user) {
         name: 'Shares',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(id),
         orderedItems: [],
     };
     const createFriendsGroupActorActivity = {

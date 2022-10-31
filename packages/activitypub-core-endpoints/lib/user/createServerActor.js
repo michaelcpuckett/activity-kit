@@ -13,6 +13,7 @@ async function createServerActor() {
         url: new URL(`${activitypub_core_utilities_1.SERVER_ACTOR_ID}/inbox`),
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(activitypub_core_utilities_1.SERVER_ACTOR_ID),
         orderedItems: [],
         published: publishedDate,
     };
@@ -22,6 +23,7 @@ async function createServerActor() {
         url: new URL(`${activitypub_core_utilities_1.SERVER_ACTOR_ID}/outbox`),
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(activitypub_core_utilities_1.SERVER_ACTOR_ID),
         orderedItems: [],
         published: publishedDate,
     };
@@ -32,6 +34,7 @@ async function createServerActor() {
         name: 'Followers',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(activitypub_core_utilities_1.SERVER_ACTOR_ID),
         items: [],
         published: publishedDate,
     };
@@ -42,6 +45,7 @@ async function createServerActor() {
         name: 'Following',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
+        attributedTo: new URL(activitypub_core_utilities_1.SERVER_ACTOR_ID),
         items: [],
         published: publishedDate,
     };

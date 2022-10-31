@@ -79,6 +79,7 @@ export class EntityGetEndpoint {
       entity.publicKey = entity.publicKey;
     }
 
+    this.res.setHeader('Vary', 'Accept');
     this.res.statusCode = 200;
 
     if (

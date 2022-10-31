@@ -47,6 +47,7 @@ class EntityGetEndpoint {
         if ('publicKey' in entity && entity.publicKey) {
             entity.publicKey = entity.publicKey;
         }
+        this.res.setHeader('Vary', 'Accept');
         this.res.statusCode = 200;
         if (this.req.headers.accept?.includes(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE) ||
             this.req.headers.accept?.includes(activitypub_core_utilities_1.LINKED_DATA_CONTENT_TYPE) ||

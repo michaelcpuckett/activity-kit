@@ -33,6 +33,7 @@ export async function createUserActor(
     name: 'Inbox',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
     published: publishedDate,
   };
@@ -44,6 +45,7 @@ export async function createUserActor(
     name: 'Outbox',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
     published: publishedDate,
   };
@@ -55,6 +57,7 @@ export async function createUserActor(
     name: 'Followers',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     items: [],
     published: publishedDate,
   };
@@ -66,6 +69,7 @@ export async function createUserActor(
     name: 'Following',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     items: [],
     published: publishedDate,
   };
@@ -77,6 +81,7 @@ export async function createUserActor(
     name: 'Liked',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
     published: publishedDate,
   };
@@ -88,6 +93,7 @@ export async function createUserActor(
     name: 'Shared',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
     published: publishedDate,
   };
@@ -99,6 +105,7 @@ export async function createUserActor(
     name: 'Blocked',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     items: [],
     published: publishedDate,
   };
@@ -110,6 +117,7 @@ export async function createUserActor(
     name: 'Groups',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     items: [],
     published: publishedDate,
   };
@@ -121,6 +129,7 @@ export async function createUserActor(
     name: 'Replies',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     items: [],
     published: publishedDate,
   };
@@ -132,6 +141,7 @@ export async function createUserActor(
     name: 'Likes',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
     published: publishedDate,
   };
@@ -143,6 +153,7 @@ export async function createUserActor(
     name: 'Shares',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
     published: publishedDate,
   };
@@ -154,6 +165,7 @@ export async function createUserActor(
     name: 'Bookmarks',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
     published: publishedDate,
   };
@@ -195,6 +207,7 @@ export async function createUserActor(
     name: 'Replies',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     items: [],
     published: publishedDate,
   };
@@ -206,6 +219,7 @@ export async function createUserActor(
     name: 'Likes',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
     published: publishedDate,
   };
@@ -217,6 +231,7 @@ export async function createUserActor(
     name: 'Shares',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
     published: publishedDate,
   };
@@ -277,6 +292,7 @@ export async function createUserActor(
     name: 'Inbox',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
   };
 
@@ -287,6 +303,7 @@ export async function createUserActor(
     name: 'Outbox',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
   };
 
@@ -297,6 +314,7 @@ export async function createUserActor(
     name: 'Likes',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     items: [],
   };
 
@@ -307,6 +325,7 @@ export async function createUserActor(
     name: 'Likes',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
   };
 
@@ -317,6 +336,7 @@ export async function createUserActor(
     name: 'Shares',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
   };
 
@@ -327,6 +347,7 @@ export async function createUserActor(
     name: 'Members',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     items: [],
   };
 
@@ -359,6 +380,7 @@ export async function createUserActor(
     name: 'Replies',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     items: [],
   };
 
@@ -369,6 +391,7 @@ export async function createUserActor(
     name: 'Likes',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
   };
 
@@ -379,6 +402,7 @@ export async function createUserActor(
     name: 'Shares',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
+    attributedTo: new URL(id),
     orderedItems: [],
   };
 

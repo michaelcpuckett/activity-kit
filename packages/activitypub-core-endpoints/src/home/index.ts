@@ -63,6 +63,7 @@ export class HomeGetEndpoint {
     actor.outbox = await this.adapters.db.findEntityById(actor.outbox);
 
     this.res.statusCode = 200;
+    this.res.setHeader('Vary', 'Accept');
 
     if (
       this.req.headers.accept?.includes(ACTIVITYSTREAMS_CONTENT_TYPE) ||
