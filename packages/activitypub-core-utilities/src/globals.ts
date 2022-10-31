@@ -33,6 +33,7 @@ export const RESERVED_USERNAMES = [
   'activity',
   'actor',
   'collection',
+  'entity',
   'inbox',
   'outbox',
   'replies',

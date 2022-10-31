@@ -41,7 +41,7 @@ export class WebfingerGetEndpoint {
     const [, username] = account.split(':');
 
     if (username) {
-      const actor = await this.adapters.db.findOne('actor', {
+      const actor = await this.adapters.db.findOne('entity', {
         preferredUsername: username,
       });
 

@@ -4,7 +4,7 @@ import { UploadMediaPostEndpoint } from '.';
 export async function getActor(this: UploadMediaPostEndpoint) {
   const url = new URL(`${LOCAL_DOMAIN}${this.req.url}`);
 
-  const actor = await this.adapters.db.findOne('actor', {
+  const actor = await this.adapters.db.findOne('entity', {
     'endpoints.uploadMedia': url.toString(),
   });
 

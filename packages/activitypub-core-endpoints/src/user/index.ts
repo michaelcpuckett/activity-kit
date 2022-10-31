@@ -56,7 +56,7 @@ export class UserPostEndpoint {
 
     const { email, password, name, preferredUsername } = body;
 
-    const isUsernameTaken = !!(await this.adapters.db.findOne('actor', {
+    const isUsernameTaken = !!(await this.adapters.db.findOne('entity', {
       preferredUsername,
     }));
 
@@ -77,7 +77,7 @@ export class UserPostEndpoint {
       preferredUsername,
     });
 
-    const isBotCreated = !!(await this.adapters.db.findOne('actor', {
+    const isBotCreated = !!(await this.adapters.db.findOne('entity', {
       preferredUsername: SERVER_ACTOR_USERNAME,
     }));
 
