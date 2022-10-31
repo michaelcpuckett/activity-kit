@@ -16,17 +16,17 @@ const activityPub = (config) => async (req, res, next) => {
             next();
             return;
         }
-        if (req.url.startsWith('/actor/') && req.url.endsWith('/inbox')) {
+        if (req.url.endsWith('/inbox')) {
             await new activitypub_core_endpoints_1.InboxPostEndpoint(req, res, config.adapters, config.plugins).respond();
             next();
             return;
         }
-        if (req.url.startsWith('/actor/') && req.url.endsWith('/uploadMedia')) {
+        if (req.url.endsWith('/uploadMedia')) {
             await new activitypub_core_endpoints_1.UploadMediaPostEndpoint(req, res, config.adapters, config.plugins).respond();
             next();
             return;
         }
-        if (req.url.startsWith('/actor/') && req.url.endsWith('/outbox')) {
+        if (req.url.endsWith('/outbox')) {
             await new activitypub_core_endpoints_1.OutboxPostEndpoint(req, res, config.adapters, config.plugins).respond();
             next();
             return;
@@ -51,11 +51,10 @@ const activityPub = (config) => async (req, res, next) => {
             next();
             return;
         }
-        if (req.url.startsWith('/object/') ||
-            req.url.startsWith('/actor/') ||
-            req.url.startsWith('/activity/') ||
-            (req.url.startsWith('/actor/') && req.url.endsWith('/inbox')) ||
-            (req.url.startsWith('/actor/') && req.url.endsWith('/outbox'))) {
+        if (req.url === '/' ||
+            req.url.startsWith('/entity/') ||
+            req.url.endsWith('/inbox') ||
+            req.url.endsWith('/outbox')) {
             await new activitypub_core_endpoints_1.EntityGetEndpoint(req, res, config.adapters, config.plugins).respond(config.pages.entity);
             next();
             return;

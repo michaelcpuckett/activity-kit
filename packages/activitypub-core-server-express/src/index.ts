@@ -69,7 +69,7 @@ export const activityPub =
         return;
       }
 
-      if (req.url.startsWith('/actor/') && req.url.endsWith('/inbox')) {
+      if (req.url.endsWith('/inbox')) {
         await new InboxPostEndpoint(
           req,
           res,
@@ -80,7 +80,7 @@ export const activityPub =
         return;
       }
 
-      if (req.url.startsWith('/actor/') && req.url.endsWith('/uploadMedia')) {
+      if (req.url.endsWith('/uploadMedia')) {
         await new UploadMediaPostEndpoint(
           req,
           res,
@@ -91,7 +91,7 @@ export const activityPub =
         return;
       }
 
-      if (req.url.startsWith('/actor/') && req.url.endsWith('/outbox')) {
+      if (req.url.endsWith('/outbox')) {
         await new OutboxPostEndpoint(
           req,
           res,
@@ -136,11 +136,10 @@ export const activityPub =
       }
 
       if (
-        req.url.startsWith('/object/') ||
-        req.url.startsWith('/actor/') ||
-        req.url.startsWith('/activity/') ||
-        (req.url.startsWith('/actor/') && req.url.endsWith('/inbox')) ||
-        (req.url.startsWith('/actor/') && req.url.endsWith('/outbox'))
+        req.url === '/' ||
+        req.url.startsWith('/entity/') ||
+        req.url.endsWith('/inbox') ||
+        req.url.endsWith('/outbox')
       ) {
         await new EntityGetEndpoint(
           req,
