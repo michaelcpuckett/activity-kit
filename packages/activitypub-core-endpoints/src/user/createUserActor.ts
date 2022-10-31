@@ -14,7 +14,16 @@ export async function createUserActor(
 ) {
   const { publicKey, privateKey } = await generateKeyPair();
 
-  const id = `${LOCAL_DOMAIN}/actor/${user.preferredUsername}`;
+  let id = `${LOCAL_DOMAIN}/actor/${user.preferredUsername}`;
+
+  if (this.plugins) {
+    for (const plugin of this.plugins) {
+      if (plugin.generateActorId) {
+        id = plugin.generateActorId(this.adapters)(user.preferredUsername);
+      }
+    }
+  }
+
   const publishedDate = new Date();
 
   const userInbox: AP.OrderedCollection = {

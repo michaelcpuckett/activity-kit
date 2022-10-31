@@ -2,6 +2,7 @@ export * as AP from './activitypub';
 export declare type Plugin = {
     handleCreateUserActor?: Function;
     handleOutboxActivity?: Function;
+    generateActorId?: Function;
 };
 export declare type AuthAdapter = {
     createUser: Function;
