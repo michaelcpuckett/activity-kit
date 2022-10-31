@@ -33,7 +33,7 @@ describe('utilities', () => {
       totalItems: 2,
       partOf: 'https://mastodon.social/users/mpuckett/followers',
       orderedItems: [
-        'https://puckett.contact/actor/michael',
+        'https://puckett.contact/entity/michael',
         'https://michaelpuckett.engineer/as/actor',
       ],
     };
@@ -44,7 +44,7 @@ describe('utilities', () => {
       totalItems: 2,
       partOf: new URL('https://mastodon.social/users/mpuckett/followers'),
       orderedItems: [
-        new URL('https://puckett.contact/actor/michael'),
+        new URL('https://puckett.contact/entity/michael'),
         new URL('https://michaelpuckett.engineer/as/actor'),
       ],
     };

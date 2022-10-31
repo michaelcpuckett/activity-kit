@@ -14,7 +14,7 @@ export async function createUserActor(
 ) {
   const { publicKey, privateKey } = await generateKeyPair();
 
-  let id = `${LOCAL_DOMAIN}/actor/${user.preferredUsername}`;
+  let id = `${LOCAL_DOMAIN}/entity/${user.preferredUsername}`;
 
   if (this.plugins) {
     for (const plugin of this.plugins) {

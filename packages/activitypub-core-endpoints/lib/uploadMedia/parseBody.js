@@ -47,7 +47,7 @@ async function parseBody() {
         files.file &&
         !Array.isArray(files.file)) {
         this.file = files.file;
-        const objectId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/object/${(0, activitypub_core_utilities_1.getGuid)()}`;
+        const objectId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`;
         const activityId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`;
         const object = {
             '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,

@@ -7,7 +7,7 @@ const activitypub_core_utilities_3 = require("activitypub-core-utilities");
 const activitypub_core_types_1 = require("activitypub-core-types");
 async function createUserActor(user) {
     const { publicKey, privateKey } = await (0, activitypub_core_utilities_2.generateKeyPair)();
-    let id = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/actor/${user.preferredUsername}`;
+    let id = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/entity/${user.preferredUsername}`;
     if (this.plugins) {
         for (const plugin of this.plugins) {
             if (plugin.generateActorId) {

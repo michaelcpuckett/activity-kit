@@ -6,7 +6,7 @@ import { ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
 describe('DbAdapter', () => {
   describe('saveEntity', () => {
     const date = new Date('2022-01-01');
-    const object1Url = 'https://test.com/object/123';
+    const object1Url = 'https://test.com/entity/123';
     const object1: AP.Note = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(object1Url),

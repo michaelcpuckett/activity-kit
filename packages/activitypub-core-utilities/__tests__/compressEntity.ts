@@ -4,7 +4,7 @@ import { ACTIVITYSTREAMS_CONTEXT } from '../src/globals';
 
 describe('Utilities', () => {
   describe('compressEntity', () => {
-    const actor1Url = `https://test.com/actor/123`;
+    const actor1Url = `https://test.com/entity/123`;
     const actor1Result: AP.Person = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(actor1Url),
@@ -15,7 +15,7 @@ describe('Utilities', () => {
       updated: new Date('2022-01-01'),
     };
 
-    const object1Url = `https://test.com/actor/123`;
+    const object1Url = `https://test.com/entity/123`;
     const object1Result: AP.Note = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(object1Url),

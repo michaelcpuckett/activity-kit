@@ -19,7 +19,7 @@ async function handleCreate() {
     if (Array.isArray(object)) {
         throw new Error('Internal error: Object array not supported currently. TODO.');
     }
-    const objectId = `${activitypub_core_utilities_2.LOCAL_DOMAIN}/object/${(0, activitypub_core_utilities_3.getGuid)()}`;
+    const objectId = `${activitypub_core_utilities_2.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_3.getGuid)()}`;
     object.id = new URL(objectId);
     if ('url' in object) {
         object.url = new URL(objectId);

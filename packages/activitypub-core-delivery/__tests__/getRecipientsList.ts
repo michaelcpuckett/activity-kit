@@ -4,9 +4,9 @@ import { getRecipientsList } from '../src/getRecipientsList';
 
 describe('DeliveryAdapter', () => {
   describe('getRecipientsList', () => {
-    const actor1FollowingUrl = 'https://test.com/actor/following';
-    const actor1FollowingPageUrl = 'https://test.com/actor/following/page/1';
-    const actor2Url = 'https://example.com/actor/foo';
+    const actor1FollowingUrl = 'https://test.com/entity/following';
+    const actor1FollowingPageUrl = 'https://test.com/entity/following/page/1';
+    const actor2Url = 'https://example.com/entity/foo';
 
     const fetch = jest.fn(async (url) => {
       return {

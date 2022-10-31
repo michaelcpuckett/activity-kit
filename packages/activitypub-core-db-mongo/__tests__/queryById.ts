@@ -5,7 +5,7 @@ import { ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
 
 describe('DbAdapter', () => {
   describe('queryById', () => {
-    const object1Url = 'https://test.com/object/123';
+    const object1Url = 'https://test.com/entity/123';
     const object1Result: AP.Note = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(object1Url),

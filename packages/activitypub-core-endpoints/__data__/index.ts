@@ -1,20 +1,20 @@
 import { ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 
-export const aliceUrl = `https://test.com/actor/alice`;
+export const aliceUrl = `https://test.com/entity/alice`;
 export const aliceInboxUrl = `${aliceUrl}/inbox`;
 export const aliceOutboxUrl = `${aliceUrl}/outbox`;
 export const aliceLikedUrl = `${aliceUrl}/liked`;
 export const aliceSharedUrl = `${aliceUrl}/shared`;
 export const collection1Url = `${aliceUrl}/collection/abc`;
-export const note1Url = `${aliceUrl}/object/123`;
-export const bobUrl = 'https://test.com/actor/bob';
+export const note1Url = `${aliceUrl}/entity/123`;
+export const bobUrl = 'https://test.com/entity/bob';
 export const bobInboxUrl = `${bobUrl}/inbox`;
 export const bobOutboxUrl = `${bobUrl}/outbox`;
-export const eveUrl = 'https://test.com/actor/eve';
+export const eveUrl = 'https://test.com/entity/eve';
 export const eveInboxUrl = `${eveUrl}/inbox`;
 export const eveOutboxUrl = `${eveUrl}/outbox`;
-export const note2Url = `${bobUrl}/object/123`;
+export const note2Url = `${bobUrl}/entity/123`;
 export const note2LikesUrl = `${note2Url}/likes`;
 export const note2SharesUrl = `${note2Url}/shares`;
 export const addActivityUrl = `${aliceUrl}/add/abc`;

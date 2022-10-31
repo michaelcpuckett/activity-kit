@@ -34,7 +34,7 @@ export async function handleCreate(this: OutboxPostEndpoint) {
     );
   }
 
-  const objectId = `${LOCAL_DOMAIN}/object/${getGuid()}`;
+  const objectId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
 
   object.id = new URL(objectId);
 
