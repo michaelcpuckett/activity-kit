@@ -5,10 +5,10 @@ const globals_1 = require("./globals");
 const getCollectionNameByUrl = (url) => {
     const isLocal = url.hostname === globals_1.LOCAL_HOSTNAME;
     if (!isLocal) {
-        return 'foreign-object';
+        return 'foreign-entity';
     }
     const [, collectionName] = url.pathname.split('/');
-    return collectionName;
+    return collectionName ?? 'entity';
 };
 exports.getCollectionNameByUrl = getCollectionNameByUrl;
 //# sourceMappingURL=getCollectionNameByUrl.js.map

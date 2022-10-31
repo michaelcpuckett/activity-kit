@@ -4,10 +4,10 @@ export const getCollectionNameByUrl = (url: URL) => {
   const isLocal = url.hostname === LOCAL_HOSTNAME;
 
   if (!isLocal) {
-    return 'foreign-object';
+    return 'foreign-entity';
   }
 
-  const [, collectionName] = url.pathname.split('/');
+  const [, collectionName] = url.pathname.split('/'); // TODO
 
-  return collectionName;
+  return collectionName ?? 'entity';
 };

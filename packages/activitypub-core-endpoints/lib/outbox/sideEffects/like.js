@@ -36,7 +36,7 @@ async function handleLike() {
         throw new Error('Bad liked collection: No ID.');
     }
     await Promise.all([this.adapters.db.insertOrderedItem(likedId, object.id)]);
-    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(object.id) !== 'foreign-object';
+    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(object.id) !== 'foreign-entity';
     if (isLocal) {
         if (!('likes' in object) || !object.likes) {
             throw new Error('Object is local, but has no `likes` collection.');

@@ -8,7 +8,7 @@ export async function findEntityById(
 ): Promise<AP.Entity | null> {
   const collectionName = getCollectionNameByUrl(id);
 
-  if (collectionName === 'foreign-object') {
+  if (collectionName === 'foreign-entity') {
     return null;
   }
 

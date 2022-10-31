@@ -71,7 +71,7 @@ export async function handleAnnounce(this: OutboxPostEndpoint) {
 
   await Promise.all([this.adapters.db.insertOrderedItem(shared.id, object.id)]);
 
-  const isLocal = getCollectionNameByUrl(object.id) !== 'foreign-object';
+  const isLocal = getCollectionNameByUrl(object.id) !== 'foreign-entity';
 
   if (isLocal) {
     if (!('shares' in object) || !object.shares) {
