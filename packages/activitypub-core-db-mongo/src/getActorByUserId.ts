@@ -11,7 +11,7 @@ export async function getActorByUserId(
 
   const preferredUsername = await this.findStringValueById('username', userId);
 
-  const user = await this.findOne('actor', { preferredUsername });
+  const user = await this.findOne('entity', { preferredUsername });
 
   if (user && 'preferredUsername' in user) {
     return user;
