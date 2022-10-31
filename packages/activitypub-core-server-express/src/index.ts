@@ -138,6 +138,18 @@ export const activityPub =
       if (
         req.url === '/' ||
         req.url.startsWith('/entity/') ||
+        req.url.endsWith('/following') ||
+        req.url.endsWith('/followers') ||
+        req.url.endsWith('/liked') ||
+        req.url.endsWith('/likes') ||
+        req.url.endsWith('/replies') ||
+        req.url.endsWith('/shared') ||
+        req.url.endsWith('/shares') ||
+        req.url.endsWith('/blocked') ||
+        req.url.endsWith('/groups') ||
+        req.url.endsWith('/bookmarks') ||
+        req.url.endsWith('/friends') ||
+        req.url.endsWith('/members') ||
         req.url.endsWith('/inbox') ||
         req.url.endsWith('/outbox')
       ) {
