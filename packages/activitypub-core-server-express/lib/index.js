@@ -52,6 +52,7 @@ const activityPub = (config) => async (req, res, next) => {
             return;
         }
         if (req.url === '/' ||
+            req.url.startsWith('/@') ||
             req.url.startsWith('/entity/') ||
             req.url.endsWith('/following') ||
             req.url.endsWith('/followers') ||

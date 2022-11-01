@@ -137,6 +137,7 @@ export const activityPub =
 
       if (
         req.url === '/' ||
+        req.url.startsWith('/@') ||
         req.url.startsWith('/entity/') ||
         req.url.endsWith('/following') ||
         req.url.endsWith('/followers') ||
