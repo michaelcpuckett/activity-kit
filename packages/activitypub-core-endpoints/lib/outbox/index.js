@@ -41,15 +41,6 @@ class OutboxPostEndpoint {
             this.activity.id = activityId;
             if ((0, activitypub_core_utilities_1.isTypeOf)(this.activity, activitypub_core_types_1.AP.ActivityTypes)) {
                 this.activity.url = activityId;
-                if ('object' in this.activity) {
-                    const objectId = (0, activitypub_core_utilities_1.getId)(this.activity.object);
-                    if (objectId) {
-                        const remoteObject = await this.adapters.db.queryById(objectId);
-                        if (!remoteObject) {
-                            throw new Error('Bad object: Object with ID does not exist!');
-                        }
-                    }
-                }
                 await this.runSideEffects();
             }
             else {

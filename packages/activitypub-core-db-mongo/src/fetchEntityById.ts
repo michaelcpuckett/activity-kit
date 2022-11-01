@@ -19,7 +19,7 @@ export async function fetchEntityById(
 
   // GET requests (eg. to the inbox) MUST be made with an Accept header of
   // `application/ld+json; profile="https://www.w3.org/ns/activitystreams"`
-  const fetchedThing = await this.fetch(id.toString(), {
+  const fetchedEntity = await this.fetch(id.toString(), {
     headers: {
       [CONTENT_TYPE_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
       [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
@@ -35,45 +35,8 @@ export async function fetchEntityById(
       return null;
     });
 
-  if (
-    !(
-      typeof fetchedThing === 'object' &&
-      fetchedThing &&
-      'type' in fetchedThing
-    )
-  ) {
-    return null;
-  }
-
-  const convertedEntity = convertStringsToUrls(fetchedThing);
-
-  if (
-    !('type' in convertedEntity) ||
-    typeof convertedEntity.type !== 'string'
-  ) {
-    return null;
-  }
-
-  const convertedEntityWithType: {
-    [key: string]: unknown;
-    type: string;
-  } = {
-    ...convertedEntity,
-    type: convertedEntity.type,
-  };
-
-  const typedThing = getTypedEntity(
-    convertedEntityWithType as unknown as AP.Entity,
-  );
-
-  if (!typedThing) {
-    return null;
-  }
-
-  const compressedEntity = compressEntity(typedThing);
-
   // TODO Turn on smarter caching.
   // await this.saveThing(compressedEntity);
 
-  return compressedEntity;
+  return compressEntity(convertStringsToUrls(fetchedEntity));
 }

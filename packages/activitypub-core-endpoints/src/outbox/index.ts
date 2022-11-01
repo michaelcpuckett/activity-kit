@@ -66,20 +66,6 @@ export class OutboxPostEndpoint {
 
       if (isTypeOf(this.activity, AP.ActivityTypes)) {
         (this.activity as AP.Activity).url = activityId;
-
-        if ('object' in this.activity) {
-          // Check that any attached `object` with ID really exists.
-          const objectId = getId(this.activity.object);
-
-          if (objectId) {
-            const remoteObject = await this.adapters.db.queryById(objectId);
-
-            if (!remoteObject) {
-              throw new Error('Bad object: Object with ID does not exist!');
-            }
-          }
-        }
-        // Then run side effects.
         await this.runSideEffects();
       } else {
         // If not activity type, wrap object in a Create activity.
@@ -89,7 +75,6 @@ export class OutboxPostEndpoint {
       // Address activity and object the same way.
       this.activity = combineAddresses(this.activity as AP.Activity);
 
-      // Commit to database.
       await this.saveActivity();
 
       if (!this.activity.id) {
