@@ -73,6 +73,5 @@ export async function handleAccept(this: InboxPostEndpoint) {
 
   await Promise.all([
     this.adapters.db.insertItem(followeeFollowersId, followerId),
-    this.adapters.db.insertItem(followerFollowingId, followeeId),
   ]);
 }
