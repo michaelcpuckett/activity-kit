@@ -30,7 +30,7 @@ export async function getActors(
       : []),
   ];
 
-  const recipientInboxes = await Promise.all(
+  const recipients = await Promise.all(
     recipientIds.map(async (recipientId) => {
       if (recipientId.toString() === getId(activity.actor).toString()) {
         return null;
@@ -43,20 +43,20 @@ export async function getActors(
       }
 
       if (isTypeOf(recipient, AP.ActorTypes)) {
-        return (recipient as AP.Actor).inbox;
+        return (recipient as AP.Actor);
       }
 
       return null;
     }),
   );
 
-  const recipientInboxIds: URL[] = [];
+  const actors: AP.Actor[] = [];
 
-  for (const recipientInbox of recipientInboxes) {
-    if (recipientInbox instanceof URL) {
-      recipientInboxIds.push(recipientInbox);
+  for (const recipient of recipients) {
+    if (recipient) {
+      actors.push(recipient);
     }
   }
 
-  this.actors = await Promise.all([...new Set(recipientInboxIds)].map(async url => await this.adapters.db.findEntityById(url)));
+  this.actors = actors;
 }

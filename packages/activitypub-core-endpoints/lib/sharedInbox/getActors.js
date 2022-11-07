@@ -25,7 +25,7 @@ async function getActors() {
             ? await this.adapters.delivery.getRecipientsList(activity.audience)
             : []),
     ];
-    const recipientInboxes = await Promise.all(recipientIds.map(async (recipientId) => {
+    const recipients = await Promise.all(recipientIds.map(async (recipientId) => {
         if (recipientId.toString() === (0, activitypub_core_utilities_1.getId)(activity.actor).toString()) {
             return null;
         }
@@ -34,17 +34,17 @@ async function getActors() {
             return null;
         }
         if ((0, activitypub_core_utilities_1.isTypeOf)(recipient, activitypub_core_types_1.AP.ActorTypes)) {
-            return recipient.inbox;
+            return recipient;
         }
         return null;
     }));
-    const recipientInboxIds = [];
-    for (const recipientInbox of recipientInboxes) {
-        if (recipientInbox instanceof URL) {
-            recipientInboxIds.push(recipientInbox);
+    const actors = [];
+    for (const recipient of recipients) {
+        if (recipient) {
+            actors.push(recipient);
         }
     }
-    this.actors = await Promise.all([...new Set(recipientInboxIds)].map(async (url) => await this.adapters.db.findEntityById(url)));
+    this.actors = actors;
 }
 exports.getActors = getActors;
 //# sourceMappingURL=getActors.js.map
