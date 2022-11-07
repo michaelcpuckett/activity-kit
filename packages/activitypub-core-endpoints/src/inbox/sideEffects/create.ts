@@ -32,17 +32,17 @@ export async function handleCreate(this: InboxPostEndpoint) {
     // Groups automatically announce activities addressed to them if sent
     // from members.
 
-    const followingCollection: AP.Collection = await this.adapters.db.findEntityById(getId(this.actor.following));
+    const followersCollection: AP.Collection = await this.adapters.db.findEntityById(getId(this.actor.followers));
 
-    if (!followingCollection) {
+    if (!followersCollection) {
       throw new Error('Bad following collection: not found.');
     }
 
-    if (!Array.isArray(followingCollection.items)) {
+    if (!Array.isArray(followersCollection.items)) {
       throw new Error('Bad following collection: no items.');
     }
 
-    if (!followingCollection.items.includes(getId(activity.actor))) {
+    if (!followersCollection.items.includes(getId(activity.actor))) {
       return;
     }
 
@@ -89,6 +89,7 @@ export async function handleCreate(this: InboxPostEndpoint) {
       url: new URL(announceActivityId),
       type: AP.ActivityTypes.ANNOUNCE,
       actor: getId(this.actor),
+      to: [getId(this.actor.followers)],
       object: getId(object),
       replies: announceActivityReplies.id,
       likes: announceActivityLikes.id,

@@ -19,14 +19,14 @@ async function handleCreate() {
         }
     }
     if ((0, activitypub_core_utilities_1.isType)(this.actor, activitypub_core_types_1.AP.ActorTypes.GROUP)) {
-        const followingCollection = await this.adapters.db.findEntityById((0, activitypub_core_utilities_1.getId)(this.actor.following));
-        if (!followingCollection) {
+        const followersCollection = await this.adapters.db.findEntityById((0, activitypub_core_utilities_1.getId)(this.actor.followers));
+        if (!followersCollection) {
             throw new Error('Bad following collection: not found.');
         }
-        if (!Array.isArray(followingCollection.items)) {
+        if (!Array.isArray(followersCollection.items)) {
             throw new Error('Bad following collection: no items.');
         }
-        if (!followingCollection.items.includes((0, activitypub_core_utilities_1.getId)(activity.actor))) {
+        if (!followersCollection.items.includes((0, activitypub_core_utilities_1.getId)(activity.actor))) {
             return;
         }
         const publishedDate = new Date();
@@ -66,6 +66,7 @@ async function handleCreate() {
             url: new URL(announceActivityId),
             type: activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE,
             actor: (0, activitypub_core_utilities_1.getId)(this.actor),
+            to: [(0, activitypub_core_utilities_1.getId)(this.actor.followers)],
             object: (0, activitypub_core_utilities_1.getId)(object),
             replies: announceActivityReplies.id,
             likes: announceActivityLikes.id,
