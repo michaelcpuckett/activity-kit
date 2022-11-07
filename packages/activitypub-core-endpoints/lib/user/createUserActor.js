@@ -93,11 +93,12 @@ async function createUserActor(user) {
         items: [],
         published: publishedDate,
     };
-    const userGroups = {
+    const userLists = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/groups`),
-        url: new URL(`${id}/groups`),
-        name: 'Groups',
+        id: new URL(`${id}/lists`),
+        url: new URL(`${id}/lists`),
+        name: 'Lists',
+        summary: 'A user\'s set of curated lists of other users, such as "Friends Only".',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         attributedTo: new URL(id),
@@ -148,11 +149,14 @@ async function createUserActor(user) {
         orderedItems: [],
         published: publishedDate,
     };
+    if (!Object.values(activitypub_core_types_1.AP.ActorTypes).includes(user.type)) {
+        throw new Error('Bad request: Provided type is not an Actor type.');
+    }
     let userActor = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(id),
         url: new URL(id),
-        type: activitypub_core_types_1.AP.ActorTypes.PERSON,
+        type: [user.type],
         name: user.name,
         preferredUsername: user.preferredUsername,
         inbox: userInbox.id,
@@ -163,7 +167,12 @@ async function createUserActor(user) {
         replies: userReplies.id,
         likes: userLikes.id,
         shares: userShares.id,
-        streams: [userShared.id, userBlocked.id, userGroups.id, userBookmarks.id],
+        streams: [
+            userShared.id,
+            userBlocked.id,
+            userLists.id,
+            userBookmarks.id
+        ],
         endpoints: {
             sharedInbox: new URL(activitypub_core_utilities_3.SHARED_INBOX_ID),
             uploadMedia: new URL(`${id}/uploadMedia`),
@@ -247,155 +256,12 @@ async function createUserActor(user) {
         this.adapters.db.saveEntity(userFollowing),
         this.adapters.db.saveEntity(userShared),
         this.adapters.db.saveEntity(userBlocked),
-        this.adapters.db.saveEntity(userGroups),
+        this.adapters.db.saveEntity(userLists),
         this.adapters.db.saveEntity(userBookmarks),
         this.adapters.db.saveString('account', user.uid, user.email),
         this.adapters.db.saveString('private-key', user.uid, privateKey),
         this.adapters.db.saveString('username', user.uid, user.preferredUsername),
     ]);
-    const friendsGroupId = `${id}/groups/friends`;
-    const friendsGroupInbox = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${friendsGroupId}/inbox`),
-        url: new URL(`${friendsGroupId}/inbox`),
-        name: 'Inbox',
-        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-        totalItems: 0,
-        attributedTo: new URL(id),
-        orderedItems: [],
-    };
-    const friendsGroupOutbox = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${friendsGroupId}/outbox`),
-        url: new URL(`${friendsGroupId}/outbox`),
-        name: 'Outbox',
-        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-        totalItems: 0,
-        attributedTo: new URL(id),
-        orderedItems: [],
-    };
-    const friendsGroupReplies = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${friendsGroupId}/likes`),
-        url: new URL(`${friendsGroupId}/likes`),
-        name: 'Likes',
-        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
-        totalItems: 0,
-        attributedTo: new URL(id),
-        items: [],
-    };
-    const friendsGroupLikes = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${friendsGroupId}/likes`),
-        url: new URL(`${friendsGroupId}/likes`),
-        name: 'Likes',
-        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-        totalItems: 0,
-        attributedTo: new URL(id),
-        orderedItems: [],
-    };
-    const friendsGroupShares = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${friendsGroupId}/shares`),
-        url: new URL(`${friendsGroupId}/shares`),
-        name: 'Shares',
-        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-        totalItems: 0,
-        attributedTo: new URL(id),
-        orderedItems: [],
-    };
-    const friendsGroupMembers = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${friendsGroupId}/members`),
-        url: new URL(`${friendsGroupId}/members`),
-        name: 'Members',
-        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
-        totalItems: 0,
-        attributedTo: new URL(id),
-        items: [],
-    };
-    const friendsGroupActor = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(friendsGroupId),
-        url: new URL(friendsGroupId),
-        type: activitypub_core_types_1.AP.ActorTypes.GROUP,
-        name: 'Friends',
-        inbox: friendsGroupInbox.id,
-        outbox: friendsGroupOutbox.id,
-        published: new Date(),
-        replies: friendsGroupReplies.id,
-        likes: friendsGroupLikes.id,
-        shares: friendsGroupShares.id,
-        streams: [
-            friendsGroupMembers.id,
-        ],
-        endpoints: {
-            sharedInbox: new URL(activitypub_core_utilities_3.SHARED_INBOX_ID),
-        },
-    };
-    const createFriendsGroupActorActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`;
-    const createFriendsGroupActivityReplies = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${createFriendsGroupActorActivityId}/replies`),
-        url: new URL(`${createFriendsGroupActorActivityId}/replies`),
-        name: 'Replies',
-        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
-        totalItems: 0,
-        attributedTo: new URL(id),
-        items: [],
-    };
-    const createFriendsGroupActivityLikes = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${createFriendsGroupActorActivityId}/likes`),
-        url: new URL(`${createFriendsGroupActorActivityId}/likes`),
-        name: 'Likes',
-        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-        totalItems: 0,
-        attributedTo: new URL(id),
-        orderedItems: [],
-    };
-    const createFriendsGroupActivityShares = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${createFriendsGroupActorActivityId}/shares`),
-        url: new URL(`${createFriendsGroupActorActivityId}/shares`),
-        name: 'Shares',
-        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-        totalItems: 0,
-        attributedTo: new URL(id),
-        orderedItems: [],
-    };
-    const createFriendsGroupActorActivity = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(createFriendsGroupActorActivityId),
-        url: new URL(createFriendsGroupActorActivityId),
-        type: activitypub_core_types_1.AP.ActivityTypes.CREATE,
-        actor: new URL(activitypub_core_utilities_3.SERVER_ACTOR_ID),
-        object: friendsGroupActor,
-    };
-    await Promise.all([
-        this.adapters.db.saveEntity(friendsGroupActor),
-        this.adapters.db.saveEntity(friendsGroupInbox),
-        this.adapters.db.saveEntity(friendsGroupOutbox),
-        this.adapters.db.saveEntity(friendsGroupReplies),
-        this.adapters.db.saveEntity(friendsGroupLikes),
-        this.adapters.db.saveEntity(friendsGroupShares),
-        this.adapters.db.saveEntity(friendsGroupMembers),
-        this.adapters.db.saveEntity(createFriendsGroupActorActivity),
-        this.adapters.db.saveEntity(createFriendsGroupActivityReplies),
-        this.adapters.db.saveEntity(createFriendsGroupActivityLikes),
-        this.adapters.db.saveEntity(createFriendsGroupActivityShares),
-    ]);
-    if (userGroups.id) {
-        await Promise.all([
-            this.adapters.db.insertItem(userGroups.id, new URL(friendsGroupId)),
-        ]);
-    }
-    if (createFriendsGroupActorActivity.id && friendsGroupInbox.id) {
-        await Promise.all([
-            this.adapters.db.insertOrderedItem(new URL(`${activitypub_core_utilities_3.SERVER_ACTOR_ID}/outbox`), createFriendsGroupActorActivity.id),
-            this.adapters.db.insertOrderedItem(friendsGroupInbox.id, createFriendsGroupActorActivity.id),
-        ]);
-    }
     if (createActorActivity.id && userInbox.id) {
         await Promise.all([
             this.adapters.db.insertOrderedItem(new URL(`${activitypub_core_utilities_3.SERVER_ACTOR_ID}/outbox`), createActorActivity.id),

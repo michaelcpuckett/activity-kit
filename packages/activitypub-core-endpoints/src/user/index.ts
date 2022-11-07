@@ -1,4 +1,3 @@
-import { AppOptions, ServiceAccount } from 'firebase-admin';
 import {
   RESERVED_USERNAMES,
   SERVER_ACTOR_USERNAME,
@@ -6,7 +5,7 @@ import {
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
 import type { IncomingMessage, ServerResponse } from 'http';
-import type { DbAdapter, AuthAdapter, Plugin } from 'activitypub-core-types';
+import { DbAdapter, AuthAdapter, Plugin, AP } from 'activitypub-core-types';
 
 export class UserPostEndpoint {
   req: IncomingMessage;
@@ -54,7 +53,7 @@ export class UserPostEndpoint {
       },
     );
 
-    const { email, password, name, preferredUsername } = body;
+    const { email, type, password, name, preferredUsername } = body;
 
     const isUsernameTaken = !!(await this.adapters.db.findOne('entity', {
       preferredUsername,
@@ -87,6 +86,7 @@ export class UserPostEndpoint {
 
     await this.createUserActor({
       uid: user.uid,
+      type,
       email,
       preferredUsername,
       name,

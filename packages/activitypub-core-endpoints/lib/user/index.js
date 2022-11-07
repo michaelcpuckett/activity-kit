@@ -30,7 +30,7 @@ class UserPostEndpoint {
                 reject('Failed to make an OAuth request');
             });
         });
-        const { email, password, name, preferredUsername } = body;
+        const { email, type, password, name, preferredUsername } = body;
         const isUsernameTaken = !!(await this.adapters.db.findOne('entity', {
             preferredUsername,
         }));
@@ -55,6 +55,7 @@ class UserPostEndpoint {
         }
         await this.createUserActor({
             uid: user.uid,
+            type,
             email,
             preferredUsername,
             name,

@@ -2,7 +2,7 @@
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
 import type { IncomingMessage, ServerResponse } from 'http';
-import type { DbAdapter, AuthAdapter, Plugin } from 'activitypub-core-types';
+import { DbAdapter, AuthAdapter, Plugin } from 'activitypub-core-types';
 export declare class UserPostEndpoint {
     req: IncomingMessage;
     res: ServerResponse;

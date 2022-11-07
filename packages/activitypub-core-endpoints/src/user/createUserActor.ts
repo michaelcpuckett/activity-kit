@@ -10,7 +10,13 @@ import { UserPostEndpoint } from '.';
 
 export async function createUserActor(
   this: UserPostEndpoint,
-  user: { uid: string; email: string; name: string; preferredUsername: string },
+  user: {
+    uid: string;
+    type: string;
+    email: string;
+    name: string;
+    preferredUsername: string
+  },
 ) {
   const { publicKey, privateKey } = await generateKeyPair();
 
@@ -110,11 +116,12 @@ export async function createUserActor(
     published: publishedDate,
   };
 
-  const userGroups: AP.Collection = {
+  const userLists: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/groups`),
-    url: new URL(`${id}/groups`),
-    name: 'Groups',
+    id: new URL(`${id}/lists`),
+    url: new URL(`${id}/lists`),
+    name: 'Lists',
+    summary: 'A user\'s set of curated lists of other users, such as "Friends Only".',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
     attributedTo: new URL(id),
@@ -170,11 +177,15 @@ export async function createUserActor(
     published: publishedDate,
   };
 
+  if (!Object.values(AP.ActorTypes).includes(user.type as typeof AP.ActorTypes[keyof typeof AP.ActorTypes])) {
+    throw new Error('Bad request: Provided type is not an Actor type.')
+  }
+
   let userActor: AP.Actor = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(id),
     url: new URL(id),
-    type: AP.ActorTypes.PERSON,
+    type: [user.type] as typeof AP.ActorTypes[keyof typeof AP.ActorTypes][],
     name: user.name,
     preferredUsername: user.preferredUsername,
     inbox: userInbox.id,
@@ -185,7 +196,12 @@ export async function createUserActor(
     replies: userReplies.id,
     likes: userLikes.id,
     shares: userShares.id,
-    streams: [userShared.id, userBlocked.id, userGroups.id, userBookmarks.id],
+    streams: [
+      userShared.id,
+      userBlocked.id,
+      userLists.id,
+      userBookmarks.id
+    ],
     endpoints: {
       sharedInbox: new URL(SHARED_INBOX_ID),
       uploadMedia: new URL(`${id}/uploadMedia`),
@@ -196,7 +212,7 @@ export async function createUserActor(
       publicKeyPem: publicKey,
     },
     published: publishedDate,
-  };
+  } as AP.Actor;
 
   const createActorActivityId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
 
@@ -276,177 +292,12 @@ export async function createUserActor(
     this.adapters.db.saveEntity(userFollowing),
     this.adapters.db.saveEntity(userShared),
     this.adapters.db.saveEntity(userBlocked),
-    this.adapters.db.saveEntity(userGroups),
+    this.adapters.db.saveEntity(userLists),
     this.adapters.db.saveEntity(userBookmarks),
     this.adapters.db.saveString('account', user.uid, user.email),
     this.adapters.db.saveString('private-key', user.uid, privateKey),
     this.adapters.db.saveString('username', user.uid, user.preferredUsername),
   ]);
-
-  const friendsGroupId = `${id}/groups/friends`;
-
-  const friendsGroupInbox: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${friendsGroupId}/inbox`),
-    url: new URL(`${friendsGroupId}/inbox`),
-    name: 'Inbox',
-    type: AP.CollectionTypes.ORDERED_COLLECTION,
-    totalItems: 0,
-    attributedTo: new URL(id),
-    orderedItems: [],
-  };
-
-  const friendsGroupOutbox: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${friendsGroupId}/outbox`),
-    url: new URL(`${friendsGroupId}/outbox`),
-    name: 'Outbox',
-    type: AP.CollectionTypes.ORDERED_COLLECTION,
-    totalItems: 0,
-    attributedTo: new URL(id),
-    orderedItems: [],
-  };
-
-  const friendsGroupReplies: AP.Collection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${friendsGroupId}/likes`),
-    url: new URL(`${friendsGroupId}/likes`),
-    name: 'Likes',
-    type: AP.CollectionTypes.COLLECTION,
-    totalItems: 0,
-    attributedTo: new URL(id),
-    items: [],
-  };
-
-  const friendsGroupLikes: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${friendsGroupId}/likes`),
-    url: new URL(`${friendsGroupId}/likes`),
-    name: 'Likes',
-    type: AP.CollectionTypes.ORDERED_COLLECTION,
-    totalItems: 0,
-    attributedTo: new URL(id),
-    orderedItems: [],
-  };
-
-  const friendsGroupShares: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${friendsGroupId}/shares`),
-    url: new URL(`${friendsGroupId}/shares`),
-    name: 'Shares',
-    type: AP.CollectionTypes.ORDERED_COLLECTION,
-    totalItems: 0,
-    attributedTo: new URL(id),
-    orderedItems: [],
-  };
-
-  const friendsGroupMembers: AP.Collection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${friendsGroupId}/members`),
-    url: new URL(`${friendsGroupId}/members`),
-    name: 'Members',
-    type: AP.CollectionTypes.COLLECTION,
-    totalItems: 0,
-    attributedTo: new URL(id),
-    items: [],
-  };
-
-  const friendsGroupActor: AP.Actor = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(friendsGroupId),
-    url: new URL(friendsGroupId),
-    type: AP.ActorTypes.GROUP,
-    name: 'Friends',
-    inbox: friendsGroupInbox.id,
-    outbox: friendsGroupOutbox.id,
-    published: new Date(),
-    replies: friendsGroupReplies.id,
-    likes: friendsGroupLikes.id,
-    shares: friendsGroupShares.id,
-    streams: [
-      friendsGroupMembers.id, // TODO. Or relationships instead of all this?
-    ],
-    endpoints: {
-      sharedInbox: new URL(SHARED_INBOX_ID),
-    },
-  };
-
-  const createFriendsGroupActorActivityId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
-
-  const createFriendsGroupActivityReplies: AP.Collection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${createFriendsGroupActorActivityId}/replies`),
-    url: new URL(`${createFriendsGroupActorActivityId}/replies`),
-    name: 'Replies',
-    type: AP.CollectionTypes.COLLECTION,
-    totalItems: 0,
-    attributedTo: new URL(id),
-    items: [],
-  };
-
-  const createFriendsGroupActivityLikes: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${createFriendsGroupActorActivityId}/likes`),
-    url: new URL(`${createFriendsGroupActorActivityId}/likes`),
-    name: 'Likes',
-    type: AP.CollectionTypes.ORDERED_COLLECTION,
-    totalItems: 0,
-    attributedTo: new URL(id),
-    orderedItems: [],
-  };
-
-  const createFriendsGroupActivityShares: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${createFriendsGroupActorActivityId}/shares`),
-    url: new URL(`${createFriendsGroupActorActivityId}/shares`),
-    name: 'Shares',
-    type: AP.CollectionTypes.ORDERED_COLLECTION,
-    totalItems: 0,
-    attributedTo: new URL(id),
-    orderedItems: [],
-  };
-
-  const createFriendsGroupActorActivity: AP.Create = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(createFriendsGroupActorActivityId),
-    url: new URL(createFriendsGroupActorActivityId),
-    type: AP.ActivityTypes.CREATE,
-    actor: new URL(SERVER_ACTOR_ID),
-    object: friendsGroupActor,
-  };
-
-  await Promise.all([
-    this.adapters.db.saveEntity(friendsGroupActor),
-    this.adapters.db.saveEntity(friendsGroupInbox),
-    this.adapters.db.saveEntity(friendsGroupOutbox),
-    this.adapters.db.saveEntity(friendsGroupReplies),
-    this.adapters.db.saveEntity(friendsGroupLikes),
-    this.adapters.db.saveEntity(friendsGroupShares),
-    this.adapters.db.saveEntity(friendsGroupMembers),
-    this.adapters.db.saveEntity(createFriendsGroupActorActivity),
-    this.adapters.db.saveEntity(createFriendsGroupActivityReplies),
-    this.adapters.db.saveEntity(createFriendsGroupActivityLikes),
-    this.adapters.db.saveEntity(createFriendsGroupActivityShares),
-  ]);
-
-  if (userGroups.id) {
-    await Promise.all([
-      this.adapters.db.insertItem(userGroups.id, new URL(friendsGroupId)),
-    ]);
-  }
-
-  if (createFriendsGroupActorActivity.id && friendsGroupInbox.id) {
-    await Promise.all([
-      this.adapters.db.insertOrderedItem(
-        new URL(`${SERVER_ACTOR_ID}/outbox`),
-        createFriendsGroupActorActivity.id,
-      ),
-      this.adapters.db.insertOrderedItem(
-        friendsGroupInbox.id,
-        createFriendsGroupActorActivity.id,
-      ),
-    ]);
-  }
 
   if (createActorActivity.id && userInbox.id) {
     await Promise.all([
