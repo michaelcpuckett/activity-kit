@@ -30,8 +30,7 @@
     "activitypub-core-endpoints": "^0.0.190",
     "activitypub-core-types": "^0.0.190",
     "activitypub-core-utilities": "^0.0.190",
-    "express": "^4.18.2",
-    "http": "^0.0.1-security"
+    "express": "^4.18.2"
   },
   "gitHead": "feeaebe7fed149c7080810e9347801a7a8605d36"
 }
