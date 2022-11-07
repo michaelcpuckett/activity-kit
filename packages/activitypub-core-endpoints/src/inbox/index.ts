@@ -64,8 +64,10 @@ export class InboxPostEndpoint {
       for (const actor of this.actors) {
         this.actor = actor;
         await this.runSideEffects();
+        console.log(this.activity);
+        console.log('inserting', actor.inbox, getId(actor.inbox), getId(this.activity));
         await this.adapters.db.insertOrderedItem(
-          getId(actor.inbox),
+          actor.inbox,
           getId(this.activity),
         );
       }

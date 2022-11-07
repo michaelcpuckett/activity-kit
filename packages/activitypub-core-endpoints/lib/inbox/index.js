@@ -43,7 +43,9 @@ class InboxPostEndpoint {
             for (const actor of this.actors) {
                 this.actor = actor;
                 await this.runSideEffects();
-                await this.adapters.db.insertOrderedItem((0, activitypub_core_utilities_1.getId)(actor.inbox), (0, activitypub_core_utilities_1.getId)(this.activity));
+                console.log(this.activity);
+                console.log('inserting', actor.inbox, (0, activitypub_core_utilities_1.getId)(actor.inbox), (0, activitypub_core_utilities_1.getId)(this.activity));
+                await this.adapters.db.insertOrderedItem(actor.inbox, (0, activitypub_core_utilities_1.getId)(this.activity));
             }
             await this.adapters.db.saveEntity(this.activity);
             await this.broadcastActivity();
