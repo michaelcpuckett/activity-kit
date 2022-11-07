@@ -29,6 +29,7 @@ export async function handleCreate(this: InboxPostEndpoint) {
   }
 
   if (isType(this.actor, AP.ActorTypes.GROUP)) {
+    console.log('is group');
     // Groups automatically announce activities addressed to them if sent
     // from members.
 
@@ -43,8 +44,12 @@ export async function handleCreate(this: InboxPostEndpoint) {
     }
 
     if (!followersCollection.items.includes(getId(activity.actor))) {
+      console.log('not in group');
       return;
     }
+
+    console.log('in group');
+
 
     // Now we're in outbox, because this is auto-generated:
 

@@ -19,6 +19,7 @@ async function handleCreate() {
         }
     }
     if ((0, activitypub_core_utilities_1.isType)(this.actor, activitypub_core_types_1.AP.ActorTypes.GROUP)) {
+        console.log('is group');
         const followersCollection = await this.adapters.db.findEntityById((0, activitypub_core_utilities_1.getId)(this.actor.followers));
         if (!followersCollection) {
             throw new Error('Bad following collection: not found.');
@@ -27,8 +28,10 @@ async function handleCreate() {
             throw new Error('Bad following collection: no items.');
         }
         if (!followersCollection.items.includes((0, activitypub_core_utilities_1.getId)(activity.actor))) {
+            console.log('not in group');
             return;
         }
+        console.log('in group');
         const publishedDate = new Date();
         const announceActivityId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`;
         const announceActivityReplies = {
