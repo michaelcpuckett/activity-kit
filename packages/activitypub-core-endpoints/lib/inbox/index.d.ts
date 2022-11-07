@@ -2,8 +2,7 @@
 import { AP, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
-import { getActor } from './getActor';
-import { saveActivity } from './saveActivity';
+import { getActors } from './getActors';
 import { parseBody } from './parseBody';
 import { runSideEffects } from './runSideEffects';
 import { handleAccept } from './sideEffects/accept';
@@ -24,16 +23,16 @@ export declare class InboxPostEndpoint {
     };
     plugins?: Plugin[];
     actor: AP.Actor | null;
+    actors: AP.Actor[];
     activity: AP.Entity | null;
     constructor(req: IncomingMessage, res: ServerResponse, adapters: {
         auth: AuthAdapter;
         db: DbAdapter;
         delivery: DeliveryAdapter;
     }, plugins?: Plugin[]);
-    protected getActor: typeof getActor;
+    protected getActors: typeof getActors;
     protected runSideEffects: typeof runSideEffects;
     protected parseBody: typeof parseBody;
-    protected saveActivity: typeof saveActivity;
     protected broadcastActivity: typeof broadcastActivity;
     protected shouldForwardActivity: typeof shouldForwardActivity;
     protected handleCreate: typeof handleCreate;

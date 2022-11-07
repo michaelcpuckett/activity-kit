@@ -1,8 +1,7 @@
 import { AP, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
-import { getActor } from './getActor';
-import { saveActivity } from './saveActivity';
+import { getActors } from './getActors';
 import { parseBody } from './parseBody';
 import { runSideEffects } from './runSideEffects';
 import { handleAccept } from './sideEffects/accept';
@@ -12,7 +11,7 @@ import { handleLike } from './sideEffects/like';
 import { handleCreate } from './sideEffects/create';
 import { shouldForwardActivity } from './shouldForwardActivity';
 import { broadcastActivity } from './broadcastActivity';
-import { stringify } from 'activitypub-core-utilities';
+import { getId, stringify } from 'activitypub-core-utilities';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
 
 export class InboxPostEndpoint {
@@ -26,6 +25,7 @@ export class InboxPostEndpoint {
   plugins?: Plugin[];
 
   actor: AP.Actor | null = null;
+  actors: AP.Actor[] = [];
   activity: AP.Entity | null = null;
 
   constructor(
@@ -44,10 +44,9 @@ export class InboxPostEndpoint {
     this.plugins = plugins;
   }
 
-  protected getActor = getActor;
+  protected getActors = getActors;
   protected runSideEffects = runSideEffects;
   protected parseBody = parseBody;
-  protected saveActivity = saveActivity;
   protected broadcastActivity = broadcastActivity;
   protected shouldForwardActivity = shouldForwardActivity;
 
@@ -59,10 +58,19 @@ export class InboxPostEndpoint {
 
   public async respond() {
     try {
-      await this.getActor();
+      await this.getActors();
       await this.parseBody();
-      await this.runSideEffects();
-      await this.saveActivity();
+
+      for (const actor of this.actors) {
+        this.actor = actor;
+        await this.runSideEffects();
+        await this.adapters.db.insertOrderedItem(
+          getId(actor.inbox),
+          getId(this.activity),
+        );
+      }
+
+      await this.adapters.db.saveEntity(this.activity);
       await this.broadcastActivity();
 
       this.res.statusCode = 200;

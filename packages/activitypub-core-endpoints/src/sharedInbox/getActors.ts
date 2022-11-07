@@ -3,7 +3,7 @@ import { getId, isTypeOf } from 'activitypub-core-utilities';
 import { SharedInboxPostEndpoint } from '.';
 import { InboxPostEndpoint } from '../inbox';
 
-export async function getRecipientInboxIds(
+export async function getActors(
   this: InboxPostEndpoint & SharedInboxPostEndpoint,
 ) {
   if (!isTypeOf(this.activity, AP.ActivityTypes)) {
@@ -58,5 +58,5 @@ export async function getRecipientInboxIds(
     }
   }
 
-  return [...new Set(recipientInboxIds)];
+  this.actors = await Promise.all([...new Set(recipientInboxIds)].map(async url => await this.adapters.db.findEntityById(url)));
 }
