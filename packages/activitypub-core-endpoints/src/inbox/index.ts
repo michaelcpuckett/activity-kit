@@ -58,8 +58,8 @@ export class InboxPostEndpoint {
 
   public async respond() {
     try {
-      await this.getActors();
       await this.parseBody();
+      await this.getActors();
 
       for (const actor of this.actors) {
         this.actor = actor;
