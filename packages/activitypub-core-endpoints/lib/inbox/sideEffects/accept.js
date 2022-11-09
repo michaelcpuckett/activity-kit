@@ -39,19 +39,15 @@ async function handleAccept() {
     if (!followee) {
         throw new Error('Bad followee: not found.');
     }
-    if (!('outbox' in followee)) {
+    if (!(0, activitypub_core_utilities_1.isTypeOf)(followee, activitypub_core_types_1.AP.ActorTypes)) {
         throw new Error('Bad followee: not an actor.');
-    }
-    const followeeFollowersId = (0, activitypub_core_utilities_1.getId)(followee.followers);
-    if (!followeeFollowersId) {
-        throw new Error('Bad followee: No followers collection.');
     }
     const followerFollowingId = (0, activitypub_core_utilities_1.getId)(follower.following);
     if (!followerFollowingId) {
         throw new Error('Bad followee: No following collection.');
     }
     await Promise.all([
-        this.adapters.db.insertItem(followeeFollowersId, followerId),
+        this.adapters.db.insertItem(followerFollowingId, followeeId),
     ]);
 }
 exports.handleAccept = handleAccept;

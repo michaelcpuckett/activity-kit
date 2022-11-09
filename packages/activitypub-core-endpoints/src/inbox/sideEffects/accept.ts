@@ -55,14 +55,8 @@ export async function handleAccept(this: InboxPostEndpoint) {
     throw new Error('Bad followee: not found.');
   }
 
-  if (!('outbox' in followee)) {
+  if (!isTypeOf(followee, AP.ActorTypes)) {
     throw new Error('Bad followee: not an actor.');
-  }
-
-  const followeeFollowersId = getId(followee.followers);
-
-  if (!followeeFollowersId) {
-    throw new Error('Bad followee: No followers collection.');
   }
 
   const followerFollowingId = getId(follower.following);
@@ -72,6 +66,6 @@ export async function handleAccept(this: InboxPostEndpoint) {
   }
 
   await Promise.all([
-    this.adapters.db.insertItem(followeeFollowersId, followerId),
+    this.adapters.db.insertItem(followerFollowingId, followeeId),
   ]);
 }

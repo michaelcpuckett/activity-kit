@@ -27,14 +27,9 @@ async function handleCreate() {
         if (!Array.isArray(followersCollection.items)) {
             throw new Error('Bad following collection: no items.');
         }
-        console.log(followersCollection.items);
-        console.log('^ folowers; v actor');
-        console.log((0, activitypub_core_utilities_1.getId)(activity.actor));
         if (!followersCollection.items.map(id => id.toString()).includes((0, activitypub_core_utilities_1.getId)(activity.actor).toString())) {
-            console.log('not in group');
             return;
         }
-        console.log('in group');
         const publishedDate = new Date();
         const announceActivityId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`;
         const announceActivityReplies = {

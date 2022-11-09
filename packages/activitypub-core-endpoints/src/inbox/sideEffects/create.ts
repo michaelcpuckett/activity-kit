@@ -43,17 +43,9 @@ export async function handleCreate(this: InboxPostEndpoint) {
       throw new Error('Bad following collection: no items.');
     }
 
-    console.log(followersCollection.items);
-    console.log('^ folowers; v actor');
-    console.log(getId(activity.actor));
-
     if (!followersCollection.items.map(id => id.toString()).includes(getId(activity.actor).toString())) {
-      console.log('not in group');
       return;
     }
-
-    console.log('in group');
-
 
     // Now we're in outbox, because this is auto-generated:
 
