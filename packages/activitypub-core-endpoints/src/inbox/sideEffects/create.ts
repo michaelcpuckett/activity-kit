@@ -47,7 +47,7 @@ export async function handleCreate(this: InboxPostEndpoint) {
     console.log('^ folowers; v actor');
     console.log(getId(activity.actor));
 
-    if (!followersCollection.items.includes(getId(activity.actor))) {
+    if (!followersCollection.items.map(id => id.toString()).includes(getId(activity.actor).toString())) {
       console.log('not in group');
       return;
     }

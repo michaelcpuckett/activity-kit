@@ -30,7 +30,7 @@ async function handleCreate() {
         console.log(followersCollection.items);
         console.log('^ folowers; v actor');
         console.log((0, activitypub_core_utilities_1.getId)(activity.actor));
-        if (!followersCollection.items.includes((0, activitypub_core_utilities_1.getId)(activity.actor))) {
+        if (!followersCollection.items.map(id => id.toString()).includes((0, activitypub_core_utilities_1.getId)(activity.actor).toString())) {
             console.log('not in group');
             return;
         }
