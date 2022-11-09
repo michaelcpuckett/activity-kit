@@ -43,6 +43,10 @@ export async function handleCreate(this: InboxPostEndpoint) {
       throw new Error('Bad following collection: no items.');
     }
 
+    console.log(followersCollection.items);
+    console.log('^ folowers; v actor');
+    console.log(getId(activity.actor));
+
     if (!followersCollection.items.includes(getId(activity.actor))) {
       console.log('not in group');
       return;

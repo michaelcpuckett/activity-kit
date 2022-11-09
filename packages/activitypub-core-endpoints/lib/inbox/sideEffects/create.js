@@ -27,6 +27,9 @@ async function handleCreate() {
         if (!Array.isArray(followersCollection.items)) {
             throw new Error('Bad following collection: no items.');
         }
+        console.log(followersCollection.items);
+        console.log('^ folowers; v actor');
+        console.log((0, activitypub_core_utilities_1.getId)(activity.actor));
         if (!followersCollection.items.includes((0, activitypub_core_utilities_1.getId)(activity.actor))) {
             console.log('not in group');
             return;
