@@ -41,6 +41,18 @@ async function handleFollow() {
     if (!(follower.id && followee.id)) {
         return;
     }
+    const followersId = (0, activitypub_core_utilities_4.getId)(followee.followers);
+    if (!followersId) {
+        throw new Error('Bad followee: No followers ID.');
+    }
+    const followers = await this.adapters.db.fetchEntityById(followersId);
+    if (!followers) {
+        throw new Error('Bad followers collection: Not found.');
+    }
+    if (followers.items.map((id) => id.toString()).includes((0, activitypub_core_utilities_4.getId)(follower).toString())) {
+        console.log('NOTE: ALREADY A FOLLOWER.');
+        return;
+    }
     const acceptActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_2.getGuid)()}`;
     const publishedDate = new Date();
     const acceptActivityReplies = {
@@ -89,10 +101,6 @@ async function handleFollow() {
     const followeeOutboxId = (0, activitypub_core_utilities_4.getId)(followee.outbox);
     if (!followeeOutboxId) {
         throw new Error('Bad followee: No outbox ID.');
-    }
-    const followersId = (0, activitypub_core_utilities_4.getId)(followee.followers);
-    if (!followersId) {
-        throw new Error('Bad followee: No followers ID.');
     }
     await Promise.all([
         this.adapters.db.saveEntity(acceptActivity),

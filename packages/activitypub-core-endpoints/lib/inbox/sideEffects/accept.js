@@ -42,12 +42,20 @@ async function handleAccept() {
     if (!(0, activitypub_core_utilities_1.isTypeOf)(followee, activitypub_core_types_1.AP.ActorTypes)) {
         throw new Error('Bad followee: not an actor.');
     }
-    const followerFollowingId = (0, activitypub_core_utilities_1.getId)(follower.following);
-    if (!followerFollowingId) {
+    const followingId = (0, activitypub_core_utilities_1.getId)(follower.following);
+    if (!followingId) {
         throw new Error('Bad followee: No following collection.');
     }
+    const following = await this.adapters.db.fetchEntityById(followingId);
+    if (!following) {
+        throw new Error('Bad followers collection: Not found.');
+    }
+    if (following.items.map((id) => id.toString()).includes((0, activitypub_core_utilities_1.getId)(followee).toString())) {
+        console.log('NOTE: ALREADY FOLLOWING.');
+        return;
+    }
     await Promise.all([
-        this.adapters.db.insertItem(followerFollowingId, followeeId),
+        this.adapters.db.insertItem(followingId, followeeId),
     ]);
 }
 exports.handleAccept = handleAccept;

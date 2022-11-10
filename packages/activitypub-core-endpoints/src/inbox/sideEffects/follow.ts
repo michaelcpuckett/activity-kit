@@ -60,6 +60,24 @@ export async function handleFollow(this: InboxPostEndpoint) {
     return;
   }
 
+  const followersId = getId(followee.followers);
+
+  if (!followersId) {
+    throw new Error('Bad followee: No followers ID.');
+  }
+
+  const followers = await this.adapters.db.fetchEntityById(followersId);
+
+  if (!followers) {
+    throw new Error('Bad followers collection: Not found.');
+  }
+
+  // Already a follower.
+  if (followers.items.map((id: URL) => id.toString()).includes(getId(follower).toString())) {
+    console.log('NOTE: ALREADY A FOLLOWER.');
+    return;
+  }
+
   // Now we're in outbox, because this is auto-generated:
 
   const acceptActivityId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
@@ -116,12 +134,6 @@ export async function handleFollow(this: InboxPostEndpoint) {
 
   if (!followeeOutboxId) {
     throw new Error('Bad followee: No outbox ID.');
-  }
-
-  const followersId = getId(followee.followers);
-
-  if (!followersId) {
-    throw new Error('Bad followee: No followers ID.');
   }
 
   await Promise.all([

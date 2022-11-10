@@ -59,13 +59,25 @@ export async function handleAccept(this: InboxPostEndpoint) {
     throw new Error('Bad followee: not an actor.');
   }
 
-  const followerFollowingId = getId(follower.following);
+  const followingId = getId(follower.following);
 
-  if (!followerFollowingId) {
+  if (!followingId) {
     throw new Error('Bad followee: No following collection.');
   }
 
+  const following = await this.adapters.db.fetchEntityById(followingId);
+
+  if (!following) {
+    throw new Error('Bad followers collection: Not found.');
+  }
+
+  // Already following.
+  if (following.items.map((id: URL) => id.toString()).includes(getId(followee).toString())) {
+    console.log('NOTE: ALREADY FOLLOWING.');
+    return;
+  }
+
   await Promise.all([
-    this.adapters.db.insertItem(followerFollowingId, followeeId),
+    this.adapters.db.insertItem(followingId, followeeId),
   ]);
 }
