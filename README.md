@@ -6,51 +6,108 @@ This is a [Lerna](https://lerna.js.org/) monorepo that holds packages related to
 
 ## Current Status
 
-This is a toy project at the moment. It's not fully working and it changes frequently.
+This project is still incomplete at the moment. Much of the core functionality is complete, but refer to:
 
-See [TODO.md](TODO.md) and [CHECKLIST.md](CHECKLIST.md).
+* [TODO.md](TODO.md)
+* [CHECKLIST.md](CHECKLIST.md)
+* [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Running in a Project
 
-Canonical example using Firebase Auth, Express, MongoDB, JSX:
+Canonical example using Express, MongoDB, Firebase Auth, JSX:
 
 ```ts
 (async () => {
   const app = express();
-  const authenticationAdapter = new FirebaseAuthentication(serviceAccount, '<project-id>');
-  const dbAdapter = await new MongoDbAdapter().connect({
-    mongoClientUrl: 'mongodb://localhost:27017',
-  });
-  const deliveryAdapter = new DeliveryAdapter(dbAdapter);
+
+  // Firebase Authentication adapter.
+  const firebaseServiceAccount: ServiceAccount = JSON.parse(decodeURIComponent(process.env.AP_SERVICE_ACCOUNT));
+  const firebaseAuthAdapter =
+    new FirebaseAuthAdapter(
+      firebaseServiceAccount,
+      'firebase-project-id'
+    );
+
+  // Mongo DB adapter.
+  const mongoClient = new MongoClient(process.env.AP_MONGO_CLIENT_URL);
+  await mongoClient.connect();
+  const mongoDb = mongoClient.db(process.env.AP_MONGO_DB_NAME);
+  const mongoDbAdapter = new MongoDbAdapter(mongoDb);
+
+  // Server-to-Server Delivery adapter.
+  const defaultDeliveryAdapter =
+    new DeliveryAdapter({
+      adapters: {
+        db: mongoDbAdapter,
+      },
+    });
+
+  // FTP Storage adapter.
+  const ftpStorageAdapter =
+    new FtpStorageAdapter(
+      JSON.parse(decodeURIComponent(process.env.AP_FTP_CONFIG)),
+      '/uploads'
+    );
+
+  const renderLoginPage = async () => {
+    return `
+      <!doctype html>
+      ${renderToString(
+        <LoginPage />
+      )}`;
+  };
+
+  const renderHomePage = async ({ actor }) => {
+    return `
+      <!doctype html>
+      ${renderToString(
+        <DashboardPage actor={actor} />
+      )}
+    `;
+  };
+
+  const renderEntityPage = async ({ entity, actor }) => {
+    return `
+      <!doctype html>
+      ${renderToString(
+        <EntityPage
+          entity={entity}
+          actor={actor}
+        />
+      )}
+    `;
+  };
 
   app.use(
-    activityPub(
-      {
-        renderIndex: async () => {
-          return `
-        <!doctype html>
-        ${renderToString(<IndexPage />)}`;
-        },
-        renderEntity: async ({ entity, actor }) => {
-          return `
-        <!doctype html>
-        ${renderToString(<EntityPage entity={entity} actor={actor} />)}
-      `;
-        },
-        renderHome: async ({ actor }) => {
-          return `
-        <!doctype html>
-        ${renderToString(<HomePage actor={actor} />)}
-      `;
-        },
+    activityPub({
+      pages: {
+        login: renderLoginPage,
+        home: renderHomePage,
+        entity: renderEntityPage,
       },
-      {
-        authenticationAdapter,
-        dbAdapter,
-        deliveryAdapter,
-      },
-    ),
+
+      adapters: {
+        auth: firebaseAuthAdapter,
+        db: mongoDbAdapter,
+        delivery: defaultDeliveryAdapter,
+        storage: ftpStorageAdapter,
+      }
+    }),
   );
+
+  app.get('/', (req: IncomingMessage, res: ServerResponse) => {
+    const indexPage = `
+      <!doctype html>
+      ${renderToString(
+        <IndexPage />
+      )}
+    `;
+
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/html')
+    res.write(indexPage);
+    res.end();
+  });
 
   app.listen(process.env.PORT ?? 3000, () => {
     console.log('Running...');
@@ -73,8 +130,7 @@ restrictions.
 ## Use Cases
 
 There are a few use cases this project attempts to fulfill. Ideally this project
-papers over some of the complexity of JSON-LD, Activity Streams collections, etc.
-to make getting started easy.
+papers over some of the complexity of JSON-LD, Activity Streams collections, etc. to make getting started easy.
 
 ### Connecting a Blog to the Fediverse
 
@@ -125,7 +181,6 @@ The logic layer that get included in all projects include these packages:
   - The logic specific to the Server-to-Server delivery (federation).
 - `activitypub-core-utilities`
   - Common functions with no dependencies on packages from upper layers.
-
 
 ### Adapaters
 
