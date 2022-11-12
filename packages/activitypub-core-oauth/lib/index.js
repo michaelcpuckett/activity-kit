@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.routeHandker = void 0;
+exports.oidcRouteHandler = void 0;
 const oidc_provider_1 = require("oidc-provider");
 const client = {
     client_id: 'oidcCLIENT',
@@ -20,10 +20,12 @@ const configuration = {
         client,
     ],
     pkce: {
-        methods: [],
+        methods: [
+            'S256',
+        ],
         required: () => false,
     },
 };
 const oidc = new oidc_provider_1.Provider('http://localhost:3000', configuration);
-exports.routeHandker = oidc.callback();
+exports.oidcRouteHandler = oidc.callback();
 //# sourceMappingURL=index.js.map

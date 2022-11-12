@@ -13,18 +13,20 @@ const client: ClientMetadata = {
   response_types: [
     'code',
   ],
-}
+};
 
 const configuration: Configuration = {
   clients: [
     client,
   ],
   pkce: {
-    methods: [],
+    methods: [
+      'S256',
+    ],
     required: () => false,
   },
 };
 
 const oidc = new Provider('http://localhost:3000', configuration);
 
-export const routeHandker = oidc.callback();
+export const oidcRouteHandler = oidc.callback();
