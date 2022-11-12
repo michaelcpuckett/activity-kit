@@ -2,30 +2,32 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.oidcRouteHandler = void 0;
 const oidc_provider_1 = require("oidc-provider");
-const client = {
-    client_id: 'oidcCLIENT',
-    client_secret: 'Some_super_secret',
-    grant_types: [
-        'authorization_code',
-    ],
-    redirect_uris: [
-        'http://localhost:8080/auth/login/callback',
-    ],
-    response_types: [
-        'code',
-    ],
-};
-const configuration = {
-    clients: [
-        client,
-    ],
-    pkce: {
-        methods: [
-            'S256',
+const activitypub_core_utilities_1 = require("activitypub-core-utilities");
+const oidcRouteHandler = ({ client_id, client_secret, redirect_uris }) => {
+    const client = {
+        client_id,
+        client_secret,
+        grant_types: [
+            'authorization_code',
         ],
-        required: () => false,
-    },
+        redirect_uris,
+        response_types: [
+            'code',
+        ],
+    };
+    const configuration = {
+        clients: [
+            client,
+        ],
+        pkce: {
+            methods: [
+                'S256',
+            ],
+            required: () => false,
+        },
+    };
+    const oidc = new oidc_provider_1.Provider(activitypub_core_utilities_1.LOCAL_DOMAIN, configuration);
+    return oidc.callback();
 };
-const oidc = new oidc_provider_1.Provider('http://localhost:3000', configuration);
-exports.oidcRouteHandler = oidc.callback();
+exports.oidcRouteHandler = oidcRouteHandler;
 //# sourceMappingURL=index.js.map
