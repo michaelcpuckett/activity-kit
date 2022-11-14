@@ -84,6 +84,9 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
                     </span>
                     <input type="password" name="password" />
                   </label>
+                  <button type="submit">
+                    Submit
+                  </button>
                 </form>
               </body>
             </html>
@@ -179,6 +182,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
                     if (!isAuthenticated) {
                         return undefined;
                     }
+                    console.log('id', id);
                     return id;
                 }
                 catch (err) {
@@ -188,6 +192,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
             try {
                 const { prompt } = await oidc.interactionDetails(req, res);
                 const body = await (0, activitypub_core_utilities_1.parseStream)(req);
+                console.log('body', body);
                 const accountId = await authenticate(body.email, body.password);
                 if (!accountId) {
                     res.statusCode = 200;
@@ -212,6 +217,9 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
                     </span>
                     <input type="password" name="password" />
                   </label>
+                  <button type="submit">
+                    Submit
+                  </button>
                 </form>
               </body>
             </html>

@@ -123,6 +123,9 @@ export const oidcRouteHandler = ({
                     </span>
                     <input type="password" name="password" />
                   </label>
+                  <button type="submit">
+                    Submit
+                  </button>
                 </form>
               </body>
             </html>
@@ -232,6 +235,8 @@ export const oidcRouteHandler = ({
             return undefined;
           }
 
+          console.log('id', id)
+
           return id;
         } catch (err) {
           return undefined;
@@ -245,6 +250,8 @@ export const oidcRouteHandler = ({
           email: string;
           password: string;
         };
+
+        console.log('body', body);
 
         const accountId = await authenticate(body.email, body.password);
 
@@ -271,6 +278,9 @@ export const oidcRouteHandler = ({
                     </span>
                     <input type="password" name="password" />
                   </label>
+                  <button type="submit">
+                    Submit
+                  </button>
                 </form>
               </body>
             </html>
