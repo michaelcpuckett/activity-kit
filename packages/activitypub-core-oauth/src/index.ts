@@ -93,6 +93,66 @@ export const oidcRouteHandler = ({
 
   return {
     oidc: oidc.callback(),
+    interactio: async (req: IncomingMessage, res: ServerResponse) => {
+      try {
+        const details = await oidc.interactionDetails(req, res);
+        const {
+          uid,
+          prompt,
+        } = details;
+    
+        if (prompt.name === 'login') {
+          res.statusCode = 200; // TODO
+          res.setHeader('Accept', 'text/html');
+          res.write(`
+            <!doctype html>
+            <html>
+              <body>
+                <h1>Sign In</h1>
+                <textarea>${JSON.stringify(prompt.details)}</textarea>
+                <form>
+                  <label>
+                    <span>
+                      Email
+                    </span>
+                    <input type="email" name="email" />
+                  </label>
+                  <label>
+                    <span>
+                      Password
+                    </span>
+                    <input type="password" name="password" />
+                  </label>
+                </form>
+              </body>
+            </html>
+          `);
+          res.end();
+          return;
+        }
+        
+        res.statusCode = 200; // TODO
+        res.setHeader('Accept', 'text/html');
+        res.write(`
+          <!doctype html>
+          <html>
+            <body>
+              <h1>Authorize</h1>
+              <form autocomplete="off" action="/interaction/${uid}/confirm" method="post">
+                <button autofocus type="submit">
+                  Continue
+                </button>
+              </form>
+            </body>
+          </html>
+        `);
+        res.end();
+      } catch (err) {
+        res.statusCode = 500;
+        res.setHeader('Accept', 'text/html');
+        res.write(JSON.stringify(err));
+      }
+    },
     abort: async (req: IncomingMessage, res: ServerResponse) => {
       try {
         const result = {

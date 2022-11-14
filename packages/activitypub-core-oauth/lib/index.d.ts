@@ -12,6 +12,7 @@ export declare const oidcRouteHandler: ({ client_id, client_secret, redirect_uri
     };
 }) => {
     oidc: (req: IncomingMessage | import("http2").Http2ServerRequest, res: import("http2").Http2ServerResponse | ServerResponse<IncomingMessage>) => void;
+    interactio: (req: IncomingMessage, res: ServerResponse) => Promise<void>;
     abort: (req: IncomingMessage, res: ServerResponse) => Promise<void>;
     confirm: (req: IncomingMessage, res: ServerResponse) => Promise<void>;
     login: (req: IncomingMessage, res: ServerResponse) => Promise<void>;
