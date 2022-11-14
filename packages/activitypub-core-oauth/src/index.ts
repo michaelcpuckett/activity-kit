@@ -93,7 +93,7 @@ export const oidcRouteHandler = ({
 
   return {
     oidc: oidc.callback(),
-    interactio: async (req: IncomingMessage, res: ServerResponse) => {
+    interaction: async (req: IncomingMessage, res: ServerResponse) => {
       try {
         const details = await oidc.interactionDetails(req, res);
         const {

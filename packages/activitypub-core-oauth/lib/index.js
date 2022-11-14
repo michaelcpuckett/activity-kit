@@ -58,7 +58,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
     const oidc = new oidc_provider_1.Provider(activitypub_core_utilities_1.LOCAL_DOMAIN, configuration);
     return {
         oidc: oidc.callback(),
-        interactio: async (req, res) => {
+        interaction: async (req, res) => {
             try {
                 const details = await oidc.interactionDetails(req, res);
                 const { uid, prompt, } = details;
