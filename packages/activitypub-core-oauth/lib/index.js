@@ -71,7 +71,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
               <body>
                 <h1>Sign In</h1>
                 <textarea>${JSON.stringify(prompt.details)}</textarea>
-                <form method="POST">
+                <form method="POST" action="/interaction/${uid}/login">
                   <label>
                     <span>
                       Email
@@ -190,7 +190,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
                 }
             }
             try {
-                const { prompt } = await oidc.interactionDetails(req, res);
+                const { uid, prompt } = await oidc.interactionDetails(req, res);
                 const body = await (0, activitypub_core_utilities_1.parseStream)(req);
                 console.log('body', body);
                 const accountId = await authenticate(body.email, body.password);
@@ -204,7 +204,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
                 <h1>Sign In</h1>
                 <p>Invalid email or password!</p>
                 <textarea>${JSON.stringify(prompt.details)}</textarea>
-                <form method="post">
+                <form method="post" action="/interaction/${uid}/login">
                   <label>
                     <span>
                       Email

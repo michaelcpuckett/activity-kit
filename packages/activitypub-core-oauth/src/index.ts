@@ -110,7 +110,7 @@ export const oidcRouteHandler = ({
               <body>
                 <h1>Sign In</h1>
                 <textarea>${JSON.stringify(prompt.details)}</textarea>
-                <form method="POST">
+                <form method="POST" action="/interaction/${uid}/login">
                   <label>
                     <span>
                       Email
@@ -244,7 +244,7 @@ export const oidcRouteHandler = ({
       }
 
       try {
-        const { prompt } = await oidc.interactionDetails(req, res);
+        const { uid, prompt } = await oidc.interactionDetails(req, res);
 
         const body = await parseStream(req) as unknown as {
           email: string;
@@ -265,7 +265,7 @@ export const oidcRouteHandler = ({
                 <h1>Sign In</h1>
                 <p>Invalid email or password!</p>
                 <textarea>${JSON.stringify(prompt.details)}</textarea>
-                <form method="post">
+                <form method="post" action="/interaction/${uid}/login">
                   <label>
                     <span>
                       Email
