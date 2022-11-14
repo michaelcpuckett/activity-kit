@@ -25,6 +25,7 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
+    "activitypub-core-types": "^0.0.197",
     "activitypub-core-utilities": "^0.0.197",
     "oidc-provider": "^7.14.0"
   },

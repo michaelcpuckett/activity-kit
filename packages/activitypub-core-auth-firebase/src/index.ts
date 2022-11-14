@@ -3,6 +3,7 @@ import { AppOptions, ServiceAccount } from 'firebase-admin';
 import type { AuthAdapter } from 'activitypub-core-types';
 import { createUser } from './createUser';
 import { getUserIdByToken } from './getUserIdByToken';
+import { authenticatePassword } from './authenticatePassword';
 
 export class FirebaseAuthAdapter implements AuthAdapter {
   appOptions: AppOptions;
@@ -13,7 +14,8 @@ export class FirebaseAuthAdapter implements AuthAdapter {
       projectId,
     };
   }
-
+  
+  public authenticatePassword = authenticatePassword;
   public createUser = createUser;
   public getUserIdByToken = getUserIdByToken;
 }

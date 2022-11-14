@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "activitypub-core-types": "^0.0.197",
+    "firebase": "^9.14.0",
     "firebase-admin": "^11.2.0"
   },
   "gitHead": "feeaebe7fed149c7080810e9347801a7a8605d36"

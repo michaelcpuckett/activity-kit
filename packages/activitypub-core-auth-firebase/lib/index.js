@@ -27,6 +27,7 @@ exports.FirebaseAuthAdapter = void 0;
 const firebaseAdmin = __importStar(require("firebase-admin"));
 const createUser_1 = require("./createUser");
 const getUserIdByToken_1 = require("./getUserIdByToken");
+const authenticatePassword_1 = require("./authenticatePassword");
 class FirebaseAuthAdapter {
     appOptions;
     constructor(serviceAccount, projectId) {
@@ -35,6 +36,7 @@ class FirebaseAuthAdapter {
             projectId,
         };
     }
+    authenticatePassword = authenticatePassword_1.authenticatePassword;
     createUser = createUser_1.createUser;
     getUserIdByToken = getUserIdByToken_1.getUserIdByToken;
 }
