@@ -183,6 +183,8 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
             try {
                 const body = await (0, get_body_1.parse)(req, req.headers);
                 console.log('body', body);
+                const details = await oidc.interactionDetails(req, res);
+                console.log(details);
                 const { uid, prompt } = await oidc.interactionDetails(req, res);
                 console.log('uid', uid);
                 const authenticate = async function authenticate(email, password) {

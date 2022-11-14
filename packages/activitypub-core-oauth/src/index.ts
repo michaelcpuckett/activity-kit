@@ -238,7 +238,12 @@ export const oidcRouteHandler = ({
 
         console.log('body', body);
 
+        const details = await oidc.interactionDetails(req, res);
+
+        console.log(details);
+
         const { uid, prompt } = await oidc.interactionDetails(req, res);
+
 
         console.log('uid', uid);
         // This can be anything you need to authenticate a user
