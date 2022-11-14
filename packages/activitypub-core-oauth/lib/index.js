@@ -180,7 +180,9 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
         login: async (req, res) => {
             console.log('LOGIN!');
             try {
-                const body = JSON.parse(await (0, activitypub_core_utilities_1.streamToString)(req));
+                const reqBody = await (0, activitypub_core_utilities_1.streamToString)(req);
+                console.log('reqBody', reqBody);
+                const body = JSON.parse(reqBody);
                 console.log('body', body);
                 const { uid, prompt } = await oidc.interactionDetails(req, res);
                 console.log('uid', uid);

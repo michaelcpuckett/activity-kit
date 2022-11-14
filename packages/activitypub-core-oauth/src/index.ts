@@ -233,7 +233,11 @@ export const oidcRouteHandler = ({
       console.log('LOGIN!')
 
       try {
-        const body = JSON.parse(await streamToString(req));
+        const reqBody = await streamToString(req);
+
+        console.log('reqBody', reqBody);
+
+        const body = JSON.parse(reqBody);
 
         console.log('body', body);
 
