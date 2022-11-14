@@ -115,6 +115,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
                 res.statusCode = 500;
                 res.setHeader('Accept', 'text/html');
                 res.write(JSON.stringify(err));
+                res.end();
             }
         },
         abort: async (req, res) => {
@@ -129,6 +130,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
                 res.statusCode = 500;
                 res.setHeader('Accept', 'text/html');
                 res.write(JSON.stringify(err));
+                res.end();
             }
         },
         confirm: async (req, res) => {
@@ -172,29 +174,30 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
                 res.statusCode = 500;
                 res.setHeader('Accept', 'text/html');
                 res.write(JSON.stringify(err));
+                res.end();
             }
         },
         login: async (req, res) => {
             console.log('LOGIN!');
-            async function authenticate(email, password) {
-                try {
-                    const id = await adapters.db.findStringIdByValue('account', email);
-                    const isAuthenticated = await adapters.auth.authenticatePassword(email, password);
-                    if (!isAuthenticated) {
-                        return undefined;
-                    }
-                    console.log('id', id);
-                    return id;
-                }
-                catch (err) {
-                    return undefined;
-                }
-            }
             try {
                 const { uid, prompt } = await oidc.interactionDetails(req, res);
                 console.log('uid', uid);
                 const body = JSON.parse(await (0, activitypub_core_utilities_1.streamToString)(req));
                 console.log('body', body);
+                const authenticate = async function authenticate(email, password) {
+                    try {
+                        const id = await adapters.db.findStringIdByValue('account', email);
+                        const isAuthenticated = await adapters.auth.authenticatePassword(email, password);
+                        if (!isAuthenticated) {
+                            return undefined;
+                        }
+                        console.log('id', id);
+                        return id;
+                    }
+                    catch (err) {
+                        return undefined;
+                    }
+                };
                 const accountId = await authenticate(body.email, body.password);
                 if (!accountId) {
                     res.statusCode = 200;
@@ -235,9 +238,11 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
                 await oidc.interactionFinished(req, res, result, { mergeWithLastSubmission: false });
             }
             catch (err) {
+                console.log('failure');
                 res.statusCode = 500;
                 res.setHeader('Accept', 'text/html');
                 res.write(JSON.stringify(err));
+                res.end();
             }
         }
     };

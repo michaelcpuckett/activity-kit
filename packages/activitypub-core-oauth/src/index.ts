@@ -154,6 +154,8 @@ export const oidcRouteHandler = ({
         res.statusCode = 500;
         res.setHeader('Accept', 'text/html');
         res.write(JSON.stringify(err));
+        res.end();
+
       }
     },
     abort: async (req: IncomingMessage, res: ServerResponse) => {
@@ -167,6 +169,8 @@ export const oidcRouteHandler = ({
         res.statusCode = 500;
         res.setHeader('Accept', 'text/html');
         res.write(JSON.stringify(err));
+        res.end();
+
       }
     },
     confirm: async (req: IncomingMessage, res: ServerResponse) => {
@@ -222,27 +226,11 @@ export const oidcRouteHandler = ({
         res.statusCode = 500;
         res.setHeader('Accept', 'text/html');
         res.write(JSON.stringify(err));
+        res.end();
       }
     },
     login: async (req: IncomingMessage, res: ServerResponse) => {
       console.log('LOGIN!')
-      // This can be anything you need to authenticate a user
-      async function authenticate(email: string, password: string) {
-        try {
-          const id = await adapters.db.findStringIdByValue('account', email);
-          const isAuthenticated = await adapters.auth.authenticatePassword(email, password);
-
-          if (!isAuthenticated) {
-            return undefined;
-          }
-
-          console.log('id', id)
-
-          return id;
-        } catch (err) {
-          return undefined;
-        }
-      }
 
       try {
         const { uid, prompt } = await oidc.interactionDetails(req, res);
@@ -252,6 +240,24 @@ export const oidcRouteHandler = ({
         const body = JSON.parse(await streamToString(req));
 
         console.log('body', body);
+
+        // This can be anything you need to authenticate a user
+        const authenticate = async function authenticate(email: string, password: string) {
+          try {
+            const id = await adapters.db.findStringIdByValue('account', email);
+            const isAuthenticated = await adapters.auth.authenticatePassword(email, password);
+
+            if (!isAuthenticated) {
+              return undefined;
+            }
+
+            console.log('id', id)
+
+            return id;
+          } catch (err) {
+            return undefined;
+          }
+        }
 
         const accountId = await authenticate(body.email, body.password);
 
@@ -295,9 +301,11 @@ export const oidcRouteHandler = ({
 
         await oidc.interactionFinished(req, res, result, { mergeWithLastSubmission: false });
       } catch (err) {
+        console.log('failure')
         res.statusCode = 500;
         res.setHeader('Accept', 'text/html');
         res.write(JSON.stringify(err));
+        res.end();
       }
     }
   }
