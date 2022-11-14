@@ -10,6 +10,7 @@ export async function authenticatePassword(
   const app = initializeApp(this.appOptions);
   const auth = getAuth(app);
   const user = await signInWithEmailAndPassword(auth, email, password);
+  console.log('user', user);
 
   if (user) {
     return true;

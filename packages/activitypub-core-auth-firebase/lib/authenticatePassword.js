@@ -7,6 +7,7 @@ async function authenticatePassword(email, password) {
     const app = (0, app_1.initializeApp)(this.appOptions);
     const auth = (0, auth_1.getAuth)(app);
     const user = await (0, auth_1.signInWithEmailAndPassword)(auth, email, password);
+    console.log('user', user);
     if (user) {
         return true;
     }
