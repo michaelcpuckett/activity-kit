@@ -3,6 +3,7 @@ import type { Configuration, ClientMetadata } from 'oidc-provider';
 import { LOCAL_DOMAIN, streamToString } from 'activitypub-core-utilities';
 import type { AuthAdapter, DbAdapter } from 'activitypub-core-types';
 import { IncomingMessage, ServerResponse } from 'http';
+import { parse } from 'get-body';
 
 export const oidcRouteHandler = ({
   client_id,
@@ -233,11 +234,7 @@ export const oidcRouteHandler = ({
       console.log('LOGIN!')
 
       try {
-        const reqBody = await streamToString(req);
-
-        console.log('reqBody', reqBody);
-
-        const body = JSON.parse(reqBody);
+        const body = await parse(req, req.headers);
 
         console.log('body', body);
 

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.oidcRouteHandler = void 0;
 const oidc_provider_1 = require("oidc-provider");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
+const get_body_1 = require("get-body");
 const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters }) => {
     const client = {
         client_id,
@@ -180,9 +181,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
         login: async (req, res) => {
             console.log('LOGIN!');
             try {
-                const reqBody = await (0, activitypub_core_utilities_1.streamToString)(req);
-                console.log('reqBody', reqBody);
-                const body = JSON.parse(reqBody);
+                const body = await (0, get_body_1.parse)(req, req.headers);
                 console.log('body', body);
                 const { uid, prompt } = await oidc.interactionDetails(req, res);
                 console.log('uid', uid);

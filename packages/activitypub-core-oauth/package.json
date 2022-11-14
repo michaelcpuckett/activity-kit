@@ -27,6 +27,7 @@
   "dependencies": {
     "activitypub-core-types": "^0.0.209",
     "activitypub-core-utilities": "^0.0.209",
+    "get-body": "^1.0.3",
     "oidc-provider": "^7.14.0"
   },
   "devDependencies": {
