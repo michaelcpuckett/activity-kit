@@ -39,7 +39,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
             if (!actor) {
                 return undefined;
             }
-            const email = this.adapters.db.getStringValueById('account', id);
+            const email = await adapters.db.findStringValueById('account', id);
             if (!email) {
                 return undefined;
             }
@@ -174,8 +174,8 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
         login: async (req, res) => {
             async function authenticate(email, password) {
                 try {
-                    const id = this.adapters.db.getStringIdByValue('account', email);
-                    const isAuthenticated = await this.adapters.auth.authenticatePassword(email, password);
+                    const id = await adapters.db.findStringIdByValue('account', email);
+                    const isAuthenticated = await adapters.auth.authenticatePassword(email, password);
                     if (!isAuthenticated) {
                         return undefined;
                     }

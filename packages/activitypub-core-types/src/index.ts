@@ -9,6 +9,7 @@ export type Plugin = {
 export type AuthAdapter = {
   createUser: Function;
   getUserIdByToken: Function;
+  authenticatePassword: Function;
 };
 
 export type DbAdapter = {

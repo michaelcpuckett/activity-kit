@@ -7,6 +7,7 @@ export declare type Plugin = {
 export declare type AuthAdapter = {
     createUser: Function;
     getUserIdByToken: Function;
+    authenticatePassword: Function;
 };
 export declare type DbAdapter = {
     expandCollection: Function;

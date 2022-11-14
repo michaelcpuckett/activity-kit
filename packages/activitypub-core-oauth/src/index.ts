@@ -69,7 +69,7 @@ export const oidcRouteHandler = ({
         return undefined;
       }
 
-      const email = this.adapters.db.getStringValueById('account', id);
+      const email = await adapters.db.findStringValueById('account', id);
 
       if (!email) {
         return undefined;
@@ -225,8 +225,8 @@ export const oidcRouteHandler = ({
       // This can be anything you need to authenticate a user
       async function authenticate(email: string, password: string) {
         try {
-          const id = this.adapters.db.getStringIdByValue('account', email);
-          const isAuthenticated = await this.adapters.auth.authenticatePassword(email, password);
+          const id = await adapters.db.findStringIdByValue('account', email);
+          const isAuthenticated = await adapters.auth.authenticatePassword(email, password);
 
           if (!isAuthenticated) {
             return undefined;
