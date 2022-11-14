@@ -225,6 +225,7 @@ export const oidcRouteHandler = ({
       }
     },
     login: async (req: IncomingMessage, res: ServerResponse) => {
+      console.log('LOGIN!')
       // This can be anything you need to authenticate a user
       async function authenticate(email: string, password: string) {
         try {
@@ -245,6 +246,8 @@ export const oidcRouteHandler = ({
 
       try {
         const { uid, prompt } = await oidc.interactionDetails(req, res);
+
+        console.log('uid', uid);
 
         const body = await parseStream(req) as unknown as {
           email: string;

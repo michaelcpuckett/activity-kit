@@ -175,6 +175,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
             }
         },
         login: async (req, res) => {
+            console.log('LOGIN!');
             async function authenticate(email, password) {
                 try {
                     const id = await adapters.db.findStringIdByValue('account', email);
@@ -191,6 +192,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
             }
             try {
                 const { uid, prompt } = await oidc.interactionDetails(req, res);
+                console.log('uid', uid);
                 const body = await (0, activitypub_core_utilities_1.parseStream)(req);
                 console.log('body', body);
                 const accountId = await authenticate(body.email, body.password);
