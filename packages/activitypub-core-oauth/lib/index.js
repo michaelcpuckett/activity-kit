@@ -71,7 +71,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
               <body>
                 <h1>Sign In</h1>
                 <textarea>${JSON.stringify(prompt.details)}</textarea>
-                <form>
+                <form method="POST">
                   <label>
                     <span>
                       Email
@@ -204,7 +204,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
                 <h1>Sign In</h1>
                 <p>Invalid email or password!</p>
                 <textarea>${JSON.stringify(prompt.details)}</textarea>
-                <form>
+                <form method="post">
                   <label>
                     <span>
                       Email
