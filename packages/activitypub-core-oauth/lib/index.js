@@ -193,7 +193,7 @@ const oidcRouteHandler = ({ client_id, client_secret, redirect_uris, adapters })
             try {
                 const { uid, prompt } = await oidc.interactionDetails(req, res);
                 console.log('uid', uid);
-                const body = await (0, activitypub_core_utilities_1.parseStream)(req);
+                const body = JSON.parse(await (0, activitypub_core_utilities_1.streamToString)(req));
                 console.log('body', body);
                 const accountId = await authenticate(body.email, body.password);
                 if (!accountId) {

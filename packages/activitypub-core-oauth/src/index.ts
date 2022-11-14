@@ -1,6 +1,6 @@
 import { Provider } from 'oidc-provider';
 import type { Configuration, ClientMetadata } from 'oidc-provider';
-import { LOCAL_DOMAIN, parseStream } from 'activitypub-core-utilities';
+import { LOCAL_DOMAIN, streamToString } from 'activitypub-core-utilities';
 import type { AuthAdapter, DbAdapter } from 'activitypub-core-types';
 import { IncomingMessage, ServerResponse } from 'http';
 
@@ -249,10 +249,7 @@ export const oidcRouteHandler = ({
 
         console.log('uid', uid);
 
-        const body = await parseStream(req) as unknown as {
-          email: string;
-          password: string;
-        };
+        const body = JSON.parse(await streamToString(req));
 
         console.log('body', body);
 
