@@ -233,14 +233,13 @@ export const oidcRouteHandler = ({
       console.log('LOGIN!')
 
       try {
-        const { uid, prompt } = await oidc.interactionDetails(req, res);
-
-        console.log('uid', uid);
-
         const body = JSON.parse(await streamToString(req));
 
         console.log('body', body);
 
+        const { uid, prompt } = await oidc.interactionDetails(req, res);
+
+        console.log('uid', uid);
         // This can be anything you need to authenticate a user
         const authenticate = async function authenticate(email: string, password: string) {
           try {
