@@ -101,22 +101,26 @@ export class EntityGetEndpoint {
 
       if (isType(entity, AP.CollectionTypes.COLLECTION)) {
         const expandedItems = await Promise.all(entity.items.map(async (id: URL) => {
-          return await this.adapters.db.findEntityById(id);
+          return await this.adapters.db.findEntityById(id) ?? id;
         }));
 
         const items = [];
 
         for (const item of expandedItems) {
           if (item) {
-            if (isTypeOf(item, AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
-              const object = await this.adapters.db.findEntityById(item.object);
+            if (item instanceof URL) {
+              items.push(item);
+            } else {
+              if (isTypeOf(item, AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
+                const object = await this.adapters.db.findEntityById(item.object);
 
-              if (object) {
-                item.object = object;
+                if (object) {
+                  item.object = object;
+                }
               }
-            }
 
-            items.push(item);
+              items.push(item);
+            }
           }
         }
 
@@ -130,22 +134,26 @@ export class EntityGetEndpoint {
 
       if (isType(entity, AP.CollectionTypes.ORDERED_COLLECTION)) {
         const expandedItems = await Promise.all(entity.orderedItems.map(async (id: URL) => {
-          return await this.adapters.db.findEntityById(id);
+          return await this.adapters.db.findEntityById(id) ?? id;
         }));
 
         const orderedItems = [];
 
         for (const item of expandedItems) {
           if (item) {
-            if (isTypeOf(item, AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
-              const object = await this.adapters.db.findEntityById(item.object);
+            if (item instanceof URL) {
+              orderedItems.push(item);
+            } else {
+              if (isTypeOf(item, AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
+                const object = await this.adapters.db.findEntityById(item.object);
 
-              if (object) {
-                item.object = object;
+                if (object) {
+                  item.object = object;
+                }
               }
-            }
 
-            orderedItems.push(item);
+              orderedItems.push(item);
+            }
           }
         }
 

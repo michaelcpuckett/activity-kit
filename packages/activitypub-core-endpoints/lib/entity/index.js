@@ -61,18 +61,23 @@ class EntityGetEndpoint {
             }
             if ((0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
                 const expandedItems = await Promise.all(entity.items.map(async (id) => {
-                    return await this.adapters.db.findEntityById(id);
+                    return await this.adapters.db.findEntityById(id) ?? id;
                 }));
                 const items = [];
                 for (const item of expandedItems) {
                     if (item) {
-                        if ((0, activitypub_core_utilities_1.isTypeOf)(item, activitypub_core_types_1.AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
-                            const object = await this.adapters.db.findEntityById(item.object);
-                            if (object) {
-                                item.object = object;
-                            }
+                        if (item instanceof URL) {
+                            items.push(item);
                         }
-                        items.push(item);
+                        else {
+                            if ((0, activitypub_core_utilities_1.isTypeOf)(item, activitypub_core_types_1.AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
+                                const object = await this.adapters.db.findEntityById(item.object);
+                                if (object) {
+                                    item.object = object;
+                                }
+                            }
+                            items.push(item);
+                        }
                     }
                 }
                 this.res.write((0, activitypub_core_utilities_3.stringify)({
@@ -84,18 +89,23 @@ class EntityGetEndpoint {
             }
             if ((0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
                 const expandedItems = await Promise.all(entity.orderedItems.map(async (id) => {
-                    return await this.adapters.db.findEntityById(id);
+                    return await this.adapters.db.findEntityById(id) ?? id;
                 }));
                 const orderedItems = [];
                 for (const item of expandedItems) {
                     if (item) {
-                        if ((0, activitypub_core_utilities_1.isTypeOf)(item, activitypub_core_types_1.AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
-                            const object = await this.adapters.db.findEntityById(item.object);
-                            if (object) {
-                                item.object = object;
-                            }
+                        if (item instanceof URL) {
+                            orderedItems.push(item);
                         }
-                        orderedItems.push(item);
+                        else {
+                            if ((0, activitypub_core_utilities_1.isTypeOf)(item, activitypub_core_types_1.AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
+                                const object = await this.adapters.db.findEntityById(item.object);
+                                if (object) {
+                                    item.object = object;
+                                }
+                            }
+                            orderedItems.push(item);
+                        }
                     }
                 }
                 this.res.write((0, activitypub_core_utilities_3.stringify)({
