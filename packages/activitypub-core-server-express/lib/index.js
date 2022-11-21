@@ -46,6 +46,11 @@ const activityPub = (config) => async (req, res, next) => {
             next();
             return;
         }
+        if (req.url === '/directory') {
+            await new activitypub_core_endpoints_1.DirectoryGetEndpoint(req, res, config.adapters, config.plugins).respond(config.pages.directory);
+            next();
+            return;
+        }
         if (req.url.startsWith('/.well-known/webfinger')) {
             await new activitypub_core_endpoints_1.WebfingerGetEndpoint(req, res, config.adapters, config.plugins).respond();
             next();

@@ -9,6 +9,7 @@ import {
   SharedInboxPostEndpoint,
   WebfingerGetEndpoint,
   UploadMediaPostEndpoint,
+  DirectoryGetEndpoint
 } from 'activitypub-core-endpoints';
 import { AP, Plugin } from 'activitypub-core-types';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
@@ -24,6 +25,12 @@ export const activityPub =
       login: () => Promise<string>;
 
       home: ({ actor }: { actor: AP.Actor }) => Promise<string>;
+
+      directory: ({
+        groups,
+      }: {
+        groups: AP.Group[],
+      }) => Promise<string>;
 
       entity: ({
         entity,
@@ -120,6 +127,17 @@ export const activityPub =
           config.adapters,
           config.plugins,
         ).respond(config.pages.home);
+        next();
+        return;
+      }
+
+      if (req.url === '/directory') {
+        await new DirectoryGetEndpoint(
+          req,
+          res,
+          config.adapters,
+          config.plugins,
+        ).respond(config.pages.directory);
         next();
         return;
       }
