@@ -3,6 +3,8 @@ import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   CONTENT_TYPE_HEADER,
   HTML_CONTENT_TYPE,
+  isType,
+  isTypeOf,
   JSON_CONTENT_TYPE,
   LINKED_DATA_CONTENT_TYPE,
   LOCAL_DOMAIN,
@@ -90,8 +92,73 @@ export class EntityGetEndpoint {
       // TODO sign HTTP signature
 
       this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
-      this.res.write(stringify(entity));
-      this.res.end();
+
+      if (!isTypeOf(entity, AP.CollectionTypes)) {
+        this.res.write(stringify(entity));
+        this.res.end();
+        return;
+      }
+
+      if (isType(entity, AP.CollectionTypes.COLLECTION)) {
+        const expandedItems = await Promise.all(entity.items.map(async (id: URL) => {
+          return await this.adapters.db.findEntityById(id);
+        }));
+
+        const items = [];
+
+        for (const item of expandedItems) {
+          if (item) {
+            if (isTypeOf(item, AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
+              const object = await this.adapters.db.findEntityById(item.object);
+
+              if (object) {
+                item.object = object;
+              }
+            }
+
+            items.push(item);
+          }
+        }
+
+        this.res.write(stringify({
+          ...entity,
+          items,
+        }));
+        this.res.end();
+        return;
+      }
+
+      if (isType(entity, AP.CollectionTypes.ORDERED_COLLECTION)) {
+        const expandedItems = await Promise.all(entity.orderedItems.map(async (id: URL) => {
+          return await this.adapters.db.findEntityById(id);
+        }));
+
+        const orderedItems = [];
+
+        for (const item of expandedItems) {
+          if (item) {
+            if (isTypeOf(item, AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
+              const object = await this.adapters.db.findEntityById(item.object);
+
+              if (object) {
+                item.object = object;
+              }
+            }
+
+            orderedItems.push(item);
+          }
+        }
+
+        this.res.write(stringify({
+          ...entity,
+          orderedItems,
+        }));
+        this.res.end();
+        return;
+      }
+
+      this.handleNotFound();
+      return;
     } else {
       this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
       this.res.write(

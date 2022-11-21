@@ -31,13 +31,37 @@ class UserPostEndpoint {
             });
         });
         const { email, type, password, name, preferredUsername } = body;
+        if (!email) {
+            this.res.statusCode = 300;
+            this.res.write(JSON.stringify({
+                error: 'Email is required.',
+            }));
+            this.res.end();
+            return;
+        }
+        if (!password) {
+            this.res.statusCode = 300;
+            this.res.write(JSON.stringify({
+                error: 'Password is required.',
+            }));
+            this.res.end();
+            return;
+        }
+        if (!preferredUsername) {
+            this.res.statusCode = 300;
+            this.res.write(JSON.stringify({
+                error: 'Username is required.',
+            }));
+            this.res.end();
+            return;
+        }
         const isUsernameTaken = !!(await this.adapters.db.findOne('entity', {
             preferredUsername,
         }));
         if (isUsernameTaken || activitypub_core_utilities_1.RESERVED_USERNAMES.includes(preferredUsername)) {
             this.res.statusCode = 409;
             this.res.write(JSON.stringify({
-                error: 'Username Taken.',
+                error: 'Username taken.',
             }));
             this.res.end();
             return;

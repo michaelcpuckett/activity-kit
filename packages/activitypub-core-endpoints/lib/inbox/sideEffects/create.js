@@ -67,7 +67,7 @@ async function handleCreate() {
             url: new URL(announceActivityId),
             type: activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE,
             actor: (0, activitypub_core_utilities_1.getId)(this.actor),
-            to: [(0, activitypub_core_utilities_1.getId)(this.actor.followers)],
+            to: [new URL(activitypub_core_utilities_1.PUBLIC_ACTOR), (0, activitypub_core_utilities_1.getId)(this.actor.followers)],
             object: (0, activitypub_core_utilities_1.getId)(object),
             replies: announceActivityReplies.id,
             likes: announceActivityLikes.id,
