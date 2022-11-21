@@ -39,6 +39,8 @@ export class DirectoryGetEndpoint {
     const groups = this.adapters.db.findAll('entity', {
       type: ['Group'],
     });
+
+    console.log(groups);
     
     this.res.statusCode = 200;
     this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
@@ -47,5 +49,6 @@ export class DirectoryGetEndpoint {
         groups: convertUrlsToStrings(groups),
       }),
     );
+    this.res.end();
   }
 }
