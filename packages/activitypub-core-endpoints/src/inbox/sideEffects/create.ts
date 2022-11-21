@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import { ACTIVITYSTREAMS_CONTEXT, getGuid, getId, isType, LOCAL_DOMAIN } from 'activitypub-core-utilities';
+import { ACTIVITYSTREAMS_CONTEXT, getGuid, getId, isType, LOCAL_DOMAIN, PUBLIC_ACTOR } from 'activitypub-core-utilities';
 import { InboxPostEndpoint } from '..';
 
 export async function handleCreate(this: InboxPostEndpoint) {
@@ -90,7 +90,7 @@ export async function handleCreate(this: InboxPostEndpoint) {
       url: new URL(announceActivityId),
       type: AP.ActivityTypes.ANNOUNCE,
       actor: getId(this.actor),
-      to: [getId(this.actor.followers)],
+      to: [new URL(PUBLIC_ACTOR), getId(this.actor.followers)],
       object: getId(object),
       replies: announceActivityReplies.id,
       likes: announceActivityLikes.id,
