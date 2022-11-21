@@ -17,7 +17,7 @@ class DirectoryGetEndpoint {
         this.url = url ?? new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${req.url}`);
     }
     async respond(render) {
-        const groups = this.adapters.db.findAll('entity', {
+        const groups = await this.adapters.db.findAll('entity', {
             type: ['Group'],
         });
         console.log(groups);

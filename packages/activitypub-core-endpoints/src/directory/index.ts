@@ -36,7 +36,7 @@ export class DirectoryGetEndpoint {
   }
 
   public async respond(render: Function) {
-    const groups = this.adapters.db.findAll('entity', {
+    const groups = await this.adapters.db.findAll('entity', {
       type: ['Group'],
     });
 
