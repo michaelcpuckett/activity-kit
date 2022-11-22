@@ -53,7 +53,7 @@ async function handleBlock() {
     if (!blocked || !blocked.id) {
         throw new Error('Bad blocked collection: not found.');
     }
-    await Promise.all([this.adapters.db.insertOrderedItem(blocked.id, object.id)]);
+    await Promise.all([this.adapters.db.insertItem(blocked.id, object.id)]);
 }
 exports.handleBlock = handleBlock;
 //# sourceMappingURL=block.js.map

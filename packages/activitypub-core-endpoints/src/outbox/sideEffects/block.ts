@@ -77,5 +77,5 @@ export async function handleBlock(this: OutboxPostEndpoint) {
     throw new Error('Bad blocked collection: not found.');
   }
 
-  await Promise.all([this.adapters.db.insertOrderedItem(blocked.id, object.id)]);
+  await Promise.all([this.adapters.db.insertItem(blocked.id, object.id)]);
 }
