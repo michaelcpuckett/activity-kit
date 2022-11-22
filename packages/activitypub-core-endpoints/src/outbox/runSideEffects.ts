@@ -11,6 +11,10 @@ export async function runSideEffects(this: OutboxPostEndpoint) {
     await this.handleDelete();
   }
 
+  if (isType(this.activity, AP.ActivityTypes.BLOCK)) {
+    await this.handleBlock();
+  }
+
   if (isType(this.activity, AP.ActivityTypes.UPDATE)) {
     await this.handleUpdate();
   }

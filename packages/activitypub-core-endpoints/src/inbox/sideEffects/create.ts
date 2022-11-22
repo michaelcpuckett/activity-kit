@@ -28,11 +28,8 @@ export async function handleCreate(this: InboxPostEndpoint) {
     }
   }
 
+  // Groups automatically announce activities addressed to them if sent from non-blocked followers.
   if (isType(this.actor, AP.ActorTypes.GROUP)) {
-    console.log('is group');
-    // Groups automatically announce activities addressed to them if sent
-    // from members.
-
     const followersCollection: AP.Collection = await this.adapters.db.findEntityById(getId(this.actor.followers));
 
     if (!followersCollection) {
@@ -126,6 +123,19 @@ export async function handleCreate(this: InboxPostEndpoint) {
 
     if (!shared || !shared.id) {
       throw new Error('Bad shared collection: not found.');
+    }
+
+    const blocked = streams.find((stream) => {
+      if (stream && 'name' in stream) {
+        if (stream.name === 'Blocked') {
+          return true;
+        }
+      }
+    });
+
+    if (blocked.items.map((id: URL) => id.toString()).includes(getId(activity.actor).toString())) {
+      console.log('Blocked');
+      return;
     }
 
     await Promise.all([this.adapters.db.insertOrderedItem(shared.id, getId(object))]);

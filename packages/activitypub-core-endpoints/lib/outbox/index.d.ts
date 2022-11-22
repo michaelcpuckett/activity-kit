@@ -14,6 +14,7 @@ import { handleCreate } from './sideEffects/create';
 import { handleUpdate } from './sideEffects/update';
 import { handleLike } from './sideEffects/like';
 import { handleAnnounce } from './sideEffects/announce';
+import { handleBlock } from './sideEffects/block';
 import { handleAdd } from './sideEffects/add';
 import { handleUndo } from './sideEffects/undo';
 import { handleRemove } from './sideEffects/remove';
@@ -44,6 +45,7 @@ export declare class OutboxPostEndpoint {
     protected parseBody: typeof parseBody;
     protected handleAdd: typeof handleAdd;
     protected handleAnnounce: typeof handleAnnounce;
+    protected handleBlock: typeof handleBlock;
     protected handleCreate: typeof handleCreate;
     protected handleDelete: typeof handleDelete;
     protected handleLike: typeof handleLike;

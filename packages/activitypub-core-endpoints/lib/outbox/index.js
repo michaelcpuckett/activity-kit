@@ -14,6 +14,7 @@ const create_1 = require("./sideEffects/create");
 const update_1 = require("./sideEffects/update");
 const like_1 = require("./sideEffects/like");
 const announce_1 = require("./sideEffects/announce");
+const block_1 = require("./sideEffects/block");
 const add_1 = require("./sideEffects/add");
 const undo_1 = require("./sideEffects/undo");
 const remove_1 = require("./sideEffects/remove");
@@ -71,6 +72,7 @@ class OutboxPostEndpoint {
     parseBody = parseBody_1.parseBody;
     handleAdd = add_1.handleAdd;
     handleAnnounce = announce_1.handleAnnounce;
+    handleBlock = block_1.handleBlock;
     handleCreate = create_1.handleCreate;
     handleDelete = delete_1.handleDelete;
     handleLike = like_1.handleLike;
