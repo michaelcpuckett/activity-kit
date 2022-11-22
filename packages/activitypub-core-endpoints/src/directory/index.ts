@@ -40,8 +40,6 @@ export class DirectoryGetEndpoint {
       type: ['Group'],
     });
 
-    console.log(groups);
-    
     this.res.statusCode = 200;
     this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
     this.res.write(
