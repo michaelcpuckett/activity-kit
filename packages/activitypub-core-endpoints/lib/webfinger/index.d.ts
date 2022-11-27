@@ -11,5 +11,6 @@ export declare class WebfingerGetEndpoint {
     constructor(req: IncomingMessage, res: ServerResponse, adapters: {
         db: DbAdapter;
     }, plugins?: Plugin[]);
+    private handleNotFound;
     respond(): Promise<void>;
 }

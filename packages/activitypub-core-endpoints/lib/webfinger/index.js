@@ -37,42 +37,78 @@ class WebfingerGetEndpoint {
         this.adapters = adapters;
         this.plugins = plugins;
     }
+    handleNotFound() {
+        this.res.statusCode = 404;
+        this.res.end();
+    }
     async respond() {
         const query = {
             ...queryString.parse(new URL(this.req.url, activitypub_core_utilities_1.LOCAL_DOMAIN).search),
         };
         const resource = query.resource ?? '';
-        const [account] = resource.split('@');
-        const [, username] = account.split(':');
-        if (username) {
+        if (resource.includes('@')) {
+            const [account] = resource.split('@');
+            const [, username] = account.split(':');
+            if (!username) {
+                return this.handleNotFound();
+            }
             const actor = await this.adapters.db.findOne('entity', {
                 preferredUsername: username,
             });
-            if (actor) {
-                const finger = {
-                    subject: `acct:${username}@${activitypub_core_utilities_1.LOCAL_HOSTNAME}`,
-                    links: [
-                        {
-                            rel: 'http://webfinger.net/rel/profile-page',
-                            type: activitypub_core_utilities_1.HTML_CONTENT_TYPE,
-                            href: actor.url.toString(),
-                        },
-                        {
-                            rel: 'self',
-                            type: activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE,
-                            href: actor.url.toString(),
-                        },
-                    ],
-                };
-                this.res.statusCode = 200;
-                this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.JRD_CONTENT_TYPE);
-                this.res.write(JSON.stringify(finger));
-                this.res.end();
-                return;
+            if (!actor) {
+                return this.handleNotFound();
             }
+            const finger = {
+                subject: `acct:${username}@${activitypub_core_utilities_1.LOCAL_HOSTNAME}`,
+                aliases: [
+                    actor.url.toString(),
+                ],
+                links: [
+                    {
+                        rel: 'http://webfinger.net/rel/profile-page',
+                        type: activitypub_core_utilities_1.HTML_CONTENT_TYPE,
+                        href: actor.url.toString(),
+                    },
+                    {
+                        rel: 'self',
+                        type: activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE,
+                        href: actor.url.toString(),
+                    },
+                ],
+            };
+            this.res.statusCode = 200;
+            this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.JRD_CONTENT_TYPE);
+            this.res.write(JSON.stringify(finger));
+            this.res.end();
         }
-        this.res.statusCode = 404;
-        this.res.end();
+        else {
+            const actor = await this.adapters.db.findEntityById(resource);
+            if (!actor) {
+                return this.handleNotFound();
+            }
+            const finger = {
+                subject: actor.url.toString(),
+                aliases: [
+                    `acct:${actor.preferredUsername}@${activitypub_core_utilities_1.LOCAL_HOSTNAME}`,
+                ],
+                links: [
+                    {
+                        rel: 'http://webfinger.net/rel/profile-page',
+                        type: activitypub_core_utilities_1.HTML_CONTENT_TYPE,
+                        href: actor.url.toString(),
+                    },
+                    {
+                        rel: 'self',
+                        type: activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE,
+                        href: actor.url.toString(),
+                    },
+                ],
+            };
+            this.res.statusCode = 200;
+            this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.JRD_CONTENT_TYPE);
+            this.res.write(JSON.stringify(finger));
+            this.res.end();
+        }
     }
 }
 exports.WebfingerGetEndpoint = WebfingerGetEndpoint;
