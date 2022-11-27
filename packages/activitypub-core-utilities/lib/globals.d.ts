@@ -17,6 +17,7 @@ export declare const ACCEPT_HEADER = "Accept";
 export declare const CONTENT_TYPE_HEADER = "Content-Type";
 export declare const ACTIVITYSTREAMS_CONTENT_TYPE_WITH_PROFILE: string;
 export declare const ACTIVITYSTREAMS_CONTENT_TYPE = "application/activity+json";
+export declare const XRD_CONTENT_TYPE = "application/xrd+xml";
 export declare const JRD_CONTENT_TYPE = "application/jrd+json";
 export declare const JSON_CONTENT_TYPE = "application/json";
 export declare const HTML_CONTENT_TYPE = "text/html";
