@@ -4,8 +4,4 @@
 
 ## Usage
 
-```
-const activitypubCoreExpressMiddleware = require('activitypub-core-express-middleware');
 
-// TODO: DEMONSTRATE API
-```
