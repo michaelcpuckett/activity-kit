@@ -56,6 +56,11 @@ const activityPub = (config) => async (req, res, next) => {
             next();
             return;
         }
+        if (req.url.startsWith('/.well-known/host-meta')) {
+            await new activitypub_core_endpoints_1.HostMetaGetEndpoint(req, res, config.adapters, config.plugins).respond();
+            next();
+            return;
+        }
         if (req.url === '/' ||
             req.url.startsWith('/@') ||
             req.url.startsWith('/entity/') ||

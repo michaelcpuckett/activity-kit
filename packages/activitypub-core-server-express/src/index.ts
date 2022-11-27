@@ -9,7 +9,8 @@ import {
   SharedInboxPostEndpoint,
   WebfingerGetEndpoint,
   UploadMediaPostEndpoint,
-  DirectoryGetEndpoint
+  DirectoryGetEndpoint,
+  HostMetaGetEndpoint
 } from 'activitypub-core-endpoints';
 import { AP, Plugin } from 'activitypub-core-types';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
@@ -144,6 +145,17 @@ export const activityPub =
 
       if (req.url.startsWith('/.well-known/webfinger')) {
         await new WebfingerGetEndpoint(
+          req,
+          res,
+          config.adapters,
+          config.plugins,
+        ).respond();
+        next();
+        return;
+      }
+
+      if (req.url.startsWith('/.well-known/host-meta')) {
+        await new HostMetaGetEndpoint(
           req,
           res,
           config.adapters,
