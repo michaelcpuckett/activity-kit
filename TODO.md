@@ -3,19 +3,13 @@ See CHECKLIST.md
 * Full integration with:
     * Mastodon
     * Friendica
-* HTTPS Signatures and Linked Data Signatures
-* block
-* performance issues
-* ostatus
+    * Pleroma?
+    * Lemmy?
+    * PeerTube?
+* finish block
 * oauth
 * as:sensitive
-* foaf / schema.org / others
-* /.well-known/host-meta
+* watch for performance issues
 * caching of remote objects
-* conversion of dates, urls
-* adding/removing context esp for plugins
-* Still working out additional types / getTypedEntity
-
-Mastodon secure mode: all cross-server HTTP requests to Mastodon must be signed (in other words, even GET requests to public resources).
-
-Collection-Synchronization HTTP header
+* foaf / schema.org / others
+* nodeinfo users + posts
