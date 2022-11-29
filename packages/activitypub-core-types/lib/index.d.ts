@@ -12,6 +12,7 @@ export declare type AuthAdapter = {
 export declare type DbAdapter = {
     expandCollection: Function;
     expandEntity: Function;
+    getPrivateKey: Function;
     fetchEntityById: Function;
     findAll: Function;
     findEntityById: Function;
@@ -19,7 +20,6 @@ export declare type DbAdapter = {
     findStringIdByValue: Function;
     findStringValueById: Function;
     getActorByUserId: Function;
-    getCollectionItems: Function;
     insertItem: Function;
     removeItem: Function;
     insertOrderedItem: Function;

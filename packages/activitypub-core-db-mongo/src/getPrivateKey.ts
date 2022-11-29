@@ -1,17 +1,17 @@
-import { DeliveryAdapter } from '.';
+import { MongoDbAdapter } from '.';
 import { AP } from 'activitypub-core-types';
 
-export async function getPrivateKey(this: DeliveryAdapter, actor: AP.Actor) {
+export async function getPrivateKey(this: MongoDbAdapter, actor: AP.Actor) {
   if (!actor.preferredUsername) {
     throw new Error('Actor has no `preferredUsername`.');
   }
 
-  const userId = await this.adapters.db.findStringIdByValue(
+  const userId = await this.findStringIdByValue(
     'username',
     actor.preferredUsername,
   );
 
-  const privateKey = await this.adapters.db.findStringValueById(
+  const privateKey = await this.findStringValueById(
     'private-key',
     userId,
   );

@@ -9,6 +9,7 @@ import { insertItem, removeOrderedItem, insertOrderedItem, removeItem } from './
 import { fetchEntityById } from './fetchEntityById';
 import { queryById } from './queryById';
 import { expandEntity } from './expandEntity';
+import { getPrivateKey } from './getPrivateKey';
 import { getCollectionItems } from './getCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
@@ -25,6 +26,7 @@ export declare class MongoDbAdapter implements DbAdapter {
     findEntityById: typeof findEntityById;
     findStringValueById: typeof findStringValueById;
     findStringIdByValue: typeof findStringIdByValue;
+    getPrivateKey: typeof getPrivateKey;
     getActorByUserId: typeof getActorByUserId;
     saveEntity: typeof saveEntity;
     saveString: typeof saveString;

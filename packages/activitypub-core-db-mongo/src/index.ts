@@ -16,6 +16,7 @@ import {
 import { fetchEntityById } from './fetchEntityById';
 import { queryById } from './queryById';
 import { expandEntity } from './expandEntity';
+import { getPrivateKey } from './getPrivateKey';
 import { getCollectionItems } from './getCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
@@ -40,6 +41,7 @@ export class MongoDbAdapter implements DbAdapter {
   public findEntityById = findEntityById;
   public findStringValueById = findStringValueById;
   public findStringIdByValue = findStringIdByValue;
+  public getPrivateKey = getPrivateKey;
 
   // Auth.
 

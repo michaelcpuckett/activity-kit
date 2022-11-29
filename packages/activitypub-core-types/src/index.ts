@@ -15,6 +15,7 @@ export type AuthAdapter = {
 export type DbAdapter = {
   expandCollection: Function;
   expandEntity: Function;
+  getPrivateKey: Function;
   fetchEntityById: Function;
   findAll: Function;
   findEntityById: Function;
@@ -22,7 +23,6 @@ export type DbAdapter = {
   findStringIdByValue: Function;
   findStringValueById: Function;
   getActorByUserId: Function;
-  getCollectionItems: Function;
   insertItem: Function;
   removeItem: Function;
   insertOrderedItem: Function;

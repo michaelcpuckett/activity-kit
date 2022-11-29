@@ -15,6 +15,7 @@ const insert_1 = require("./insert");
 const fetchEntityById_1 = require("./fetchEntityById");
 const queryById_1 = require("./queryById");
 const expandEntity_1 = require("./expandEntity");
+const getPrivateKey_1 = require("./getPrivateKey");
 const getCollectionItems_1 = require("./getCollectionItems");
 const expandCollection_1 = require("./expandCollection");
 const findAll_1 = require("./findAll");
@@ -31,6 +32,7 @@ class MongoDbAdapter {
     findEntityById = findEntityById_1.findEntityById;
     findStringValueById = findStringValueById_1.findStringValueById;
     findStringIdByValue = findStringIdByValue_1.findStringIdByValue;
+    getPrivateKey = getPrivateKey_1.getPrivateKey;
     getActorByUserId = getActorByUserId_1.getActorByUserId;
     saveEntity = saveEntity_1.saveEntity;
     saveString = saveString_1.saveString;

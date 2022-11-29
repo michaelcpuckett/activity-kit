@@ -20,7 +20,7 @@ export async function signAndSendToForeignActorInbox(
   const { dateHeader, digestHeader, signatureHeader } = await getHttpSignature(
     foreignActorInbox,
     actor.id,
-    await this.getPrivateKey(actor),
+    await this.adapters.db.getPrivateKey(actor),
     convertedActivity,
   );
 

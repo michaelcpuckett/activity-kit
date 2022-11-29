@@ -5,7 +5,7 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity) {
     console.log('SENDING TO...', foreignActorInbox.toString());
     const convertedActivity = (0, activitypub_core_utilities_1.convertUrlsToStrings)(activity);
-    const { dateHeader, digestHeader, signatureHeader } = await (0, activitypub_core_utilities_1.getHttpSignature)(foreignActorInbox, actor.id, await this.getPrivateKey(actor), convertedActivity);
+    const { dateHeader, digestHeader, signatureHeader } = await (0, activitypub_core_utilities_1.getHttpSignature)(foreignActorInbox, actor.id, await this.adapters.db.getPrivateKey(actor), convertedActivity);
     return await this.adapters
         .fetch(foreignActorInbox.toString(), {
         method: 'post',

@@ -3,11 +3,10 @@ import { AP } from 'activitypub-core-types';
 import {
   ACCEPT_HEADER,
   ACTIVITYSTREAMS_CONTENT_TYPE,
-  CONTENT_TYPE_HEADER,
+  convertStringsToUrls,
+  compressEntity,
+  getHttpSignature
 } from 'activitypub-core-utilities';
-import { getTypedEntity } from 'activitypub-core-utilities';
-import { convertStringsToUrls } from 'activitypub-core-utilities';
-import { compressEntity } from 'activitypub-core-utilities';
 
 export async function fetchEntityById(
   this: MongoDbAdapter,
@@ -17,12 +16,22 @@ export async function fetchEntityById(
     return null;
   }
 
+  const actor = await this.findOne('entity', { preferredUsername: 'bot' }) as AP.Actor;
+
+  const { dateHeader, digestHeader, signatureHeader } = await getHttpSignature(
+    id,
+    actor.id,
+    await this.getPrivateKey(actor),
+  );
+
   // GET requests (eg. to the inbox) MUST be made with an Accept header of
   // `application/ld+json; profile="https://www.w3.org/ns/activitystreams"`
   const fetchedEntity = await this.fetch(id.toString(), {
     headers: {
-      [CONTENT_TYPE_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
       [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
+      date: dateHeader,
+      digest: digestHeader,
+      signature: signatureHeader
     },
   })
     .then(

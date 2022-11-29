@@ -28,10 +28,9 @@ const crypto = __importStar(require("crypto"));
 async function getHttpSignature(foreignTarget, actorId, privateKey, entity) {
     const foreignDomain = foreignTarget.hostname;
     const foreignPathName = foreignTarget.pathname;
-    const digestHash = crypto
-        .createHash('sha256')
-        .update(JSON.stringify(entity))
-        .digest('base64');
+    const hash = crypto.createHash('sha256');
+    const hashWithContent = entity ? hash.update(JSON.stringify(entity)) : hash;
+    const digestHash = hashWithContent.digest('base64');
     const digestHeader = `SHA-256=${digestHash}`;
     const signer = crypto.createSign('sha256');
     const dateString = new Date().toUTCString();
