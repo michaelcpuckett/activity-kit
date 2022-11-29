@@ -10,7 +10,8 @@ import {
   WebfingerGetEndpoint,
   UploadMediaPostEndpoint,
   DirectoryGetEndpoint,
-  HostMetaGetEndpoint
+  HostMetaGetEndpoint,
+  NodeinfoGetEndpoint
 } from 'activitypub-core-endpoints';
 import { AP, Plugin } from 'activitypub-core-types';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
@@ -156,6 +157,17 @@ export const activityPub =
 
       if (req.url.startsWith('/.well-known/host-meta')) {
         await new HostMetaGetEndpoint(
+          req,
+          res,
+          config.adapters,
+          config.plugins,
+        ).respond();
+        next();
+        return;
+      }
+
+      if (req.url.startsWith('/.well-known/nodeinfo')) {
+        await new NodeinfoGetEndpoint(
           req,
           res,
           config.adapters,

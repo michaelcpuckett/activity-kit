@@ -7,4 +7,5 @@ export { InboxPostEndpoint } from './inbox';
 export { SharedInboxPostEndpoint } from './sharedInbox';
 export { WebfingerGetEndpoint } from './webfinger';
 export { HostMetaGetEndpoint } from './host-meta';
+export { NodeinfoGetEndpoint } from './nodeinfo';
 export { UploadMediaPostEndpoint } from './uploadMedia';

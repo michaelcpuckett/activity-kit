@@ -43,7 +43,7 @@ export class WebfingerGetEndpoint {
     } as { [key: string]: string };
     const resource = query.resource ?? '';
 
-    if (resource.includes('@')) {
+    if (resource.startsWith('acct:')) {
       const [account] = resource.split('@');
       const [, username] = account.split(':');
 

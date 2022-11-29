@@ -46,7 +46,7 @@ class WebfingerGetEndpoint {
             ...queryString.parse(new URL(this.req.url, activitypub_core_utilities_1.LOCAL_DOMAIN).search),
         };
         const resource = query.resource ?? '';
-        if (resource.includes('@')) {
+        if (resource.startsWith('acct:')) {
             const [account] = resource.split('@');
             const [, username] = account.split(':');
             if (!username) {
