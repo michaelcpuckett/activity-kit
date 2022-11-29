@@ -67,11 +67,11 @@ class NodeinfoGetEndpoint {
             this.res.write(JSON.stringify({
                 "links": [
                     {
-                        "href": `${activitypub_core_utilities_1.LOCAL_DOMAIN}/nodeinfo/2.0.json`,
+                        "href": `${activitypub_core_utilities_1.LOCAL_DOMAIN}/nodeinfo/2.0`,
                         "rel": `http://nodeinfo.diaspora.software/ns/schema/2.0`,
                     },
                     {
-                        "href": `${activitypub_core_utilities_1.LOCAL_DOMAIN}/nodeinfo/2.1.json`,
+                        "href": `${activitypub_core_utilities_1.LOCAL_DOMAIN}/nodeinfo/2.1`,
                         "rel": `http://nodeinfo.diaspora.software/ns/schema/2.1`,
                     }
                 ]

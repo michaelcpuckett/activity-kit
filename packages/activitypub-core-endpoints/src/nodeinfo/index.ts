@@ -80,11 +80,11 @@ export class NodeinfoGetEndpoint {
       this.res.write(JSON.stringify({
         "links": [
            {
-              "href": `${LOCAL_DOMAIN}/nodeinfo/2.0.json`,
+              "href": `${LOCAL_DOMAIN}/nodeinfo/2.0`,
               "rel": `http://nodeinfo.diaspora.software/ns/schema/2.0`,
            },
            {
-              "href": `${LOCAL_DOMAIN}/nodeinfo/2.1.json`,
+              "href": `${LOCAL_DOMAIN}/nodeinfo/2.1`,
               "rel": `http://nodeinfo.diaspora.software/ns/schema/2.1`,
            }
         ]
