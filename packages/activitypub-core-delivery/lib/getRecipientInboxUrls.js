@@ -39,7 +39,7 @@ async function getRecipientInboxUrls(activity, actor) {
             recipientInboxUrls.push(recipientInbox);
         }
     }
-    return [...new Set(recipientInboxUrls)];
+    return [...new Set(recipientInboxUrls.map((url) => url.toString()))].map((url) => new URL(url));
 }
 exports.getRecipientInboxUrls = getRecipientInboxUrls;
 //# sourceMappingURL=getRecipientInboxUrls.js.map

@@ -55,5 +55,6 @@ export async function getRecipientInboxUrls(
     }
   }
 
-  return [...new Set(recipientInboxUrls)];
+  // Deduplicate reciplients list.
+  return [...new Set(recipientInboxUrls.map((url: URL) => url.toString()))].map((url: string) => new URL(url));
 }
