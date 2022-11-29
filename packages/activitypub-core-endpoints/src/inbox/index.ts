@@ -61,27 +61,21 @@ export class InboxPostEndpoint {
       return;
     }
 
-    const blockedUrl = this.actor.streams?.find((stream) => stream.toString().endsWith('blocked'));
+    const streams = await Promise.all(this.actor.streams.map(async stream => await this.adapters.db.fetchEntityById(stream)));
 
-    if (!blockedUrl) {
+    const blocked = streams.find((stream: AP.Collection) => {
+      if (stream.name === 'Blocked') {
+        return true;
+      }
+    });
+
+    if (!blocked) {
       return false;
     }
 
-    const blockedCollection = this.adapters.db.findEntityById(blockedUrl);
+    const potentiallyBlockedActorId = getId(this.activity.actor);
 
-    if (!blockedCollection) {
-      return false;
-    }
-
-    const blockedList = blockedCollection.items;
-
-    if (!blockedList || !blockedList.length) {
-      return false;
-    }
-
-    const actorId = getId(this.activity.actor);
-
-    return blockedList.map((blockedUser: URL) => blockedUser.toString()).includes(actorId.toString());
+    return blocked.items.map((id: URL) => id.toString()).includes(potentiallyBlockedActorId.toString());
   }
 
   public async respond() {
@@ -91,12 +85,11 @@ export class InboxPostEndpoint {
 
       for (const actor of this.actors) {
         this.actor = actor;
+        const isBlocked = await this.isBlocked();
 
-        if (await this.isBlocked()) {
+        if (isBlocked) {
           console.log('BLOCKED!');
-          this.res.statusCode = 401;
-          this.res.end();
-          break;
+          continue;
         }
 
         await this.runSideEffects();
