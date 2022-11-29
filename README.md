@@ -186,39 +186,49 @@ The logic layer that get included in all projects include these packages:
 
 #### Database Adapaters
 
+There is a large amount of data related to profiles and interactions that must be persisted over time.
+
 Currently this project comes with:
 
-- `activitypub-core-mongodb`
+- `activitypub-core-db-mongo`
 
 * TODO: SQLite, PostreSQL
 
 #### Authentication Adapters
 
+Users can sign up and log in to their account.
+
 Current this project comes with:
 
-- `activitypub-core-firebase-auth`
+- `activitypub-core-auth-firebase`
 
 * TODO: Passport.js
 
 #### Storage Adapters
 
+Allows for users to upload media, such as profile pictures or attachments.
+
 Currently this project comes with:
 
-- `activitypub-core-ftp-storage`
+- `activitypub-core-storage-ftp`
 
 * TODO: AWS S3, Firebase Storage
 
 #### Server Adapters
 
+The server must handle the core endpoint requests.
+
 Currently this project comes with:
 
-- `activitypub-core-express-middleware`
+- `activitypub-core-server-express`
 
 * TODO: Fastify, Next.js
 
 ### Plugins
 
-In progress. Injectables that can modify core functionality.
+In progress.
+
+Injectables that can modify core functionality.
 
 Currently this project comes with:
 
