@@ -28,23 +28,35 @@ const crypto = __importStar(require("crypto"));
 async function getHttpSignature(foreignTarget, actorId, privateKey, entity) {
     const foreignDomain = foreignTarget.hostname;
     const foreignPathName = foreignTarget.pathname;
-    const hash = crypto.createHash('sha256');
-    const hashWithContent = entity ? hash.update(JSON.stringify(entity)) : hash;
-    const digestHash = hashWithContent.digest('base64');
-    const digestHeader = `SHA-256=${digestHash}`;
-    const signer = crypto.createSign('sha256');
     const dateString = new Date().toUTCString();
-    const stringToSign = `(request-target): post ${foreignPathName}\nhost: ${foreignDomain}\ndate: ${dateString}\ndigest: SHA-256=${digestHash}`;
-    signer.update(stringToSign);
-    signer.end();
-    const signature = signer.sign(privateKey);
-    const signature_b64 = signature.toString('base64');
-    const signatureHeader = `keyId="${actorId.toString()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest",signature="${signature_b64}"`;
-    return {
-        dateHeader: dateString,
-        digestHeader,
-        signatureHeader,
-    };
+    const signer = crypto.createSign('sha256');
+    if (entity) {
+        const digestHash = crypto.createHash('sha256').update(JSON.stringify(entity)).digest('base64');
+        const digestHeader = `SHA-256=${digestHash}`;
+        const stringToSign = `(request-target): post ${foreignPathName}\nhost: ${foreignDomain}\ndate: ${dateString}\ndigest: SHA-256=${digestHash}`;
+        signer.update(stringToSign);
+        signer.end();
+        const signature = signer.sign(privateKey);
+        const signature_b64 = signature.toString('base64');
+        const signatureHeader = `keyId="${actorId.toString()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest",signature="${signature_b64}"`;
+        return {
+            dateHeader: dateString,
+            digestHeader,
+            signatureHeader,
+        };
+    }
+    else {
+        const stringToSign = `(request-target): get ${foreignPathName}\nhost: ${foreignDomain}\ndate: ${dateString}`;
+        signer.update(stringToSign);
+        signer.end();
+        const signature = signer.sign(privateKey);
+        const signature_b64 = signature.toString('base64');
+        const signatureHeader = `keyId="${actorId.toString()}#main-key",algorithm="rsa-sha256",headers="(request-target) host date",signature="${signature_b64}"`;
+        return {
+            dateHeader: dateString,
+            signatureHeader,
+        };
+    }
 }
 exports.getHttpSignature = getHttpSignature;
 //# sourceMappingURL=getHttpSignature.js.map

@@ -190,7 +190,7 @@ Currently this project comes with:
 
 - `activitypub-core-mongodb`
 
-* TODO: PostreSQL
+* TODO: SQLite, PostreSQL
 
 #### Authentication Adapters
 

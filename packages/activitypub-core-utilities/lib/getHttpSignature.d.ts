@@ -4,4 +4,8 @@ export declare function getHttpSignature(foreignTarget: URL, actorId: URL, priva
     dateHeader: string;
     digestHeader: string;
     signatureHeader: string;
+} | {
+    dateHeader: string;
+    signatureHeader: string;
+    digestHeader?: undefined;
 }>;

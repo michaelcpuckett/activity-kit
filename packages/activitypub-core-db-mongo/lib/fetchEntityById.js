@@ -7,12 +7,11 @@ async function fetchEntityById(id) {
         return null;
     }
     const actor = await this.findOne('entity', { preferredUsername: 'bot' });
-    const { dateHeader, digestHeader, signatureHeader } = await (0, activitypub_core_utilities_1.getHttpSignature)(id, actor.id, await this.getPrivateKey(actor));
+    const { dateHeader, signatureHeader } = await (0, activitypub_core_utilities_1.getHttpSignature)(id, actor.id, await this.getPrivateKey(actor));
     const fetchedEntity = await this.fetch(id.toString(), {
         headers: {
             [activitypub_core_utilities_1.ACCEPT_HEADER]: activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE,
             date: dateHeader,
-            digest: digestHeader,
             signature: signatureHeader
         },
     })
