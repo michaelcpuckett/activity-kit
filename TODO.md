@@ -1,5 +1,7 @@
 See CHECKLIST.md
 
+* ! Get tests working again
+
 * Full integration with:
     * Mastodon
     * Friendica
