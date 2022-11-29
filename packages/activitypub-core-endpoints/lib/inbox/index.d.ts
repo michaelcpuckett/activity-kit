@@ -40,5 +40,6 @@ export declare class InboxPostEndpoint {
     protected handleAnnounce: typeof handleAnnounce;
     protected handleFollow: typeof handleFollow;
     protected handleLike: typeof handleLike;
+    private isBlocked;
     respond(): Promise<void>;
 }

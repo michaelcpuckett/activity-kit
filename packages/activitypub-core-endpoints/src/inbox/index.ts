@@ -56,6 +56,34 @@ export class InboxPostEndpoint {
   protected handleFollow = handleFollow;
   protected handleLike = handleLike;
 
+  private async isBlocked(): Promise<boolean> {
+    if (!('actor' in this.activity)) {
+      return;
+    }
+
+    const blockedUrl = this.actor.streams?.find((stream) => stream.toString().endsWith('blocked'));
+
+    if (!blockedUrl) {
+      return false;
+    }
+
+    const blockedCollection = this.adapters.db.findEntityById(blockedUrl);
+
+    if (!blockedCollection) {
+      return false;
+    }
+
+    const blockedList = blockedCollection.items;
+
+    if (!blockedList || !blockedList.length) {
+      return false;
+    }
+
+    const actorId = getId(this.activity.actor);
+
+    return blockedList.map((blockedUser: URL) => blockedUser.toString()).includes(actorId.toString());
+  }
+
   public async respond() {
     try {
       await this.parseBody();
@@ -63,6 +91,14 @@ export class InboxPostEndpoint {
 
       for (const actor of this.actors) {
         this.actor = actor;
+
+        if (await this.isBlocked()) {
+          console.log('BLOCKED!');
+          this.res.statusCode = 401;
+          this.res.end();
+          break;
+        }
+
         await this.runSideEffects();
         console.log(this.activity);
         console.log('inserting', actor.inbox, getId(actor.inbox), getId(this.activity));
