@@ -166,7 +166,7 @@ export const activityPub =
         return;
       }
 
-      if (req.url.startsWith('/.well-known/nodeinfo')) {
+      if (req.url.startsWith('/.well-known/nodeinfo') || req.url.startsWith('/nodeinfo')) {
         await new NodeinfoGetEndpoint(
           req,
           res,

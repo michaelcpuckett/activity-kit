@@ -61,7 +61,7 @@ const activityPub = (config) => async (req, res, next) => {
             next();
             return;
         }
-        if (req.url.startsWith('/.well-known/nodeinfo')) {
+        if (req.url.startsWith('/.well-known/nodeinfo') || req.url.startsWith('/nodeinfo')) {
             await new activitypub_core_endpoints_1.NodeinfoGetEndpoint(req, res, config.adapters, config.plugins).respond();
             next();
             return;
