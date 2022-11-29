@@ -125,19 +125,6 @@ export async function handleCreate(this: InboxPostEndpoint) {
       throw new Error('Bad shared collection: not found.');
     }
 
-    const blocked = streams.find((stream) => {
-      if (stream && 'name' in stream) {
-        if (stream.name === 'Blocked') {
-          return true;
-        }
-      }
-    });
-
-    if (blocked.items.map((id: URL) => id.toString()).includes(getId(activity.actor).toString())) {
-      console.log('Blocked');
-      return;
-    }
-
     await Promise.all([this.adapters.db.insertOrderedItem(shared.id, getId(object))]);
 
     const isLocal = getCollectionNameByUrl(getId(object)) !== 'foreign-entity';

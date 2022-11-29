@@ -91,17 +91,6 @@ async function handleCreate() {
         if (!shared || !shared.id) {
             throw new Error('Bad shared collection: not found.');
         }
-        const blocked = streams.find((stream) => {
-            if (stream && 'name' in stream) {
-                if (stream.name === 'Blocked') {
-                    return true;
-                }
-            }
-        });
-        if (blocked.items.map((id) => id.toString()).includes((0, activitypub_core_utilities_1.getId)(activity.actor).toString())) {
-            console.log('Blocked');
-            return;
-        }
         await Promise.all([this.adapters.db.insertOrderedItem(shared.id, (0, activitypub_core_utilities_1.getId)(object))]);
         const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)((0, activitypub_core_utilities_1.getId)(object)) !== 'foreign-entity';
         if (isLocal) {
