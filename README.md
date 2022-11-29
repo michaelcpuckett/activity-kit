@@ -218,7 +218,9 @@ Currently this project comes with:
 
 ### Plugins
 
-In progress. Currently this project comes with:
+In progress. Injectables that can modify core functionality.
+
+Currently this project comes with:
 
 - `activitypub-core-plugin-foaf`
 
