@@ -29,7 +29,7 @@ export class ProxyGetEndpoint {
     const proxiedUrl = this.req.url?.split('?resource=')[1];
 
     if (proxiedUrl) {
-      const fetchedResult = await this.adapters.db.queryById(proxiedUrl);
+      const fetchedResult = await this.adapters.db.queryById(new URL(proxiedUrl));
       
       if (fetchedResult) {
         this.res.statusCode = 200;

@@ -14,7 +14,7 @@ class ProxyGetEndpoint {
     async respond() {
         const proxiedUrl = this.req.url?.split('?resource=')[1];
         if (proxiedUrl) {
-            const fetchedResult = await this.adapters.db.queryById(proxiedUrl);
+            const fetchedResult = await this.adapters.db.queryById(new URL(proxiedUrl));
             if (fetchedResult) {
                 this.res.statusCode = 200;
                 this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);
