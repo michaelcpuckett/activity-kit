@@ -11,7 +11,8 @@ import {
   UploadMediaPostEndpoint,
   DirectoryGetEndpoint,
   HostMetaGetEndpoint,
-  NodeinfoGetEndpoint
+  NodeinfoGetEndpoint,
+  ProxyGetEndpoint
 } from 'activitypub-core-endpoints';
 import { AP, Plugin } from 'activitypub-core-types';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
@@ -140,6 +141,17 @@ export const activityPub =
           config.adapters,
           config.plugins,
         ).respond(config.pages.directory);
+        next();
+        return;
+      }
+
+      if (req.url.startsWith('/proxy')) {
+        await new ProxyGetEndpoint(
+          req,
+          res,
+          config.adapters,
+          config.plugins,
+        ).respond();
         next();
         return;
       }

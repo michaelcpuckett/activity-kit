@@ -9,3 +9,4 @@ export { WebfingerGetEndpoint } from './webfinger';
 export { HostMetaGetEndpoint } from './host-meta';
 export { NodeinfoGetEndpoint } from './nodeinfo';
 export { UploadMediaPostEndpoint } from './uploadMedia';
+export { ProxyGetEndpoint } from './proxy';

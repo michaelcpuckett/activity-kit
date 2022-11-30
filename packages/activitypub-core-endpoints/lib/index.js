@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UploadMediaPostEndpoint = exports.NodeinfoGetEndpoint = exports.HostMetaGetEndpoint = exports.WebfingerGetEndpoint = exports.SharedInboxPostEndpoint = exports.InboxPostEndpoint = exports.OutboxPostEndpoint = exports.DirectoryGetEndpoint = exports.EntityGetEndpoint = exports.HomeGetEndpoint = exports.UserPostEndpoint = void 0;
+exports.ProxyGetEndpoint = exports.UploadMediaPostEndpoint = exports.NodeinfoGetEndpoint = exports.HostMetaGetEndpoint = exports.WebfingerGetEndpoint = exports.SharedInboxPostEndpoint = exports.InboxPostEndpoint = exports.OutboxPostEndpoint = exports.DirectoryGetEndpoint = exports.EntityGetEndpoint = exports.HomeGetEndpoint = exports.UserPostEndpoint = void 0;
 var user_1 = require("./user");
 Object.defineProperty(exports, "UserPostEndpoint", { enumerable: true, get: function () { return user_1.UserPostEndpoint; } });
 var home_1 = require("./home");
@@ -23,4 +23,6 @@ var nodeinfo_1 = require("./nodeinfo");
 Object.defineProperty(exports, "NodeinfoGetEndpoint", { enumerable: true, get: function () { return nodeinfo_1.NodeinfoGetEndpoint; } });
 var uploadMedia_1 = require("./uploadMedia");
 Object.defineProperty(exports, "UploadMediaPostEndpoint", { enumerable: true, get: function () { return uploadMedia_1.UploadMediaPostEndpoint; } });
+var proxy_1 = require("./proxy");
+Object.defineProperty(exports, "ProxyGetEndpoint", { enumerable: true, get: function () { return proxy_1.ProxyGetEndpoint; } });
 //# sourceMappingURL=index.js.map
