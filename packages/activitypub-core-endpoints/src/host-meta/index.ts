@@ -57,7 +57,7 @@ export class HostMetaGetEndpoint {
             template="${LOCAL_DOMAIN}/.well-known/webfinger?resource={uri}"
           />
         </XRD>
-      `);
+      `.trim());
     }
     this.res.end();
     return;

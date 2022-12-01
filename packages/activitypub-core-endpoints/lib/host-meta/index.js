@@ -37,7 +37,7 @@ class HostMetaGetEndpoint {
             template="${activitypub_core_utilities_1.LOCAL_DOMAIN}/.well-known/webfinger?resource={uri}"
           />
         </XRD>
-      `);
+      `.trim());
         }
         this.res.end();
         return;
