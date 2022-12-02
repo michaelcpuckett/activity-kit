@@ -3,6 +3,7 @@ import {
   SERVER_ACTOR_ID,
   SERVER_ACTOR_USERNAME,
   SHARED_INBOX_ID,
+  W3ID_SECURITY_CONTEXT,
 } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 import { generateKeyPair } from 'activitypub-core-utilities';
@@ -61,7 +62,10 @@ export async function createServerActor(this: UserPostEndpoint) {
   };
 
   const botActor: AP.Actor = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+    '@context': [
+      ACTIVITYSTREAMS_CONTEXT,
+      W3ID_SECURITY_CONTEXT,
+    ],
     id: new URL(SERVER_ACTOR_ID),
     url: new URL(SERVER_ACTOR_ID),
     type: AP.ActorTypes.APPLICATION,

@@ -1,4 +1,4 @@
-import { ACTIVITYSTREAMS_CONTEXT, getGuid } from 'activitypub-core-utilities';
+import { ACTIVITYSTREAMS_CONTEXT, getGuid, W3ID_SECURITY_CONTEXT } from 'activitypub-core-utilities';
 import { generateKeyPair } from 'activitypub-core-utilities';
 import {
   LOCAL_DOMAIN,
@@ -182,7 +182,10 @@ export async function createUserActor(
   }
 
   let userActor: AP.Actor = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+    '@context': [
+      ACTIVITYSTREAMS_CONTEXT,
+      W3ID_SECURITY_CONTEXT,
+    ],
     id: new URL(id),
     url: new URL(id),
     type: [user.type] as typeof AP.ActorTypes[keyof typeof AP.ActorTypes][],

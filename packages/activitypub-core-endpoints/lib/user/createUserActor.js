@@ -153,7 +153,10 @@ async function createUserActor(user) {
         throw new Error('Bad request: Provided type is not an Actor type.');
     }
     let userActor = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': [
+            activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+            activitypub_core_utilities_1.W3ID_SECURITY_CONTEXT,
+        ],
         id: new URL(id),
         url: new URL(id),
         type: [user.type],

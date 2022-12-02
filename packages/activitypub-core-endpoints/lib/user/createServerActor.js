@@ -50,7 +50,10 @@ async function createServerActor() {
         published: publishedDate,
     };
     const botActor = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': [
+            activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+            activitypub_core_utilities_1.W3ID_SECURITY_CONTEXT,
+        ],
         id: new URL(activitypub_core_utilities_1.SERVER_ACTOR_ID),
         url: new URL(activitypub_core_utilities_1.SERVER_ACTOR_ID),
         type: activitypub_core_types_1.AP.ActorTypes.APPLICATION,
