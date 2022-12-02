@@ -78,7 +78,7 @@ class WebfingerGetEndpoint {
         </XRD>
       `.trim();
             this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.XRD_CONTENT_TYPE);
-            this.res.write(JSON.stringify(finger));
+            this.res.write(finger);
         }
         this.res.end();
     }

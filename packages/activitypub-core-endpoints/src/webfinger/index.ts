@@ -111,7 +111,7 @@ export class WebfingerGetEndpoint {
       `.trim();
 
       this.res.setHeader(CONTENT_TYPE_HEADER, XRD_CONTENT_TYPE);
-      this.res.write(JSON.stringify(finger));
+      this.res.write(finger);
     }
 
     this.res.end();
