@@ -95,7 +95,7 @@ export class WebfingerGetEndpoint {
       const finger = `
         <?xml version="1.0" encoding="UTF-8" ?>
         <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
-          Subject>acct:${username}@${LOCAL_HOSTNAME}</Subject>
+          <Subject>acct:${username}@${LOCAL_HOSTNAME}</Subject>
           <Alias>${actor.url.toString()}</Alias>
           <Link
             rel="http://webfinger.net/rel/profile-page"
