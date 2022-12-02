@@ -4,8 +4,10 @@ import {
   CONTENT_TYPE_HEADER,
   HTML_CONTENT_TYPE,
   JRD_CONTENT_TYPE,
+  JSON_CONTENT_TYPE,
   LOCAL_DOMAIN,
   LOCAL_HOSTNAME,
+  XRD_CONTENT_TYPE,
 } from 'activitypub-core-utilities';
 import * as queryString from 'query-string';
 import type { DbAdapter, Plugin } from 'activitypub-core-types';
@@ -38,27 +40,36 @@ export class WebfingerGetEndpoint {
   }
 
   public async respond() {
-    const query = {
-      ...queryString.parse(new URL(this.req.url, LOCAL_DOMAIN).search),
-    } as { [key: string]: string };
-    const resource = query.resource ?? '';
+    this.res.setHeader('Vary', 'Accept');
 
-    if (resource.startsWith('acct:')) {
-      const [account] = resource.split('@');
-      const [, username] = account.split(':');
+    const query = new URL(this.req.url, LOCAL_DOMAIN).searchParams;
+    const resource = query.get('resource') ?? '';
 
-      if (!username) {
-        return this.handleNotFound();
-      }
-      
-      const actor = await this.adapters.db.findOne('entity', {
-        preferredUsername: username,
-      });
+    if (!resource.startsWith('acct:')) {
+      this.handleNotFound();
+    }
 
-      if (!actor) {
-        return this.handleNotFound();
-      }
+    const [account] = resource.split('@');
+    const [, username] = account.split(':');
 
+    if (!username) {
+      return this.handleNotFound();
+    }
+    
+    const actor = await this.adapters.db.findOne('entity', {
+      preferredUsername: username,
+    });
+
+    if (!actor) {
+      return this.handleNotFound();
+    }
+
+    this.res.statusCode = 200;
+
+    if (
+      this.req.headers.accept?.includes(JSON_CONTENT_TYPE) ||
+      this.req.headers.accept?.includes(JRD_CONTENT_TYPE)
+    ) {
       const finger = {
         subject: `acct:${username}@${LOCAL_HOSTNAME}`,
         aliases: [
@@ -78,40 +89,31 @@ export class WebfingerGetEndpoint {
         ],
       };
 
-      this.res.statusCode = 200;
       this.res.setHeader(CONTENT_TYPE_HEADER, JRD_CONTENT_TYPE);
       this.res.write(JSON.stringify(finger));
-      this.res.end();
     } else {
-      const actor = await this.adapters.db.findEntityById(resource);
+      const finger = `
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
+          Subject>acct:${username}@${LOCAL_HOSTNAME}</Subject>
+          <Alias>${actor.url.toString()}</Alias>
+          <Link
+            rel="http://webfinger.net/rel/profile-page"
+            type="${HTML_CONTENT_TYPE}"
+            href="${actor.url.toString()}"
+          />
+          <Link
+            rel="self"
+            type="${ACTIVITYSTREAMS_CONTENT_TYPE}"
+            href="${actor.url.toString()}"
+          />
+        </XRD>
+      `.trim();
 
-      if (!actor) {
-        return this.handleNotFound();
-      }
-
-      const finger = {
-        subject: actor.url.toString(),
-        aliases: [
-          `acct:${actor.preferredUsername}@${LOCAL_HOSTNAME}`,
-        ],
-        links: [
-          {
-            rel: 'http://webfinger.net/rel/profile-page',
-            type: HTML_CONTENT_TYPE,
-            href: actor.url.toString(),
-          },
-          {
-            rel: 'self',
-            type: ACTIVITYSTREAMS_CONTENT_TYPE,
-            href: actor.url.toString(),
-          },
-        ],
-      };
-
-      this.res.statusCode = 200;
-      this.res.setHeader(CONTENT_TYPE_HEADER, JRD_CONTENT_TYPE);
+      this.res.setHeader(CONTENT_TYPE_HEADER, XRD_CONTENT_TYPE);
       this.res.write(JSON.stringify(finger));
-      this.res.end();
     }
+
+    this.res.end();
   }
 }
