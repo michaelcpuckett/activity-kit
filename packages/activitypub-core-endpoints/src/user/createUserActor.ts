@@ -188,7 +188,7 @@ export async function createUserActor(
     ],
     id: new URL(id),
     url: new URL(id),
-    type: [user.type] as typeof AP.ActorTypes[keyof typeof AP.ActorTypes][],
+    type: user.type as typeof AP.ActorTypes[keyof typeof AP.ActorTypes],
     name: user.name,
     preferredUsername: user.preferredUsername,
     inbox: userInbox.id,

@@ -159,7 +159,7 @@ async function createUserActor(user) {
         ],
         id: new URL(id),
         url: new URL(id),
-        type: [user.type],
+        type: user.type,
         name: user.name,
         preferredUsername: user.preferredUsername,
         inbox: userInbox.id,
