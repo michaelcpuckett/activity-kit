@@ -18,7 +18,7 @@ class DirectoryGetEndpoint {
     }
     async respond(render) {
         const groups = await this.adapters.db.findAll('entity', {
-            type: ['Group'],
+            type: 'Group',
         });
         this.res.statusCode = 200;
         this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);
