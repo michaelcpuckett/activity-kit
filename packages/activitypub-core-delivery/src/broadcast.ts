@@ -14,6 +14,8 @@ export async function broadcast(
 ) {
   const publicActivity = cleanProps(applyContext(activity));
 
+  console.log(publicActivity)
+
   if (!('actor' in publicActivity)) {
     throw new Error('Not an activity?');
   }

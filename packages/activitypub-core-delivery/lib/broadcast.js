@@ -5,6 +5,7 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 async function broadcast(activity, actor) {
     const publicActivity = (0, activitypub_core_utilities_1.cleanProps)((0, activitypub_core_utilities_2.applyContext)(activity));
+    console.log(publicActivity);
     if (!('actor' in publicActivity)) {
         throw new Error('Not an activity?');
     }
