@@ -49,7 +49,7 @@ async function handleCreate() {
         if (!shared || !shared.id) {
             throw new Error('Bad shared collection: not found.');
         }
-        const objectToAnnounce = await (async function getObjectToAnnounce() {
+        const objectToAnnounce = await (async () => {
             if (!('inReplyTo' in object && object.inReplyTo)) {
                 return object;
             }

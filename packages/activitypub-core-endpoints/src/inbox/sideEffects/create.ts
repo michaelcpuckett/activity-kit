@@ -82,7 +82,7 @@ export async function handleCreate(this: InboxPostEndpoint) {
     // If this in reply to something, the member probably
     // meant to boost the post being replied to.
 
-    const objectToAnnounce = await (async function getObjectToAnnounce() {
+    const objectToAnnounce = await (async () => {
       if (!('inReplyTo' in object && object.inReplyTo)) {
         return object;
       }
