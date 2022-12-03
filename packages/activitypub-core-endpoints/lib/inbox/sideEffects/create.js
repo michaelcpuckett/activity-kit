@@ -57,7 +57,7 @@ async function handleCreate() {
             if (shared.orderedItems.map(orderedItem => (0, activitypub_core_utilities_1.getId)(orderedItem).toString()).includes(objectInReplyToId.toString())) {
                 return object;
             }
-            const objectInReplyTo = await this.adapters.db.findEntityById(objectInReplyToId);
+            const objectInReplyTo = await this.adapters.db.queryById(objectInReplyToId);
             if (!objectInReplyTo) {
                 return object;
             }

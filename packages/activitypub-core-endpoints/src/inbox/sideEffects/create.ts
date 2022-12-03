@@ -95,7 +95,7 @@ export async function handleCreate(this: InboxPostEndpoint) {
         return object;
       }
   
-      const objectInReplyTo = await this.adapters.db.findEntityById(
+      const objectInReplyTo = await this.adapters.db.queryById(
         objectInReplyToId
       );
   
