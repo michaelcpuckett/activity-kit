@@ -20,6 +20,7 @@ import { handleCreate } from './sideEffects/create';
 import { handleUpdate } from './sideEffects/update';
 import { handleLike } from './sideEffects/like';
 import { handleAnnounce } from './sideEffects/announce';
+import { handleAccept } from './sideEffects/accept';
 import { handleBlock } from './sideEffects/block';
 import { handleAdd } from './sideEffects/add';
 import { handleUndo } from './sideEffects/undo';
@@ -106,6 +107,7 @@ export class OutboxPostEndpoint {
 
   protected handleAdd = handleAdd;
   protected handleAnnounce = handleAnnounce;
+  protected handleAccept = handleAccept;
   protected handleBlock = handleBlock;
   protected handleCreate = handleCreate;
   protected handleDelete = handleDelete;

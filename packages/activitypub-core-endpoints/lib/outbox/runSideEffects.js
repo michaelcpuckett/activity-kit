@@ -10,6 +10,9 @@ async function runSideEffects() {
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.DELETE)) {
         await this.handleDelete();
     }
+    if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.ACCEPT)) {
+        await this.handleAccept();
+    }
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.BLOCK)) {
         await this.handleBlock();
     }
