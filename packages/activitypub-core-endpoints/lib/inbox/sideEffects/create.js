@@ -31,6 +31,38 @@ async function handleCreate() {
         }
         const publishedDate = new Date();
         const announceActivityId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`;
+        if (!('streams' in this.actor) ||
+            !this.actor.streams ||
+            !Array.isArray(this.actor.streams)) {
+            throw new Error("Actor's streams not found.");
+        }
+        const streams = await Promise.all(this.actor.streams
+            .map((stream) => stream instanceof URL ? stream : stream.id)
+            .map(async (id) => id ? await this.adapters.db.findEntityById(id) : null));
+        const shared = streams.find((stream) => {
+            if (stream && 'name' in stream) {
+                if (stream.name === 'Shared') {
+                    return true;
+                }
+            }
+        });
+        if (!shared || !shared.id) {
+            throw new Error('Bad shared collection: not found.');
+        }
+        const objectToAnnounce = await (async function getObjectToAnnounce() {
+            if (!('inReplyTo' in object && object.inReplyTo)) {
+                return object;
+            }
+            const objectInReplyToId = (0, activitypub_core_utilities_1.getId)(object.inReplyTo);
+            if (shared.orderedItems.map(orderedItem => (0, activitypub_core_utilities_1.getId)(orderedItem).toString()).includes(objectInReplyToId.toString())) {
+                return object;
+            }
+            const objectInReplyTo = await this.adapters.db.findEntityById(objectInReplyToId);
+            if (!objectInReplyTo) {
+                return object;
+            }
+            return objectInReplyTo;
+        })();
         const announceActivityReplies = {
             '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
             id: new URL(`${announceActivityId}/replies`),
@@ -55,7 +87,7 @@ async function handleCreate() {
             '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
             id: new URL(`${announceActivityId}/shares`),
             url: new URL(`${announceActivityId}/shares`),
-            name: 'Likes',
+            name: 'Shares',
             type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
             totalItems: 0,
             orderedItems: [],
@@ -67,37 +99,19 @@ async function handleCreate() {
             type: activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE,
             actor: (0, activitypub_core_utilities_1.getId)(this.actor),
             to: [new URL(activitypub_core_utilities_1.PUBLIC_ACTOR), (0, activitypub_core_utilities_1.getId)(this.actor.followers)],
-            object: (0, activitypub_core_utilities_1.getId)(object),
+            object: (0, activitypub_core_utilities_1.getId)(objectToAnnounce),
             replies: announceActivityReplies.id,
             likes: announceActivityLikes.id,
             shares: announceActivityShares.id,
             published: publishedDate,
         };
-        if (!('streams' in this.actor) ||
-            !this.actor.streams ||
-            !Array.isArray(this.actor.streams)) {
-            throw new Error("Actor's streams not found.");
-        }
-        const streams = await Promise.all(this.actor.streams
-            .map((stream) => stream instanceof URL ? stream : stream.id)
-            .map(async (id) => id ? await this.adapters.db.findEntityById(id) : null));
-        const shared = streams.find((stream) => {
-            if (stream && 'name' in stream) {
-                if (stream.name === 'Shared') {
-                    return true;
-                }
-            }
-        });
-        if (!shared || !shared.id) {
-            throw new Error('Bad shared collection: not found.');
-        }
-        await Promise.all([this.adapters.db.insertOrderedItem(shared.id, (0, activitypub_core_utilities_1.getId)(object))]);
-        const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)((0, activitypub_core_utilities_1.getId)(object)) !== 'foreign-entity';
+        await Promise.all([this.adapters.db.insertOrderedItem(shared.id, (0, activitypub_core_utilities_1.getId)(objectToAnnounce))]);
+        const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)((0, activitypub_core_utilities_1.getId)(objectToAnnounce)) !== 'foreign-entity';
         if (isLocal) {
-            if (!('shares' in object) || !object.shares) {
+            if (!('shares' in objectToAnnounce) || !objectToAnnounce.shares) {
                 throw new Error('Object is local, but `shares` is not in this object.');
             }
-            const sharesId = (0, activitypub_core_utilities_1.getId)(object.shares);
+            const sharesId = (0, activitypub_core_utilities_1.getId)(objectToAnnounce.shares);
             if (!sharesId) {
                 throw new Error('Bad shares collection: no ID.');
             }

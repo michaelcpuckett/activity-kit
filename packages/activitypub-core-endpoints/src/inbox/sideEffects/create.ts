@@ -44,57 +44,11 @@ export async function handleCreate(this: InboxPostEndpoint) {
       return;
     }
 
-    // Now we're in outbox, because this is auto-generated:
+    // We're in outbox, because this is auto-generated:
 
     const publishedDate = new Date();
     const announceActivityId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
-
-    const announceActivityReplies: AP.Collection = {
-      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-      id: new URL(`${announceActivityId}/replies`),
-      url: new URL(`${announceActivityId}/replies`),
-      name: 'Replies',
-      type: AP.CollectionTypes.COLLECTION,
-      totalItems: 0,
-      items: [],
-      published: publishedDate,
-    };
-
-    const announceActivityLikes = {
-      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-      id: new URL(`${announceActivityId}/likes`),
-      url: new URL(`${announceActivityId}/likes`),
-      name: 'Likes',
-      type: AP.CollectionTypes.ORDERED_COLLECTION,
-      totalItems: 0,
-      orderedItems: [],
-      published: publishedDate,
-    };
-
-    const announceActivityShares = {
-      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-      id: new URL(`${announceActivityId}/shares`),
-      url: new URL(`${announceActivityId}/shares`),
-      name: 'Likes',
-      type: AP.CollectionTypes.ORDERED_COLLECTION,
-      totalItems: 0,
-      orderedItems: [],
-      published: publishedDate,
-    };
-
-    const announceActivity: AP.Announce = {
-      id: new URL(announceActivityId),
-      url: new URL(announceActivityId),
-      type: AP.ActivityTypes.ANNOUNCE,
-      actor: getId(this.actor),
-      to: [new URL(PUBLIC_ACTOR), getId(this.actor.followers)],
-      object: getId(object),
-      replies: announceActivityReplies.id,
-      likes: announceActivityLikes.id,
-      shares: announceActivityShares.id,
-      published: publishedDate,
-    };
-
+    
     if (
       !('streams' in this.actor) ||
       !this.actor.streams ||
@@ -125,16 +79,89 @@ export async function handleCreate(this: InboxPostEndpoint) {
       throw new Error('Bad shared collection: not found.');
     }
 
-    await Promise.all([this.adapters.db.insertOrderedItem(shared.id, getId(object))]);
+    // If this in reply to something, the member probably
+    // meant to boost the post being replied to.
 
-    const isLocal = getCollectionNameByUrl(getId(object)) !== 'foreign-entity';
+    const objectToAnnounce = await (async function getObjectToAnnounce() {
+      if (!('inReplyTo' in object && object.inReplyTo)) {
+        return object;
+      }
+  
+      const objectInReplyToId = getId(object.inReplyTo);
+  
+      // Ensure the reply isn't something that's already been shared.
+  
+      if (shared.orderedItems.map(orderedItem => getId(orderedItem).toString()).includes(objectInReplyToId.toString())) {
+        return object;
+      }
+  
+      const objectInReplyTo = await this.adapters.db.findEntityById(
+        objectInReplyToId
+      );
+  
+      if (!objectInReplyTo) {
+        return object;
+      } 
+  
+      return objectInReplyTo;
+    })();
+
+    const announceActivityReplies: AP.Collection = {
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
+      id: new URL(`${announceActivityId}/replies`),
+      url: new URL(`${announceActivityId}/replies`),
+      name: 'Replies',
+      type: AP.CollectionTypes.COLLECTION,
+      totalItems: 0,
+      items: [],
+      published: publishedDate,
+    };
+
+    const announceActivityLikes = {
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
+      id: new URL(`${announceActivityId}/likes`),
+      url: new URL(`${announceActivityId}/likes`),
+      name: 'Likes',
+      type: AP.CollectionTypes.ORDERED_COLLECTION,
+      totalItems: 0,
+      orderedItems: [],
+      published: publishedDate,
+    };
+
+    const announceActivityShares = {
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
+      id: new URL(`${announceActivityId}/shares`),
+      url: new URL(`${announceActivityId}/shares`),
+      name: 'Shares',
+      type: AP.CollectionTypes.ORDERED_COLLECTION,
+      totalItems: 0,
+      orderedItems: [],
+      published: publishedDate,
+    };
+
+    const announceActivity: AP.Announce = {
+      id: new URL(announceActivityId),
+      url: new URL(announceActivityId),
+      type: AP.ActivityTypes.ANNOUNCE,
+      actor: getId(this.actor),
+      to: [new URL(PUBLIC_ACTOR), getId(this.actor.followers)],
+      object: getId(objectToAnnounce),
+      replies: announceActivityReplies.id,
+      likes: announceActivityLikes.id,
+      shares: announceActivityShares.id,
+      published: publishedDate,
+    };
+
+    await Promise.all([this.adapters.db.insertOrderedItem(shared.id, getId(objectToAnnounce))]);
+
+    const isLocal = getCollectionNameByUrl(getId(objectToAnnounce)) !== 'foreign-entity';
 
     if (isLocal) {
-      if (!('shares' in object) || !object.shares) {
+      if (!('shares' in objectToAnnounce) || !objectToAnnounce.shares) {
         throw new Error('Object is local, but `shares` is not in this object.');
       }
 
-      const sharesId = getId(object.shares);
+      const sharesId = getId(objectToAnnounce.shares);
 
       if (!sharesId) {
         throw new Error('Bad shares collection: no ID.');
