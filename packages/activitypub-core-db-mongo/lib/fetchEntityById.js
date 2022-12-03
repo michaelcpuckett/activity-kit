@@ -16,11 +16,29 @@ async function fetchEntityById(id) {
         },
     })
         .then(async (response) => {
-        return await response.json();
+        if (response.statusCode === 200) {
+            return await response.json();
+        }
+        else if (response.statusCode === 404) {
+            const data = await response.json();
+            if ('@context' in data) {
+                console.log('Likely a Tombstone?');
+                return data;
+            }
+            else {
+                throw new Error('Not found, but not a tombstone.');
+            }
+        }
+        else {
+            console.log('Found but not 200 or 404.', response.statusCode);
+            throw new Error(`Unexpected status code ${response.statusCode}`);
+        }
     })
         .catch((error) => {
         console.log(String(error));
-        return null;
+        return this.findOne('remote-entity', {
+            _id: id.toString(),
+        });
     });
     return (0, activitypub_core_utilities_1.compressEntity)((0, activitypub_core_utilities_1.convertStringsToUrls)(fetchedEntity));
 }

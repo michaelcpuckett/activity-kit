@@ -101,7 +101,7 @@ export class EntityGetEndpoint {
 
       if (isType(entity, AP.CollectionTypes.COLLECTION)) {
         const expandedItems = await Promise.all(entity.items.map(async (id: URL) => {
-          return await this.adapters.db.findEntityById(id) ?? await this.adapters.db.fetchEntityById(id) ?? id;
+          return await this.adapters.db.queryById(id);
         }));
 
         const items = [];
@@ -134,7 +134,7 @@ export class EntityGetEndpoint {
 
       if (isType(entity, AP.CollectionTypes.ORDERED_COLLECTION)) {
         const expandedItems = await Promise.all(entity.orderedItems.map(async (id: URL) => {
-          return await this.adapters.db.findEntityById(id) ?? await this.adapters.db.fetchEntityById(id) ?? id;
+          return await this.adapters.db.queryById(id) ?? id;
         }));
 
         const orderedItems = [];

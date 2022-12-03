@@ -61,7 +61,7 @@ class EntityGetEndpoint {
             }
             if ((0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
                 const expandedItems = await Promise.all(entity.items.map(async (id) => {
-                    return await this.adapters.db.findEntityById(id) ?? await this.adapters.db.fetchEntityById(id) ?? id;
+                    return await this.adapters.db.queryById(id);
                 }));
                 const items = [];
                 for (const item of expandedItems) {
@@ -89,7 +89,7 @@ class EntityGetEndpoint {
             }
             if ((0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
                 const expandedItems = await Promise.all(entity.orderedItems.map(async (id) => {
-                    return await this.adapters.db.findEntityById(id) ?? await this.adapters.db.fetchEntityById(id) ?? id;
+                    return await this.adapters.db.queryById(id) ?? id;
                 }));
                 const orderedItems = [];
                 for (const item of expandedItems) {
