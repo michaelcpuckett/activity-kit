@@ -53,7 +53,20 @@ async function handleBlock() {
     if (!blocked || !blocked.id) {
         throw new Error('Bad blocked collection: not found.');
     }
-    await Promise.all([this.adapters.db.insertItem(blocked.id, object.id)]);
+    const blocks = streams.find((stream) => {
+        if (stream && 'name' in stream) {
+            if (stream.name === 'Blocks') {
+                return true;
+            }
+        }
+    });
+    if (!blocks || !blocks.id) {
+        throw new Error('Bad blocks collection: not found.');
+    }
+    await Promise.all([
+        this.adapters.db.insertItem(blocked.id, object.id),
+        this.adapters.db.insertItem(blocks.id, this.activity.id)
+    ]);
 }
 exports.handleBlock = handleBlock;
 //# sourceMappingURL=block.js.map
