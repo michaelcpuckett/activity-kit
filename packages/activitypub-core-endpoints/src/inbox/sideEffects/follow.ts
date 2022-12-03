@@ -78,6 +78,10 @@ export async function handleFollow(this: InboxPostEndpoint) {
     return;
   }
 
+  if (this.actor.manuallyApprovesFollowers) {
+    return;
+  }
+
   // Now we're in outbox, because this is auto-generated:
 
   const acceptActivityId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;

@@ -48,6 +48,7 @@ type BaseActor = BaseCoreObject & {
     owner: string;
     publicKeyPem: string;
   };
+  manuallyApprovesFollowers?: boolean;
 };
 
 export type Application = BaseActor & {

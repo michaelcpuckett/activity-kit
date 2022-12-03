@@ -53,6 +53,9 @@ async function handleFollow() {
         console.log('NOTE: ALREADY A FOLLOWER.');
         return;
     }
+    if (this.actor.manuallyApprovesFollowers) {
+        return;
+    }
     const acceptActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_2.getGuid)()}`;
     const publishedDate = new Date();
     const acceptActivityReplies = {

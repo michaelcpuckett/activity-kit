@@ -28,6 +28,7 @@ declare type BaseActor = BaseCoreObject & {
         owner: string;
         publicKeyPem: string;
     };
+    manuallyApprovesFollowers?: boolean;
 };
 export declare type Application = BaseActor & {
     type: TypeOrArrayWithType<typeof ActorTypes.APPLICATION>;
