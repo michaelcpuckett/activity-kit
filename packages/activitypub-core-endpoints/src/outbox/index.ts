@@ -25,6 +25,7 @@ import { handleBlock } from './sideEffects/block';
 import { handleAdd } from './sideEffects/add';
 import { handleUndo } from './sideEffects/undo';
 import { handleRemove } from './sideEffects/remove';
+import { handleUndoBlock } from './sideEffects/undo/undoBlock';
 import { handleUndoLike } from './sideEffects/undo/undoLike';
 import { handleUndoAnnounce } from './sideEffects/undo/undoAnnounce';
 
@@ -118,4 +119,5 @@ export class OutboxPostEndpoint {
   protected handleUndo = handleUndo;
   protected handleUndoLike = handleUndoLike;
   protected handleUndoAnnounce = handleUndoAnnounce;
+  protected handleUndoBlock = handleUndoBlock;
 }

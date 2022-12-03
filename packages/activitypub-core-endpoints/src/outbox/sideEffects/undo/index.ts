@@ -38,6 +38,10 @@ export async function handleUndo(this: OutboxPostEndpoint) {
     await this.handleDelete(object);
   }
 
+  if (isType(object, AP.ActivityTypes.BLOCK)) {
+    await this.handleUndoBlock(object);
+  }
+
   if (isType(object, AP.ActivityTypes.LIKE)) {
     await this.handleUndoLike(object);
   }

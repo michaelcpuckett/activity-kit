@@ -19,6 +19,7 @@ const block_1 = require("./sideEffects/block");
 const add_1 = require("./sideEffects/add");
 const undo_1 = require("./sideEffects/undo");
 const remove_1 = require("./sideEffects/remove");
+const undoBlock_1 = require("./sideEffects/undo/undoBlock");
 const undoLike_1 = require("./sideEffects/undo/undoLike");
 const undoAnnounce_1 = require("./sideEffects/undo/undoAnnounce");
 class OutboxPostEndpoint {
@@ -83,6 +84,7 @@ class OutboxPostEndpoint {
     handleUndo = undo_1.handleUndo;
     handleUndoLike = undoLike_1.handleUndoLike;
     handleUndoAnnounce = undoAnnounce_1.handleUndoAnnounce;
+    handleUndoBlock = undoBlock_1.handleUndoBlock;
 }
 exports.OutboxPostEndpoint = OutboxPostEndpoint;
 //# sourceMappingURL=index.js.map
