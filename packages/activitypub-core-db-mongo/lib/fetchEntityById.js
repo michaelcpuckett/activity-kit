@@ -16,10 +16,10 @@ async function fetchEntityById(id) {
         },
     })
         .then(async (response) => {
-        if (response.statusCode === 200) {
+        if (response.status === 200) {
             return await response.json();
         }
-        else if (response.statusCode === 404) {
+        else if (response.status === 404) {
             const data = await response.json();
             if ('@context' in data) {
                 console.log('Likely a Tombstone?');
@@ -30,8 +30,8 @@ async function fetchEntityById(id) {
             }
         }
         else {
-            console.log('Found but not 200 or 404.', response.statusCode);
-            throw new Error(`Unexpected status code ${response.statusCode}`);
+            console.log('Found but not 200 or 404.', response.status);
+            throw new Error(`Unexpected status code ${response.status}`);
         }
     })
         .catch((error) => {
