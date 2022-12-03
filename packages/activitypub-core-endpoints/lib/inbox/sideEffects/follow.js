@@ -54,6 +54,16 @@ async function handleFollow() {
         return;
     }
     if (this.actor.manuallyApprovesFollowers) {
+        const streams = await Promise.all(this.actor.streams.map(async (stream) => await this.adapters.db.fetchEntityById(stream)));
+        const requests = streams.find((stream) => {
+            if (stream.name === 'Requests') {
+                return true;
+            }
+        });
+        if (!requests) {
+            throw new Error('Bad Requests cllection: Not found.');
+        }
+        await this.adapters.db.insertOrderedItem((0, activitypub_core_utilities_4.getId)(requests), activity.id);
         return;
     }
     const acceptActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_2.getGuid)()}`;

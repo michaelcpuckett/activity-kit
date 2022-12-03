@@ -79,6 +79,20 @@ export async function handleFollow(this: InboxPostEndpoint) {
   }
 
   if (this.actor.manuallyApprovesFollowers) {
+    const streams = await Promise.all(this.actor.streams.map(async stream => await this.adapters.db.fetchEntityById(stream)));
+
+    const requests = streams.find((stream: AP.Collection) => {
+      if (stream.name === 'Requests') {
+        return true;
+      }
+    });
+
+    if (!requests) {
+      throw new Error('Bad Requests cllection: Not found.');
+    }
+
+    await this.adapters.db.insertOrderedItem(getId(requests), activity.id);
+
     return;
   }
 
