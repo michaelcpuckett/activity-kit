@@ -91,7 +91,7 @@ export async function handleFollow(this: InboxPostEndpoint) {
       throw new Error('Bad Requests cllection: Not found.');
     }
 
-    await this.adapters.db.insertOrderedItem(getId(requests), activity.id);
+    await this.adapters.db.insertItem(getId(requests), activity.id);
 
     return;
   }

@@ -63,7 +63,7 @@ async function handleFollow() {
         if (!requests) {
             throw new Error('Bad Requests cllection: Not found.');
         }
-        await this.adapters.db.insertOrderedItem((0, activitypub_core_utilities_4.getId)(requests), activity.id);
+        await this.adapters.db.insertItem((0, activitypub_core_utilities_4.getId)(requests), activity.id);
         return;
     }
     const acceptActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_2.getGuid)()}`;
