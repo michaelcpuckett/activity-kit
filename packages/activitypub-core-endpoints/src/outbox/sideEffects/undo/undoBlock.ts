@@ -79,7 +79,7 @@ export async function handleUndoBlock(
   }
 
   await Promise.all([
-    this.adapters.db.removeOrderedItem(blocks.id, activity.id),
-    this.adapters.db.removeOrderedItem(blocked.id, object.id),
+    this.adapters.db.removeItem(blocks.id, activity.id),
+    this.adapters.db.removeItem(blocked.id, object.id),
   ]);
 }

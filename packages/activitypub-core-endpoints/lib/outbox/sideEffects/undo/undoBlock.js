@@ -54,8 +54,8 @@ async function handleUndoBlock(activity) {
         throw new Error('Bad actor: no blocked collection.');
     }
     await Promise.all([
-        this.adapters.db.removeOrderedItem(blocks.id, activity.id),
-        this.adapters.db.removeOrderedItem(blocked.id, object.id),
+        this.adapters.db.removeItem(blocks.id, activity.id),
+        this.adapters.db.removeItem(blocked.id, object.id),
     ]);
 }
 exports.handleUndoBlock = handleUndoBlock;
