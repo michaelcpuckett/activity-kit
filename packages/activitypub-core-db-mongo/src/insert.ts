@@ -34,6 +34,18 @@ export async function removeOrderedItem(
   url: URL,
 ) {
   const collectionName = getCollectionNameByUrl(path);
+
+  const foundItem = this.db.collection(collectionName).findOne({
+    _id: path.toString(),
+    orderedItems: [
+      url.toString(),
+    ],
+  });
+
+  if (!foundItem) {
+    throw new Error('Could not remove ordered item: not found.');
+  }
+
   await this.db.collection(collectionName).updateOne(
     {
       _id: path.toString(),
@@ -54,6 +66,18 @@ export async function removeOrderedItem(
 
 export async function insertItem(this: MongoDbAdapter, path: URL, url: URL) {
   const collectionName = getCollectionNameByUrl(path);
+
+  const foundItem = this.db.collection(collectionName).findOne({
+    _id: path.toString(),
+    items: [
+      url.toString(),
+    ],
+  });
+
+  if (!foundItem) {
+    throw new Error('Could not remove item: not found.');
+  }
+
   await this.db.collection(collectionName).updateOne(
     {
       _id: path.toString(),
