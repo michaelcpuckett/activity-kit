@@ -41,16 +41,17 @@ class InboxPostEndpoint {
             return;
         }
         const streams = await Promise.all(this.actor.streams.map(async (stream) => await this.adapters.db.fetchEntityById(stream)));
-        const blocked = streams.find((stream) => {
-            if (stream.name === 'Blocked') {
+        const blocks = streams.find((stream) => {
+            if (stream.name === 'Blocks') {
                 return true;
             }
         });
-        if (!blocked) {
+        if (!blocks) {
             return false;
         }
+        const blockedActors = await Promise.all(blocks.items.map(async (id) => (await this.adapters.db.queryById(id))?.object));
         const potentiallyBlockedActorId = (0, activitypub_core_utilities_1.getId)(this.activity.actor);
-        return blocked.items.map((id) => id.toString()).includes(potentiallyBlockedActorId.toString());
+        return blockedActors.map(id => id.toString()).includes(potentiallyBlockedActorId.toString());
     }
     async respond() {
         try {

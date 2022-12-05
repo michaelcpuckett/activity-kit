@@ -66,20 +66,7 @@ export async function handleUndoBlock(
     throw new Error('Bad actor: no blocks collection.');
   }
 
-  const blocked = streams.find((stream) => {
-    if (stream && 'name' in stream) {
-      if (stream.name === 'Blocked') {
-        return true;
-      }
-    }
-  });
-
-  if (!blocked || !blocked.id) {
-    throw new Error('Bad actor: no blocked collection.');
-  }
-
   await Promise.all([
     this.adapters.db.removeItem(blocks.id, activity.id),
-    this.adapters.db.removeItem(blocked.id, object.id),
   ]);
 }

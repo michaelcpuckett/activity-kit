@@ -63,19 +63,20 @@ export class InboxPostEndpoint {
 
     const streams = await Promise.all(this.actor.streams.map(async stream => await this.adapters.db.fetchEntityById(stream)));
 
-    const blocked = streams.find((stream: AP.Collection) => {
-      if (stream.name === 'Blocked') {
+    const blocks = streams.find((stream: AP.Collection) => {
+      if (stream.name === 'Blocks') {
         return true;
       }
     });
 
-    if (!blocked) {
+    if (!blocks) {
       return false;
     }
 
+    const blockedActors = await Promise.all(blocks.items.map(async (id: URL) => (await this.adapters.db.queryById(id))?.object));
     const potentiallyBlockedActorId = getId(this.activity.actor);
-
-    return blocked.items.map((id: URL) => id.toString()).includes(potentiallyBlockedActorId.toString());
+    
+    return blockedActors.map(id => id.toString()).includes(potentiallyBlockedActorId.toString());
   }
 
   public async respond() {
