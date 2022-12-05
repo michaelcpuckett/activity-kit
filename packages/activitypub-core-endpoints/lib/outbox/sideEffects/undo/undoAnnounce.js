@@ -44,7 +44,7 @@ async function handleUndoAnnounce(activity) {
         throw new Error('Bad actor: no shared collection.');
     }
     await Promise.all([
-        this.adapters.db.removeOrderedItem(shared.id, object.id),
+        this.adapters.db.removeOrderedItem(shared.id, objectId),
     ]);
 }
 exports.handleUndoAnnounce = handleUndoAnnounce;

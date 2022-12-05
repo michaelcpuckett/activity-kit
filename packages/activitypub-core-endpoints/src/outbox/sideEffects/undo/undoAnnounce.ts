@@ -67,6 +67,6 @@ export async function handleUndoAnnounce(
   }
 
   await Promise.all([
-    this.adapters.db.removeOrderedItem(shared.id, object.id),
+    this.adapters.db.removeOrderedItem(shared.id, objectId),
   ]);
 }
