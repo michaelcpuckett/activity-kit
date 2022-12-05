@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-storage-ftp",
-  "version": "0.0.264",
+  "version": "0.0.265",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -25,7 +25,7 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "activitypub-core-types": "^0.0.264",
+    "activitypub-core-types": "^0.0.265",
     "ftp": "^0.3.10"
   },
   "devDependencies": {
