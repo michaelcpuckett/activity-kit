@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-oauth",
-  "version": "0.0.259",
+  "version": "0.0.260",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -25,8 +25,8 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "activitypub-core-types": "^0.0.259",
-    "activitypub-core-utilities": "^0.0.259",
+    "activitypub-core-types": "^0.0.260",
+    "activitypub-core-utilities": "^0.0.260",
     "get-body": "^1.0.3",
     "oidc-provider": "^7.14.0"
   },
