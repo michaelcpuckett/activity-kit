@@ -65,18 +65,6 @@ export async function handleBlock(this: OutboxPostEndpoint) {
       ),
   );
 
-  const blocked = streams.find((stream) => {
-    if (stream && 'name' in stream) {
-      if (stream.name === 'Blocked') {
-        return true;
-      }
-    }
-  });
-
-  if (!blocked || !blocked.id) {
-    throw new Error('Bad blocked collection: not found.');
-  }
-
   const blocks = streams.find((stream) => {
     if (stream && 'name' in stream) {
       if (stream.name === 'Blocks') {
@@ -90,7 +78,6 @@ export async function handleBlock(this: OutboxPostEndpoint) {
   }
 
   await Promise.all([
-    this.adapters.db.insertItem(blocked.id, object.id),
     this.adapters.db.insertItem(blocks.id, this.activity.id)
   ]);
 }

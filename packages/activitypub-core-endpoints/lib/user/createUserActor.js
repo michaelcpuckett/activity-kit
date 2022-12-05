@@ -82,17 +82,6 @@ async function createUserActor(user) {
         orderedItems: [],
         published: publishedDate,
     };
-    const userBlocked = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/blocked`),
-        url: new URL(`${id}/blocked`),
-        name: 'Blocked',
-        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
-        totalItems: 0,
-        attributedTo: new URL(id),
-        items: [],
-        published: publishedDate,
-    };
     const userBlocks = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(`${id}/blocks`),
@@ -194,9 +183,8 @@ async function createUserActor(user) {
         shares: userShares.id,
         streams: [
             userShared.id,
-            userRequests.id,
-            userBlocked.id,
             userBlocks.id,
+            userRequests.id,
             userLists.id,
             userBookmarks.id
         ],
@@ -283,7 +271,6 @@ async function createUserActor(user) {
         this.adapters.db.saveEntity(userFollowing),
         this.adapters.db.saveEntity(userShared),
         this.adapters.db.saveEntity(userRequests),
-        this.adapters.db.saveEntity(userBlocked),
         this.adapters.db.saveEntity(userBlocks),
         this.adapters.db.saveEntity(userLists),
         this.adapters.db.saveEntity(userBookmarks),

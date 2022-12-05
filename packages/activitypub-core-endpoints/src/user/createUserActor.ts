@@ -104,18 +104,6 @@ export async function createUserActor(
     published: publishedDate,
   };
 
-  const userBlocked: AP.Collection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/blocked`),
-    url: new URL(`${id}/blocked`),
-    name: 'Blocked',
-    type: AP.CollectionTypes.COLLECTION,
-    totalItems: 0,
-    attributedTo: new URL(id),
-    items: [],
-    published: publishedDate,
-  };
-
   const userBlocks: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(`${id}/blocks`),
@@ -225,9 +213,8 @@ export async function createUserActor(
     shares: userShares.id,
     streams: [
       userShared.id,
-      userRequests.id,
-      userBlocked.id,
       userBlocks.id,
+      userRequests.id,
       userLists.id,
       userBookmarks.id
     ],
@@ -321,7 +308,6 @@ export async function createUserActor(
     this.adapters.db.saveEntity(userFollowing),
     this.adapters.db.saveEntity(userShared),
     this.adapters.db.saveEntity(userRequests),
-    this.adapters.db.saveEntity(userBlocked),
     this.adapters.db.saveEntity(userBlocks),
     this.adapters.db.saveEntity(userLists),
     this.adapters.db.saveEntity(userBookmarks),
