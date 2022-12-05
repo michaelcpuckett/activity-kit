@@ -3,9 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUndoAnnounce = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function handleUndoAnnounce(activity) {
-    if (!('object' in activity)) {
-        throw new Error('Bad activity: no object.');
-    }
     if (!activity.id) {
         throw new Error('Bad activity: no ID.');
     }
@@ -16,14 +13,6 @@ async function handleUndoAnnounce(activity) {
     const actor = await this.adapters.db.queryById(actorId);
     if (!actor || !('outbox' in actor)) {
         throw new Error('Bad actor: not found.');
-    }
-    const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
-    if (!objectId) {
-        throw new Error('Bad object: no ID.');
-    }
-    const object = await this.adapters.db.queryById(objectId);
-    if (!object) {
-        throw new Error('Bad object: not found.');
     }
     if (!('streams' in actor) ||
         !actor.streams ||
