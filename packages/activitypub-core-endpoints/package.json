@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-endpoints",
-  "version": "0.0.268",
+  "version": "0.0.269",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -21,9 +21,9 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "activitypub-core-delivery": "^0.0.268",
-    "activitypub-core-types": "^0.0.268",
-    "activitypub-core-utilities": "^0.0.268",
+    "activitypub-core-delivery": "^0.0.269",
+    "activitypub-core-types": "^0.0.269",
+    "activitypub-core-utilities": "^0.0.269",
     "cookie": "^0.5.0",
     "formidable": "^2.0.1",
     "query-string": "^7.1.1",
