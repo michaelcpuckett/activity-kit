@@ -55,6 +55,10 @@ class InboxPostEndpoint {
     async respond() {
         try {
             await this.parseBody();
+            if (this.adapters.db.findEntityById((0, activitypub_core_utilities_1.getId)(this.activity))) {
+                console.log('We have already received this activity. It might have been forwarded by another server.');
+                return;
+            }
             await this.getActors();
             for (const actor of this.actors) {
                 this.actor = actor;
