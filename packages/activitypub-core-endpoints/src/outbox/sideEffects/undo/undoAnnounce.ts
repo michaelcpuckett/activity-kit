@@ -38,16 +38,6 @@ export async function handleUndoAnnounce(
     throw new Error('Bad object: not found.');
   }
 
-  if (!('shares' in object) || !object.shares) {
-    throw new Error('Bad object: no shares collection.');
-  }
-
-  const sharesId = getId(object.shares);
-
-  if (!sharesId) {
-    throw new Error('Bad shares collection: no ID.');
-  }
-
   if (
     !('streams' in actor) ||
     !actor.streams ||
@@ -77,7 +67,6 @@ export async function handleUndoAnnounce(
   }
 
   await Promise.all([
-    this.adapters.db.removeOrderedItem(sharesId, activity.id),
     this.adapters.db.removeOrderedItem(shared.id, object.id),
   ]);
 }

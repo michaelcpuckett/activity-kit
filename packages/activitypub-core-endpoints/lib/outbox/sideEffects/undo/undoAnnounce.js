@@ -25,13 +25,6 @@ async function handleUndoAnnounce(activity) {
     if (!object) {
         throw new Error('Bad object: not found.');
     }
-    if (!('shares' in object) || !object.shares) {
-        throw new Error('Bad object: no shares collection.');
-    }
-    const sharesId = (0, activitypub_core_utilities_1.getId)(object.shares);
-    if (!sharesId) {
-        throw new Error('Bad shares collection: no ID.');
-    }
     if (!('streams' in actor) ||
         !actor.streams ||
         !Array.isArray(actor.streams)) {
@@ -51,7 +44,6 @@ async function handleUndoAnnounce(activity) {
         throw new Error('Bad actor: no shared collection.');
     }
     await Promise.all([
-        this.adapters.db.removeOrderedItem(sharesId, activity.id),
         this.adapters.db.removeOrderedItem(shared.id, object.id),
     ]);
 }
