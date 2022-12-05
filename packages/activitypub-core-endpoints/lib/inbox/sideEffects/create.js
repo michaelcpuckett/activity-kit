@@ -63,6 +63,7 @@ async function handleCreate() {
             }
             return objectInReplyTo;
         })();
+        this.activity.object = objectToAnnounce;
         const announceActivityReplies = {
             '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
             id: new URL(`${announceActivityId}/replies`),
