@@ -81,7 +81,6 @@ export async function handleCreate(this: InboxPostEndpoint) {
 
     // If this in reply to something, the member probably
     // meant to boost the post being replied to.
-
     const objectToAnnounce = await (async () => {
       if (!('inReplyTo' in object && object.inReplyTo)) {
         return object;
@@ -154,7 +153,7 @@ export async function handleCreate(this: InboxPostEndpoint) {
       published: publishedDate,
     };
 
-    await Promise.all([this.adapters.db.insertOrderedItem(shared.id, this.activity.id)]);
+    await Promise.all([this.adapters.db.insertOrderedItem(shared.id, announceActivity.id)]);
 
     const isLocal = getCollectionNameByUrl(getId(objectToAnnounce)) !== 'foreign-entity';
 
