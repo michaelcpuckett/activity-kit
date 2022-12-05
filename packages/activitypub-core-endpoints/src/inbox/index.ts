@@ -84,6 +84,8 @@ export class InboxPostEndpoint {
 
       if (this.adapters.db.findEntityById(getId(this.activity))) {
         console.log('We have already received this activity. It might have been forwarded by another server.');
+        this.res.statusCode = 200;
+        this.res.end();
         return;
       }
 
