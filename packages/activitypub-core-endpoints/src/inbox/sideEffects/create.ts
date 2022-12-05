@@ -106,6 +106,8 @@ export async function handleCreate(this: InboxPostEndpoint) {
       return objectInReplyTo;
     })();
 
+    (this.activity as AP.Announce).object = objectToAnnounce;
+
     const announceActivityReplies: AP.Collection = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(`${announceActivityId}/replies`),
