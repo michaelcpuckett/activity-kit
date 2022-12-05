@@ -105,7 +105,7 @@ async function handleCreate() {
             shares: announceActivityShares.id,
             published: publishedDate,
         };
-        await Promise.all([this.adapters.db.insertOrderedItem(shared.id, (0, activitypub_core_utilities_1.getId)(objectToAnnounce))]);
+        await Promise.all([this.adapters.db.insertOrderedItem(shared.id, this.activity.id)]);
         const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)((0, activitypub_core_utilities_1.getId)(objectToAnnounce)) !== 'foreign-entity';
         if (isLocal) {
             if (!('shares' in objectToAnnounce) || !objectToAnnounce.shares) {

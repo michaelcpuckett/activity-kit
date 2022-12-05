@@ -152,7 +152,7 @@ export async function handleCreate(this: InboxPostEndpoint) {
       published: publishedDate,
     };
 
-    await Promise.all([this.adapters.db.insertOrderedItem(shared.id, getId(objectToAnnounce))]);
+    await Promise.all([this.adapters.db.insertOrderedItem(shared.id, this.activity.id)]);
 
     const isLocal = getCollectionNameByUrl(getId(objectToAnnounce)) !== 'foreign-entity';
 

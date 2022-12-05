@@ -69,7 +69,7 @@ export async function handleAnnounce(this: OutboxPostEndpoint) {
     throw new Error('Bad shared collection: not found.');
   }
 
-  await Promise.all([this.adapters.db.insertOrderedItem(shared.id, object.id)]);
+  await Promise.all([this.adapters.db.insertOrderedItem(shared.id, this.activity.id)]);
 
   const isLocal = getCollectionNameByUrl(object.id) !== 'foreign-entity';
 

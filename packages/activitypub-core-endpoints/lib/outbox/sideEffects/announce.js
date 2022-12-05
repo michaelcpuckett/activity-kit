@@ -46,7 +46,7 @@ async function handleAnnounce() {
     if (!shared || !shared.id) {
         throw new Error('Bad shared collection: not found.');
     }
-    await Promise.all([this.adapters.db.insertOrderedItem(shared.id, object.id)]);
+    await Promise.all([this.adapters.db.insertOrderedItem(shared.id, this.activity.id)]);
     const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(object.id) !== 'foreign-entity';
     if (isLocal) {
         if (!('shares' in object) || !object.shares) {
