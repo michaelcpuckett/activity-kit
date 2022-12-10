@@ -12,16 +12,22 @@ class ProxyGetEndpoint {
         this.adapters = adapters;
     }
     async respond() {
-        const proxiedUrl = this.req.url?.split('?resource=')[1];
-        if (proxiedUrl) {
-            const fetchedResult = await this.adapters.db.queryById(new URL(proxiedUrl));
-            if (fetchedResult) {
-                this.res.statusCode = 200;
-                this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);
-                this.res.write(JSON.stringify(fetchedResult));
-                this.res.end();
-                return;
+        try {
+            const proxiedUrl = this.req.url?.split('?resource=')[1];
+            if (proxiedUrl) {
+                const fetchedResult = await this.adapters.db.queryById(new URL(proxiedUrl));
+                if (fetchedResult) {
+                    this.res.statusCode = 200;
+                    this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);
+                    this.res.write(JSON.stringify(fetchedResult));
+                    this.res.end();
+                    return;
+                }
             }
+        }
+        catch (error) {
+            this.res.statusCode = 404;
+            this.res.end();
         }
         this.res.statusCode = 404;
         this.res.end();

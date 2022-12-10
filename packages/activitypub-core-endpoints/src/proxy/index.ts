@@ -26,18 +26,23 @@ export class ProxyGetEndpoint {
   }
 
   public async respond() {
-    const proxiedUrl = this.req.url?.split('?resource=')[1];
+    try {
+      const proxiedUrl = this.req.url?.split('?resource=')[1];
 
-    if (proxiedUrl) {
-      const fetchedResult = await this.adapters.db.queryById(new URL(proxiedUrl));
-      
-      if (fetchedResult) {
-        this.res.statusCode = 200;
-        this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE)
-        this.res.write(JSON.stringify(fetchedResult));
-        this.res.end();
-        return;
+      if (proxiedUrl) {
+        const fetchedResult = await this.adapters.db.queryById(new URL(proxiedUrl));
+        
+        if (fetchedResult) {
+          this.res.statusCode = 200;
+          this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE)
+          this.res.write(JSON.stringify(fetchedResult));
+          this.res.end();
+          return;
+        }
       }
+    } catch (error) {
+      this.res.statusCode = 404;
+      this.res.end();
     }
 
     this.res.statusCode = 404;
