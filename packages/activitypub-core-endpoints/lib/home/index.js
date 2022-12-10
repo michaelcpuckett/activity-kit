@@ -44,9 +44,23 @@ class HomeGetEndpoint {
         }
         else {
             this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);
-            this.res.write(await render({
-                actor: (0, activitypub_core_utilities_1.convertUrlsToStrings)(actor),
+            let props = {
+                actor,
+            };
+            if (this.plugins) {
+                for (const plugin of this.plugins) {
+                    if ('getHomePageProps' in plugin && plugin.getHomePageProps) {
+                        props = {
+                            ...props,
+                            ...(await plugin.getHomePageProps(actor)),
+                        };
+                    }
+                }
+            }
+            const formattedProps = Object.fromEntries(Object.entries(props).map(([key, value]) => {
+                return [key, (0, activitypub_core_utilities_1.convertUrlsToStrings)(value)];
             }));
+            this.res.write(await render(formattedProps));
         }
         this.res.end();
     }

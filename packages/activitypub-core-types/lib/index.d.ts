@@ -3,6 +3,7 @@ export declare type Plugin = {
     handleCreateUserActor?: Function;
     handleOutboxActivity?: Function;
     generateActorId?: Function;
+    getHomePageProps?: Function;
 };
 export declare type AuthAdapter = {
     createUser: Function;

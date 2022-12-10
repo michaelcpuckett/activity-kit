@@ -74,10 +74,28 @@ export class HomeGetEndpoint {
       this.res.write(stringify(actor));
     } else {
       this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
+
+      let props = {
+        actor,
+      };
+
+      if (this.plugins) {
+        for (const plugin of this.plugins) {
+          if ('getHomePageProps' in plugin && plugin.getHomePageProps) {
+            props = {
+              ...props,
+              ...(await plugin.getHomePageProps(actor)),
+            };
+          }
+        }
+      }
+
+      const formattedProps = Object.fromEntries(Object.entries(props).map(([key, value]) => {
+        return [key, convertUrlsToStrings(value)];
+      }));
+
       this.res.write(
-        await render({
-          actor: convertUrlsToStrings(actor) as AP.Actor,
-        }),
+        await render(formattedProps),
       );
     }
 

@@ -4,6 +4,7 @@ export type Plugin = {
   handleCreateUserActor?: Function;
   handleOutboxActivity?: Function;
   generateActorId?: Function;
+  getHomePageProps?: Function;
 };
 
 export type AuthAdapter = {
