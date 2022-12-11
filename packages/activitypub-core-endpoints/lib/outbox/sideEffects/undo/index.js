@@ -21,6 +21,12 @@ async function handleUndo() {
     if ((0, activitypub_core_utilities_1.isType)(object, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
         await this.handleDelete(object);
     }
+    if ((0, activitypub_core_utilities_1.isType)(object, activitypub_core_types_1.AP.ActivityTypes.FOLLOW)) {
+        await this.handleUndoFollow(object);
+    }
+    if ((0, activitypub_core_utilities_1.isType)(object, activitypub_core_types_1.AP.ActivityTypes.ACCEPT)) {
+        await this.handleUndoAccept(object);
+    }
     if ((0, activitypub_core_utilities_1.isType)(object, activitypub_core_types_1.AP.ActivityTypes.BLOCK)) {
         await this.handleUndoBlock(object);
     }
