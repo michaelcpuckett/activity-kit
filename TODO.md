@@ -9,10 +9,10 @@ See CHECKLIST.md
     * Pleroma
     * Lemmy?
     * PeerTube?
-* finish block (unfriend?)
+* finish block (unfriend, remove any reposts)
 * oauth
 * as:sensitive
 * watch for performance issues
-* caching of remote objects
+* caching of remote objects -- too many?
 * foaf / schema.org / others
 * nodeinfo users + posts
