@@ -23,6 +23,13 @@ async function insertOrderedItem(path, url) {
 exports.insertOrderedItem = insertOrderedItem;
 async function removeOrderedItem(path, url) {
     const collectionName = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(path);
+    const existingItem = this.findOne(collectionName, {
+        _id: path.toString(),
+        orderedItems: [url.toString()],
+    });
+    if (existingItem) {
+        return;
+    }
     await this.db.collection(collectionName).updateOne({
         _id: path.toString(),
     }, {
@@ -57,6 +64,13 @@ async function insertItem(path, url) {
 exports.insertItem = insertItem;
 async function removeItem(path, url) {
     const collectionName = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(path);
+    const existingItem = this.findOne(collectionName, {
+        _id: path.toString(),
+        items: [url.toString()],
+    });
+    if (existingItem) {
+        return;
+    }
     await this.db.collection(collectionName).updateOne({
         _id: path.toString(),
     }, {

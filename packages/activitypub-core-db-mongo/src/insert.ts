@@ -34,6 +34,16 @@ export async function removeOrderedItem(
   url: URL,
 ) {
   const collectionName = getCollectionNameByUrl(path);
+
+  const existingItem = this.findOne(collectionName, {
+    _id: path.toString(),
+    orderedItems: [url.toString()],
+  });
+
+  if (existingItem) {
+    return;
+  }
+
   await this.db.collection(collectionName).updateOne(
     {
       _id: path.toString(),
@@ -76,6 +86,16 @@ export async function insertItem(this: MongoDbAdapter, path: URL, url: URL) {
 
 export async function removeItem(this: MongoDbAdapter, path: URL, url: URL) {
   const collectionName = getCollectionNameByUrl(path);
+
+  const existingItem = this.findOne(collectionName, {
+    _id: path.toString(),
+    items: [url.toString()],
+  });
+
+  if (existingItem) {
+    return;
+  }
+
   await this.db.collection(collectionName).updateOne(
     {
       _id: path.toString(),
