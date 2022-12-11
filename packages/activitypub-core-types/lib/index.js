@@ -22,7 +22,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AP = void 0;
 exports.AP = __importStar(require("./activitypub"));
+__exportStar(require("./assertions"), exports);
 //# sourceMappingURL=index.js.map

@@ -1,4 +1,5 @@
 export * as AP from './activitypub';
+export * from './assertions';
 
 export type Plugin = {
   handleCreateUserActor?: Function;
