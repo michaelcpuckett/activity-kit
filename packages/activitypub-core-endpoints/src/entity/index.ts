@@ -187,7 +187,11 @@ export class EntityGetEndpoint {
       }
 
       const formattedProps = Object.fromEntries(Object.entries(props).map(([key, value]) => {
-        return [key, convertUrlsToStrings(value)];
+        if (typeof value === 'object') {
+          return [key, convertUrlsToStrings(value)];
+        } else {
+          return [key, value];
+        }
       }));
 
       this.res.write(

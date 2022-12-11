@@ -135,7 +135,12 @@ class EntityGetEndpoint {
                 }
             }
             const formattedProps = Object.fromEntries(Object.entries(props).map(([key, value]) => {
-                return [key, (0, activitypub_core_utilities_2.convertUrlsToStrings)(value)];
+                if (typeof value === 'object') {
+                    return [key, (0, activitypub_core_utilities_2.convertUrlsToStrings)(value)];
+                }
+                else {
+                    return [key, value];
+                }
             }));
             this.res.write(await render(formattedProps));
             this.res.end();
