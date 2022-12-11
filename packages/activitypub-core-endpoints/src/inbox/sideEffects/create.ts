@@ -147,7 +147,9 @@ export async function handleCreate(this: InboxPostEndpoint) {
       actor: getId(this.actor),
       to: [new URL(PUBLIC_ACTOR), getId(this.actor.followers)],
       object: getId(objectToAnnounce),
-      context: getId(object),
+      ...getId(objectToAnnounce).toString() !== getId(object).toString() ? {
+        context: getId(object),
+      } : null,
       replies: announceActivityReplies.id,
       likes: announceActivityLikes.id,
       shares: announceActivityShares.id,
