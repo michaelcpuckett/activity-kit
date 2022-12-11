@@ -27,7 +27,7 @@ async function removeOrderedItem(path, url) {
         _id: path.toString(),
         orderedItems: [url.toString()],
     });
-    if (existingItem) {
+    if (!existingItem) {
         return;
     }
     await this.db.collection(collectionName).updateOne({
@@ -68,7 +68,7 @@ async function removeItem(path, url) {
         _id: path.toString(),
         items: [url.toString()],
     });
-    if (existingItem) {
+    if (!existingItem) {
         return;
     }
     await this.db.collection(collectionName).updateOne({

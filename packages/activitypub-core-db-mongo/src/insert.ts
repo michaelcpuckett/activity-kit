@@ -40,7 +40,7 @@ export async function removeOrderedItem(
     orderedItems: [url.toString()],
   });
 
-  if (existingItem) {
+  if (!existingItem) {
     return;
   }
 
@@ -92,7 +92,7 @@ export async function removeItem(this: MongoDbAdapter, path: URL, url: URL) {
     items: [url.toString()],
   });
 
-  if (existingItem) {
+  if (!existingItem) {
     return;
   }
 
