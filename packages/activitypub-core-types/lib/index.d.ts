@@ -4,6 +4,7 @@ export declare type Plugin = {
     handleOutboxActivity?: Function;
     generateActorId?: Function;
     getHomePageProps?: Function;
+    getEntityPageProps?: Function;
 };
 export declare type AuthAdapter = {
     createUser: Function;

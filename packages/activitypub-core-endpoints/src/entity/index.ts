@@ -169,14 +169,31 @@ export class EntityGetEndpoint {
       return;
     } else {
       this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
-      this.res.write(
-        await render({
-          entity: convertUrlsToStrings(entity),
-          actor: convertUrlsToStrings(authorizedActor) as AP.Actor,
-        }),
-      );
-    }
 
-    this.res.end();
+      let props = {
+        entity,
+        actor: authorizedActor,
+      };
+
+      if (this.plugins) {
+        for (const plugin of this.plugins) {
+          if ('getHomePageProps' in plugin && plugin.getHomePageProps) {
+            props = {
+              ...props,
+              ...(await plugin.getEntityPageProps(entity)),
+            };
+          }
+        }
+      }
+
+      const formattedProps = Object.fromEntries(Object.entries(props).map(([key, value]) => {
+        return [key, convertUrlsToStrings(value)];
+      }));
+
+      this.res.write(
+        await render(formattedProps),
+      );
+      this.res.end();
+    }
   }
 }
