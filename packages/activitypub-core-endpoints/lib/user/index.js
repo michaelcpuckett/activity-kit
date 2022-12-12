@@ -66,29 +66,38 @@ class UserPostEndpoint {
             this.res.end();
             return;
         }
-        const user = await this.adapters.auth.createUser({
-            email,
-            password,
-            preferredUsername,
-        });
-        const isBotCreated = !!(await this.adapters.db.findOne('entity', {
-            preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
-        }));
-        if (!isBotCreated) {
-            await this.createServerActor();
+        try {
+            const user = await this.adapters.auth.createUser({
+                email,
+                password,
+                preferredUsername,
+            });
+            const isBotCreated = !!(await this.adapters.db.findOne('entity', {
+                preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
+            }));
+            if (!isBotCreated) {
+                await this.createServerActor();
+            }
+            await this.createUserActor({
+                uid: user.uid,
+                type,
+                email,
+                preferredUsername,
+                name,
+            });
+            this.res.statusCode = 200;
+            this.res.write(JSON.stringify({
+                success: true,
+            }));
+            this.res.end();
         }
-        await this.createUserActor({
-            uid: user.uid,
-            type,
-            email,
-            preferredUsername,
-            name,
-        });
-        this.res.statusCode = 200;
-        this.res.write(JSON.stringify({
-            success: true,
-        }));
-        this.res.end();
+        catch (error) {
+            this.res.statusCode = 300;
+            this.res.write(JSON.stringify({
+                error: error.toString(),
+            }));
+            this.res.end();
+        }
     }
 }
 exports.UserPostEndpoint = UserPostEndpoint;
