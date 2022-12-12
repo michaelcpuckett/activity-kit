@@ -60,6 +60,7 @@ export class UserPostEndpoint {
       this.res.write(
         JSON.stringify({
           error: 'Email is required.',
+          field: 'email',
         }),
       );
       this.res.end();
@@ -71,6 +72,7 @@ export class UserPostEndpoint {
       this.res.write(
         JSON.stringify({
           error: 'Password is required.',
+          field: 'password',
         }),
       );
       this.res.end();
@@ -82,6 +84,7 @@ export class UserPostEndpoint {
       this.res.write(
         JSON.stringify({
           error: 'Username is required.',
+          field: 'username',
         }),
       );
       this.res.end();
@@ -97,6 +100,7 @@ export class UserPostEndpoint {
       this.res.write(
         JSON.stringify({
           error: 'Username taken.',
+          field: 'username',
         }),
       );
       this.res.end();

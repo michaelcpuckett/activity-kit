@@ -35,6 +35,7 @@ class UserPostEndpoint {
             this.res.statusCode = 300;
             this.res.write(JSON.stringify({
                 error: 'Email is required.',
+                field: 'email',
             }));
             this.res.end();
             return;
@@ -43,6 +44,7 @@ class UserPostEndpoint {
             this.res.statusCode = 300;
             this.res.write(JSON.stringify({
                 error: 'Password is required.',
+                field: 'password',
             }));
             this.res.end();
             return;
@@ -51,6 +53,7 @@ class UserPostEndpoint {
             this.res.statusCode = 300;
             this.res.write(JSON.stringify({
                 error: 'Username is required.',
+                field: 'username',
             }));
             this.res.end();
             return;
@@ -62,6 +65,7 @@ class UserPostEndpoint {
             this.res.statusCode = 409;
             this.res.write(JSON.stringify({
                 error: 'Username taken.',
+                field: 'username',
             }));
             this.res.end();
             return;
