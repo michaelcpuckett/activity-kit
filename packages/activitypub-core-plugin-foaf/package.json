@@ -28,5 +28,6 @@
     "activitypub-core-endpoints": "^0.0.288",
     "activitypub-core-types": "^0.0.288",
     "activitypub-core-utilities": "^0.0.288"
-  }
+  },
+  "gitHead": "237f2c816e3c96fa691f99af85300a3a9884745a"
 }

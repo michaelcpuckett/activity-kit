@@ -32,5 +32,6 @@
   },
   "devDependencies": {
     "@types/oidc-provider": "^7.12.0"
-  }
+  },
+  "gitHead": "237f2c816e3c96fa691f99af85300a3a9884745a"
 }

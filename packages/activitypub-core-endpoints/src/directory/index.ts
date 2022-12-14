@@ -41,9 +41,9 @@ export class DirectoryGetEndpoint {
       type: 'Group',
     });
 
-    const groupsWithFollowers = await Promise.all(groups.map(async (group) => convertUrlsToStrings({
-      ...group,
-      followers: await this.adapters.db.findEntityById(getId(group.followers)),
+    const groupsWithFollowers = await Promise.all(groups.map(async (group) => ({
+      ...convertUrlsToStrings(group),
+      followers: convertUrlsToStrings(await this.adapters.db.findEntityById(getId(group.followers))),
     }))) as AP.Group[];
 
     this.res.statusCode = 200;
