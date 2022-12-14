@@ -58,7 +58,7 @@ export class WebfingerGetEndpoint {
     
     const actor = await this.adapters.db.findOne('entity', {
       preferredUsername: username,
-    });
+    }).collation( { locale: 'en', strength: 1 } );
 
     if (!actor) {
       return this.handleNotFound();
