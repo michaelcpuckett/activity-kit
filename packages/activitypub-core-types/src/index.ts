@@ -35,6 +35,10 @@ export type DbAdapter = {
   saveString: Function;
 };
 
+export const DbOptions = {
+  CASE_INSENSITIVE: 'CASE_INSENSITIVE',
+} as const;
+
 export interface StorageAdapter {
   upload: Function;
 }

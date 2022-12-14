@@ -31,6 +31,9 @@ export declare type DbAdapter = {
     saveEntity: Function;
     saveString: Function;
 };
+export declare const DbOptions: {
+    readonly CASE_INSENSITIVE: "CASE_INSENSITIVE";
+};
 export interface StorageAdapter {
     upload: Function;
 }

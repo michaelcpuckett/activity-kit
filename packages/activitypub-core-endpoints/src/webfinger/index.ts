@@ -9,8 +9,8 @@ import {
   LOCAL_HOSTNAME,
   XRD_CONTENT_TYPE,
 } from 'activitypub-core-utilities';
-import * as queryString from 'query-string';
 import type { DbAdapter, Plugin } from 'activitypub-core-types';
+import {DbOptions} from 'activitypub-core-types';
 
 export class WebfingerGetEndpoint {
   req: IncomingMessage;
@@ -58,7 +58,7 @@ export class WebfingerGetEndpoint {
     
     const actor = await this.adapters.db.findOne('entity', {
       preferredUsername: username,
-    }).collation( { locale: 'en', strength: 1 } );
+    }, [DbOptions.CASE_INSENSITIVE]);
 
     if (!actor) {
       return this.handleNotFound();

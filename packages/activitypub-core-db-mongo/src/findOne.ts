@@ -1,16 +1,29 @@
 import { MongoDbAdapter } from '.';
-import { AP } from 'activitypub-core-types';
+import { AP, DbOptions } from 'activitypub-core-types';
 import {
-  convertStringsToUrls,
-  getTypedEntity,
+  convertStringsToUrls
 } from 'activitypub-core-utilities';
 
 export async function findOne(
   this: MongoDbAdapter,
   collection: string,
   matchingObject: { [key: string]: unknown },
+  options?: typeof DbOptions[keyof typeof DbOptions]
 ): Promise<AP.Entity | null> {
-  const value = await this.db.collection(collection).findOne(matchingObject);
+  let value = null;
+
+  if (options && options.includes(DbOptions.CASE_INSENSITIVE)) {
+    const cursor = this.db.collection(collection).find(matchingObject).collation({ locale: 'en', strength: 1 });
+    const results = await cursor.toArray();
+
+    if (results.length) {
+      value = results[0];
+    }
+  }
+
+  if (!value) {
+    value = await this.db.collection(collection).findOne(matchingObject);
+  }
 
   if (!value) {
     return null;

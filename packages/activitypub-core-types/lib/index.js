@@ -26,7 +26,10 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AP = void 0;
+exports.DbOptions = exports.AP = void 0;
 exports.AP = __importStar(require("./activitypub"));
 __exportStar(require("./assertions"), exports);
+exports.DbOptions = {
+    CASE_INSENSITIVE: 'CASE_INSENSITIVE',
+};
 //# sourceMappingURL=index.js.map
