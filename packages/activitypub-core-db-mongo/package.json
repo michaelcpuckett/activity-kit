@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-db-mongo",
-  "version": "0.0.287",
+  "version": "0.0.288",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -28,9 +28,9 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "activitypub-core-delivery": "^0.0.287",
-    "activitypub-core-types": "^0.0.287",
-    "activitypub-core-utilities": "^0.0.287"
+    "activitypub-core-delivery": "^0.0.288",
+    "activitypub-core-types": "^0.0.288",
+    "activitypub-core-utilities": "^0.0.288"
   },
   "devDependencies": {
     "@types/jest": "^29.1.2",
