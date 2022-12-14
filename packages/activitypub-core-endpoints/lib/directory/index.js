@@ -27,6 +27,7 @@ class DirectoryGetEndpoint {
         this.res.statusCode = 200;
         this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);
         this.res.write(await render({
+            currentUrl: this.req.url,
             groups: groupsWithFollowers,
         }));
         this.res.end();

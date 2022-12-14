@@ -50,6 +50,7 @@ export class DirectoryGetEndpoint {
     this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
     this.res.write(
       await render({
+        currentUrl: this.req.url,
         groups: groupsWithFollowers,
       }),
     );
