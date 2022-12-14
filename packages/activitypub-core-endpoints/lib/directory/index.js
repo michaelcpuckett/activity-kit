@@ -22,7 +22,7 @@ class DirectoryGetEndpoint {
         });
         const groupsWithFollowers = await Promise.all(groups.map(async (group) => (0, activitypub_core_utilities_2.convertUrlsToStrings)({
             ...group,
-            followers: await this.adapters.db.findEntityById(group.followers),
+            followers: await this.adapters.db.findEntityById((0, activitypub_core_utilities_1.getId)(group.followers)),
         })));
         this.res.statusCode = 200;
         this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.HTML_CONTENT_TYPE);

@@ -1,6 +1,7 @@
 import { AP, Plugin } from 'activitypub-core-types';
 import {
   CONTENT_TYPE_HEADER,
+  getId,
   HTML_CONTENT_TYPE,
   LOCAL_DOMAIN,
 } from 'activitypub-core-utilities';
@@ -42,7 +43,7 @@ export class DirectoryGetEndpoint {
 
     const groupsWithFollowers = await Promise.all(groups.map(async (group) => convertUrlsToStrings({
       ...group,
-      followers: await this.adapters.db.findEntityById(group.followers),
+      followers: await this.adapters.db.findEntityById(getId(group.followers)),
     }))) as AP.Group[];
 
     this.res.statusCode = 200;
