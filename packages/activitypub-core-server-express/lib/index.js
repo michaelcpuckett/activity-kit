@@ -46,7 +46,7 @@ const activityPub = (config) => async (req, res, next) => {
             next();
             return;
         }
-        if (req.url === '/directory') {
+        if (req.url.startsWith('/directory')) {
             await new activitypub_core_endpoints_1.DirectoryGetEndpoint(req, res, config.adapters, config.plugins).respond(config.pages.directory);
             next();
             return;

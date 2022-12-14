@@ -134,7 +134,7 @@ export const activityPub =
         return;
       }
 
-      if (req.url === '/directory') {
+      if (req.url.startsWith('/directory')) {
         await new DirectoryGetEndpoint(
           req,
           res,
