@@ -1,4 +1,4 @@
-import { Plugin } from 'activitypub-core-types';
+import { AP, Plugin } from 'activitypub-core-types';
 import {
   CONTENT_TYPE_HEADER,
   HTML_CONTENT_TYPE,
@@ -36,15 +36,20 @@ export class DirectoryGetEndpoint {
   }
 
   public async respond(render: Function) {
-    const groups = await this.adapters.db.findAll('entity', {
+    const groups: AP.Group[] = await this.adapters.db.findAll('entity', {
       type: 'Group',
     });
+
+    const groupsWithFollowers = await Promise.all(groups.map(async (group) => convertUrlsToStrings({
+      ...group,
+      followers: await this.adapters.db.findEntityById(group.followers),
+    }))) as AP.Group[];
 
     this.res.statusCode = 200;
     this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
     this.res.write(
       await render({
-        groups: convertUrlsToStrings(groups),
+        groups: groupsWithFollowers,
       }),
     );
     this.res.end();
