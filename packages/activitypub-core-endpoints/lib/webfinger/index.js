@@ -40,7 +40,7 @@ class WebfingerGetEndpoint {
         if (this.req.headers.accept?.includes(activitypub_core_utilities_1.JSON_CONTENT_TYPE) ||
             this.req.headers.accept?.includes(activitypub_core_utilities_1.JRD_CONTENT_TYPE)) {
             const finger = {
-                subject: `acct:${username}@${activitypub_core_utilities_1.LOCAL_HOSTNAME}`,
+                subject: `acct:${actor.preferredUsername}@${activitypub_core_utilities_1.LOCAL_HOSTNAME}`,
                 aliases: [
                     actor.url.toString(),
                 ],

@@ -71,7 +71,7 @@ export class WebfingerGetEndpoint {
       this.req.headers.accept?.includes(JRD_CONTENT_TYPE)
     ) {
       const finger = {
-        subject: `acct:${username}@${LOCAL_HOSTNAME}`,
+        subject: `acct:${actor.preferredUsername}@${LOCAL_HOSTNAME}`,
         aliases: [
           actor.url.toString(),
         ],
