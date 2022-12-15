@@ -72,9 +72,6 @@ export async function handleFollow(this: InboxPostEndpoint) {
     throw new Error('Bad followers collection: Not found.');
   }
 
-  console.log(followers);
-  console.log('followers^ on follow')
-
   // Already a follower.
   if (followers.items.map((id: URL) => id.toString()).includes(getId(follower).toString())) {
     console.log('NOTE: ALREADY A FOLLOWER.');

@@ -49,8 +49,6 @@ async function handleFollow() {
     if (!followers) {
         throw new Error('Bad followers collection: Not found.');
     }
-    console.log(followers);
-    console.log('followers^ on follow');
     if (followers.items.map((id) => id.toString()).includes((0, activitypub_core_utilities_4.getId)(follower).toString())) {
         console.log('NOTE: ALREADY A FOLLOWER.');
         return;
