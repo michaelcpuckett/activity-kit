@@ -24,4 +24,6 @@ export declare const activityPub: (config: {
         storage: StorageAdapter;
     };
     plugins?: Plugin[];
-}) => (req: IncomingMessage, res: ServerResponse, next: NextFunction) => Promise<void>;
+}) => (req: IncomingMessage & {
+    hostname: string;
+}, res: ServerResponse, next: NextFunction) => Promise<void>;
