@@ -66,11 +66,14 @@ export async function handleFollow(this: InboxPostEndpoint) {
     throw new Error('Bad followee: No followers ID.');
   }
 
-  const followers = await this.adapters.db.fetchEntityById(followersId);
+  const followers = await this.adapters.db.findEntityById(followersId);
 
   if (!followers) {
     throw new Error('Bad followers collection: Not found.');
   }
+
+  console.log(followers);
+  console.log('followers^ on follow')
 
   // Already a follower.
   if (followers.items.map((id: URL) => id.toString()).includes(getId(follower).toString())) {
