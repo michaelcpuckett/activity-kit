@@ -40,7 +40,7 @@ class InboxPostEndpoint {
         if (!('actor' in this.activity)) {
             return;
         }
-        const streams = await Promise.all(this.actor.streams.map(async (stream) => await this.adapters.db.fetchEntityById(stream)));
+        const streams = await Promise.all(this.actor.streams.map(async (stream) => await this.adapters.db.queryEntityById(stream)));
         const blocks = streams.find((stream) => {
             if (stream.name === 'Blocks') {
                 return true;

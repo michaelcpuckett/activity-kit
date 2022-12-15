@@ -54,7 +54,7 @@ async function handleFollow() {
         return;
     }
     if (this.actor.manuallyApprovesFollowers) {
-        const streams = await Promise.all(this.actor.streams.map(async (stream) => await this.adapters.db.fetchEntityById(stream)));
+        const streams = await Promise.all(this.actor.streams.map(async (stream) => await this.adapters.db.queryEntityById(stream)));
         const requests = streams.find((stream) => {
             if (stream.name === 'Requests') {
                 return true;
