@@ -8,6 +8,10 @@ export function applyContext(entity: AP.Entity): AP.Entity {
       entity['@context'] = [
         new URL(ACTIVITYSTREAMS_CONTEXT),
         new URL(W3ID_SECURITY_CONTEXT),
+        {
+          "PropertyValue": "https://schema.org/PropertyValue",
+          "value": "https://schema.org/value"
+        }
       ];
     } else {
       entity['@context'] = new URL(ACTIVITYSTREAMS_CONTEXT);

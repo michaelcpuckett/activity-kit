@@ -1,5 +1,5 @@
 import * as jsonld from 'jsonld';
-import { ACTIVITYSTREAMS_CONTEXT } from './globals';
+import { ACTIVITYSTREAMS_CONTEXT, W3ID_SECURITY_CONTEXT } from './globals';
 import { convertStringsToUrls } from './convertStringsToUrls';
 
 declare module 'jsonld' {
@@ -482,7 +482,14 @@ const customLoader = async (url: string) => {
 };
 
   const result = await jsonld.compact(entity, {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+    '@context': [
+      ACTIVITYSTREAMS_CONTEXT,
+      W3ID_SECURITY_CONTEXT,
+      {
+        "PropertyValue": "https://schema.org/PropertyValue",
+        "value": "https://schema.org/value",
+      },
+    ]
   }, {documentLoader: customLoader});
 
   if (!result) {
