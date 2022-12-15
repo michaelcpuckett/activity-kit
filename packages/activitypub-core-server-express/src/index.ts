@@ -54,7 +54,7 @@ export const activityPub =
     plugins?: Plugin[];
   }) =>
   async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
-    console.log('INCOMING:', req.url);
+    console.log('INCOMING:', req.url, req.headers.host, req.headers.origin);
 
     if (req.method === 'POST') {
       if (req.url === '/user') {
