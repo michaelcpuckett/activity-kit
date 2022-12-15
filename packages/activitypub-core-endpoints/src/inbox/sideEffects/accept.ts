@@ -65,7 +65,7 @@ export async function handleAccept(this: InboxPostEndpoint) {
     throw new Error('Bad followee: No following collection.');
   }
 
-  const following = await this.adapters.db.queryEntityById(followingId);
+  const following = await this.adapters.db.queryById(followingId);
 
   if (!following) {
     throw new Error('Bad followers collection: Not found.');
