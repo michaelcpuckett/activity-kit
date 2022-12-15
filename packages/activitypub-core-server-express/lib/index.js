@@ -4,7 +4,7 @@ exports.activityPub = void 0;
 const activitypub_core_endpoints_1 = require("activitypub-core-endpoints");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activityPub = (config) => async (req, res, next) => {
-    console.log('INCOMING:', req.url);
+    console.log('INCOMING:', req.url, req.headers.host, req.headers.origin);
     if (req.method === 'POST') {
         if (req.url === '/user') {
             await new activitypub_core_endpoints_1.UserPostEndpoint(req, res, config.adapters, config.plugins).respond();
