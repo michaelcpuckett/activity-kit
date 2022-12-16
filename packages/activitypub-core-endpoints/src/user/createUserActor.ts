@@ -197,6 +197,10 @@ export async function createUserActor(
     '@context': [
       ACTIVITYSTREAMS_CONTEXT,
       W3ID_SECURITY_CONTEXT,
+      {
+        "PropertyValue": "https://schema.org/PropertyValue",
+        "value": "https://schema.org/value",
+      },
     ],
     id: new URL(id),
     url: new URL(id),

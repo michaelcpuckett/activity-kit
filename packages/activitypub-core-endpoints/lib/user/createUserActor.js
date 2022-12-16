@@ -167,6 +167,10 @@ async function createUserActor(user) {
         '@context': [
             activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
             activitypub_core_utilities_1.W3ID_SECURITY_CONTEXT,
+            {
+                "PropertyValue": "https://schema.org/PropertyValue",
+                "value": "https://schema.org/value",
+            },
         ],
         id: new URL(id),
         url: new URL(id),

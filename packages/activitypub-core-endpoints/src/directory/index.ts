@@ -43,6 +43,7 @@ export class DirectoryGetEndpoint {
 
     const groupsWithFollowers = await Promise.all(groups.map(async (group) => ({
       ...convertUrlsToStrings(group),
+      shared: convertUrlsToStrings(await this.adapters.db.findEntityById(getId(group.streams.find(stream => `${stream}`.endsWith('shared'))))),
       followers: convertUrlsToStrings(await this.adapters.db.findEntityById(getId(group.followers))),
     }))) as AP.Group[];
 
