@@ -496,7 +496,14 @@ const convertFromJsonLd = async (entity) => {
         return nodeDocumentLoader(url);
     };
     const result = await jsonld.compact(entity, {
-        '@context': globals_1.ACTIVITYSTREAMS_CONTEXT,
+        '@context': [
+            globals_1.ACTIVITYSTREAMS_CONTEXT,
+            globals_1.W3ID_SECURITY_CONTEXT,
+            {
+                "PropertyValue": "https://schema.org/PropertyValue",
+                "value": "https://schema.org/value",
+            }
+        ],
     }, { documentLoader: customLoader });
     if (!result) {
         return null;

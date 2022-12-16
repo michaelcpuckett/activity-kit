@@ -10,6 +10,10 @@ function applyContext(entity) {
             entity['@context'] = [
                 new URL(globals_1.ACTIVITYSTREAMS_CONTEXT),
                 new URL(globals_1.W3ID_SECURITY_CONTEXT),
+                {
+                    "PropertyValue": "https://schema.org/PropertyValue",
+                    "value": "https://schema.org/value"
+                }
             ];
         }
         else {

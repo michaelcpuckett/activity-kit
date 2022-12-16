@@ -488,9 +488,9 @@ const customLoader = async (url: string) => {
       {
         "PropertyValue": "https://schema.org/PropertyValue",
         "value": "https://schema.org/value",
-      },
-    ]
-  }, {documentLoader: customLoader});
+      }
+    ],
+  } as jsonld.ContextDefinition, {documentLoader: customLoader});
 
   if (!result) {
     return null;
