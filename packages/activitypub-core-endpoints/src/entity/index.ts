@@ -54,6 +54,49 @@ export class EntityGetEndpoint {
     };
   }
 
+  protected async handleFoundEntity(render: Function, entity: AP.Entity, authorizedActor?: AP.Actor) {
+    if (
+      this.req.headers.accept?.includes(ACTIVITYSTREAMS_CONTENT_TYPE) ||
+      this.req.headers.accept?.includes(LINKED_DATA_CONTENT_TYPE) ||
+      this.req.headers.accept?.includes(JSON_CONTENT_TYPE)
+    ) {
+      this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
+      this.res.write(stringify(entity));
+    } else {
+      this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
+
+      let props = {
+        entity,
+        actor: authorizedActor,
+      };
+
+      if (this.plugins) {
+        for (const plugin of this.plugins) {
+          if ('getEntityPageProps' in plugin && plugin.getEntityPageProps) {
+            props = {
+              ...props,
+              ...(await plugin.getEntityPageProps(entity)),
+            };
+          }
+        }
+      }
+
+      const formattedProps = Object.fromEntries(Object.entries(props).map(([key, value]) => {
+        if (typeof value === 'object') {
+          return [key, convertUrlsToStrings(value)];
+        } else {
+          return [key, value];
+        }
+      }));
+
+      this.res.write(
+        await render(formattedProps),
+      );
+    }
+    
+    this.res.end();
+  }
+
   protected handleNotFound() {
     this.res.statusCode = 400;
     this.res.write('Not found');
@@ -86,133 +129,90 @@ export class EntityGetEndpoint {
     this.res.setHeader('Vary', 'Accept');
     this.res.statusCode = 200;
 
-    if (
-      this.req.headers.accept?.includes(ACTIVITYSTREAMS_CONTENT_TYPE) ||
-      this.req.headers.accept?.includes(LINKED_DATA_CONTENT_TYPE) ||
-      this.req.headers.accept?.includes(JSON_CONTENT_TYPE)
-    ) {
-      // TODO sign HTTP signature?
+    if (!isTypeOf(entity, AP.CollectionTypes) && !isTypeOf(entity, AP.CollectionPageTypes)) {
+      this.handleFoundEntity(render, entity, authorizedActor);
+      return;
+    }
 
-      this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
+    // Otherwise, handle the collection.
 
-      // If not a collection or collection page, just send the entity as-is.
+    const isOrderedCollection = isType(entity, AP.CollectionTypes.ORDERED_COLLECTION);
+    const lagePageIndex = Math.max(1, Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE));
+    const query = this.url.searchParams;
+    const page = query.get('page');
+    const current = query.has('current');
 
-      if (!isTypeOf(entity, AP.CollectionTypes) && !isTypeOf(entity, AP.CollectionPageTypes)) {
-        this.res.write(stringify(entity));
-        this.res.end();
-        return;
-      }
-
-      // Otherwise, handle the collection.
-
-      const isOrderedCollection = isType(entity, AP.CollectionTypes.ORDERED_COLLECTION);
-      const lagePageIndex = Math.max(1, Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE));
-      const query = this.url.searchParams;
-      const page = query.get('page');
-      const current = query.has('current');
-
-      if (!page) {
-        if (isOrderedCollection) {
-          delete entity.orderedItems;
-        } else {
-          delete entity.items;
-        }
-
-        this.res.write(stringify({
-          ...entity,
-          first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
-          last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
-          current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
-        }));
-
-        this.res.end();
-        return;
-      }
-
-      // Treated as a CollectionPage.
-
-      const currentPage = Number(page);
-      const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE + 1;
-
-      if (!currentPage) {
-        throw new Error('Bad query string value: not a number.');
-      }
-
-      const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'].slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE)[current ? 'reverse' : 'slice']().map(async (id: URL) => {
-        return await this.adapters.db.queryById(id);
-      }));
-
-      const items = [];
-
-      for (const item of expandedItems) {
-        if (item) {
-          if (item instanceof URL) {
-            items.push(item);
-          } else {
-            if (isTypeOf(item, AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
-              const object = await this.adapters.db.findEntityById(item.object);
-
-              if (object) {
-                item.object = object;
-              }
-            }
-
-            items.push(item);
-          }
-        }
-      }
-
-      this.res.write(stringify({
+    if (!page) {
+      const collectionEntity = {
         ...entity,
-        type: isOrderedCollection ? AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE : AP.CollectionPageTypes.COLLECTION_PAGE,
-        [isOrderedCollection ? 'orderedItems' : 'items']: items,
-        ...isOrderedCollection ? {
-          startIndex: firstItemIndex,
-        } : null,
-        partOf: `${LOCAL_DOMAIN}${this.url.pathname}${current ? '&current' : ''}`,
-        ...(currentPage > 1) ? {
-          prev: `${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage - 1}${current ? '&current' : ''}`
-        } : null,
-        ...(currentPage < lagePageIndex) ? {
-          next: `${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage + 1}${current ? '&current' : ''}`
-        } : null,
         first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
         last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
         current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
-      }));
-      this.res.end();
-      return;
-    } else {
-      this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
-
-      let props = {
-        entity,
-        actor: authorizedActor,
       };
-
-      if (this.plugins) {
-        for (const plugin of this.plugins) {
-          if ('getHomePageProps' in plugin && plugin.getHomePageProps) {
-            props = {
-              ...props,
-              ...(await plugin.getEntityPageProps(entity)),
-            };
-          }
-        }
+      
+      if (isOrderedCollection) {
+        delete collectionEntity.orderedItems;
+      } else {
+        delete collectionEntity.items;
       }
 
-      const formattedProps = Object.fromEntries(Object.entries(props).map(([key, value]) => {
-        if (typeof value === 'object') {
-          return [key, convertUrlsToStrings(value)];
-        } else {
-          return [key, value];
-        }
-      }));
+      this.handleFoundEntity(render, collectionEntity, authorizedActor);
 
-      this.res.write(
-        await render(formattedProps),
-      );
-      this.res.end();
+      return;
     }
+
+    // Treated as a CollectionPage.
+
+    const currentPage = Number(page);
+    const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE + 1;
+
+    if (!currentPage) {
+      throw new Error('Bad query string value: not a number.');
+    }
+
+    const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'].slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE)[current ? 'reverse' : 'slice']().map(async (id: URL) => {
+      return await this.adapters.db.queryById(id);
+    }));
+
+    const items = [];
+
+    for (const item of expandedItems) {
+      if (item) {
+        if (item instanceof URL) {
+          items.push(item);
+        } else {
+          if (isTypeOf(item, AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
+            const object = await this.adapters.db.findEntityById(item.object);
+
+            if (object) {
+              item.object = object;
+            }
+          }
+
+          items.push(item);
+        }
+      }
+    }
+
+    const collectionPageEntity = {
+      ...entity,
+      type: isOrderedCollection ? AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE : AP.CollectionPageTypes.COLLECTION_PAGE,
+      [isOrderedCollection ? 'orderedItems' : 'items']: items,
+      ...isOrderedCollection ? {
+        startIndex: firstItemIndex,
+      } : null,
+      partOf: `${LOCAL_DOMAIN}${this.url.pathname}${current ? '&current' : ''}`,
+      ...(currentPage > 1) ? {
+        prev: `${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage - 1}${current ? '&current' : ''}`
+      } : null,
+      ...(currentPage < lagePageIndex) ? {
+        next: `${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage + 1}${current ? '&current' : ''}`
+      } : null,
+      first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
+      last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
+      current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
+    };
+
+    this.handleFoundEntity(render, collectionPageEntity, authorizedActor);
   }
 }
