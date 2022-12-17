@@ -132,7 +132,7 @@ export class EntityGetEndpoint {
       // Treated as a CollectionPage.
 
       const currentPage = Number(page);
-      const firstItemIndex = currentPage * ITEMS_PER_COLLECTION_PAGE;
+      const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE + 1;
 
       if (!currentPage) {
         throw new Error('Bad query string value: not a number.');
