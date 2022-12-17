@@ -112,18 +112,18 @@ export class EntityGetEndpoint {
       const current = query.has('current');
 
       if (!page) {
+        if (isOrderedCollection) {
+          delete entity.orderedItems;
+        } else {
+          delete entity.items;
+        }
+
         this.res.write(stringify({
           ...entity,
           first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
           last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
           current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
         }));
-
-        if (isOrderedCollection) {
-          delete entity.orderedItems;
-        } else {
-          delete entity.items;
-        }
 
         this.res.end();
         return;

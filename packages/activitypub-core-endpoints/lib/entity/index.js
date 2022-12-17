@@ -66,18 +66,18 @@ class EntityGetEndpoint {
             const page = query.get('page');
             const current = query.has('current');
             if (!page) {
-                this.res.write((0, activitypub_core_utilities_3.stringify)({
-                    ...entity,
-                    first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
-                    last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
-                    current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
-                }));
                 if (isOrderedCollection) {
                     delete entity.orderedItems;
                 }
                 else {
                     delete entity.items;
                 }
+                this.res.write((0, activitypub_core_utilities_3.stringify)({
+                    ...entity,
+                    first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
+                    last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
+                    current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
+                }));
                 this.res.end();
                 return;
             }
