@@ -42,7 +42,7 @@ class EntityGetEndpoint {
     async respond(render) {
         const cookies = cookie_1.default.parse(this.req.headers.cookie ?? '');
         const authorizedActor = await this.adapters.db.getActorByUserId(await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''));
-        const entity = await this.adapters.db.findEntityById(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}`);
+        const entity = await this.adapters.db.findEntityById(new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}`));
         if (!entity) {
             return this.handleNotFound();
         }
