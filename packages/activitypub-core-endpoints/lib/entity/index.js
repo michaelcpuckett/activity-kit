@@ -72,6 +72,12 @@ class EntityGetEndpoint {
                     last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
                     current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
                 }));
+                if (isOrderedCollection) {
+                    delete entity.orderedItems;
+                }
+                else {
+                    delete entity.items;
+                }
                 this.res.end();
                 return;
             }

@@ -103,7 +103,7 @@ export class EntityGetEndpoint {
         return;
       }
 
-      // Otherwise, paginate the collection.
+      // Otherwise, handle the collection.
 
       const isOrderedCollection = isType(entity, AP.CollectionTypes.ORDERED_COLLECTION);
       const lagePageIndex = Math.max(1, Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE));
@@ -118,9 +118,18 @@ export class EntityGetEndpoint {
           last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
           current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
         }));
+
+        if (isOrderedCollection) {
+          delete entity.orderedItems;
+        } else {
+          delete entity.items;
+        }
+
         this.res.end();
         return;
       }
+
+      // Treated as a CollectionPage.
 
       const currentPage = Number(page);
       const firstItemIndex = currentPage * ITEMS_PER_COLLECTION_PAGE;
