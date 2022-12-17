@@ -105,9 +105,8 @@ export class EntityGetEndpoint {
 
       // Otherwise, paginate the collection.
 
-      const isOrderedCollection = isType(entity, AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE);
-      const lagePageIndex = Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE);
-
+      const isOrderedCollection = isType(entity, AP.CollectionTypes.ORDERED_COLLECTION);
+      const lagePageIndex = Math.max(1, Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE));
       const query = this.url.searchParams;
       const page = query.get('page');
       const current = query.get('current');

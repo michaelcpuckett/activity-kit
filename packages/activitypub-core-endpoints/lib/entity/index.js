@@ -60,8 +60,8 @@ class EntityGetEndpoint {
                 this.res.end();
                 return;
             }
-            const isOrderedCollection = (0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE);
-            const lagePageIndex = Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE);
+            const isOrderedCollection = (0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
+            const lagePageIndex = Math.max(1, Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE));
             const query = this.url.searchParams;
             const page = query.get('page');
             const current = query.get('current');
