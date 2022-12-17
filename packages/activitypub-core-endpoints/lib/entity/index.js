@@ -65,21 +65,11 @@ class EntityGetEndpoint {
             const query = this.url.searchParams;
             const page = query.get('page');
             const current = query.has('current');
-            if (!page && !current) {
-                this.res.write((0, activitypub_core_utilities_3.stringify)({
-                    ...entity,
-                    first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1`,
-                    last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}`,
-                    current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
-                }));
-                this.res.end();
-                return;
-            }
             if (!page) {
                 this.res.write((0, activitypub_core_utilities_3.stringify)({
                     ...entity,
-                    first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1&current`,
-                    last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}&current`,
+                    first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
+                    last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
                     current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
                 }));
                 this.res.end();

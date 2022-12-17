@@ -111,22 +111,11 @@ export class EntityGetEndpoint {
       const page = query.get('page');
       const current = query.has('current');
 
-      if (!page && !current) {
-        this.res.write(stringify({
-          ...entity,
-          first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1`,
-          last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}`,
-          current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
-        }));
-        this.res.end();
-        return;
-      }
-
       if (!page) {
         this.res.write(stringify({
           ...entity,
-          first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1&current`,
-          last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}&current`,
+          first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
+          last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
           current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
         }));
         this.res.end();
