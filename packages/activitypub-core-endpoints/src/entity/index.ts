@@ -161,7 +161,8 @@ export class EntityGetEndpoint {
     // Treated as a CollectionPage.
 
     const currentPage = Number(page);
-    const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE + 1;
+    const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE;
+    const startIndex = firstItemIndex + 1;
 
     if (!currentPage) {
       throw new Error('Bad query string value: not a number.');
@@ -198,7 +199,7 @@ export class EntityGetEndpoint {
       type: isOrderedCollection ? AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE : AP.CollectionPageTypes.COLLECTION_PAGE,
       [isOrderedCollection ? 'orderedItems' : 'items']: items,
       ...isOrderedCollection ? {
-        startIndex: firstItemIndex,
+        startIndex,
       } : null,
       partOf: `${LOCAL_DOMAIN}${this.url.pathname}${current ? '?current' : ''}`,
       ...(currentPage > 1) ? {

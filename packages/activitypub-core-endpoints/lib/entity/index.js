@@ -110,7 +110,8 @@ class EntityGetEndpoint {
             return this.handleFoundEntity(render, collectionEntity, authorizedActor);
         }
         const currentPage = Number(page);
-        const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE + 1;
+        const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE;
+        const startIndex = firstItemIndex + 1;
         if (!currentPage) {
             throw new Error('Bad query string value: not a number.');
         }
@@ -141,7 +142,7 @@ class EntityGetEndpoint {
             type: isOrderedCollection ? activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE : activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE,
             [isOrderedCollection ? 'orderedItems' : 'items']: items,
             ...isOrderedCollection ? {
-                startIndex: firstItemIndex,
+                startIndex,
             } : null,
             partOf: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}${current ? '?current' : ''}`,
             ...(currentPage > 1) ? {
