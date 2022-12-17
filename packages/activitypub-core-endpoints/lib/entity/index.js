@@ -136,12 +136,14 @@ class EntityGetEndpoint {
         }
         const collectionPageEntity = {
             ...entity,
+            id: new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage}${current ? '&current' : ''}`),
+            url: new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage}${current ? '&current' : ''}`),
             type: isOrderedCollection ? activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE : activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE,
             [isOrderedCollection ? 'orderedItems' : 'items']: items,
             ...isOrderedCollection ? {
                 startIndex: firstItemIndex,
             } : null,
-            partOf: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}${current ? '&current' : ''}`,
+            partOf: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}${current ? '?current' : ''}`,
             ...(currentPage > 1) ? {
                 prev: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage - 1}${current ? '&current' : ''}`
             } : null,

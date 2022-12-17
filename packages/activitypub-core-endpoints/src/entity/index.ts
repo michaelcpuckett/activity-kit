@@ -193,12 +193,14 @@ export class EntityGetEndpoint {
 
     const collectionPageEntity = {
       ...entity,
+      id: new URL(`${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage}${current ? '&current' : ''}`),
+      url: new URL(`${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage}${current ? '&current' : ''}`),
       type: isOrderedCollection ? AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE : AP.CollectionPageTypes.COLLECTION_PAGE,
       [isOrderedCollection ? 'orderedItems' : 'items']: items,
       ...isOrderedCollection ? {
         startIndex: firstItemIndex,
       } : null,
-      partOf: `${LOCAL_DOMAIN}${this.url.pathname}${current ? '&current' : ''}`,
+      partOf: `${LOCAL_DOMAIN}${this.url.pathname}${current ? '?current' : ''}`,
       ...(currentPage > 1) ? {
         prev: `${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage - 1}${current ? '&current' : ''}`
       } : null,
