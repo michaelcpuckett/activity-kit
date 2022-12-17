@@ -23,7 +23,7 @@ export declare class EntityGetEndpoint {
     protected handleNotFound(): {
         props: {};
     };
-    respond(render: Function): Promise<{
+    respond(render: Function): Promise<void | {
         props: {};
     }>;
 }

@@ -67,7 +67,7 @@ class EntityGetEndpoint {
         this.res.end();
     }
     handleNotFound() {
-        this.res.statusCode = 400;
+        this.res.statusCode = 404;
         this.res.write('Not found');
         this.res.end();
         return {
@@ -87,8 +87,7 @@ class EntityGetEndpoint {
         this.res.setHeader('Vary', 'Accept');
         this.res.statusCode = 200;
         if (!(0, activitypub_core_utilities_1.isTypeOf)(entity, activitypub_core_types_1.AP.CollectionTypes) && !(0, activitypub_core_utilities_1.isTypeOf)(entity, activitypub_core_types_1.AP.CollectionPageTypes)) {
-            this.handleFoundEntity(render, entity, authorizedActor);
-            return;
+            return this.handleFoundEntity(render, entity, authorizedActor);
         }
         const isOrderedCollection = (0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
         const lagePageIndex = Math.max(1, Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE));
@@ -108,8 +107,7 @@ class EntityGetEndpoint {
             else {
                 delete collectionEntity.items;
             }
-            this.handleFoundEntity(render, collectionEntity, authorizedActor);
-            return;
+            return this.handleFoundEntity(render, collectionEntity, authorizedActor);
         }
         const currentPage = Number(page);
         const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE + 1;
@@ -154,7 +152,7 @@ class EntityGetEndpoint {
             last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
             current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
         };
-        this.handleFoundEntity(render, collectionPageEntity, authorizedActor);
+        return this.handleFoundEntity(render, collectionPageEntity, authorizedActor);
     }
 }
 exports.EntityGetEndpoint = EntityGetEndpoint;

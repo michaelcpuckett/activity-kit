@@ -93,12 +93,12 @@ export class EntityGetEndpoint {
         await render(formattedProps),
       );
     }
-    
+
     this.res.end();
   }
 
   protected handleNotFound() {
-    this.res.statusCode = 400;
+    this.res.statusCode = 404;
     this.res.write('Not found');
     this.res.end();
 
@@ -130,8 +130,7 @@ export class EntityGetEndpoint {
     this.res.statusCode = 200;
 
     if (!isTypeOf(entity, AP.CollectionTypes) && !isTypeOf(entity, AP.CollectionPageTypes)) {
-      this.handleFoundEntity(render, entity, authorizedActor);
-      return;
+      return this.handleFoundEntity(render, entity, authorizedActor);
     }
 
     // Otherwise, handle the collection.
@@ -156,9 +155,7 @@ export class EntityGetEndpoint {
         delete collectionEntity.items;
       }
 
-      this.handleFoundEntity(render, collectionEntity, authorizedActor);
-
-      return;
+      return this.handleFoundEntity(render, collectionEntity, authorizedActor);
     }
 
     // Treated as a CollectionPage.
@@ -213,6 +210,6 @@ export class EntityGetEndpoint {
       current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
     };
 
-    this.handleFoundEntity(render, collectionPageEntity, authorizedActor);
+    return this.handleFoundEntity(render, collectionPageEntity, authorizedActor);
   }
 }
