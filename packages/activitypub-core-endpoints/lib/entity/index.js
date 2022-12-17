@@ -114,7 +114,7 @@ class EntityGetEndpoint {
         if (!currentPage) {
             throw new Error('Bad query string value: not a number.');
         }
-        const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'][current ? 'reverse' : 'slice']().slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE).map(async (id) => {
+        const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'][current ? 'slice' : 'reverse']().slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE).map(async (id) => {
             return await this.adapters.db.queryById(id);
         }));
         const items = [];
