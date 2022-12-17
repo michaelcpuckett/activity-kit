@@ -166,7 +166,7 @@ export class EntityGetEndpoint {
 
       this.res.write(stringify({
         ...entity,
-        items,
+        [isOrderedCollection ? 'orderedItems' : 'items']: items,
         ...isOrderedCollection ? {
           startIndex: firstItemIndex,
         } : null,

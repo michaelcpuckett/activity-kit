@@ -112,7 +112,7 @@ class EntityGetEndpoint {
             }
             this.res.write((0, activitypub_core_utilities_3.stringify)({
                 ...entity,
-                items,
+                [isOrderedCollection ? 'orderedItems' : 'items']: items,
                 ...isOrderedCollection ? {
                     startIndex: firstItemIndex,
                 } : null,
