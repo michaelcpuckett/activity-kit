@@ -102,6 +102,7 @@ class EntityGetEndpoint {
             }
             this.res.write((0, activitypub_core_utilities_3.stringify)({
                 ...entity,
+                type: isOrderedCollection ? activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE : activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE,
                 [isOrderedCollection ? 'orderedItems' : 'items']: items,
                 ...isOrderedCollection ? {
                     startIndex: firstItemIndex,

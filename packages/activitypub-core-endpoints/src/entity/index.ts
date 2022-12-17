@@ -155,6 +155,7 @@ export class EntityGetEndpoint {
 
       this.res.write(stringify({
         ...entity,
+        type: isOrderedCollection ? AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE : AP.CollectionPageTypes.COLLECTION_PAGE,
         [isOrderedCollection ? 'orderedItems' : 'items']: items,
         ...isOrderedCollection ? {
           startIndex: firstItemIndex,
