@@ -15,6 +15,8 @@ import cookie from 'cookie';
 import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 
+const ITEMS_PER_COLLECTION_PAGE = 50;
+
 export class EntityGetEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
@@ -71,7 +73,7 @@ export class EntityGetEndpoint {
 
     // TODO authorize entity posts by actor.
 
-    const entity = await this.adapters.db.findEntityById(this.url);
+    const entity = await this.adapters.db.findEntityById(`${LOCAL_DOMAIN}${this.url.pathname}`);
 
     if (!entity) {
       return this.handleNotFound();
@@ -89,18 +91,57 @@ export class EntityGetEndpoint {
       this.req.headers.accept?.includes(LINKED_DATA_CONTENT_TYPE) ||
       this.req.headers.accept?.includes(JSON_CONTENT_TYPE)
     ) {
-      // TODO sign HTTP signature
+      // TODO sign HTTP signature?
 
       this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
 
+      // If not a collection, just send the entity as-is.
       if (!isTypeOf(entity, AP.CollectionTypes)) {
         this.res.write(stringify(entity));
         this.res.end();
         return;
       }
 
-      if (isType(entity, AP.CollectionTypes.COLLECTION)) {
-        const expandedItems = await Promise.all(entity.items.map(async (id: URL) => {
+      // Otherwise, paginate the collection.
+
+      if (isTypeOf(entity, AP.CollectionPageTypes)) {
+        const isOrderedCollection = isType(entity, AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE);
+        const lagePageIndex = Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE);
+
+        const query = this.url.searchParams;
+        const page = query.get('page');
+        const current = query.get('current');
+
+        if (!page && !current) {
+          this.res.write(stringify({
+            ...entity,
+            first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1`,
+            last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}`,
+            current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
+          }));
+          this.res.end();
+          return;
+        }
+
+        if (!page) {
+          this.res.write(stringify({
+            ...entity,
+            first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1&current`,
+            last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}&current`,
+            current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
+          }));
+          this.res.end();
+          return;
+        }
+
+        const currentPage = Number(page);
+        const firstItemIndex = currentPage * ITEMS_PER_COLLECTION_PAGE;
+
+        if (!currentPage) {
+          throw new Error('Bad query string value: not a number.');
+        }
+
+        const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'].slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE)[current ? 'reverse' : 'slice']().map(async (id: URL) => {
           return await this.adapters.db.queryById(id);
         }));
 
@@ -127,39 +168,19 @@ export class EntityGetEndpoint {
         this.res.write(stringify({
           ...entity,
           items,
-        }));
-        this.res.end();
-        return;
-      }
-
-      if (isType(entity, AP.CollectionTypes.ORDERED_COLLECTION)) {
-        const expandedItems = await Promise.all(entity.orderedItems.map(async (id: URL) => {
-          return await this.adapters.db.queryById(id) ?? id;
-        }));
-
-        const orderedItems = [];
-
-        for (const item of expandedItems) {
-          if (item) {
-            if (item instanceof URL) {
-              orderedItems.push(item);
-            } else {
-              if (isTypeOf(item, AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
-                const object = await this.adapters.db.findEntityById(item.object);
-
-                if (object) {
-                  item.object = object;
-                }
-              }
-
-              orderedItems.push(item);
-            }
-          }
-        }
-
-        this.res.write(stringify({
-          ...entity,
-          orderedItems,
+          ...isOrderedCollection ? {
+            startIndex: firstItemIndex,
+          } : null,
+          partOf: `${LOCAL_DOMAIN}${this.url.pathname}${current ? '&current' : ''}`,
+          ...(currentPage > 1) ? {
+            prev: `${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage - 1}${current ? '&current' : ''}`
+          } : null,
+          ...(currentPage < lagePageIndex) ? {
+            next: `${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage + 1}${current ? '&current' : ''}`
+          } : null,
+          first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
+          last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
+          current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
         }));
         this.res.end();
         return;

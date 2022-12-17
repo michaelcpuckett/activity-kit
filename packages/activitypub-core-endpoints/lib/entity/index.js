@@ -9,6 +9,7 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
 const cookie_1 = __importDefault(require("cookie"));
+const ITEMS_PER_COLLECTION_PAGE = 50;
 class EntityGetEndpoint {
     req;
     res;
@@ -41,7 +42,7 @@ class EntityGetEndpoint {
     async respond(render) {
         const cookies = cookie_1.default.parse(this.req.headers.cookie ?? '');
         const authorizedActor = await this.adapters.db.getActorByUserId(await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''));
-        const entity = await this.adapters.db.findEntityById(this.url);
+        const entity = await this.adapters.db.findEntityById(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}`);
         if (!entity) {
             return this.handleNotFound();
         }
@@ -59,8 +60,38 @@ class EntityGetEndpoint {
                 this.res.end();
                 return;
             }
-            if ((0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
-                const expandedItems = await Promise.all(entity.items.map(async (id) => {
+            if ((0, activitypub_core_utilities_1.isTypeOf)(entity, activitypub_core_types_1.AP.CollectionPageTypes)) {
+                const isOrderedCollection = (0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE);
+                const lagePageIndex = Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE);
+                const query = this.url.searchParams;
+                const page = query.get('page');
+                const current = query.get('current');
+                if (!page && !current) {
+                    this.res.write((0, activitypub_core_utilities_3.stringify)({
+                        ...entity,
+                        first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1`,
+                        last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}`,
+                        current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
+                    }));
+                    this.res.end();
+                    return;
+                }
+                if (!page) {
+                    this.res.write((0, activitypub_core_utilities_3.stringify)({
+                        ...entity,
+                        first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1&current`,
+                        last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}&current`,
+                        current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
+                    }));
+                    this.res.end();
+                    return;
+                }
+                const currentPage = Number(page);
+                const firstItemIndex = currentPage * ITEMS_PER_COLLECTION_PAGE;
+                if (!currentPage) {
+                    throw new Error('Bad query string value: not a number.');
+                }
+                const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'].slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE)[current ? 'reverse' : 'slice']().map(async (id) => {
                     return await this.adapters.db.queryById(id);
                 }));
                 const items = [];
@@ -83,34 +114,19 @@ class EntityGetEndpoint {
                 this.res.write((0, activitypub_core_utilities_3.stringify)({
                     ...entity,
                     items,
-                }));
-                this.res.end();
-                return;
-            }
-            if ((0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
-                const expandedItems = await Promise.all(entity.orderedItems.map(async (id) => {
-                    return await this.adapters.db.queryById(id) ?? id;
-                }));
-                const orderedItems = [];
-                for (const item of expandedItems) {
-                    if (item) {
-                        if (item instanceof URL) {
-                            orderedItems.push(item);
-                        }
-                        else {
-                            if ((0, activitypub_core_utilities_1.isTypeOf)(item, activitypub_core_types_1.AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
-                                const object = await this.adapters.db.findEntityById(item.object);
-                                if (object) {
-                                    item.object = object;
-                                }
-                            }
-                            orderedItems.push(item);
-                        }
-                    }
-                }
-                this.res.write((0, activitypub_core_utilities_3.stringify)({
-                    ...entity,
-                    orderedItems,
+                    ...isOrderedCollection ? {
+                        startIndex: firstItemIndex,
+                    } : null,
+                    partOf: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}${current ? '&current' : ''}`,
+                    ...(currentPage > 1) ? {
+                        prev: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage - 1}${current ? '&current' : ''}`
+                    } : null,
+                    ...(currentPage < lagePageIndex) ? {
+                        next: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage + 1}${current ? '&current' : ''}`
+                    } : null,
+                    first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
+                    last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
+                    current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
                 }));
                 this.res.end();
                 return;
