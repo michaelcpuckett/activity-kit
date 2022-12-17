@@ -55,83 +55,79 @@ class EntityGetEndpoint {
             this.req.headers.accept?.includes(activitypub_core_utilities_1.LINKED_DATA_CONTENT_TYPE) ||
             this.req.headers.accept?.includes(activitypub_core_utilities_1.JSON_CONTENT_TYPE)) {
             this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);
-            if (!(0, activitypub_core_utilities_1.isTypeOf)(entity, activitypub_core_types_1.AP.CollectionTypes)) {
+            if (!(0, activitypub_core_utilities_1.isTypeOf)(entity, activitypub_core_types_1.AP.CollectionTypes) && !(0, activitypub_core_utilities_1.isTypeOf)(entity, activitypub_core_types_1.AP.CollectionPageTypes)) {
                 this.res.write((0, activitypub_core_utilities_3.stringify)(entity));
                 this.res.end();
                 return;
             }
-            if ((0, activitypub_core_utilities_1.isTypeOf)(entity, activitypub_core_types_1.AP.CollectionPageTypes)) {
-                const isOrderedCollection = (0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE);
-                const lagePageIndex = Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE);
-                const query = this.url.searchParams;
-                const page = query.get('page');
-                const current = query.get('current');
-                if (!page && !current) {
-                    this.res.write((0, activitypub_core_utilities_3.stringify)({
-                        ...entity,
-                        first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1`,
-                        last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}`,
-                        current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
-                    }));
-                    this.res.end();
-                    return;
-                }
-                if (!page) {
-                    this.res.write((0, activitypub_core_utilities_3.stringify)({
-                        ...entity,
-                        first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1&current`,
-                        last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}&current`,
-                        current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
-                    }));
-                    this.res.end();
-                    return;
-                }
-                const currentPage = Number(page);
-                const firstItemIndex = currentPage * ITEMS_PER_COLLECTION_PAGE;
-                if (!currentPage) {
-                    throw new Error('Bad query string value: not a number.');
-                }
-                const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'].slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE)[current ? 'reverse' : 'slice']().map(async (id) => {
-                    return await this.adapters.db.queryById(id);
-                }));
-                const items = [];
-                for (const item of expandedItems) {
-                    if (item) {
-                        if (item instanceof URL) {
-                            items.push(item);
-                        }
-                        else {
-                            if ((0, activitypub_core_utilities_1.isTypeOf)(item, activitypub_core_types_1.AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
-                                const object = await this.adapters.db.findEntityById(item.object);
-                                if (object) {
-                                    item.object = object;
-                                }
-                            }
-                            items.push(item);
-                        }
-                    }
-                }
+            const isOrderedCollection = (0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE);
+            const lagePageIndex = Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE);
+            const query = this.url.searchParams;
+            const page = query.get('page');
+            const current = query.get('current');
+            if (!page && !current) {
                 this.res.write((0, activitypub_core_utilities_3.stringify)({
                     ...entity,
-                    items,
-                    ...isOrderedCollection ? {
-                        startIndex: firstItemIndex,
-                    } : null,
-                    partOf: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}${current ? '&current' : ''}`,
-                    ...(currentPage > 1) ? {
-                        prev: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage - 1}${current ? '&current' : ''}`
-                    } : null,
-                    ...(currentPage < lagePageIndex) ? {
-                        next: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage + 1}${current ? '&current' : ''}`
-                    } : null,
-                    first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
-                    last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
+                    first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1`,
+                    last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}`,
                     current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
                 }));
                 this.res.end();
                 return;
             }
-            this.handleNotFound();
+            if (!page) {
+                this.res.write((0, activitypub_core_utilities_3.stringify)({
+                    ...entity,
+                    first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1&current`,
+                    last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}&current`,
+                    current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
+                }));
+                this.res.end();
+                return;
+            }
+            const currentPage = Number(page);
+            const firstItemIndex = currentPage * ITEMS_PER_COLLECTION_PAGE;
+            if (!currentPage) {
+                throw new Error('Bad query string value: not a number.');
+            }
+            const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'].slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE)[current ? 'reverse' : 'slice']().map(async (id) => {
+                return await this.adapters.db.queryById(id);
+            }));
+            const items = [];
+            for (const item of expandedItems) {
+                if (item) {
+                    if (item instanceof URL) {
+                        items.push(item);
+                    }
+                    else {
+                        if ((0, activitypub_core_utilities_1.isTypeOf)(item, activitypub_core_types_1.AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
+                            const object = await this.adapters.db.findEntityById(item.object);
+                            if (object) {
+                                item.object = object;
+                            }
+                        }
+                        items.push(item);
+                    }
+                }
+            }
+            this.res.write((0, activitypub_core_utilities_3.stringify)({
+                ...entity,
+                items,
+                ...isOrderedCollection ? {
+                    startIndex: firstItemIndex,
+                } : null,
+                partOf: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}${current ? '&current' : ''}`,
+                ...(currentPage > 1) ? {
+                    prev: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage - 1}${current ? '&current' : ''}`
+                } : null,
+                ...(currentPage < lagePageIndex) ? {
+                    next: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage + 1}${current ? '&current' : ''}`
+                } : null,
+                first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
+                last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
+                current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
+            }));
+            this.res.end();
             return;
         }
         else {
