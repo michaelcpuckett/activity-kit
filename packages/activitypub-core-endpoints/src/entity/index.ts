@@ -109,7 +109,7 @@ export class EntityGetEndpoint {
       const lagePageIndex = Math.max(1, Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE));
       const query = this.url.searchParams;
       const page = query.get('page');
-      const current = query.get('current');
+      const current = query.has('current');
 
       if (!page && !current) {
         this.res.write(stringify({
