@@ -148,12 +148,6 @@ export class EntityGetEndpoint {
         last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
         current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
       };
-      
-      if (isOrderedCollection) {
-        delete collectionEntity.orderedItems;
-      } else {
-        delete collectionEntity.items;
-      }
 
       return this.handleFoundEntity(render, collectionEntity, authorizedActor);
     }

@@ -101,12 +101,6 @@ class EntityGetEndpoint {
                 last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
                 current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
             };
-            if (isOrderedCollection) {
-                delete collectionEntity.orderedItems;
-            }
-            else {
-                delete collectionEntity.items;
-            }
             return this.handleFoundEntity(render, collectionEntity, authorizedActor);
         }
         const currentPage = Number(page);
