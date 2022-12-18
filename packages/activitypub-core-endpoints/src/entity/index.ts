@@ -142,13 +142,24 @@ export class EntityGetEndpoint {
     const typeFilter = query.has('type') ? query.get('type').split(',') : [];
     const limit = query.has('limit') ? Number(query.get('limit')) : ITEMS_PER_COLLECTION_PAGE;
     const lastPageIndex = Math.max(1, Math.ceil(Number(entity.totalItems) / limit));
+    const currentPage = Number(page);
+    const firstItemIndex = (currentPage - 1) * limit;
+    const startIndex = firstItemIndex + 1;
 
+    const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'][current ? 'slice' : 'reverse']().map(async (id: URL) => {
+      return await this.adapters.db.queryById(id);
+    }));
+
+    const filteredItems = typeFilter.length ? expandedItems.filter(({ type }) => typeFilter.includes(type)) : expandedItems;
+
+    // If no page, treat as a Collection.
     if (!page) {
       const collectionEntity = {
         ...entity,
         first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
         last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
         current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
+        totalItems: filteredItems.length,
       };
 
       return this.handleFoundEntity(render, collectionEntity, authorizedActor);
@@ -156,19 +167,9 @@ export class EntityGetEndpoint {
 
     // Treated as a CollectionPage.
 
-    const currentPage = Number(page);
-    const firstItemIndex = (currentPage - 1) * limit;
-    const startIndex = firstItemIndex + 1;
-
     if (!currentPage) {
       throw new Error('Bad query string value: not a number.');
     }
-
-    const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'][current ? 'slice' : 'reverse']().map(async (id: URL) => {
-      return await this.adapters.db.queryById(id);
-    }));
-
-    const filteredItems = typeFilter.length ? expandedItems.filter(({ type }) => typeFilter.includes(type)) : expandedItems;
 
     const items = [];
 
@@ -209,6 +210,7 @@ export class EntityGetEndpoint {
       first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
       last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
       current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
+      totalItems: filteredItems.length,
     };
 
     return this.handleFoundEntity(render, collectionPageEntity, authorizedActor);
