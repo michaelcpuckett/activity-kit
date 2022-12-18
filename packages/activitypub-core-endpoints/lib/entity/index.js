@@ -90,22 +90,23 @@ class EntityGetEndpoint {
             return this.handleFoundEntity(render, entity, authorizedActor);
         }
         const isOrderedCollection = (0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
-        const lagePageIndex = Math.max(1, Math.ceil(Number(entity.totalItems) / ITEMS_PER_COLLECTION_PAGE));
         const query = this.url.searchParams;
         const page = query.get('page');
         const current = query.has('current');
         const typeFilter = query.has('type') ? query.get('type').split(',') : [];
+        const limit = query.has('limit') ? Number(query.get('limit')) : ITEMS_PER_COLLECTION_PAGE;
+        const lastPageIndex = Math.max(1, Math.ceil(Number(entity.totalItems) / limit));
         if (!page) {
             const collectionEntity = {
                 ...entity,
-                first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}`,
-                last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}`,
-                current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}`,
+                first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
+                last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
+                current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
             };
             return this.handleFoundEntity(render, collectionEntity, authorizedActor);
         }
         const currentPage = Number(page);
-        const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE;
+        const firstItemIndex = (currentPage - 1) * limit;
         const startIndex = firstItemIndex + 1;
         if (!currentPage) {
             throw new Error('Bad query string value: not a number.');
@@ -115,7 +116,7 @@ class EntityGetEndpoint {
         }));
         const filteredItems = typeFilter.length ? expandedItems.filter(({ type }) => typeFilter.includes(type)) : expandedItems;
         const items = [];
-        for (const item of filteredItems.slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE)) {
+        for (const item of filteredItems.slice(firstItemIndex, firstItemIndex + limit)) {
             if (item) {
                 if (item instanceof URL) {
                     items.push(item);
@@ -142,13 +143,13 @@ class EntityGetEndpoint {
             } : null,
             partOf: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}${current ? '?current' : ''}`,
             ...(currentPage > 1) ? {
-                prev: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage - 1}${current ? '&current' : ''}`
+                prev: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage - 1}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`
             } : null,
-            ...(currentPage < lagePageIndex) ? {
-                next: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage + 1}${current ? '&current' : ''}`
+            ...(currentPage < lastPageIndex) ? {
+                next: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage + 1}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`
             } : null,
-            first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
-            last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
+            first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
+            last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
             current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
         };
         return this.handleFoundEntity(render, collectionPageEntity, authorizedActor);
