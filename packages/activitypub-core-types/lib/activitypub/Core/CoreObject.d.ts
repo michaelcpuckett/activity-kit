@@ -42,5 +42,5 @@ export interface BaseCoreObject extends BaseEntity {
         content?: string;
         contentMap?: StringReferenceMap;
     };
-    sensitive: boolean;
+    sensitive?: boolean;
 }

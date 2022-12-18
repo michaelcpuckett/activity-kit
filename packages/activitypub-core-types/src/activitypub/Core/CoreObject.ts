@@ -63,5 +63,5 @@ export interface BaseCoreObject extends BaseEntity {
   };
 
   // Extension
-  sensitive: boolean;
+  sensitive?: boolean;
 }
