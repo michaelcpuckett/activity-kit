@@ -94,12 +94,13 @@ class EntityGetEndpoint {
         const query = this.url.searchParams;
         const page = query.get('page');
         const current = query.has('current');
+        const typeFilter = query.has('type') ? query.get('type').split(',') : [];
         if (!page) {
             const collectionEntity = {
                 ...entity,
-                first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
-                last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
-                current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
+                first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}`,
+                last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}`,
+                current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}`,
             };
             return this.handleFoundEntity(render, collectionEntity, authorizedActor);
         }
@@ -109,11 +110,12 @@ class EntityGetEndpoint {
         if (!currentPage) {
             throw new Error('Bad query string value: not a number.');
         }
-        const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'][current ? 'slice' : 'reverse']().slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE).map(async (id) => {
+        const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'][current ? 'slice' : 'reverse']().map(async (id) => {
             return await this.adapters.db.queryById(id);
         }));
+        const filteredItems = typeFilter.length ? expandedItems.filter(({ type }) => typeFilter.includes(type)) : expandedItems;
         const items = [];
-        for (const item of expandedItems) {
+        for (const item of filteredItems.slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE)) {
             if (item) {
                 if (item instanceof URL) {
                     items.push(item);

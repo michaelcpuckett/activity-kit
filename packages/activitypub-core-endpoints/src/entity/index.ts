@@ -140,13 +140,14 @@ export class EntityGetEndpoint {
     const query = this.url.searchParams;
     const page = query.get('page');
     const current = query.has('current');
+    const typeFilter = query.has('type') ? query.get('type').split(',') : [];
 
     if (!page) {
       const collectionEntity = {
         ...entity,
-        first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}`,
-        last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}`,
-        current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
+        first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}`,
+        last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lagePageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}`,
+        current: `${LOCAL_DOMAIN}${this.url.pathname}?current${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}`,
       };
 
       return this.handleFoundEntity(render, collectionEntity, authorizedActor);
@@ -162,13 +163,15 @@ export class EntityGetEndpoint {
       throw new Error('Bad query string value: not a number.');
     }
 
-    const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'][current ? 'slice' : 'reverse']().slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE).map(async (id: URL) => {
+    const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'][current ? 'slice' : 'reverse']().map(async (id: URL) => {
       return await this.adapters.db.queryById(id);
     }));
 
+    const filteredItems = typeFilter.length ? expandedItems.filter(({ type }) => typeFilter.includes(type)) : expandedItems;
+
     const items = [];
 
-    for (const item of expandedItems) {
+    for (const item of filteredItems.slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE)) {
       if (item) {
         if (item instanceof URL) {
           items.push(item);
