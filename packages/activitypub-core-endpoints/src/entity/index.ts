@@ -120,12 +120,12 @@ export class EntityGetEndpoint {
 
     // TODO authorize entity posts by actor.
 
-    const entity = await this.adapters.db.findOne('entity', {
+    const entity = (await this.adapters.db.findAll('entity', {
       id: `${LOCAL_DOMAIN}${this.url.pathname}`,
       ...typeFilter.length ? {
         type: { $in: typeFilter },
       } : null,
-    });
+    }))?.[0];
 
     if (!entity) {
       return this.handleNotFound();
