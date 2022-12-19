@@ -123,7 +123,9 @@ export class EntityGetEndpoint {
     const entity = (await this.adapters.db.findAll('entity', {
       id: `${LOCAL_DOMAIN}${this.url.pathname}`,
       ...typeFilter.length ? {
-        type: { $in: typeFilter },
+        orderedItems: {
+          type: { $in: typeFilter },
+        },
       } : null,
     }))?.[0];
 

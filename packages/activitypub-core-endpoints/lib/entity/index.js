@@ -84,7 +84,9 @@ class EntityGetEndpoint {
         const entity = (await this.adapters.db.findAll('entity', {
             id: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}`,
             ...typeFilter.length ? {
-                type: { $in: typeFilter },
+                orderedItems: {
+                    type: { $in: typeFilter },
+                },
             } : null,
         }))?.[0];
         if (!entity) {
