@@ -83,7 +83,9 @@ class EntityGetEndpoint {
         const typeFilter = query.has('type') ? query.get('type').split(',') : [];
         const entity = await this.adapters.db.findOne('entity', {
             id: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}`,
-            type: typeFilter,
+            ...typeFilter.length ? {
+                type: { $in: typeFilter },
+            } : null,
         });
         if (!entity) {
             return this.handleNotFound();

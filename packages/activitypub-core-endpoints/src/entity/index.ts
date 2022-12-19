@@ -122,7 +122,9 @@ export class EntityGetEndpoint {
 
     const entity = await this.adapters.db.findOne('entity', {
       id: `${LOCAL_DOMAIN}${this.url.pathname}`,
-      type: typeFilter,
+      ...typeFilter.length ? {
+        type: { $in: typeFilter },
+      } : null,
     });
 
     if (!entity) {
