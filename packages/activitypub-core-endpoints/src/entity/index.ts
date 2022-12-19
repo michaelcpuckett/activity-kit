@@ -113,10 +113,17 @@ export class EntityGetEndpoint {
     const authorizedActor = await this.adapters.db.getActorByUserId(
       await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''),
     );
+    const query = this.url.searchParams;
+    const page = query.get('page');
+    const current = query.has('current');
+    const typeFilter = query.has('type') ? query.get('type').split(',') : [];
 
     // TODO authorize entity posts by actor.
 
-    const entity = await this.adapters.db.findEntityById(new URL(`${LOCAL_DOMAIN}${this.url.pathname}`));
+    const entity = await this.adapters.db.findOne('entity', {
+      id: `${LOCAL_DOMAIN}${this.url.pathname}`,
+      type: typeFilter,
+    });
 
     if (!entity) {
       return this.handleNotFound();
@@ -136,21 +143,12 @@ export class EntityGetEndpoint {
     // Otherwise, handle the collection.
 
     const isOrderedCollection = isType(entity, AP.CollectionTypes.ORDERED_COLLECTION);
-    const query = this.url.searchParams;
-    const page = query.get('page');
-    const current = query.has('current');
-    const typeFilter = query.has('type') ? query.get('type').split(',') : [];
+    const items = entity[isOrderedCollection ? 'orderedItems' : 'items'];
     const limit = query.has('limit') ? Number(query.get('limit')) : ITEMS_PER_COLLECTION_PAGE;
-    const lastPageIndex = Math.max(1, Math.ceil(Number(entity.totalItems) / limit));
+    const lastPageIndex = Math.max(1, Math.ceil(items.length / limit));
     const currentPage = Number(page);
     const firstItemIndex = (currentPage - 1) * limit;
     const startIndex = firstItemIndex + 1;
-
-    const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'][current ? 'slice' : 'reverse']().map(async (id: URL) => {
-      return await this.adapters.db.queryById(id);
-    }));
-
-    const filteredItems = typeFilter.length ? expandedItems.filter(({ type }) => typeFilter.includes(type)) : expandedItems;
 
     // If no page, treat as a Collection.
     if (!page) {
@@ -159,7 +157,7 @@ export class EntityGetEndpoint {
         first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
         last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
         current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
-        totalItems: filteredItems.length,
+        totalItems: items.length,
       };
 
       return this.handleFoundEntity(render, collectionEntity, authorizedActor);
@@ -171,12 +169,16 @@ export class EntityGetEndpoint {
       throw new Error('Bad query string value: not a number.');
     }
 
-    const items = [];
+    const expandedItems = await Promise.all(items[current ? 'slice' : 'reverse']().slice(firstItemIndex, firstItemIndex + limit).map(async (id: URL) => {
+      return await this.adapters.db.queryById(id);
+    }));
 
-    for (const item of filteredItems.slice(firstItemIndex, firstItemIndex + limit)) {
+    const fullyExpandedItems = [];
+
+    for (const item of expandedItems) {
       if (item) {
         if (item instanceof URL) {
-          items.push(item);
+          fullyExpandedItems.push(item);
         } else {
           if (isTypeOf(item, AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
             const object = await this.adapters.db.findEntityById(item.object);
@@ -186,7 +188,7 @@ export class EntityGetEndpoint {
             }
           }
 
-          items.push(item);
+          fullyExpandedItems.push(item);
         }
       }
     }
@@ -196,7 +198,7 @@ export class EntityGetEndpoint {
       id: new URL(`${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage}${current ? '&current' : ''}`),
       url: new URL(`${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage}${current ? '&current' : ''}`),
       type: isOrderedCollection ? AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE : AP.CollectionPageTypes.COLLECTION_PAGE,
-      [isOrderedCollection ? 'orderedItems' : 'items']: items,
+      [isOrderedCollection ? 'orderedItems' : 'items']: fullyExpandedItems,
       ...isOrderedCollection ? {
         startIndex,
       } : null,
@@ -210,7 +212,7 @@ export class EntityGetEndpoint {
       first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
       last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
       current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
-      totalItems: filteredItems.length,
+      totalItems: items.length,
     };
 
     return this.handleFoundEntity(render, collectionPageEntity, authorizedActor);

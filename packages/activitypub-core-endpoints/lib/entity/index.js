@@ -77,7 +77,14 @@ class EntityGetEndpoint {
     async respond(render) {
         const cookies = cookie_1.default.parse(this.req.headers.cookie ?? '');
         const authorizedActor = await this.adapters.db.getActorByUserId(await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''));
-        const entity = await this.adapters.db.findEntityById(new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}`));
+        const query = this.url.searchParams;
+        const page = query.get('page');
+        const current = query.has('current');
+        const typeFilter = query.has('type') ? query.get('type').split(',') : [];
+        const entity = await this.adapters.db.findOne('entity', {
+            id: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}`,
+            type: typeFilter,
+        });
         if (!entity) {
             return this.handleNotFound();
         }
@@ -90,37 +97,33 @@ class EntityGetEndpoint {
             return this.handleFoundEntity(render, entity, authorizedActor);
         }
         const isOrderedCollection = (0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
-        const query = this.url.searchParams;
-        const page = query.get('page');
-        const current = query.has('current');
-        const typeFilter = query.has('type') ? query.get('type').split(',') : [];
+        const items = entity[isOrderedCollection ? 'orderedItems' : 'items'];
         const limit = query.has('limit') ? Number(query.get('limit')) : ITEMS_PER_COLLECTION_PAGE;
-        const lastPageIndex = Math.max(1, Math.ceil(Number(entity.totalItems) / limit));
+        const lastPageIndex = Math.max(1, Math.ceil(items.length / limit));
         const currentPage = Number(page);
         const firstItemIndex = (currentPage - 1) * limit;
         const startIndex = firstItemIndex + 1;
-        const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'][current ? 'slice' : 'reverse']().map(async (id) => {
-            return await this.adapters.db.queryById(id);
-        }));
-        const filteredItems = typeFilter.length ? expandedItems.filter(({ type }) => typeFilter.includes(type)) : expandedItems;
         if (!page) {
             const collectionEntity = {
                 ...entity,
                 first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
                 last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
                 current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
-                totalItems: filteredItems.length,
+                totalItems: items.length,
             };
             return this.handleFoundEntity(render, collectionEntity, authorizedActor);
         }
         if (!currentPage) {
             throw new Error('Bad query string value: not a number.');
         }
-        const items = [];
-        for (const item of filteredItems.slice(firstItemIndex, firstItemIndex + limit)) {
+        const expandedItems = await Promise.all(items[current ? 'slice' : 'reverse']().slice(firstItemIndex, firstItemIndex + limit).map(async (id) => {
+            return await this.adapters.db.queryById(id);
+        }));
+        const fullyExpandedItems = [];
+        for (const item of expandedItems) {
             if (item) {
                 if (item instanceof URL) {
-                    items.push(item);
+                    fullyExpandedItems.push(item);
                 }
                 else {
                     if ((0, activitypub_core_utilities_1.isTypeOf)(item, activitypub_core_types_1.AP.ActivityTypes) && 'object' in item && item.object instanceof URL) {
@@ -129,7 +132,7 @@ class EntityGetEndpoint {
                             item.object = object;
                         }
                     }
-                    items.push(item);
+                    fullyExpandedItems.push(item);
                 }
             }
         }
@@ -138,7 +141,7 @@ class EntityGetEndpoint {
             id: new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage}${current ? '&current' : ''}`),
             url: new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage}${current ? '&current' : ''}`),
             type: isOrderedCollection ? activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE : activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE,
-            [isOrderedCollection ? 'orderedItems' : 'items']: items,
+            [isOrderedCollection ? 'orderedItems' : 'items']: fullyExpandedItems,
             ...isOrderedCollection ? {
                 startIndex,
             } : null,
@@ -152,7 +155,7 @@ class EntityGetEndpoint {
             first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
             last: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
             current: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`,
-            totalItems: filteredItems.length,
+            totalItems: items.length,
         };
         return this.handleFoundEntity(render, collectionPageEntity, authorizedActor);
     }
