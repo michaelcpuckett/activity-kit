@@ -120,11 +120,21 @@ class EntityGetEndpoint {
         const items = [];
         for (const item of filteredItems.sort((a, b) => {
             if (sort && a[sort] && b[sort]) {
-                if (a[sort] > b[sort]) {
-                    return 1;
+                if (current) {
+                    if (a[sort].toLowerCase() > b[sort].toLowerCase()) {
+                        return 1;
+                    }
+                    else {
+                        return -1;
+                    }
                 }
                 else {
-                    return -1;
+                    if (b[sort].toLowerCase() > a[sort].toLowerCase()) {
+                        return 1;
+                    }
+                    else {
+                        return -1;
+                    }
                 }
             }
             else {
