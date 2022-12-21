@@ -140,6 +140,7 @@ export class EntityGetEndpoint {
     const page = query.get('page');
     const current = query.has('current');
     const typeFilter = query.has('type') ? query.get('type').split(',') : [];
+    const sort = query.get('sort');
     const limit = query.has('limit') ? Number(query.get('limit')) : ITEMS_PER_COLLECTION_PAGE;
     const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'][current ? 'slice' : 'reverse']().map(async (id: URL) => {
       return await this.adapters.db.queryById(id);
@@ -154,8 +155,8 @@ export class EntityGetEndpoint {
     if (!page) {
       const collectionEntity = {
         ...entity,
-        first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
-        last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
+        first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${sort ? `&sort=${sort}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
+        last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${sort ? `&sort=${sort}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
         current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
         totalItems: filteredItems.length,
       };
@@ -171,7 +172,25 @@ export class EntityGetEndpoint {
 
     const items = [];
 
-    for (const item of filteredItems.slice(firstItemIndex, firstItemIndex + limit)) {
+    for (const item of filteredItems.sort((a, b) => {
+      if (sort && a[sort] && b[sort]) {
+        if (current) {
+          if (a[sort] > b[sort]) {
+            return 1;
+          } else {
+            return -1;
+          }
+        } else {
+          if (b[sort] > a[sort]) {
+            return 1;
+          } else {
+            return -1;
+          }
+        }
+      } else {
+        return 1;
+      }
+    }).slice(firstItemIndex, firstItemIndex + limit)) {
       if (item) {
         if (item instanceof URL) {
           items.push(item);
@@ -200,13 +219,13 @@ export class EntityGetEndpoint {
       } : null,
       partOf: `${LOCAL_DOMAIN}${this.url.pathname}${current ? '?current' : ''}`,
       ...(currentPage > 1) ? {
-        prev: `${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage - 1}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`
+        prev: `${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage - 1}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}${sort ? `&sort=${sort}` : ''}`
       } : null,
       ...(currentPage < lastPageIndex) ? {
-        next: `${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage + 1}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`
+        next: `${LOCAL_DOMAIN}${this.url.pathname}?page=${currentPage + 1}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}${sort ? `&sort=${sort}` : ''}`
       } : null,
-      first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
-      last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
+      first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}${sort ? `&sort=${sort}` : ''}`,
+      last: `${LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}${sort ? `&sort=${sort}` : ''}`,
       current: `${LOCAL_DOMAIN}${this.url.pathname}?current`,
       totalItems: filteredItems.length,
     };
