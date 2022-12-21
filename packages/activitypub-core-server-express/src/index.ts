@@ -207,7 +207,15 @@ export const activityPub =
         req.url.endsWith('/friends') ||
         req.url.endsWith('/members') ||
         req.url.endsWith('/inbox') ||
-        req.url.endsWith('/outbox')
+        req.url.endsWith('/outbox') || (() => {
+          for (const plugin of config.plugins) {
+            if ('getIsEntityGetRequest' in plugin) {
+              if (plugin.getIsEntityGetRequest(req.url)) {
+                return true;
+              }
+            }
+          }
+        })()
       ) {
         await new EntityGetEndpoint(
           req,

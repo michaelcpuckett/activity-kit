@@ -11,6 +11,7 @@ See CHECKLIST.md
     * PeerTube?
 * finish block (unfriend, remove any reposts)
 * oauth
+* standardize plugin system
 * as:sensitive
 * watch for performance issues
 * caching of remote objects -- too many?

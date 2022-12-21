@@ -8,6 +8,7 @@ export type Plugin = {
   generateActorId?: Function;
   getHomePageProps?: Function;
   getEntityPageProps?: Function;
+  getIsEntityGetRequest?: Function;
 };
 
 export type AuthAdapter = {

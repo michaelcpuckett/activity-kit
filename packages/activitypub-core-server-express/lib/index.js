@@ -88,7 +88,15 @@ const activityPub = (config) => async (req, res, next) => {
             req.url.endsWith('/friends') ||
             req.url.endsWith('/members') ||
             req.url.endsWith('/inbox') ||
-            req.url.endsWith('/outbox')) {
+            req.url.endsWith('/outbox') || (() => {
+            for (const plugin of config.plugins) {
+                if ('getIsEntityGetRequest' in plugin) {
+                    if (plugin.getIsEntityGetRequest(req.url)) {
+                        return true;
+                    }
+                }
+            }
+        })()) {
             await new activitypub_core_endpoints_1.EntityGetEndpoint(req, res, config.adapters, config.plugins).respond(config.pages.entity);
             next();
             return;

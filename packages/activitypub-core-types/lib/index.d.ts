@@ -7,6 +7,7 @@ export declare type Plugin = {
     generateActorId?: Function;
     getHomePageProps?: Function;
     getEntityPageProps?: Function;
+    getIsEntityGetRequest?: Function;
 };
 export declare type AuthAdapter = {
     createUser: Function;
