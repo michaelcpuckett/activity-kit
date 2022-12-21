@@ -4,6 +4,11 @@ exports.runSideEffects = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function runSideEffects() {
+    for (const plugin of this.plugins) {
+        if (plugin.handleOutboxSideEffect) {
+            await plugin.handleOutboxSideEffect.call(this);
+        }
+    }
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
         await this.handleCreate();
     }
@@ -33,11 +38,6 @@ async function runSideEffects() {
     }
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.UNDO)) {
         await this.handleUndo();
-    }
-    for (const plugin of this.plugins) {
-        if (plugin.handleOutboxSideEffect) {
-            await plugin.handleOutboxSideEffect.call(this);
-        }
     }
 }
 exports.runSideEffects = runSideEffects;

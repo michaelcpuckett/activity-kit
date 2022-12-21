@@ -3,6 +3,12 @@ import { isType } from 'activitypub-core-utilities';
 import { OutboxPostEndpoint } from '.';
 
 export async function runSideEffects(this: OutboxPostEndpoint) {
+  for (const plugin of this.plugins) {
+    if (plugin.handleOutboxSideEffect) {
+      await plugin.handleOutboxSideEffect.call(this);
+    }
+  }
+
   if (isType(this.activity, AP.ActivityTypes.CREATE)) {
     await this.handleCreate();
   }
@@ -41,11 +47,5 @@ export async function runSideEffects(this: OutboxPostEndpoint) {
 
   if (isType(this.activity, AP.ActivityTypes.UNDO)) {
     await this.handleUndo();
-  }
-
-  for (const plugin of this.plugins) {
-    if (plugin.handleOutboxSideEffect) {
-      await plugin.handleOutboxSideEffect.call(this);
-    }
   }
 }
