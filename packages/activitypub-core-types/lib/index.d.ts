@@ -3,6 +3,7 @@ export * from './assertions';
 export declare type Plugin = {
     handleCreateUserActor?: Function;
     handleOutboxActivity?: Function;
+    handleOutboxSideEffect?: Function;
     generateActorId?: Function;
     getHomePageProps?: Function;
     getEntityPageProps?: Function;

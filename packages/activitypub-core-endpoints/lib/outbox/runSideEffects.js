@@ -34,6 +34,11 @@ async function runSideEffects() {
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.UNDO)) {
         await this.handleUndo();
     }
+    for (const plugin of this.plugins) {
+        if (plugin.handleOutboxSideEffect) {
+            await plugin.handleOutboxSideEffect.call(this);
+        }
+    }
 }
 exports.runSideEffects = runSideEffects;
 //# sourceMappingURL=runSideEffects.js.map
