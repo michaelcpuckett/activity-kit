@@ -142,7 +142,7 @@ export class EntityGetEndpoint {
     const typeFilter = query.has('type') ? query.get('type').split(',') : [];
     const sort = query.get('sort');
     const limit = query.has('limit') ? Number(query.get('limit')) : ITEMS_PER_COLLECTION_PAGE;
-    const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'][current ? 'slice' : 'reverse']().map(async (id: URL) => {
+    const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'].map(async (id: URL) => {
       return await this.adapters.db.queryById(id);
     }));
     const filteredItems = typeFilter.length ? expandedItems.filter(({ type }) => typeFilter.includes(type)) : expandedItems;
@@ -179,21 +179,13 @@ export class EntityGetEndpoint {
 
     for (const item of filteredItems.sort((a, b) => {
       if (sort && a[sort] && b[sort]) {
-        if (current) {
-          if (a[sort].toLowerCase() > b[sort].toLowerCase()) {
-            return 1;
-          } else {
-            return -1;
-          }
+        if ((typeof a[sort] === 'string' ? a[sort].toLowerCase() : a[sort]) > (typeof b[sort] === 'string' ? b[sort].toLowerCase() : b[sort])) {
+          return 1 * (current ? -1 : 1);
         } else {
-          if (b[sort].toLowerCase() > a[sort].toLowerCase()) {
-            return 1;
-          } else {
-            return -1;
-          }
+          return -1 * (current ? -1 : 1);
         }
       } else {
-        return 1;
+        return current ? -1 : 1;
       }
     }).slice(firstItemIndex, firstItemIndex + limit)) {
       if (item) {
