@@ -8,7 +8,7 @@ export async function createUser({
 }: {
   this: FirebaseAuthAdapter;
   email: string;
-  password: string;
+  password?: string;
   preferredUsername: string;
 }) {
   if (!firebaseAdmin.apps.length) {
@@ -18,7 +18,9 @@ export async function createUser({
   return await firebaseAdmin.auth().createUser({
     email,
     emailVerified: false,
-    password,
+    ...password ? {
+      password,
+    } : null,
     displayName: preferredUsername,
     disabled: false,
   });

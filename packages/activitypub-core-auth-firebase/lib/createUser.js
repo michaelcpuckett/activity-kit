@@ -32,7 +32,9 @@ async function createUser({ email, password, preferredUsername, }) {
     return await firebaseAdmin.auth().createUser({
         email,
         emailVerified: false,
-        password,
+        ...password ? {
+            password,
+        } : null,
         displayName: preferredUsername,
         disabled: false,
     });
