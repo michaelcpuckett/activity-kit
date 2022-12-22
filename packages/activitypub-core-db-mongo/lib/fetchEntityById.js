@@ -6,6 +6,12 @@ async function fetchEntityById(id) {
     if (typeof this.fetch !== 'function') {
         return null;
     }
+    const foundEntity = await this.findOne('foreign-entity', {
+        _id: id.toString(),
+    });
+    if (foundEntity) {
+        return (0, activitypub_core_utilities_1.compressEntity)((0, activitypub_core_utilities_1.convertStringsToUrls)(foundEntity));
+    }
     const actor = await this.findOne('entity', { preferredUsername: 'bot' });
     const { dateHeader, signatureHeader } = await (0, activitypub_core_utilities_1.getHttpSignature)(id, actor.id, await this.getPrivateKey(actor));
     const fetchedEntity = await this.fetch(id.toString(), {
@@ -36,9 +42,7 @@ async function fetchEntityById(id) {
     })
         .catch((error) => {
         console.log(String(error));
-        return this.findOne('foreign-entity', {
-            _id: id.toString(),
-        });
+        return null;
     });
     return (0, activitypub_core_utilities_1.compressEntity)((0, activitypub_core_utilities_1.convertStringsToUrls)(fetchedEntity));
 }

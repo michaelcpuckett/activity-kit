@@ -16,6 +16,15 @@ export async function fetchEntityById(
     return null;
   }
 
+  // Check cache
+  const foundEntity = await this.findOne('foreign-entity', {
+    _id: id.toString(),
+  }) as unknown as { [key: string]: string; };
+
+  if (foundEntity) {
+    return compressEntity(convertStringsToUrls(foundEntity));
+  }
+
   // Send HTTP Signature for Mastodon in secure mode.
   const actor = await this.findOne('entity', { preferredUsername: 'bot' }) as AP.Actor;
   const {
@@ -55,11 +64,7 @@ export async function fetchEntityById(
     })
     .catch((error: unknown) => {
       console.log(String(error));
-      
-      // Check cache
-      return this.findOne('foreign-entity', {
-        _id: id.toString(),
-      });
+      return null;
     });
 
   // TODO Turn on smarter caching.
