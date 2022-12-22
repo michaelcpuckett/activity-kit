@@ -91,7 +91,7 @@ class EntityGetEndpoint {
         }
         const isOrderedCollection = (0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
         const query = this.url.searchParams;
-        const page = query.get('page');
+        const page = query.get('page') ?? 1;
         const current = query.has('current');
         const typeFilter = query.has('type') ? query.get('type').split(',') : [];
         const sort = query.get('sort');
@@ -104,7 +104,9 @@ class EntityGetEndpoint {
         const currentPage = Number(page);
         const firstItemIndex = (currentPage - 1) * limit;
         const startIndex = firstItemIndex + 1;
-        if (!page) {
+        if (!query.has('page') && (this.req.headers.accept?.includes(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE) ||
+            this.req.headers.accept?.includes(activitypub_core_utilities_1.LINKED_DATA_CONTENT_TYPE) ||
+            this.req.headers.accept?.includes(activitypub_core_utilities_1.JSON_CONTENT_TYPE))) {
             const collectionEntity = {
                 ...entity,
                 first: `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${sort ? `&sort=${sort}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,

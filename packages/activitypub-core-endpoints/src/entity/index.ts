@@ -137,7 +137,7 @@ export class EntityGetEndpoint {
 
     const isOrderedCollection = isType(entity, AP.CollectionTypes.ORDERED_COLLECTION);
     const query = this.url.searchParams;
-    const page = query.get('page');
+    const page = query.get('page') ?? 1;
     const current = query.has('current');
     const typeFilter = query.has('type') ? query.get('type').split(',') : [];
     const sort = query.get('sort');
@@ -152,7 +152,12 @@ export class EntityGetEndpoint {
     const startIndex = firstItemIndex + 1;
 
     // If no page, treat as a Collection.
-    if (!page) {
+
+    if (!query.has('page') && (
+      this.req.headers.accept?.includes(ACTIVITYSTREAMS_CONTENT_TYPE) ||
+      this.req.headers.accept?.includes(LINKED_DATA_CONTENT_TYPE) ||
+      this.req.headers.accept?.includes(JSON_CONTENT_TYPE)
+    )) {
       const collectionEntity = {
         ...entity,
         first: `${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${typeFilter.length ? `&type=${typeFilter.join(',')}` : ''}${sort ? `&sort=${sort}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`,
