@@ -14,7 +14,10 @@ async function fetchEntityById(id) {
     }
     const actor = await this.findOne('entity', { preferredUsername: 'bot' });
     const { dateHeader, signatureHeader } = await (0, activitypub_core_utilities_1.getHttpSignature)(id, actor.id, await this.getPrivateKey(actor));
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 1250);
     const fetchedEntity = await this.fetch(id.toString(), {
+        signal: controller.signal,
         headers: {
             [activitypub_core_utilities_1.ACCEPT_HEADER]: activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE,
             date: dateHeader,
@@ -22,6 +25,7 @@ async function fetchEntityById(id) {
         },
     })
         .then(async (response) => {
+        clearTimeout(timeout);
         if (response.status === 200) {
             return await response.json();
         }
@@ -41,6 +45,7 @@ async function fetchEntityById(id) {
         }
     })
         .catch((error) => {
+        clearTimeout(timeout);
         console.log(String(error));
         return null;
     });

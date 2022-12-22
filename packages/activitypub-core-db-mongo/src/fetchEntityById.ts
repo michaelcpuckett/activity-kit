@@ -36,9 +36,13 @@ export async function fetchEntityById(
     await this.getPrivateKey(actor),
   );
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 1250);
+
   // GET requests (eg. to the inbox) MUST be made with an Accept header of
   // `application/ld+json; profile="https://www.w3.org/ns/activitystreams"`
   const fetchedEntity = await this.fetch(id.toString(), {
+    signal: controller.signal,
     headers: {
       [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
       date: dateHeader,
@@ -46,6 +50,7 @@ export async function fetchEntityById(
     },
   })
     .then(async response => {
+      clearTimeout(timeout);
       if (response.status === 200) {
         return await response.json();
       } else if (response.status === 404) {
@@ -63,6 +68,7 @@ export async function fetchEntityById(
       }
     })
     .catch((error: unknown) => {
+      clearTimeout(timeout);
       console.log(String(error));
       return null;
     });
