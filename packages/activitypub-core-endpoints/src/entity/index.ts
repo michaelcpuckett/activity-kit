@@ -180,12 +180,12 @@ export class EntityGetEndpoint {
     for (const item of filteredItems.sort((a, b) => {
       if (sort && a[sort] && b[sort]) {
         if ((typeof a[sort] === 'string' ? a[sort].toLowerCase() : a[sort]) > (typeof b[sort] === 'string' ? b[sort].toLowerCase() : b[sort])) {
-          return 1 * (current ? -1 : 1);
+          return current ? -1 : 1;
         } else {
-          return -1 * (current ? -1 : 1);
+          return current ? 1 : -1;
         }
       } else {
-        return current ? 1 : -1;
+        return current ? -1 : 1;
       }
     }).slice(firstItemIndex, firstItemIndex + limit)) {
       if (item) {
