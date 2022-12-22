@@ -130,7 +130,7 @@ class EntityGetEndpoint {
                 }
             }
             else {
-                return current ? -1 : 1;
+                return current ? 1 : -1;
             }
         }).slice(firstItemIndex, firstItemIndex + limit)) {
             if (item) {
