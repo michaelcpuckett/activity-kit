@@ -49,8 +49,7 @@ export class HostMetaGetEndpoint {
       this.res.write(JSON.stringify(hostMeta));
     } else {
       this.res.setHeader(CONTENT_TYPE_HEADER, XRD_CONTENT_TYPE);
-      this.res.write(`
-        <?xml version="1.0" encoding="UTF-8" ?>
+      this.res.write(`<?xml version="1.0" encoding="UTF-8" ?>
         <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
           <Link
             rel="lrdd"

@@ -29,8 +29,7 @@ class HostMetaGetEndpoint {
         }
         else {
             this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.XRD_CONTENT_TYPE);
-            this.res.write(`
-        <?xml version="1.0" encoding="UTF-8" ?>
+            this.res.write(`<?xml version="1.0" encoding="UTF-8" ?>
         <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
           <Link
             rel="lrdd"
