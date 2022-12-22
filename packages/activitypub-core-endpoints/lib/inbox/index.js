@@ -56,7 +56,7 @@ class InboxPostEndpoint {
     async respond() {
         try {
             await this.parseBody();
-            const existingActivity = await this.adapters.db.findEntityById((0, activitypub_core_utilities_1.getId)(this.activity)) ?? await this.adapters.db.findOne('remote-entity', {
+            const existingActivity = await this.adapters.db.findEntityById((0, activitypub_core_utilities_1.getId)(this.activity)) ?? await this.adapters.db.findOne('foreign-entity', {
                 id: (0, activitypub_core_utilities_1.getId)(this.activity),
             });
             if (existingActivity) {

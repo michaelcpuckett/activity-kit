@@ -57,7 +57,7 @@ export async function fetchEntityById(
       console.log(String(error));
       
       // Check cache
-      return this.findOne('remote-entity', {
+      return this.findOne('foreign-entity', {
         _id: id.toString(),
       });
     });

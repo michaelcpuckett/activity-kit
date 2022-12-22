@@ -36,7 +36,7 @@ async function fetchEntityById(id) {
     })
         .catch((error) => {
         console.log(String(error));
-        return this.findOne('remote-entity', {
+        return this.findOne('foreign-entity', {
             _id: id.toString(),
         });
     });
