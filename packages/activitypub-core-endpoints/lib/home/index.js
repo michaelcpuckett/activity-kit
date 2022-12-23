@@ -52,7 +52,7 @@ class HomeGetEndpoint {
                     if ('getHomePageProps' in plugin && plugin.getHomePageProps) {
                         props = {
                             ...props,
-                            ...(await plugin.getHomePageProps(actor)),
+                            ...(await plugin.getHomePageProps(actor, this.req.url)),
                         };
                     }
                 }
