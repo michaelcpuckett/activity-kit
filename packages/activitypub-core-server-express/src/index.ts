@@ -124,7 +124,7 @@ export const activityPub =
         return;
       }
 
-      if (req.url === '/home') {
+      if (req.url.startsWith('/home')) {
         await new HomeGetEndpoint(
           req,
           res,

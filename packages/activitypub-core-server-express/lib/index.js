@@ -42,7 +42,7 @@ const activityPub = (config) => async (req, res, next) => {
             next();
             return;
         }
-        if (req.url === '/home') {
+        if (req.url.startsWith('/home')) {
             await new activitypub_core_endpoints_1.HomeGetEndpoint(req, res, config.adapters, config.plugins).respond(config.pages.home);
             next();
             return;
