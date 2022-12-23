@@ -10,6 +10,14 @@ export async function handleCreate(this: InboxPostEndpoint) {
   }
 
   const object = activity.object;
+  const existingObject = await this.adapters.db.findOne('foreign-entity', {
+    id: getId(object),
+  });
+
+  if (existingObject) {
+    console.log('We have already received this object.');
+    return;
+  }
 
   if ('inReplyTo' in object && object.inReplyTo) {
     const objectInReplyTo = await this.adapters.db.findEntityById(
@@ -29,6 +37,7 @@ export async function handleCreate(this: InboxPostEndpoint) {
   }
 
   // Groups automatically announce activities addressed to them if sent from non-blocked followers.
+
   if (isType(this.actor, AP.ActorTypes.GROUP)) {
     const followersCollection: AP.Collection = await this.adapters.db.findEntityById(getId(this.actor.followers));
 

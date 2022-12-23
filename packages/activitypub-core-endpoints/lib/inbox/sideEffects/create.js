@@ -9,6 +9,13 @@ async function handleCreate() {
         throw new Error('Bad activity: no object.');
     }
     const object = activity.object;
+    const existingObject = await this.adapters.db.findOne('foreign-entity', {
+        id: (0, activitypub_core_utilities_1.getId)(object),
+    });
+    if (existingObject) {
+        console.log('We have already received this object.');
+        return;
+    }
     if ('inReplyTo' in object && object.inReplyTo) {
         const objectInReplyTo = await this.adapters.db.findEntityById((0, activitypub_core_utilities_1.getId)(object.inReplyTo));
         if (objectInReplyTo) {
