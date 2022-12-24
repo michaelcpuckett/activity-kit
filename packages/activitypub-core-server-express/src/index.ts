@@ -55,7 +55,6 @@ export const activityPub =
   }) =>
   async (req: IncomingMessage & { hostname: string; }, res: ServerResponse, next: NextFunction) => {
     console.log('INCOMING:', req.url);
-    console.log('    FROM:', req.hostname);
 
     if (req.method === 'POST') {
       if (req.url === '/user') {

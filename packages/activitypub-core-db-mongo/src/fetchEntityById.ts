@@ -73,8 +73,8 @@ export async function fetchEntityById(
       return null;
     });
 
-  // TODO Turn on smarter caching.
-  // await this.saveThing(compressedEntity);
+  const entity = compressEntity(convertStringsToUrls(fetchedEntity));
+  await this.saveEntity(entity);
 
-  return compressEntity(convertStringsToUrls(fetchedEntity));
+  return entity;
 }

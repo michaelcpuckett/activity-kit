@@ -8,8 +8,4 @@ export const getCollectionNameByUrl = (url: URL) => {
   }
 
   return 'entity';
-
-  //const [, collectionName] = url.pathname.split('/'); // TODO
-
-  //return collectionName ?? 'entity';
 };
