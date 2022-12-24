@@ -49,9 +49,8 @@ async function fetchEntityById(id) {
         console.log(String(error));
         return null;
     });
-    const entity = (0, activitypub_core_utilities_1.compressEntity)((0, activitypub_core_utilities_1.convertStringsToUrls)(fetchedEntity));
-    await this.saveEntity(entity);
-    return entity;
+    await this.saveEntity(fetchedEntity);
+    return (0, activitypub_core_utilities_1.compressEntity)((0, activitypub_core_utilities_1.convertStringsToUrls)(fetchedEntity));
 }
 exports.fetchEntityById = fetchEntityById;
 //# sourceMappingURL=fetchEntityById.js.map
