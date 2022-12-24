@@ -74,7 +74,7 @@ export async function fetchEntityById(
     });
 
   if (fetchedEntity?.id) {
-    const entity = compressEntity(convertStringsToUrls(fetchedEntity))
+    const entity = compressEntity(convertStringsToUrls(fetchedEntity));
     await this.saveEntity(entity);
     return entity;
   }
