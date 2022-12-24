@@ -73,7 +73,8 @@ export class InboxPostEndpoint {
       return false;
     }
 
-    const blockedActors = await Promise.all(blocks.items.map(async (id: URL) => (await this.adapters.db.queryById(id))?.object));
+    const blockedItems = blocks.items ? Array.isArray(blocks.items) ? blocks.items : [blocks.items] : [];
+    const blockedActors = await Promise.all(blockedItems.map(async (id: URL) => (await this.adapters.db.queryById(id))?.object));
     const potentiallyBlockedActorId = getId(this.activity.actor);
     
     return blockedActors.map(id => id.toString()).includes(potentiallyBlockedActorId.toString());
