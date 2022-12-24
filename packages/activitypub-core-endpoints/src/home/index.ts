@@ -45,9 +45,6 @@ export class HomeGetEndpoint {
       await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''),
     );
 
-    console.log(actor?.id)
-    console.log('^actor.id');
-
     if (!actor) {
       this.res.statusCode = 302;
       this.res.setHeader('Location', '/login');

@@ -11,7 +11,7 @@ export async function handleCreate(this: InboxPostEndpoint) {
 
   const object = activity.object;
   const existingObject = await this.adapters.db.findOne('foreign-entity', {
-    id: getId(object),
+    id: getId(object).toString(),
   });
 
   if (existingObject) {

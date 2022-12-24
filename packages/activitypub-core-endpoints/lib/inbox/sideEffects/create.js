@@ -10,7 +10,7 @@ async function handleCreate() {
     }
     const object = activity.object;
     const existingObject = await this.adapters.db.findOne('foreign-entity', {
-        id: (0, activitypub_core_utilities_1.getId)(object),
+        id: (0, activitypub_core_utilities_1.getId)(object).toString(),
     });
     if (existingObject) {
         console.log('We have already received this object.');

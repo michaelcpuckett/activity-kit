@@ -21,8 +21,6 @@ class HomeGetEndpoint {
     async respond(render) {
         const cookies = cookie_1.default.parse(this.req.headers.cookie ?? '');
         const actor = await this.adapters.db.getActorByUserId(await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''));
-        console.log(actor?.id);
-        console.log('^actor.id');
         if (!actor) {
             this.res.statusCode = 302;
             this.res.setHeader('Location', '/login');
