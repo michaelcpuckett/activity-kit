@@ -73,7 +73,11 @@ export async function fetchEntityById(
       return null;
     });
 
-  await this.saveEntity(fetchedEntity);
+  if (fetchedEntity?.id) {
+    const entity = compressEntity(convertStringsToUrls(fetchedEntity))
+    await this.saveEntity(entity);
+    return entity;
+  }
 
-  return compressEntity(convertStringsToUrls(fetchedEntity));
+  return null;
 }
