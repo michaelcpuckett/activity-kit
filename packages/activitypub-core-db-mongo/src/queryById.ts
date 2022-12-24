@@ -5,9 +5,5 @@ export async function queryById(
   this: MongoDbAdapter,
   id: URL,
 ): Promise<AP.Entity | null> {
-  try {
-    return (await this.findEntityById(id)) ?? (await this.fetchEntityById(id));
-  } catch (error: unknown) {
-    throw new Error(String(error));
-  }
+  return await this.findEntityById(id) ?? await this.fetchEntityById(id);
 }

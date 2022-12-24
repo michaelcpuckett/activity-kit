@@ -27,6 +27,11 @@ export async function fetchEntityById(
 
   // Send HTTP Signature for Mastodon in secure mode.
   const actor = await this.findOne('entity', { preferredUsername: 'bot' }) as AP.Actor;
+
+  if (!actor) {
+    throw new Error('Bot actor not set up.');
+  }
+
   const {
     dateHeader,
     signatureHeader
@@ -73,7 +78,7 @@ export async function fetchEntityById(
       return null;
     });
 
-  if (fetchedEntity?.id) {
+  if (fetchedEntity && 'id' in fetchedEntity) {
     const entity = compressEntity(convertStringsToUrls(fetchedEntity));
     await this.saveEntity(entity);
     return entity;

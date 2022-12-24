@@ -13,6 +13,9 @@ async function fetchEntityById(id) {
         return (0, activitypub_core_utilities_1.compressEntity)((0, activitypub_core_utilities_1.convertStringsToUrls)(foundEntity));
     }
     const actor = await this.findOne('entity', { preferredUsername: 'bot' });
+    if (!actor) {
+        throw new Error('Bot actor not set up.');
+    }
     const { dateHeader, signatureHeader } = await (0, activitypub_core_utilities_1.getHttpSignature)(id, actor.id, await this.getPrivateKey(actor));
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 1250);
@@ -49,8 +52,12 @@ async function fetchEntityById(id) {
         console.log(String(error));
         return null;
     });
-    await this.saveEntity(fetchedEntity);
-    return (0, activitypub_core_utilities_1.compressEntity)((0, activitypub_core_utilities_1.convertStringsToUrls)(fetchedEntity));
+    if (fetchedEntity && 'id' in fetchedEntity) {
+        const entity = (0, activitypub_core_utilities_1.compressEntity)((0, activitypub_core_utilities_1.convertStringsToUrls)(fetchedEntity));
+        await this.saveEntity(entity);
+        return entity;
+    }
+    return null;
 }
 exports.fetchEntityById = fetchEntityById;
 //# sourceMappingURL=fetchEntityById.js.map
