@@ -53,7 +53,7 @@ export async function fetchEntityById(
       clearTimeout(timeout);
       if (response.status === 200) {
         return await response.json();
-      } else if (response.status === 404) {
+      } else if (response.status === 410) {
         const data = await response.json();
 
         if ('@context' in data) {
