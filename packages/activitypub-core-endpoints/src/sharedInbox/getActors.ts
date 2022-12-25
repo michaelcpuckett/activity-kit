@@ -1,5 +1,5 @@
 import { AP } from 'activitypub-core-types';
-import { getId, isTypeOf } from 'activitypub-core-utilities';
+import { getCollectionNameByUrl, getId, isTypeOf } from 'activitypub-core-utilities';
 import { SharedInboxPostEndpoint } from '.';
 import { InboxPostEndpoint } from '../inbox';
 
@@ -33,6 +33,12 @@ export async function getActors(
   const recipients = await Promise.all(
     recipientIds.map(async (recipientId) => {
       if (recipientId.toString() === getId(activity.actor).toString()) {
+        return null;
+      }
+
+      const isLocal = getCollectionNameByUrl(recipientId) === 'entity';
+
+      if (!isLocal) {
         return null;
       }
 

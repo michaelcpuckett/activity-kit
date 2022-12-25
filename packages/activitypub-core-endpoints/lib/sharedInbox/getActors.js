@@ -29,6 +29,10 @@ async function getActors() {
         if (recipientId.toString() === (0, activitypub_core_utilities_1.getId)(activity.actor).toString()) {
             return null;
         }
+        const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(recipientId) === 'entity';
+        if (!isLocal) {
+            return null;
+        }
         const recipient = await this.adapters.db.findEntityById(recipientId);
         if (!recipient) {
             return null;
