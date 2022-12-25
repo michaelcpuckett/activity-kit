@@ -41,5 +41,8 @@ export async function signAndSendToForeignActorInbox(
     .then(async (res) => {
       console.log(await res.text(), res.statusCode);
       return res;
+    })
+    .catch(error => {
+      console.log(error);
     });
 }

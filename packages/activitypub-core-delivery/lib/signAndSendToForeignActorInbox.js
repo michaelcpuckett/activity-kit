@@ -22,6 +22,9 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity
         .then(async (res) => {
         console.log(await res.text(), res.statusCode);
         return res;
+    })
+        .catch(error => {
+        console.log(error);
     });
 }
 exports.signAndSendToForeignActorInbox = signAndSendToForeignActorInbox;
