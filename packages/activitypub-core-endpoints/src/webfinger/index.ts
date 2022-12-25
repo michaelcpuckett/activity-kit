@@ -52,10 +52,6 @@ export class WebfingerGetEndpoint {
     const [account] = resource.split('@');
     const [, username] = account.split(':');
 
-    if (!username) {
-      return this.handleNotFound();
-    }
-    
     const actor = await this.adapters.db.findOne('entity', {
       preferredUsername: username,
     }, [DbOptions.CASE_INSENSITIVE]);
