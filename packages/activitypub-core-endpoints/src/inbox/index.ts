@@ -85,7 +85,7 @@ export class InboxPostEndpoint {
       await this.parseBody();
 
       const existingActivity = await this.adapters.db.findEntityById(getId(this.activity)) ?? await this.adapters.db.findOne('foreign-entity', {
-        id: getId(this.activity),
+        id: getId(this.activity).toString(),
       });
 
       if (existingActivity) {

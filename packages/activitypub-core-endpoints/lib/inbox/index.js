@@ -58,7 +58,7 @@ class InboxPostEndpoint {
         try {
             await this.parseBody();
             const existingActivity = await this.adapters.db.findEntityById((0, activitypub_core_utilities_1.getId)(this.activity)) ?? await this.adapters.db.findOne('foreign-entity', {
-                id: (0, activitypub_core_utilities_1.getId)(this.activity),
+                id: (0, activitypub_core_utilities_1.getId)(this.activity).toString(),
             });
             if (existingActivity) {
                 console.log('We have already received this activity. Assuming it was forwarded by another server.');
