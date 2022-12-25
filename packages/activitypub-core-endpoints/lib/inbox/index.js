@@ -40,6 +40,12 @@ class InboxPostEndpoint {
         if (!('actor' in this.activity)) {
             return;
         }
+        console.log(Array.isArray(this.actor.streams) ? {
+            success: 'Actor has streams.'
+        } : {
+            error: 'NO STREAMS',
+            actor: this.actor
+        });
         const streams = await Promise.all(this.actor.streams.map(async (stream) => await this.adapters.db.queryById(stream)));
         const blocks = streams.find((stream) => {
             if (stream.name === 'Blocks') {
