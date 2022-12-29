@@ -88,34 +88,6 @@ export async function handleCreate(this: InboxPostEndpoint) {
       throw new Error('Bad shared collection: not found.');
     }
 
-    // If this in reply to something, the member probably
-    // meant to boost the post being replied to.
-    const objectToAnnounce = await (async () => {
-      if (!('inReplyTo' in object && object.inReplyTo)) {
-        return object;
-      }
-  
-      const objectInReplyToId = getId(object.inReplyTo);
-  
-      // Ensure the reply isn't something that's already been shared.
-  
-      if (shared.orderedItems.map(orderedItem => getId(orderedItem).toString()).includes(objectInReplyToId.toString())) {
-        return object;
-      }
-  
-      const objectInReplyTo = await this.adapters.db.queryById(
-        objectInReplyToId
-      );
-  
-      if (!objectInReplyTo) {
-        return object;
-      } 
-  
-      return objectInReplyTo;
-    })();
-
-    (this.activity as AP.Announce).object = objectToAnnounce;
-
     const announceActivityReplies: AP.Collection = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: new URL(`${announceActivityId}/replies`),
@@ -155,10 +127,7 @@ export async function handleCreate(this: InboxPostEndpoint) {
       type: AP.ActivityTypes.ANNOUNCE,
       actor: getId(this.actor),
       to: [new URL(PUBLIC_ACTOR), getId(this.actor.followers)],
-      object: getId(objectToAnnounce),
-      ...getId(objectToAnnounce).toString() !== getId(object).toString() ? {
-        context: getId(object),
-      } : null,
+      object: getId(object),
       replies: announceActivityReplies.id,
       likes: announceActivityLikes.id,
       shares: announceActivityShares.id,
@@ -167,14 +136,14 @@ export async function handleCreate(this: InboxPostEndpoint) {
 
     await Promise.all([this.adapters.db.insertOrderedItem(shared.id, announceActivity.id)]);
 
-    const isLocal = getCollectionNameByUrl(getId(objectToAnnounce)) !== 'foreign-entity';
+    const isLocal = getCollectionNameByUrl(getId(object)) !== 'foreign-entity';
 
     if (isLocal) {
-      if (!('shares' in objectToAnnounce) || !objectToAnnounce.shares) {
+      if (!('shares' in object) || !object.shares) {
         throw new Error('Object is local, but `shares` is not in this object.');
       }
 
-      const sharesId = getId(objectToAnnounce.shares);
+      const sharesId = getId(object.shares);
 
       if (!sharesId) {
         throw new Error('Bad shares collection: no ID.');

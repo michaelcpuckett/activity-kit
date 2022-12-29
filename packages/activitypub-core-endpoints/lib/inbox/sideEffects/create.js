@@ -56,21 +56,6 @@ async function handleCreate() {
         if (!shared || !shared.id) {
             throw new Error('Bad shared collection: not found.');
         }
-        const objectToAnnounce = await (async () => {
-            if (!('inReplyTo' in object && object.inReplyTo)) {
-                return object;
-            }
-            const objectInReplyToId = (0, activitypub_core_utilities_1.getId)(object.inReplyTo);
-            if (shared.orderedItems.map(orderedItem => (0, activitypub_core_utilities_1.getId)(orderedItem).toString()).includes(objectInReplyToId.toString())) {
-                return object;
-            }
-            const objectInReplyTo = await this.adapters.db.queryById(objectInReplyToId);
-            if (!objectInReplyTo) {
-                return object;
-            }
-            return objectInReplyTo;
-        })();
-        this.activity.object = objectToAnnounce;
         const announceActivityReplies = {
             '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
             id: new URL(`${announceActivityId}/replies`),
@@ -107,22 +92,19 @@ async function handleCreate() {
             type: activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE,
             actor: (0, activitypub_core_utilities_1.getId)(this.actor),
             to: [new URL(activitypub_core_utilities_1.PUBLIC_ACTOR), (0, activitypub_core_utilities_1.getId)(this.actor.followers)],
-            object: (0, activitypub_core_utilities_1.getId)(objectToAnnounce),
-            ...(0, activitypub_core_utilities_1.getId)(objectToAnnounce).toString() !== (0, activitypub_core_utilities_1.getId)(object).toString() ? {
-                context: (0, activitypub_core_utilities_1.getId)(object),
-            } : null,
+            object: (0, activitypub_core_utilities_1.getId)(object),
             replies: announceActivityReplies.id,
             likes: announceActivityLikes.id,
             shares: announceActivityShares.id,
             published: publishedDate,
         };
         await Promise.all([this.adapters.db.insertOrderedItem(shared.id, announceActivity.id)]);
-        const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)((0, activitypub_core_utilities_1.getId)(objectToAnnounce)) !== 'foreign-entity';
+        const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)((0, activitypub_core_utilities_1.getId)(object)) !== 'foreign-entity';
         if (isLocal) {
-            if (!('shares' in objectToAnnounce) || !objectToAnnounce.shares) {
+            if (!('shares' in object) || !object.shares) {
                 throw new Error('Object is local, but `shares` is not in this object.');
             }
-            const sharesId = (0, activitypub_core_utilities_1.getId)(objectToAnnounce.shares);
+            const sharesId = (0, activitypub_core_utilities_1.getId)(object.shares);
             if (!sharesId) {
                 throw new Error('Bad shares collection: no ID.');
             }
