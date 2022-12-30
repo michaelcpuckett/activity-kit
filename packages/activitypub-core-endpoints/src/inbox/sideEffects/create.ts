@@ -19,6 +19,9 @@ export async function handleCreate(this: InboxPostEndpoint) {
     return;
   }
 
+  // Cache the object for comparison later.
+  await this.adapters.db.saveEntity(activity.object);
+
   if ('inReplyTo' in object && object.inReplyTo) {
     const objectInReplyTo = await this.adapters.db.findEntityById(
       getId(object.inReplyTo),

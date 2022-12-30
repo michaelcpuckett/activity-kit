@@ -16,6 +16,7 @@ async function handleCreate() {
         console.log('We have already received this object.');
         return;
     }
+    await this.adapters.db.saveEntity(activity.object);
     if ('inReplyTo' in object && object.inReplyTo) {
         const objectInReplyTo = await this.adapters.db.findEntityById((0, activitypub_core_utilities_1.getId)(object.inReplyTo));
         if (objectInReplyTo) {
