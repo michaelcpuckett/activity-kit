@@ -142,7 +142,8 @@ export class EntityGetEndpoint {
     const typeFilter = query.has('type') ? query.get('type').split(',') : [];
     const sort = query.get('sort');
     const limit = query.has('limit') ? Number(query.get('limit')) : ITEMS_PER_COLLECTION_PAGE;
-    const expandedItems = await Promise.all(entity[isOrderedCollection ? 'orderedItems' : 'items'].map(async (id: URL) => {
+    const entityItems = entity[isOrderedCollection ? 'orderedItems' : 'items']
+    const expandedItems = await Promise.all((Array.isArray(entityItems) ? entityItems : []).map(async (id: URL) => {
       return await this.adapters.db.queryById(id);
     }));
     const filteredItems = typeFilter.length ? expandedItems.filter(({ type }) => typeFilter.includes(type)) : expandedItems;
