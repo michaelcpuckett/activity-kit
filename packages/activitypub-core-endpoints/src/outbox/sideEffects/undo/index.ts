@@ -1,35 +1,16 @@
-import { AP } from 'activitypub-core-types';
+import { AP, assertIsApActivity, assertIsApType } from 'activitypub-core-types';
 import { getId, isType } from 'activitypub-core-utilities';
 import { OutboxPostEndpoint } from '../..';
 
-/**
- * Undo
- *   [x] Supports the Undo activity in the client-to-server protocol (outbox:undo)
- *     NON-NORMATIVE
- *   [x] Ensures that the actor in the activity actor is the same in activity being
- *     undone (outbox:undo:ensures-activity-and-actor-are-same) MUST
- */
+export async function handleUndo(this: OutboxPostEndpoint, activity: AP.Entity) {
+  assertIsApType<AP.Undo>(activity, AP.ActivityTypes.UNDO);
 
-export async function handleUndo(this: OutboxPostEndpoint) {
-  if (!('object' in this.activity)) {
-    throw new Error('Bad activity: no object.');
-  }
-
-  const objectId = getId(this.activity.object);
-
-  if (!objectId) {
-    throw new Error('Bad object: no ID.');
-  }
-
+  const objectId = getId(activity.object);
   const object = await this.adapters.db.findEntityById(objectId);
 
-  if (!object) {
-    throw new Error('Bad object: not found.');
-  }
+  assertIsApActivity(object);
 
-  if (
-    !isActorAuthorizedToModifyObject(this.actor, this.activity as AP.Activity)
-  ) {
+  if (!isActorAuthorizedToModifyObject(this.actor, activity)) {
     throw new Error('Not authorized to modify object!');
   }
 

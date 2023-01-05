@@ -10,7 +10,7 @@ async function getActors() {
     if (!actor || !actor.id || !('inbox' in actor)) {
         throw new Error('No actor with this inbox.');
     }
-    this.actors = [actor];
+    return [actor];
 }
 exports.getActors = getActors;
 //# sourceMappingURL=getActors.js.map

@@ -1,83 +1,74 @@
-import { AP } from 'activitypub-core-types';
-import { getId, isTypeOf } from 'activitypub-core-utilities';
+import {
+  AP,
+  assertIsApActor,
+  assertIsApEntity,
+  assertIsApType,
+  assertIsArray,
+  assertExists,
+} from 'activitypub-core-types';
+import {
+  getId,
+  isType,
+} from 'activitypub-core-utilities';
 import { InboxPostEndpoint } from '..';
 
-export async function handleAccept(this: InboxPostEndpoint) {
-  const activity = this.activity;
-
-  if (!('object' in activity)) {
-    throw new Error('Bad activity: no object.');
-  }
+// A Follow request has been accepted.
+export async function handleAccept(
+  this: InboxPostEndpoint,
+  activity: AP.Entity,
+) {
+  assertIsApType<AP.Accept>(activity, AP.ActivityTypes.ACCEPT);
 
   const objectId = getId(activity.object);
 
-  if (!objectId) {
-    throw new Error('Bad object: no ID.');
-  }
+  assertExists(objectId);
 
-  const object = await this.adapters.db.queryById(objectId);
+  const object = await this.adapters.db.findEntityById(objectId);
 
-  if (!object) {
-    throw new Error('Bad object: not found.');
-  }
+  assertIsApEntity(object);
 
-  if (object.type !== AP.ActivityTypes.FOLLOW) {
-    // Not applicable.
+  if (!isType(object, AP.ActivityTypes.FOLLOW)) {
     return;
   }
 
-  const followActivity: AP.Follow = object;
+  const followActivity = object;
+
+  assertIsApType<AP.Follow>(followActivity, AP.ActivityTypes.FOLLOW);
+
   const followerId = getId(followActivity.actor);
 
-  if (!followerId) {
-    throw new Error('Bad follower: no ID.');
-  }
-
-  const followeeId = getId(followActivity.object);
-
-  if (!followerId) {
-    throw new Error('Bad followee: no ID.');
-  }
+  assertExists(followerId);
 
   const follower = await this.adapters.db.queryById(followerId);
 
-  if (!follower) {
-    throw new Error('Bad follower: not found.');
-  }
+  assertIsApActor(follower);
 
-  if (!isTypeOf(follower, AP.ActorTypes)) {
-    throw new Error('Bad follower: not an actor.');
-  }
+  const followeeId = getId(followActivity.object);
+
+  assertExists(followeeId);
 
   const followee = await this.adapters.db.queryById(followeeId);
 
-  if (!followee) {
-    throw new Error('Bad followee: not found.');
-  }
-
-  if (!isTypeOf(followee, AP.ActorTypes)) {
-    throw new Error('Bad followee: not an actor.');
-  }
+  assertIsApActor(followee);
 
   const followingId = getId(follower.following);
 
-  if (!followingId) {
-    throw new Error('Bad followee: No following collection.');
-  }
+  assertExists(followingId);
 
   const following = await this.adapters.db.queryById(followingId);
 
-  if (!following) {
-    throw new Error('Bad followers collection: Not found.');
-  }
+  assertIsApType<AP.Collection>(following, AP.CollectionTypes.COLLECTION);
+  assertIsArray(following.items);
 
   // Already following.
-  if (following.items.map((id: URL) => id.toString()).includes(getId(followee).toString())) {
-    console.log('NOTE: ALREADY FOLLOWING.');
+  if (
+    following.items
+      .map((item: AP.EntityReference) => getId(item)?.toString())
+      .includes(followeeId.toString())
+  ) {
+    console.log('Already following.');
     return;
   }
 
-  await Promise.all([
-    this.adapters.db.insertItem(followingId, followeeId),
-  ]);
+  await this.adapters.db.insertItem(followingId, followeeId);
 }

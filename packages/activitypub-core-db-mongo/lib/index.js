@@ -20,6 +20,7 @@ const getCollectionItems_1 = require("./getCollectionItems");
 const expandCollection_1 = require("./expandCollection");
 const findAll_1 = require("./findAll");
 const getActorByUserId_1 = require("./getActorByUserId");
+const getStreamByName_1 = require("./getStreamByName");
 class MongoDbAdapter {
     db;
     fetch;
@@ -33,6 +34,7 @@ class MongoDbAdapter {
     findStringValueById = findStringValueById_1.findStringValueById;
     findStringIdByValue = findStringIdByValue_1.findStringIdByValue;
     getPrivateKey = getPrivateKey_1.getPrivateKey;
+    getStreamByName = getStreamByName_1.getStreamByName;
     getActorByUserId = getActorByUserId_1.getActorByUserId;
     saveEntity = saveEntity_1.saveEntity;
     saveString = saveString_1.saveString;

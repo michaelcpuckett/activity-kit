@@ -28,6 +28,7 @@ export type DbAdapter = {
   findStringIdByValue: Function;
   findStringValueById: Function;
   getActorByUserId: Function;
+  getStreamByName: Function;
   insertItem: Function;
   removeItem: Function;
   insertOrderedItem: Function;

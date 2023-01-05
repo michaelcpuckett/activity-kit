@@ -64,5 +64,5 @@ export async function getActors(
     }
   }
 
-  this.actors = actors;
+  return actors;
 }

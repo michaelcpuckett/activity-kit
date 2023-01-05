@@ -10,42 +10,42 @@ export async function runSideEffects(this: OutboxPostEndpoint) {
   }
 
   if (isType(this.activity, AP.ActivityTypes.CREATE)) {
-    await this.handleCreate();
+    await this.handleCreate(this.activity);
   }
 
   if (isType(this.activity, AP.ActivityTypes.DELETE)) {
-    await this.handleDelete();
+    await this.handleDelete(this.activity);
   }
 
   if (isType(this.activity, AP.ActivityTypes.ACCEPT)) {
-    await this.handleAccept();
+    await this.handleAccept(this.activity);
   }
 
   if (isType(this.activity, AP.ActivityTypes.BLOCK)) {
-    await this.handleBlock();
+    await this.handleBlock(this.activity);
   }
 
   if (isType(this.activity, AP.ActivityTypes.UPDATE)) {
-    await this.handleUpdate();
+    await this.handleUpdate(this.activity);
   }
 
   if (isType(this.activity, AP.ActivityTypes.LIKE)) {
-    await this.handleLike();
+    await this.handleLike(this.activity);
   }
 
   if (isType(this.activity, AP.ActivityTypes.ANNOUNCE)) {
-    await this.handleAnnounce();
+    await this.handleAnnounce(this.activity);
   }
 
   if (isType(this.activity, AP.ActivityTypes.ADD)) {
-    await this.handleAdd();
+    await this.handleAdd(this.activity);
   }
 
   if (isType(this.activity, AP.ActivityTypes.REMOVE)) {
-    await this.handleRemove();
+    await this.handleRemove(this.activity);
   }
 
   if (isType(this.activity, AP.ActivityTypes.UNDO)) {
-    await this.handleUndo();
+    await this.handleUndo(this.activity);
   }
 }

@@ -10,34 +10,34 @@ async function runSideEffects() {
         }
     }
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
-        await this.handleCreate();
+        await this.handleCreate(this.activity);
     }
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.DELETE)) {
-        await this.handleDelete();
+        await this.handleDelete(this.activity);
     }
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.ACCEPT)) {
-        await this.handleAccept();
+        await this.handleAccept(this.activity);
     }
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.BLOCK)) {
-        await this.handleBlock();
+        await this.handleBlock(this.activity);
     }
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.UPDATE)) {
-        await this.handleUpdate();
+        await this.handleUpdate(this.activity);
     }
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.LIKE)) {
-        await this.handleLike();
+        await this.handleLike(this.activity);
     }
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE)) {
-        await this.handleAnnounce();
+        await this.handleAnnounce(this.activity);
     }
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.ADD)) {
-        await this.handleAdd();
+        await this.handleAdd(this.activity);
     }
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.REMOVE)) {
-        await this.handleRemove();
+        await this.handleRemove(this.activity);
     }
     if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.UNDO)) {
-        await this.handleUndo();
+        await this.handleUndo(this.activity);
     }
 }
 exports.runSideEffects = runSideEffects;

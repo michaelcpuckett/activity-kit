@@ -6,14 +6,16 @@ export async function broadcastActivity(this: InboxPostEndpoint) {
     throw new Error('No activity.');
   }
 
-  if (!this.actor) {
-    throw new Error('No actor.');
+  const botActor = await this.adapters.db.findOne('entity', { preferredUsername: 'bot' }) as AP.Actor;
+
+  if (!botActor) {
+    throw new Error('Bot actor not set up.');
   }
 
   if (await this.shouldForwardActivity()) {
     await this.adapters.delivery.broadcast(
       this.activity as AP.Activity,
-      this.actor,
+      botActor,
     );
   }
 }

@@ -1,42 +1,19 @@
 import { OutboxPostEndpoint } from '..';
-import { assertExists, assertIsApActor, assertIsApEntity, assertIsApTransitiveActivity, assertIsArray } from 'activitypub-core-types';
+import { assertIsApActor, assertIsApType } from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
+import { AP } from 'activitypub-core-types';
 
-export async function handleBlock(this: OutboxPostEndpoint) {
-  assertIsApTransitiveActivity(this.activity);
+export async function handleBlock(this: OutboxPostEndpoint, activity: AP.Entity) {
+  assertIsApType<AP.Block>(activity, AP.ActivityTypes.BLOCK);
 
-  const actorId = getId(this.activity.actor);
-
-  assertExists(actorId);
-
+  const actorId = getId(activity.actor);
   const actor = await this.adapters.db.queryById(actorId);
 
   assertIsApActor(actor);
 
-  const objectId = getId(this.activity.object);
+  const blocks = await this.adapters.db.getStreamByName(actor, 'Blocks');
 
-  assertExists(objectId);
+  assertIsApType<AP.Collection>(blocks, AP.CollectionTypes.COLLECTION);
 
-  const object = await this.adapters.db.queryById(objectId);
-
-  assertIsApActor(object);
-  assertIsArray(actor.streams);
-
-  const streams = await Promise.all(
-    actor.streams
-      .map(stream => getId(stream))
-      .map(async id => id ? await this.adapters.db.findEntityById(id) : null)
-  );
-
-  const blocks = streams.find((stream) => {
-    if (stream && 'name' in stream) {
-      if (stream.name === 'Blocks') {
-        return true;
-      }
-    }
-  });
-
-  assertIsApEntity(blocks);
-
-  await this.adapters.db.insertItem(blocks.id, this.activity.id);
+  await this.adapters.db.insertItem(blocks.id, activity.id);
 }

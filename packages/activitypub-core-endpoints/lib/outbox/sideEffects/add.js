@@ -2,34 +2,28 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleAdd = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
+const activitypub_core_types_1 = require("activitypub-core-types");
 async function handleAdd(activity) {
-    activity = activity || this.activity;
-    if (!('object' in activity) || !('target' in activity)) {
-        throw new Error('Bad activity: no object / target.');
-    }
+    (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.ADD);
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
-    if (!objectId) {
-        throw new Error('Bad object: no ID.');
-    }
-    if (!activity.target) {
-        throw new Error('Bad activity: must have target.');
-    }
     const targetId = (0, activitypub_core_utilities_1.getId)(activity.target);
-    if (!targetId) {
-        throw new Error('Bad target: no ID.');
-    }
     const target = await this.adapters.db.findEntityById(targetId);
-    if (!target) {
-        throw new Error('Bad target: not found, only local allowed.');
+    (0, activitypub_core_types_1.assertIsApCollection)(target);
+    if (target.attributedTo) {
+        const actorId = (0, activitypub_core_utilities_1.getId)(activity.actor);
+        const attributedToId = (0, activitypub_core_utilities_1.getId)(target.attributedTo);
+        if (attributedToId?.toString() !== actorId?.toString()) {
+            throw new Error('Not allowed.');
+        }
     }
-    if ('orderedItems' in target && Array.isArray(target.orderedItems)) {
+    if ((0, activitypub_core_utilities_1.isType)(target, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
         await this.adapters.db.insertOrderedItem(targetId, objectId);
     }
-    else if ('items' in target && Array.isArray(target.items)) {
+    else if ((0, activitypub_core_utilities_1.isType)(target, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
         await this.adapters.db.insertItem(targetId, objectId);
     }
     else {
-        throw new Error('Bad target: not a collection.');
+        throw new Error('Bad target: Not a collection.');
     }
 }
 exports.handleAdd = handleAdd;

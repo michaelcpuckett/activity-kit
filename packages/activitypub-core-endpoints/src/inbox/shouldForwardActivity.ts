@@ -83,10 +83,6 @@ export async function shouldForwardActivity(this: InboxPostEndpoint) {
       continue;
     }
 
-    if (objectId.toString() === this.actor?.id?.toString()) {
-      continue;
-    }
-
     const foundItem = await this.adapters.db.findEntityById(objectId);
 
     if (!foundItem) {

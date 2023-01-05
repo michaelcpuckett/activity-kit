@@ -67,9 +67,6 @@ async function shouldForwardActivity() {
         if (!objectId) {
             continue;
         }
-        if (objectId.toString() === this.actor?.id?.toString()) {
-            continue;
-        }
         const foundItem = await this.adapters.db.findEntityById(objectId);
         if (!foundItem) {
             continue;

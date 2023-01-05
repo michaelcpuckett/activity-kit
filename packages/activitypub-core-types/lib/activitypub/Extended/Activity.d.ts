@@ -88,7 +88,7 @@ export declare type Travel = IntransitiveActivity & {
 export declare type Announce = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.ANNOUNCE>;
 };
-export declare type Block = Ignore & {
+export declare type Block = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.BLOCK>;
 };
 export declare type Flag = BaseActivity & {

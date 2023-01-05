@@ -1,4 +1,4 @@
-import { AP } from 'activitypub-core-types';
+import { AP, assertIsArray } from 'activitypub-core-types';
 import type { AuthAdapter, DbAdapter, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import {
@@ -61,44 +61,36 @@ export class OutboxPostEndpoint {
   }
 
   public async respond() {
-    try {
-      await this.parseBody();
-      await this.getActor();
-      await this.authenticateActor();
+    await this.parseBody();
+    await this.getActor();
+    await this.authenticateActor();
 
-      const activityId = new URL(`${LOCAL_DOMAIN}/entity/${getGuid()}`);
-      this.activity.id = activityId; // Overwrite ID
+    const activityId = new URL(`${LOCAL_DOMAIN}/entity/${getGuid()}`);
+    this.activity.id = activityId; // Overwrite ID
 
-      if (isTypeOf(this.activity, AP.ActivityTypes)) {
-        (this.activity as AP.Activity).url = activityId;
-        await this.runSideEffects();
-      } else {
-        // If not activity type, wrap object in a Create activity.
-        await this.wrapInActivity();
-      }
-
-      // Address activity and object the same way.
-      this.activity = combineAddresses(this.activity as AP.Activity);
-
-      await this.saveActivity();
-
-      if (!this.activity.id) {
-        throw new Error('Bad activity: No ID.');
-      }
-
-      // Broadcast to Fediverse.
-      await this.adapters.delivery.broadcast(this.activity, this.actor);
-
-      this.res.statusCode = 201;
-      this.res.setHeader('Location', this.activity.id.toString());
-      this.res.end();
-    } catch (error: unknown) {
-      console.log(error);
-
-      this.res.statusCode = 500;
-      this.res.write(String(error));
-      this.res.end();
+    if (isTypeOf(this.activity, AP.ActivityTypes)) {
+      (this.activity as AP.Activity).url = activityId;
+      await this.runSideEffects();
+    } else {
+      // If not activity type, wrap object in a Create activity.
+      await this.wrapInActivity();
     }
+
+    // Address activity and object the same way.
+    this.activity = combineAddresses(this.activity as AP.Activity);
+
+    await this.saveActivity();
+
+    if (!this.activity.id) {
+      throw new Error('Bad activity: No ID.');
+    }
+
+    // Broadcast to Fediverse.
+    await this.adapters.delivery.broadcast(this.activity, this.actor);
+
+    this.res.statusCode = 201;
+    this.res.setHeader('Location', this.activity.id.toString());
+    this.res.end();
   }
 
   protected authenticateActor = authenticateActor;

@@ -5,84 +5,82 @@ const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
-async function handleCreate() {
-    if (!('object' in this.activity)) {
-        throw new Error('Bad activity: no object.');
-    }
-    const object = this.activity.object;
-    if (!object) {
-        throw new Error('Bad object: not found.');
-    }
+async function handleCreate(activity) {
+    (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.CREATE);
+    const actorId = (0, activitypub_core_utilities_3.getId)(activity.actor);
+    (0, activitypub_core_types_1.assertExists)(actorId);
+    const object = activity.object;
     if (object instanceof URL) {
         throw new Error('Bad object: URL reference is not allowed for Create.');
     }
     if (Array.isArray(object)) {
         throw new Error('Internal error: Object array not supported currently. TODO.');
     }
+    (0, activitypub_core_types_1.assertIsApEntity)(object);
     const objectId = `${activitypub_core_utilities_2.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_3.getGuid)()}`;
     object.id = new URL(objectId);
-    if ('url' in object) {
+    if ((0, activitypub_core_utilities_1.isTypeOf)(object, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
+        (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
         object.url = new URL(objectId);
-    }
-    const publishedDate = new Date();
-    const objectReplies = {
-        '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
-        id: new URL(`${object.id.toString()}/replies`),
-        url: new URL(`${object.id.toString()}/replies`),
-        name: 'Replies',
-        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
-        totalItems: 0,
-        items: [],
-        published: publishedDate,
-    };
-    const objectLikes = {
-        '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
-        id: new URL(`${object.id.toString()}/likes`),
-        url: new URL(`${object.id.toString()}/likes`),
-        name: 'Likes',
-        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-        totalItems: 0,
-        orderedItems: [],
-        published: publishedDate,
-    };
-    const objectShares = {
-        '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
-        id: new URL(`${object.id.toString()}/shares`),
-        url: new URL(`${object.id.toString()}/shares`),
-        name: 'Shares',
-        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-        totalItems: 0,
-        orderedItems: [],
-        published: publishedDate,
-    };
-    if ((0, activitypub_core_utilities_1.isTypeOf)(object, activitypub_core_types_1.AP.CoreObjectTypes)) {
-        const typedObject = object;
-        typedObject.attributedTo = this.activity.actor;
-        typedObject.replies = objectReplies.id;
-        typedObject.likes = objectLikes.id;
-        typedObject.shares = objectShares.id;
-        typedObject.attributedTo = this.activity.actor;
-        typedObject.published = publishedDate;
+        const publishedDate = new Date();
+        const objectRepliesId = new URL(`${objectId.toString()}/replies`);
+        const objectReplies = {
+            '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
+            id: objectRepliesId,
+            url: objectRepliesId,
+            name: 'Replies',
+            type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
+            totalItems: 0,
+            items: [],
+            published: publishedDate,
+        };
+        const objectLikesId = new URL(`${objectId.toString()}/likes`);
+        const objectLikes = {
+            '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
+            id: objectLikesId,
+            url: objectLikesId,
+            name: 'Likes',
+            type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+            totalItems: 0,
+            orderedItems: [],
+            published: publishedDate,
+        };
+        const objectSharesId = new URL(`${objectId.toString()}/shares`);
+        const objectShares = {
+            '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
+            id: objectSharesId,
+            url: objectSharesId,
+            name: 'Shares',
+            type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+            totalItems: 0,
+            orderedItems: [],
+            published: publishedDate,
+        };
+        object.attributedTo = actorId;
+        object.replies = objectRepliesId;
+        object.likes = objectLikesId;
+        object.shares = objectSharesId;
+        object.published = publishedDate;
         await Promise.all([
             this.adapters.db.saveEntity(object),
             this.adapters.db.saveEntity(objectReplies),
             this.adapters.db.saveEntity(objectLikes),
             this.adapters.db.saveEntity(objectShares),
         ]);
-        if (typedObject.inReplyTo) {
-            const objectInReplyTo = await this.adapters.db.findEntityById((0, activitypub_core_utilities_3.getId)(typedObject.inReplyTo));
+        if (object.inReplyTo) {
+            const objectInReplyTo = await this.adapters.db.findEntityById((0, activitypub_core_utilities_3.getId)(object.inReplyTo));
             if (objectInReplyTo) {
                 const repliesCollectionId = (0, activitypub_core_utilities_3.getId)(objectInReplyTo.replies);
                 if (repliesCollectionId) {
-                    await this.adapters.db.insertOrderedItem(repliesCollectionId, typedObject.id);
+                    await this.adapters.db.insertOrderedItem(repliesCollectionId, objectId);
                 }
             }
         }
     }
     else {
-        await Promise.all([this.adapters.db.saveEntity(object)]);
+        await this.adapters.db.saveEntity(object);
     }
-    this.activity.object = object;
+    activity.object = object;
 }
 exports.handleCreate = handleCreate;
 //# sourceMappingURL=create.js.map
