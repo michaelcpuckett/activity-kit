@@ -1,48 +1,32 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUndoLike = void 0;
+const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function handleUndoLike(activity) {
-    if (!('object' in activity)) {
-        throw new Error('Bad activity: no object.');
-    }
-    if (!activity.id) {
-        throw new Error('Bad activity: no ID.');
-    }
+    (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.LIKE);
     const actorId = (0, activitypub_core_utilities_1.getId)(activity.actor);
-    if (!actorId) {
-        throw new Error('Bad actor: no ID.');
-    }
     const actor = await this.adapters.db.queryById(actorId);
-    if (!actor || !('outbox' in actor)) {
-        throw new Error('Bad actor: not found.');
-    }
+    (0, activitypub_core_types_1.assertIsApActor)(actor);
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
-    if (!objectId) {
-        throw new Error('Bad object: no ID.');
-    }
-    const object = await this.adapters.db.queryById(objectId);
-    if (!object) {
-        throw new Error('Bad object: not found.');
-    }
-    if (!('likes' in object) || !object.likes) {
-        throw new Error('Bad object: no `likes` collection.');
-    }
-    const likesId = (0, activitypub_core_utilities_1.getId)(object.likes);
-    if (!likesId) {
-        throw new Error('Bad likes collection: no ID.');
-    }
-    if (!('liked' in actor) || !actor.liked) {
-        throw new Error('Bad actor: No liked collection.');
-    }
+    (0, activitypub_core_types_1.assertExists)(objectId);
     const likedId = (0, activitypub_core_utilities_1.getId)(actor.liked);
-    if (!likedId) {
-        throw new Error('Bad liked collection: no ID');
+    (0, activitypub_core_types_1.assertExists)(likedId);
+    await this.adapters.db.removeOrderedItem(likedId, objectId);
+    try {
+        const object = await this.adapters.db.queryById(objectId);
+        (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
+        const likesId = (0, activitypub_core_utilities_1.getId)(object.likes);
+        (0, activitypub_core_types_1.assertExists)(likesId);
+        const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectId) !== 'foreign-entity';
+        if (!isLocal) {
+            throw new Error('Cannot add to remote collection.');
+        }
+        await this.adapters.db.removeOrderedItem(likesId, activity.id);
     }
-    await Promise.all([
-        this.adapters.db.removeOrderedItem(likesId, activity.id),
-        this.adapters.db.removeOrderedItem(likedId, object.id),
-    ]);
+    catch (error) {
+        console.log(error);
+    }
 }
 exports.handleUndoLike = handleUndoLike;
 //# sourceMappingURL=undoLike.js.map

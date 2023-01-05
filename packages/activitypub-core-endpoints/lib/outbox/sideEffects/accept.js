@@ -1,34 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleAccept = void 0;
+const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
-async function handleAccept() {
-    if (!(this.activity && 'object' in this.activity && 'actor' in this.activity)) {
-        throw new Error('Bad activity: no object.');
-    }
-    const actorId = (0, activitypub_core_utilities_1.getId)(this.activity.actor);
+async function handleAccept(activity) {
+    (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.ACCEPT);
+    const actorId = (0, activitypub_core_utilities_1.getId)(activity.actor);
+    (0, activitypub_core_types_1.assertExists)(actorId);
     const actor = await this.adapters.db.queryById(actorId);
+    (0, activitypub_core_types_1.assertIsApActor)(actor);
     const followersId = (0, activitypub_core_utilities_1.getId)(actor.followers);
-    const followActivityId = (0, activitypub_core_utilities_1.getId)(this.activity.object);
+    (0, activitypub_core_types_1.assertExists)(followersId);
+    const followActivityId = (0, activitypub_core_utilities_1.getId)(activity.object);
     const followActivity = await this.adapters.db.queryById(followActivityId);
+    (0, activitypub_core_types_1.assertIsApType)(followActivity, activitypub_core_types_1.AP.ActivityTypes.FOLLOW);
     const followerId = (0, activitypub_core_utilities_1.getId)(followActivity.actor);
-    if (!('streams' in actor) ||
-        !actor.streams ||
-        !Array.isArray(actor.streams)) {
-        throw new Error("Actor's streams not found.");
-    }
-    const streams = await Promise.all(actor.streams.map(async (stream) => await this.adapters.db.findEntityById((0, activitypub_core_utilities_1.getId)(stream))));
-    const requests = streams.find((stream) => {
-        if (stream && 'name' in stream) {
-            if (stream.name === 'Requests') {
-                return true;
-            }
-        }
-    });
-    if (!requests || !requests.id) {
-        throw new Error('Bad requests collection: not found.');
-    }
+    (0, activitypub_core_types_1.assertExists)(followerId);
+    const requests = await this.adapters.db.getStreamByName(actor, 'Requests');
+    (0, activitypub_core_types_1.assertIsApType)(requests, activitypub_core_types_1.AP.CollectionTypes.COLLECTION);
     const requestsId = (0, activitypub_core_utilities_1.getId)(requests);
+    (0, activitypub_core_types_1.assertExists)(requestsId);
     await Promise.all([
         this.adapters.db.insertItem(followersId, followerId),
         this.adapters.db.removeItem(requestsId, followActivityId),

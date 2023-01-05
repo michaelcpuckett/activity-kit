@@ -1,56 +1,45 @@
-import { getId } from 'activitypub-core-utilities';
-import { AP } from 'activitypub-core-types';
+import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
+import { AP, assertExists, assertIsApActor, assertIsApEntity, assertIsApType } from 'activitypub-core-types';
 import { OutboxPostEndpoint } from '../..';
 
 export async function handleUndoAnnounce(
   this: OutboxPostEndpoint,
   activity: AP.Entity,
 ) {
-  if (!activity.id) {
-    throw new Error('Bad activity: no ID.');
-  }
+  assertIsApType<AP.Announce>(activity, AP.ActivityTypes.ANNOUNCE);
 
-  const actorId = getId((activity as AP.Activity).actor);
-
-  if (!actorId) {
-    throw new Error('Bad actor: no ID.');
-  }
-
+  const actorId = getId(activity.actor);
   const actor = await this.adapters.db.queryById(actorId);
 
-  if (!actor || !('outbox' in actor)) {
-    throw new Error('Bad actor: not found.');
-  }
+  assertIsApActor(actor);
 
-  if (
-    !('streams' in actor) ||
-    !actor.streams ||
-    !Array.isArray(actor.streams)
-  ) {
-    throw new Error('Bad actor: no streams.');
-  }
+  const shared = await this.adapters.db.getStreamByName(actor, 'Shared');
 
-  const streams = await Promise.all(
-    actor.streams
-      .map((stream: AP.Entity) => (stream instanceof URL ? stream : stream.id))
-      .map(async (id: URL) =>
-        id ? await this.adapters.db.queryById(id) : null,
-      ),
-  );
+  assertIsApType<AP.OrderedCollection>(shared, AP.CollectionTypes.ORDERED_COLLECTION);
 
-  const shared = streams.find((stream) => {
-    if (stream && 'name' in stream) {
-      if (stream.name === 'Shared') {
-        return true;
-      }
+  await this.adapters.db.removeOrderedItem(shared.id, activity.id);
+
+  const objectId = getId(activity.object);
+
+  assertExists(objectId);
+
+  const isLocal = getCollectionNameByUrl(objectId) !== 'foreign-entity';
+
+  if (isLocal) {
+    const object = await this.adapters.db.queryById(objectId);
+    
+    assertIsApEntity(object);
+
+    if (!('shares' in object)) {
+      throw new Error('Object is local, but `shares` is not in this object.');
     }
-  });
 
-  if (!shared || !shared.id) {
-    throw new Error('Bad actor: no shared collection.');
+    const sharesId = getId(object.shares);
+
+    if (!sharesId) {
+      throw new Error('Bad shares collection: no ID.');
+    }
+
+    await this.adapters.db.removeOrderedItem(sharesId, activity.id);
   }
-
-  await Promise.all([
-    this.adapters.db.removeOrderedItem(shared.id, activity.id),
-  ]);
 }

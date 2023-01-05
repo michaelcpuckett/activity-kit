@@ -142,7 +142,7 @@ export type Announce = BaseActivity & {
   type: TypeOrArrayWithType<typeof ActivityTypes.ANNOUNCE>;
 };
 
-export type Block = Ignore & {
+export type Block = BaseActivity & {
   type: TypeOrArrayWithType<typeof ActivityTypes.BLOCK>;
 };
 

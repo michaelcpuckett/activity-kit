@@ -1,47 +1,53 @@
-import { AP } from 'activitypub-core-types';
-import { getId, isType } from 'activitypub-core-utilities';
+import {
+  AP,
+  assertExists,
+  assertIsApCollection,
+  assertIsApExtendedObject,
+  assertIsApType,
+} from 'activitypub-core-types';
+import {
+  getId,
+  isType,
+} from 'activitypub-core-utilities';
 import { InboxPostEndpoint } from '..';
 
-export async function handleAnnounce(this: InboxPostEndpoint) {
-  const activity = this.activity;
-
-  if (!('object' in activity)) {
-    throw new Error('Bad activity: no object.');
-  }
+// An announcement has been made to a local object.
+export async function handleAnnounce(
+  this: InboxPostEndpoint,
+  activity: AP.Entity,
+  recipient: AP.Actor,
+) {
+  assertIsApType<AP.Announce>(activity, AP.ActivityTypes.ANNOUNCE);
 
   const objectId = getId(activity.object);
 
-  if (!objectId) {
-    throw new Error('Bad object: no ID.');
-  }
+  assertExists(objectId);
 
   const object = await this.adapters.db.findEntityById(objectId);
 
-  if (!object || !object.type || !object.id) {
-    // Not applicable.
-    return;
-  }
+  try {
+    assertIsApExtendedObject(object);
 
-  if (!('shares' in object) || !object.shares) {
-    throw new Error('Bad object: No shares collection.');
-  }
+    const sharesId = getId(object.shares);
+    const shares = await this.adapters.db.findEntityById(sharesId);
 
-  const sharesId =
-    object.shares instanceof URL ? object.shares : object.shares.id;
+    assertIsApCollection(shares);
 
-  if (!sharesId) {
-    throw new Error('Bad shares collection: no ID.');
-  }
+    const attributedToId = getId(shares.attributedTo);
 
-  const shares = await this.adapters.db.findEntityById(sharesId);
+    assertExists(attributedToId);
 
-  if (!shares) {
-    throw new Error('Bad shares collection: not found');
-  }
+    if (attributedToId.toString() !== getId(recipient)?.toString()) {
+      // Not applicable to this Actor.
+      return;
+    }
 
-  if (isType(shares, AP.CollectionTypes.COLLECTION)) {
-    await this.adapters.db.insertItem(sharesId, activity.id);
-  } else if (isType(shares.type, AP.CollectionTypes.ORDERED_COLLECTION)) {
-    await this.adapters.db.insertOrderedItem(sharesId, activity.id);
+    if (isType(shares, AP.CollectionTypes.COLLECTION)) {
+      await this.adapters.db.insertItem(sharesId, activity.id);
+    } else if (isType(shares, AP.CollectionTypes.ORDERED_COLLECTION)) {
+      await this.adapters.db.insertOrderedItem(sharesId, activity.id);
+    }
+  } catch (error) {
+    console.log(error);
   }
 }

@@ -1,71 +1,54 @@
 import { OutboxPostEndpoint } from '..';
-import { AP } from 'activitypub-core-types';
+import {
+  AP,
+  assertExists,
+  assertIsApActor,
+  assertIsApEntity,
+  assertIsApExtendedObject,
+  assertIsApType,
+} from 'activitypub-core-types';
 import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
 
-export async function handleLike(this: OutboxPostEndpoint) {
-  if (!('object' in this.activity)) {
-    throw new Error('Bad activity: no object.');
-  }
+export async function handleLike(
+  this: OutboxPostEndpoint,
+  activity: AP.Entity,
+) {
+  assertIsApType<AP.Like>(activity, AP.ActivityTypes.LIKE);
 
-  if (!this.activity.id) {
-    throw new Error('Bad activity: no ID.');
-  }
-
-  const actorId = getId((this.activity as AP.Activity).actor);
-
-  if (!actorId) {
-    throw new Error('Bad actor: no ID.');
-  }
-
+  const actorId = getId(activity.actor);
   const actor = await this.adapters.db.queryById(actorId);
 
-  if (!actor || !('outbox' in actor)) {
-    throw new Error('Bad actor: not found.');
-  }
+  assertIsApActor(actor);
 
-  const objectId = getId(this.activity.object);
+  const objectId = getId(activity.object);
 
-  if (!objectId) {
-    throw new Error('Bad object: no ID.');
-  }
+  assertExists(objectId);
 
   const object = await this.adapters.db.queryById(objectId);
 
-  if (!object) {
-    throw new Error('Bad object: Not found.');
-  }
-
-  if (!('id' in object) || !object.id) {
-    throw new Error('Bad object: No ID.');
-  }
-
-  if (!('liked' in actor) || !actor.liked) {
-    throw new Error('Bad actor: No `liked` collection.');
-  }
+  assertIsApEntity(object);
 
   const likedId = getId(actor.liked);
 
-  if (!likedId) {
-    throw new Error('Bad liked collection: No ID.');
-  }
+  assertExists(likedId);
 
-  await Promise.all([this.adapters.db.insertOrderedItem(likedId, object.id)]);
+  await this.adapters.db.insertOrderedItem(likedId, objectId);
 
-  const isLocal = getCollectionNameByUrl(object.id) !== 'foreign-entity';
-
-  if (isLocal) {
-    if (!('likes' in object) || !object.likes) {
-      throw new Error('Object is local, but has no `likes` collection.');
-    }
+  try {
+    assertIsApExtendedObject(object);
 
     const likesId = getId(object.likes);
 
-    if (!likesId) {
-      throw new Error('Bad likes collection: No ID.');
+    assertExists(likesId);
+
+    const isLocal = getCollectionNameByUrl(objectId) !== 'foreign-entity';
+
+    if (!isLocal) {
+      throw new Error('Cannot add to remote collection.');
     }
 
-    await Promise.all([
-      this.adapters.db.insertOrderedItem(likesId, this.activity.id),
-    ]);
+    await this.adapters.db.insertOrderedItem(likesId, activity.id);
+  } catch (error) {
+    console.log(error);
   }
 }

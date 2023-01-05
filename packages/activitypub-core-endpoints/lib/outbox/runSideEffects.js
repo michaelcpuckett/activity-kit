@@ -6,38 +6,48 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function runSideEffects() {
     for (const plugin of this.plugins) {
         if (plugin.handleOutboxSideEffect) {
-            await plugin.handleOutboxSideEffect.call(this);
+            try {
+                await plugin.handleOutboxSideEffect.call(this);
+            }
+            catch (error) {
+                console.log(error);
+            }
         }
     }
-    if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
-        await this.handleCreate();
+    try {
+        if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
+            await this.handleCreate(this.activity);
+        }
+        if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.DELETE)) {
+            await this.handleDelete(this.activity);
+        }
+        if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.ACCEPT)) {
+            await this.handleAccept(this.activity);
+        }
+        if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.BLOCK)) {
+            await this.handleBlock(this.activity);
+        }
+        if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.UPDATE)) {
+            await this.handleUpdate(this.activity);
+        }
+        if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.LIKE)) {
+            await this.handleLike(this.activity);
+        }
+        if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE)) {
+            await this.handleAnnounce(this.activity);
+        }
+        if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.ADD)) {
+            await this.handleAdd(this.activity);
+        }
+        if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.REMOVE)) {
+            await this.handleRemove(this.activity);
+        }
+        if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.UNDO)) {
+            await this.handleUndo(this.activity);
+        }
     }
-    if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.DELETE)) {
-        await this.handleDelete();
-    }
-    if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.ACCEPT)) {
-        await this.handleAccept();
-    }
-    if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.BLOCK)) {
-        await this.handleBlock();
-    }
-    if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.UPDATE)) {
-        await this.handleUpdate();
-    }
-    if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.LIKE)) {
-        await this.handleLike();
-    }
-    if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE)) {
-        await this.handleAnnounce();
-    }
-    if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.ADD)) {
-        await this.handleAdd();
-    }
-    if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.REMOVE)) {
-        await this.handleRemove();
-    }
-    if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.UNDO)) {
-        await this.handleUndo();
+    catch (error) {
+        console.log(error);
     }
 }
 exports.runSideEffects = runSideEffects;

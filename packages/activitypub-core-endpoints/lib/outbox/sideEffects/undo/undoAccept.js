@@ -2,36 +2,20 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUndoAccept = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
+const activitypub_core_types_1 = require("activitypub-core-types");
 async function handleUndoAccept(activity) {
-    if (!('object' in activity)) {
-        throw new Error('Bad activity: no object.');
-    }
-    if (!activity.id) {
-        throw new Error('Bad activity: no ID.');
-    }
+    (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.ACCEPT);
     const actorId = (0, activitypub_core_utilities_1.getId)(activity.actor);
-    if (!actorId) {
-        throw new Error('Bad actor: no ID.');
-    }
-    const actor = await this.adapters.db.queryById(actorId);
-    if (!actor || !('outbox' in actor)) {
-        throw new Error('Bad actor: not found.');
-    }
+    const actor = await this.adapters.db.findEntityById(actorId);
+    (0, activitypub_core_types_1.assertIsApActor)(actor);
+    const followersId = (0, activitypub_core_utilities_1.getId)(actor.followers);
+    (0, activitypub_core_types_1.assertExists)(followersId);
     const followId = (0, activitypub_core_utilities_1.getId)(activity.object);
-    if (!followId) {
-        throw new Error('Bad follow object: no ID.');
-    }
     const follow = await this.adapters.db.queryById(followId);
-    if (!follow) {
-        throw new Error('Bad follow object: not found.');
-    }
+    (0, activitypub_core_types_1.assertIsApType)(follow, activitypub_core_types_1.AP.ActivityTypes.FOLLOW);
     const followerId = (0, activitypub_core_utilities_1.getId)(follow.actor);
-    if (!followerId) {
-        throw new Error('Bad follower: no ID.');
-    }
-    await Promise.all([
-        this.adapters.db.removeItem((0, activitypub_core_utilities_1.getId)(actor.followers), followerId),
-    ]);
+    (0, activitypub_core_types_1.assertExists)(followerId);
+    await this.adapters.db.removeItem(followersId, followerId);
 }
 exports.handleUndoAccept = handleUndoAccept;
 //# sourceMappingURL=undoAccept.js.map

@@ -3,19 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUndo = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
-async function handleUndo() {
-    if (!('object' in this.activity)) {
-        throw new Error('Bad activity: no object.');
-    }
-    const objectId = (0, activitypub_core_utilities_1.getId)(this.activity.object);
-    if (!objectId) {
-        throw new Error('Bad object: no ID.');
-    }
+async function handleUndo(activity) {
+    (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.UNDO);
+    const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
     const object = await this.adapters.db.findEntityById(objectId);
-    if (!object) {
-        throw new Error('Bad object: not found.');
-    }
-    if (!isActorAuthorizedToModifyObject(this.actor, this.activity)) {
+    (0, activitypub_core_types_1.assertIsApActivity)(object);
+    if (!isActorAuthorizedToModifyObject(this.actor, activity)) {
         throw new Error('Not authorized to modify object!');
     }
     if ((0, activitypub_core_utilities_1.isType)(object, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {

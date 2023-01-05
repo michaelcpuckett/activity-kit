@@ -48,7 +48,7 @@ async function getActors() {
             actors.push(recipient);
         }
     }
-    this.actors = actors;
+    return actors;
 }
 exports.getActors = getActors;
 //# sourceMappingURL=getActors.js.map

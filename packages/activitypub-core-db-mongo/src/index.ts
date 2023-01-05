@@ -21,6 +21,7 @@ import { getCollectionItems } from './getCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
+import { getStreamByName } from './getStreamByName';
 import type { DbAdapter } from 'activitypub-core-types';
 
 export class MongoDbAdapter implements DbAdapter {
@@ -42,6 +43,7 @@ export class MongoDbAdapter implements DbAdapter {
   public findStringValueById = findStringValueById;
   public findStringIdByValue = findStringIdByValue;
   public getPrivateKey = getPrivateKey;
+  public getStreamByName = getStreamByName;
 
   // Auth.
 

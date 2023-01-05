@@ -4,29 +4,17 @@ exports.handleDelete = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function handleDelete(activity) {
-    activity = activity || this.activity;
-    if (!('object' in activity)) {
-        throw new Error('Bad activity: no object.');
-    }
+    (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.DELETE);
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
-    if (!objectId) {
-        throw new Error('Bad object: not ID.');
-    }
+    (0, activitypub_core_types_1.assertExists)(objectId);
     const object = await this.adapters.db.findEntityById(objectId);
-    if (!object || !object.type) {
-        throw new Error('Bad object: not found.');
-    }
+    (0, activitypub_core_types_1.assertIsApEntity)(object);
     activity.object = {
         id: objectId,
         url: objectId,
         type: activitypub_core_types_1.AP.CoreObjectTypes.TOMBSTONE,
         deleted: new Date(),
         formerType: object.type,
-        ...(object.created
-            ? {
-                created: object.created,
-            }
-            : null),
     };
     await this.adapters.db.saveEntity(activity.object);
 }

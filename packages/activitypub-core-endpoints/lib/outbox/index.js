@@ -38,35 +38,27 @@ class OutboxPostEndpoint {
         this.plugins = plugins;
     }
     async respond() {
-        try {
-            await this.parseBody();
-            await this.getActor();
-            await this.authenticateActor();
-            const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`);
-            this.activity.id = activityId;
-            if ((0, activitypub_core_utilities_1.isTypeOf)(this.activity, activitypub_core_types_1.AP.ActivityTypes)) {
-                this.activity.url = activityId;
-                await this.runSideEffects();
-            }
-            else {
-                await this.wrapInActivity();
-            }
-            this.activity = (0, activitypub_core_utilities_1.combineAddresses)(this.activity);
-            await this.saveActivity();
-            if (!this.activity.id) {
-                throw new Error('Bad activity: No ID.');
-            }
-            await this.adapters.delivery.broadcast(this.activity, this.actor);
-            this.res.statusCode = 201;
-            this.res.setHeader('Location', this.activity.id.toString());
-            this.res.end();
+        await this.parseBody();
+        await this.getActor();
+        await this.authenticateActor();
+        const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`);
+        this.activity.id = activityId;
+        if ((0, activitypub_core_utilities_1.isTypeOf)(this.activity, activitypub_core_types_1.AP.ActivityTypes)) {
+            this.activity.url = activityId;
+            await this.runSideEffects();
         }
-        catch (error) {
-            console.log(error);
-            this.res.statusCode = 500;
-            this.res.write(String(error));
-            this.res.end();
+        else {
+            await this.wrapInActivity();
         }
+        this.activity = (0, activitypub_core_utilities_1.combineAddresses)(this.activity);
+        await this.saveActivity();
+        if (!this.activity.id) {
+            throw new Error('Bad activity: No ID.');
+        }
+        await this.adapters.delivery.broadcast(this.activity, this.actor);
+        this.res.statusCode = 201;
+        this.res.setHeader('Location', this.activity.id.toString());
+        this.res.end();
     }
     authenticateActor = authenticateActor_1.authenticateActor;
     getActor = getActor_1.getActor;

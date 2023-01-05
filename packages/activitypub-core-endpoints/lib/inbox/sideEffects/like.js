@@ -3,35 +3,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleLike = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
-async function handleLike() {
-    const activity = this.activity;
-    if (!('object' in activity)) {
-        throw new Error('Bad activity: no object.');
-    }
+async function handleLike(activity, recipient) {
+    (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.LIKE);
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
-    if (!objectId) {
-        throw new Error('Bad object: no ID.');
-    }
+    (0, activitypub_core_types_1.assertExists)(objectId);
     const object = await this.adapters.db.findEntityById(objectId);
-    if (!object) {
-        return;
+    (0, activitypub_core_types_1.assertIsApEntity)(object);
+    try {
+        (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
+        const likesId = (0, activitypub_core_utilities_1.getId)(object.likes);
+        (0, activitypub_core_types_1.assertExists)(likesId);
+        const likes = await this.adapters.db.findEntityById(likesId);
+        (0, activitypub_core_types_1.assertIsApCollection)(likes);
+        const attributedToId = (0, activitypub_core_utilities_1.getId)(likes.attributedTo);
+        (0, activitypub_core_types_1.assertExists)(attributedToId);
+        if (attributedToId.toString() !== (0, activitypub_core_utilities_1.getId)(recipient)?.toString()) {
+            return;
+        }
+        if ((0, activitypub_core_utilities_1.isType)(likes, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
+            await this.adapters.db.insertItem(likesId, activity.id);
+        }
+        else if ((0, activitypub_core_utilities_1.isType)(likes, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
+            await this.adapters.db.insertOrderedItem(likesId, activity.id);
+        }
     }
-    if (!('likes' in object) || !object.likes) {
-        throw new Error('Bad object: no likes collection.');
-    }
-    const likesId = (0, activitypub_core_utilities_1.getId)(object.likes);
-    if (!likesId) {
-        throw new Error('Bad likes collection: no ID.');
-    }
-    const likes = await this.adapters.db.findEntityById(likesId);
-    if (!likes) {
-        throw new Error('Bad likes collection: not found.');
-    }
-    if ((0, activitypub_core_utilities_1.isType)(likes, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
-        await this.adapters.db.insertItem(likesId, activity.id);
-    }
-    else if ((0, activitypub_core_utilities_1.isType)(likes, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
-        await this.adapters.db.insertOrderedItem(likesId, activity.id);
+    catch (error) {
+        console.log(error);
     }
 }
 exports.handleLike = handleLike;

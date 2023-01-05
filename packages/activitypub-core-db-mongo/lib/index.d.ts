@@ -27,6 +27,7 @@ export declare class MongoDbAdapter implements DbAdapter {
     findStringValueById: typeof findStringValueById;
     findStringIdByValue: typeof findStringIdByValue;
     getPrivateKey: typeof getPrivateKey;
+    getStreamByName: (this: MongoDbAdapter, actor: import("activitypub-core-types/lib/activitypub").Actor, name: string) => Promise<import("activitypub-core-types/lib/activitypub").Collection | import("activitypub-core-types/lib/activitypub").OrderedCollection>;
     getActorByUserId: typeof getActorByUserId;
     saveEntity: typeof saveEntity;
     saveString: typeof saveString;

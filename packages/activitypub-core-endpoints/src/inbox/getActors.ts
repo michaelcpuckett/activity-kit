@@ -11,5 +11,5 @@ export async function getActors(this: InboxPostEndpoint) {
     throw new Error('No actor with this inbox.');
   }
 
-  this.actors = [actor];
+  return [actor];
 }

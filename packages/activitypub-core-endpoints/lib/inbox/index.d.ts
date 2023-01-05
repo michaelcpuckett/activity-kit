@@ -22,8 +22,6 @@ export declare class InboxPostEndpoint {
         delivery: DeliveryAdapter;
     };
     plugins?: Plugin[];
-    actor: AP.Actor | null;
-    actors: AP.Actor[];
     activity: AP.Entity | null;
     constructor(req: IncomingMessage, res: ServerResponse, adapters: {
         auth: AuthAdapter;

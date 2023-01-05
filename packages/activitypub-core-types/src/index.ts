@@ -3,8 +3,8 @@ export * from './assertions';
 
 export type Plugin = {
   handleCreateUserActor?: Function;
-  handleOutboxActivity?: Function;
   handleOutboxSideEffect?: Function;
+  handleInboxSideEffect?: Function;
   generateActorId?: Function;
   getHomePageProps?: Function;
   getEntityPageProps?: Function;
@@ -28,6 +28,7 @@ export type DbAdapter = {
   findStringIdByValue: Function;
   findStringValueById: Function;
   getActorByUserId: Function;
+  getStreamByName: Function;
   insertItem: Function;
   removeItem: Function;
   insertOrderedItem: Function;

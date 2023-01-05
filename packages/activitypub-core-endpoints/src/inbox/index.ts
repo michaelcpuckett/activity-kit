@@ -1,4 +1,4 @@
-import { AP, Plugin } from 'activitypub-core-types';
+import { AP, assertIsArray, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
 import { getActors } from './getActors';
@@ -24,8 +24,6 @@ export class InboxPostEndpoint {
   };
   plugins?: Plugin[];
 
-  actor: AP.Actor | null = null;
-  actors: AP.Actor[] = [];
   activity: AP.Entity | null = null;
 
   constructor(
@@ -56,12 +54,12 @@ export class InboxPostEndpoint {
   protected handleFollow = handleFollow;
   protected handleLike = handleLike;
 
-  private async isBlocked(): Promise<boolean> {
+  private async isBlocked(actor: AP.Actor): Promise<boolean> {
     if (!('actor' in this.activity)) {
       return;
     }
 
-    const streams = await Promise.all(this.actor.streams.map(async stream => await this.adapters.db.queryById(stream)));
+    const streams = await Promise.all(actor.streams.map(async stream => await this.adapters.db.queryById(stream)));
 
     const blocks = streams.find((stream: AP.Collection) => {
       if (stream.name === 'Blocks') {
@@ -81,56 +79,44 @@ export class InboxPostEndpoint {
   }
 
   public async respond() {
-    try {
-      await this.parseBody();
+    await this.parseBody();
 
-      const activityId = getId(this.activity);
+    const activityId = getId(this.activity);
 
-      if (activityId) {
-        const existingActivity = await this.adapters.db.findEntityById(getId(this.activity)) ?? await this.adapters.db.findOne('foreign-entity', {
-          id: activityId.toString(),
-        });
+    if (activityId) {
+      const existingActivity = await this.adapters.db.findEntityById(getId(this.activity)) ?? await this.adapters.db.findOne('foreign-entity', {
+        id: activityId.toString(),
+      });
 
-        if (existingActivity) {
-          console.log('We have already received this activity. Assuming it was forwarded by another server.');
-          this.res.statusCode = 200;
-          this.res.end();
-          return;
-        }
+      if (existingActivity) {
+        console.log('We have already received this activity. Assuming it was forwarded by another server.');
+        this.res.statusCode = 200;
+        this.res.end();
+        return;
       }
-
-      await this.getActors();
-
-      for (const actor of this.actors) {
-        this.actor = actor;
-        const isBlocked = await this.isBlocked();
-
-        if (isBlocked) {
-          console.log('BLOCKED!');
-          continue;
-        }
-
-        await this.runSideEffects();
-        console.log(this.activity);
-        console.log('inserting', actor.inbox, getId(actor.inbox), getId(this.activity));
-        await this.adapters.db.insertOrderedItem(
-          actor.inbox,
-          getId(this.activity),
-        );
-      }
-
-      await this.adapters.db.saveEntity(this.activity);
-      await this.broadcastActivity();
-
-      this.res.statusCode = 200;
-      this.res.write(stringify(this.activity));
-      this.res.end();
-    } catch (error: unknown) {
-      console.log(error);
-
-      this.res.statusCode = 500;
-      this.res.write(String(error));
-      this.res.end();
     }
+
+    for (const actor of await this.getActors()) {
+      const isBlocked = await this.isBlocked(actor);
+
+      if (isBlocked) {
+        console.log('Blocked from appearing in this inbox.');
+        continue;
+      }
+
+      await this.adapters.db.insertOrderedItem(
+        actor.inbox,
+        getId(this.activity),
+      );
+
+      await this.runSideEffects(actor);
+    }
+
+    await this.adapters.db.saveEntity(this.activity);
+    await this.broadcastActivity();
+
+    this.res.statusCode = 200;
+    this.res.write(stringify(this.activity));
+    this.res.end();
   }
 }

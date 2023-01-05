@@ -1,50 +1,30 @@
 import { getId } from 'activitypub-core-utilities';
-import { AP } from 'activitypub-core-types';
+import { AP, assertExists, assertIsApActor, assertIsApType } from 'activitypub-core-types';
 import { OutboxPostEndpoint } from '../..';
 
 export async function handleUndoAccept(
   this: OutboxPostEndpoint,
   activity: AP.Entity,
 ) {
-  if (!('object' in activity)) {
-    throw new Error('Bad activity: no object.');
-  }
+  assertIsApType<AP.Accept>(activity, AP.ActivityTypes.ACCEPT);
 
-  if (!activity.id) {
-    throw new Error('Bad activity: no ID.');
-  }
+  const actorId = getId(activity.actor);
+  const actor = await this.adapters.db.findEntityById(actorId);
 
-  const actorId = getId((activity as AP.Activity).actor);
+  assertIsApActor(actor);
 
-  if (!actorId) {
-    throw new Error('Bad actor: no ID.');
-  }
+  const followersId = getId(actor.followers);
 
-  const actor = await this.adapters.db.queryById(actorId);
-
-  if (!actor || !('outbox' in actor)) {
-    throw new Error('Bad actor: not found.');
-  }
+  assertExists(followersId);
 
   const followId = getId(activity.object);
-
-  if (!followId) {
-    throw new Error('Bad follow object: no ID.');
-  }
-
   const follow = await this.adapters.db.queryById(followId);
 
-  if (!follow) {
-    throw new Error('Bad follow object: not found.');
-  }
+  assertIsApType<AP.Follow>(follow, AP.ActivityTypes.FOLLOW);
 
   const followerId = getId(follow.actor);
 
-  if (!followerId) {
-    throw new Error('Bad follower: no ID.');
-  }
+  assertExists(followerId);
 
-  await Promise.all([
-    this.adapters.db.removeItem(getId(actor.followers), followerId),
-  ]);
+  await this.adapters.db.removeItem(followersId, followerId);
 }

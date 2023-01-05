@@ -1,28 +1,17 @@
 import { OutboxPostEndpoint } from '..';
-import { AP } from 'activitypub-core-types';
+import { AP, assertExists, assertIsApEntity, assertIsApExtendedObject, assertIsApTransitiveActivity, assertIsApType } from 'activitypub-core-types';
 import { ACTIVITYSTREAMS_CONTEXT, isTypeOf } from 'activitypub-core-utilities';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { getId, getGuid } from 'activitypub-core-utilities';
 
-/**
- * Create
- * [x] Merges audience properties (to, bto, cc, bcc, audience) with the Create’s
- *    object’s audience properties (outbox:create:merges-audience-properties)
- *    SHOULD
- * [x] Create’s actor property is copied to be the value of .object.attributedTo
- *    (outbox:create:actor-to-attributed-to) SHOULD
- */
+export async function handleCreate(this: OutboxPostEndpoint, activity: AP.Entity) {
+  assertIsApType<AP.Create>(activity, AP.ActivityTypes.CREATE);
 
-export async function handleCreate(this: OutboxPostEndpoint) {
-  if (!('object' in this.activity)) {
-    throw new Error('Bad activity: no object.');
-  }
+  const actorId = getId(activity.actor);
 
-  const object = this.activity.object;
+  assertExists(actorId);
 
-  if (!object) {
-    throw new Error('Bad object: not found.');
-  }
+  const object = activity.object;
 
   if (object instanceof URL) {
     throw new Error('Bad object: URL reference is not allowed for Create.');
@@ -34,57 +23,63 @@ export async function handleCreate(this: OutboxPostEndpoint) {
     );
   }
 
+  assertIsApEntity(object);
+
   const objectId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
 
   object.id = new URL(objectId);
 
-  if ('url' in object) {
+  if (isTypeOf(object, AP.ExtendedObjectTypes)) {
+    assertIsApExtendedObject(object);
+
     object.url = new URL(objectId);
-  }
 
-  const publishedDate = new Date();
+    const publishedDate = new Date();
 
-  const objectReplies: AP.Collection = {
-    '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-    id: new URL(`${object.id.toString()}/replies`),
-    url: new URL(`${object.id.toString()}/replies`),
-    name: 'Replies',
-    type: AP.CollectionTypes.COLLECTION,
-    totalItems: 0,
-    items: [],
-    published: publishedDate,
-  };
+    const objectRepliesId = new URL(`${objectId.toString()}/replies`);
+    const objectReplies: AP.Collection = {
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
+      id: objectRepliesId,
+      url: objectRepliesId,
+      name: 'Replies',
+      type: AP.CollectionTypes.COLLECTION,
+      totalItems: 0,
+      items: [],
+      published: publishedDate,
+      attributedTo: actorId,
+    };
 
-  const objectLikes: AP.OrderedCollection = {
-    '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-    id: new URL(`${object.id.toString()}/likes`),
-    url: new URL(`${object.id.toString()}/likes`),
-    name: 'Likes',
-    type: AP.CollectionTypes.ORDERED_COLLECTION,
-    totalItems: 0,
-    orderedItems: [],
-    published: publishedDate,
-  };
+    const objectLikesId = new URL(`${objectId.toString()}/likes`);
+    const objectLikes: AP.OrderedCollection = {
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
+      id: objectLikesId,
+      url: objectLikesId,
+      name: 'Likes',
+      type: AP.CollectionTypes.ORDERED_COLLECTION,
+      totalItems: 0,
+      orderedItems: [],
+      published: publishedDate,
+      attributedTo: actorId,
+    };
 
-  const objectShares: AP.OrderedCollection = {
-    '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-    id: new URL(`${object.id.toString()}/shares`),
-    url: new URL(`${object.id.toString()}/shares`),
-    name: 'Shares',
-    type: AP.CollectionTypes.ORDERED_COLLECTION,
-    totalItems: 0,
-    orderedItems: [],
-    published: publishedDate,
-  };
+    const objectSharesId = new URL(`${objectId.toString()}/shares`);
+    const objectShares: AP.OrderedCollection = {
+      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
+      id: objectSharesId,
+      url: objectSharesId,
+      name: 'Shares',
+      type: AP.CollectionTypes.ORDERED_COLLECTION,
+      totalItems: 0,
+      orderedItems: [],
+      published: publishedDate,
+      attributedTo: actorId,
+    };
 
-  if (isTypeOf(object, AP.CoreObjectTypes)) {
-    const typedObject = object as AP.CoreObject;
-    typedObject.attributedTo = (this.activity as AP.Activity).actor;
-    typedObject.replies = objectReplies.id;
-    typedObject.likes = objectLikes.id;
-    typedObject.shares = objectShares.id;
-    typedObject.attributedTo = (this.activity as AP.Activity).actor;
-    typedObject.published = publishedDate;
+    object.attributedTo = actorId;
+    object.replies = objectRepliesId;
+    object.likes = objectLikesId;
+    object.shares = objectSharesId;
+    object.published = publishedDate;
 
     await Promise.all([
       this.adapters.db.saveEntity(object),
@@ -93,9 +88,9 @@ export async function handleCreate(this: OutboxPostEndpoint) {
       this.adapters.db.saveEntity(objectShares),
     ]);
 
-    if (typedObject.inReplyTo) {
+    if (object.inReplyTo) {
       const objectInReplyTo = await this.adapters.db.findEntityById(
-        getId(typedObject.inReplyTo),
+        getId(object.inReplyTo),
       );
 
       if (objectInReplyTo) {
@@ -104,15 +99,14 @@ export async function handleCreate(this: OutboxPostEndpoint) {
         if (repliesCollectionId) {
           await this.adapters.db.insertOrderedItem(
             repliesCollectionId,
-            typedObject.id,
+            objectId,
           );
         }
       }
     }
   } else {
-    // Link case.
-    await Promise.all([this.adapters.db.saveEntity(object)]);
+    await this.adapters.db.saveEntity(object);
   }
 
-  this.activity.object = object;
+  activity.object = object;
 }
