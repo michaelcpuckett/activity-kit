@@ -12,7 +12,7 @@ async function wrapInActivity() {
     const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`);
     this.activity.id = activityId;
     this.activity.url = activityId;
-    await this.handleCreate();
+    await this.handleCreate(this.activity);
 }
 exports.wrapInActivity = wrapInActivity;
 //# sourceMappingURL=wrapInActivity.js.map

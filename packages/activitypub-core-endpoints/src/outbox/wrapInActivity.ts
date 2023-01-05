@@ -3,11 +3,10 @@ import {
   LOCAL_DOMAIN,
   combineAddresses,
   getGuid,
-  ACTIVITYSTREAMS_CONTEXT,
 } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 
-export async function wrapInActivity() {
+export async function wrapInActivity(this: OutboxPostEndpoint) {
   this.activity = combineAddresses({
     type: AP.ActivityTypes.CREATE,
     actor: this.actor.id,
@@ -18,5 +17,5 @@ export async function wrapInActivity() {
   this.activity.id = activityId; // Overwrite ID
   this.activity.url = activityId;
 
-  await this.handleCreate();
+  await this.handleCreate(this.activity);
 }
