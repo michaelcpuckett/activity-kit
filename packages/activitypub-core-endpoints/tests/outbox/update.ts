@@ -11,7 +11,7 @@ describe('Outbox', () => {
       await (handleUpdate as unknown as (activity: AP.Update) => Promise<void>).call({
         adapters: {
           db: {
-            findEntityById(entityId: URL) {
+            async findEntityById(entityId: URL) {
               if (`${entityId}` === actor1Id) {
                 return actor1;
               }
@@ -20,7 +20,7 @@ describe('Outbox', () => {
                 return note1;
               }
             },
-            saveEntity(entity: AP.Entity) {
+            async saveEntity(entity: AP.Entity) {
               updatedObject = entity;
             }
           }

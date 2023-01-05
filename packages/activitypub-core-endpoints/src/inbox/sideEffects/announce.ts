@@ -15,6 +15,7 @@ import { InboxPostEndpoint } from '..';
 export async function handleAnnounce(
   this: InboxPostEndpoint,
   activity: AP.Entity,
+  recipient: AP.Actor,
 ) {
   assertIsApType<AP.Announce>(activity, AP.ActivityTypes.ANNOUNCE);
 
@@ -31,6 +32,15 @@ export async function handleAnnounce(
     const shares = await this.adapters.db.findEntityById(sharesId);
 
     assertIsApCollection(shares);
+
+    const attributedToId = getId(shares.attributedTo);
+
+    assertExists(attributedToId);
+
+    if (attributedToId.toString() !== getId(recipient)?.toString()) {
+      // Not applicable to this Actor.
+      return;
+    }
 
     if (isType(shares, AP.CollectionTypes.COLLECTION)) {
       await this.adapters.db.insertItem(sharesId, activity.id);

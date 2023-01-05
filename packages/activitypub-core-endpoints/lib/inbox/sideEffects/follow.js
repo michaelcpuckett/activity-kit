@@ -6,7 +6,7 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
 const activitypub_core_utilities_4 = require("activitypub-core-utilities");
-async function handleFollow(activity) {
+async function handleFollow(activity, recipient) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.FOLLOW);
     const activityId = (0, activitypub_core_utilities_4.getId)(activity);
     (0, activitypub_core_types_1.assertExists)(activityId);
@@ -28,6 +28,9 @@ async function handleFollow(activity) {
     const followee = object;
     const followeeId = (0, activitypub_core_utilities_4.getId)(followee);
     (0, activitypub_core_types_1.assertExists)(followeeId);
+    if (followeeId.toString() !== (0, activitypub_core_utilities_4.getId)(recipient)?.toString()) {
+        return;
+    }
     const followersId = (0, activitypub_core_utilities_4.getId)(followee.followers);
     (0, activitypub_core_types_1.assertExists)(followersId);
     const followers = await this.adapters.db.findEntityById(followersId);
@@ -40,7 +43,7 @@ async function handleFollow(activity) {
         return;
     }
     if (followee.manuallyApprovesFollowers) {
-        const requests = await this.adapters.db.getStreamByName(actor, 'Requests');
+        const requests = await this.adapters.db.getStreamByName(followee, 'Requests');
         (0, activitypub_core_types_1.assertIsApType)(requests, activitypub_core_types_1.AP.CollectionTypes.COLLECTION);
         const requestsId = (0, activitypub_core_utilities_4.getId)(requests);
         await this.adapters.db.insertItem(requestsId, activityId);
@@ -55,6 +58,7 @@ async function handleFollow(activity) {
         url: acceptActivityRepliesId,
         name: 'Replies',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
+        attributedTo: followeeId,
         totalItems: 0,
         items: [],
         published: publishedDate,
@@ -66,6 +70,7 @@ async function handleFollow(activity) {
         url: acceptActivityLikesId,
         name: 'Likes',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        attributedTo: followeeId,
         totalItems: 0,
         orderedItems: [],
         published: publishedDate,
@@ -77,6 +82,7 @@ async function handleFollow(activity) {
         url: acceptActivitySharesId,
         name: 'Likes',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        attributedTo: followeeId,
         totalItems: 0,
         orderedItems: [],
         published: publishedDate,

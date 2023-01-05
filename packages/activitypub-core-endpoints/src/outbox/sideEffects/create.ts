@@ -46,6 +46,7 @@ export async function handleCreate(this: OutboxPostEndpoint, activity: AP.Entity
       totalItems: 0,
       items: [],
       published: publishedDate,
+      attributedTo: actorId,
     };
 
     const objectLikesId = new URL(`${objectId.toString()}/likes`);
@@ -58,6 +59,7 @@ export async function handleCreate(this: OutboxPostEndpoint, activity: AP.Entity
       totalItems: 0,
       orderedItems: [],
       published: publishedDate,
+      attributedTo: actorId,
     };
 
     const objectSharesId = new URL(`${objectId.toString()}/shares`);
@@ -70,6 +72,7 @@ export async function handleCreate(this: OutboxPostEndpoint, activity: AP.Entity
       totalItems: 0,
       orderedItems: [],
       published: publishedDate,
+      attributedTo: actorId,
     };
 
     object.attributedTo = actorId;

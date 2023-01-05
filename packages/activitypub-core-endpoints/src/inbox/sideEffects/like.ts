@@ -1,13 +1,12 @@
 import { AP, assertExists, assertIsApCollection, assertIsApEntity, assertIsApExtendedObject, assertIsApType } from 'activitypub-core-types';
 import {
-  getCollectionNameByUrl,
   getId,
   isType
 } from 'activitypub-core-utilities';
 import { InboxPostEndpoint } from '..';
 
 // A Like has been made to a local object.
-export async function handleLike(this: InboxPostEndpoint, activity: AP.Entity) {
+export async function handleLike(this: InboxPostEndpoint, activity: AP.Entity, recipient: AP.Actor) {
   assertIsApType<AP.Like>(activity, AP.ActivityTypes.LIKE);
 
   const objectId = getId(activity.object);
@@ -28,6 +27,15 @@ export async function handleLike(this: InboxPostEndpoint, activity: AP.Entity) {
     const likes = await this.adapters.db.findEntityById(likesId);
 
     assertIsApCollection(likes);
+
+    const attributedToId = getId(likes.attributedTo);
+
+    assertExists(attributedToId);
+
+    if (attributedToId.toString() !== getId(recipient)?.toString()) {
+      // Not applicable to this Actor.
+      return;
+    }
 
     if (isType(likes, AP.CollectionTypes.COLLECTION)) {
       await this.adapters.db.insertItem(likesId, activity.id);

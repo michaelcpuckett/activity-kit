@@ -2,8 +2,8 @@ export * as AP from './activitypub';
 export * from './assertions';
 export declare type Plugin = {
     handleCreateUserActor?: Function;
-    handleOutboxActivity?: Function;
     handleOutboxSideEffect?: Function;
+    handleInboxSideEffect?: Function;
     generateActorId?: Function;
     getHomePageProps?: Function;
     getEntityPageProps?: Function;

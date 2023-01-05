@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleAccept = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
-async function handleAccept(activity) {
+async function handleAccept(activity, recipient) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.ACCEPT);
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
     (0, activitypub_core_types_1.assertExists)(objectId);
@@ -16,6 +16,9 @@ async function handleAccept(activity) {
     (0, activitypub_core_types_1.assertIsApType)(followActivity, activitypub_core_types_1.AP.ActivityTypes.FOLLOW);
     const followerId = (0, activitypub_core_utilities_1.getId)(followActivity.actor);
     (0, activitypub_core_types_1.assertExists)(followerId);
+    if (followerId.toString() !== (0, activitypub_core_utilities_1.getId)(recipient)?.toString()) {
+        return;
+    }
     const follower = await this.adapters.db.queryById(followerId);
     (0, activitypub_core_types_1.assertIsApActor)(follower);
     const followeeId = (0, activitypub_core_utilities_1.getId)(followActivity.object);

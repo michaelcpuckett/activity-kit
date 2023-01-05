@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
 import { handleLike } from '../../src/inbox/sideEffects/like';
-import { likeActivity, likeActivityId, note1, note1Id, note1Likes, note1LikesId } from '../../test_data';
+import { actor1, actor2, likeActivity, likeActivityId, note1, note1Id, note1Likes, note1LikesId } from '../../test_data';
 
 describe('Inbox', () => {
   describe('Like Side Effect', () => {
@@ -9,7 +9,7 @@ describe('Inbox', () => {
       let collectionInsertedInto: URL|null = null;
       let insertedIntoCollection: URL|null = null;
 
-      await (handleLike as unknown as (activity: AP.Like) => Promise<void>).call({
+      await (handleLike as unknown as (activity: AP.Like, recipient: AP.Actor) => Promise<void>).call({
         adapters: {
           db: {
             async findEntityById(entityId: URL) {
@@ -27,7 +27,7 @@ describe('Inbox', () => {
             },
           }
         }
-      }, likeActivity);
+      }, likeActivity, actor1);
       
       expect(`${collectionInsertedInto}`).toBe(note1LikesId);
       expect(`${insertedIntoCollection}`).toBe(likeActivityId);

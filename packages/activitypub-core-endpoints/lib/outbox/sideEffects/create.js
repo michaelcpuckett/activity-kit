@@ -33,6 +33,7 @@ async function handleCreate(activity) {
             totalItems: 0,
             items: [],
             published: publishedDate,
+            attributedTo: actorId,
         };
         const objectLikesId = new URL(`${objectId.toString()}/likes`);
         const objectLikes = {
@@ -44,6 +45,7 @@ async function handleCreate(activity) {
             totalItems: 0,
             orderedItems: [],
             published: publishedDate,
+            attributedTo: actorId,
         };
         const objectSharesId = new URL(`${objectId.toString()}/shares`);
         const objectShares = {
@@ -55,6 +57,7 @@ async function handleCreate(activity) {
             totalItems: 0,
             orderedItems: [],
             published: publishedDate,
+            attributedTo: actorId,
         };
         object.attributedTo = actorId;
         object.replies = objectRepliesId;

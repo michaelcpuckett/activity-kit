@@ -9,7 +9,7 @@ describe('Inbox', () => {
       let collectionInsertedInto: URL|null = null;
       let insertedIntoCollection: URL|null = null;
 
-      await (handleAnnounce as unknown as (activity: AP.Announce) => Promise<void>).call({
+      await (handleAnnounce as unknown as (activity: AP.Announce, recipient: AP.Actor) => Promise<void>).call({
         adapters: {
           db: {
             async findEntityById(entityId: URL) {
@@ -27,7 +27,7 @@ describe('Inbox', () => {
             },
           }
         }
-      }, announceActivity);
+      }, announceActivity, actor1);
       
       expect(`${collectionInsertedInto}`).toBe(note1SharesId);
       expect(`${insertedIntoCollection}`).toBe(announceActivityId);

@@ -16,6 +16,7 @@ import { InboxPostEndpoint } from '..';
 export async function handleAccept(
   this: InboxPostEndpoint,
   activity: AP.Entity,
+  recipient: AP.Actor,
 ) {
   assertIsApType<AP.Accept>(activity, AP.ActivityTypes.ACCEPT);
 
@@ -38,6 +39,11 @@ export async function handleAccept(
   const followerId = getId(followActivity.actor);
 
   assertExists(followerId);
+
+  if (followerId.toString() !== getId(recipient)?.toString()) {
+    // Not applicable to this Actor.
+    return;
+  }
 
   const follower = await this.adapters.db.queryById(followerId);
 

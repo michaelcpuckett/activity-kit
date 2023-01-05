@@ -20,6 +20,7 @@ import { InboxPostEndpoint } from '..';
 export async function handleFollow(
   this: InboxPostEndpoint,
   activity: AP.Entity,
+  recipient: AP.Actor,
 ) {
   assertIsApType<AP.Follow>(activity, AP.ActivityTypes.FOLLOW);
 
@@ -60,6 +61,11 @@ export async function handleFollow(
 
   assertExists(followeeId);
 
+  if (followeeId.toString() !== getId(recipient)?.toString()) {
+    // Not applicable to this Actor.
+    return;
+  }
+
   const followersId = getId(followee.followers);
 
   assertExists(followersId);
@@ -80,7 +86,7 @@ export async function handleFollow(
   }
 
   if (followee.manuallyApprovesFollowers) {
-    const requests = await this.adapters.db.getStreamByName(actor, 'Requests');
+    const requests = await this.adapters.db.getStreamByName(followee, 'Requests');
 
     assertIsApType<AP.Collection>(requests, AP.CollectionTypes.COLLECTION);
 
@@ -103,6 +109,7 @@ export async function handleFollow(
     url: acceptActivityRepliesId,
     name: 'Replies',
     type: AP.CollectionTypes.COLLECTION,
+    attributedTo: followeeId,
     totalItems: 0,
     items: [],
     published: publishedDate,
@@ -115,6 +122,7 @@ export async function handleFollow(
     url: acceptActivityLikesId,
     name: 'Likes',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
+    attributedTo: followeeId,
     totalItems: 0,
     orderedItems: [],
     published: publishedDate,
@@ -127,6 +135,7 @@ export async function handleFollow(
     url: acceptActivitySharesId,
     name: 'Likes',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
+    attributedTo: followeeId,
     totalItems: 0,
     orderedItems: [],
     published: publishedDate,

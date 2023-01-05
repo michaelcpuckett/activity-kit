@@ -9,7 +9,7 @@ describe('Inbox', () => {
       let collectionInsertedInto: URL|null = null;
       let insertedIntoCollection: URL|null = null;
 
-      await (handleAccept as unknown as (activity: AP.Accept) => Promise<void>).call({
+      await (handleAccept as unknown as (activity: AP.Accept, recipient: AP.Actor) => Promise<void>).call({
         adapters: {
           db: {
             async queryById(entityId: URL) {
@@ -36,7 +36,7 @@ describe('Inbox', () => {
             },
           }
         }
-      }, acceptActivity);
+      }, acceptActivity, actor1);
 
       expect(`${collectionInsertedInto}`).toBe(actor1FollowingId);
       expect(`${insertedIntoCollection}`).toBe(actor2Id);

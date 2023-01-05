@@ -73,8 +73,8 @@ class InboxPostEndpoint {
                 continue;
             }
             await this.adapters.db.insertOrderedItem(actor.inbox, (0, activitypub_core_utilities_1.getId)(this.activity));
+            await this.runSideEffects(actor);
         }
-        await this.runSideEffects();
         await this.adapters.db.saveEntity(this.activity);
         await this.broadcastActivity();
         this.res.statusCode = 200;

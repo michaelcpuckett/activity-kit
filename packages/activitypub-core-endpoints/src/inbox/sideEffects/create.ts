@@ -13,6 +13,7 @@ import { InboxPostEndpoint } from '..';
 export async function handleCreate(
   this: InboxPostEndpoint,
   activity: AP.Entity,
+  recipient: AP.Actor,
 ) {
   assertIsApType<AP.Create>(activity, AP.ActivityTypes.CREATE);
 
@@ -52,6 +53,15 @@ export async function handleCreate(
     const repliesCollection = await this.adapters.db.findEntityById(repliesCollectionId);
 
     assertIsApCollection(repliesCollection);
+
+    const attributedToId = getId(repliesCollection.attributedTo);
+
+    assertExists(attributedToId);
+
+    if (attributedToId.toString() !== getId(recipient)?.toString()) {
+      // Not applicable to this Actor.
+      return;
+    }
 
     await this.adapters.db.insertOrderedItem(
       repliesCollectionId,

@@ -108,9 +108,10 @@ export class InboxPostEndpoint {
         actor.inbox,
         getId(this.activity),
       );
+
+      await this.runSideEffects(actor);
     }
 
-    await this.runSideEffects();
     await this.adapters.db.saveEntity(this.activity);
     await this.broadcastActivity();
 

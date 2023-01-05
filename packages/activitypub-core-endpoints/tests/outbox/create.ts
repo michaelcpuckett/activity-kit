@@ -12,7 +12,7 @@ describe('Outbox', () => {
       await (handleCreate as unknown as (activity: AP.Create) => Promise<void>).call({
         adapters: {
           db: {
-            saveEntity(entity: AP.Entity) {
+            async saveEntity(entity: AP.Entity) {
               saveEntityArguments.push(getId(entity));
             }
           }

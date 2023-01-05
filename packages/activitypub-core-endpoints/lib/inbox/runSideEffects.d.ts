@@ -1,2 +1,3 @@
 import { InboxPostEndpoint } from '.';
-export declare function runSideEffects(this: InboxPostEndpoint): Promise<void>;
+import { AP } from 'activitypub-core-types';
+export declare function runSideEffects(this: InboxPostEndpoint, recipient: AP.Actor): Promise<void>;
