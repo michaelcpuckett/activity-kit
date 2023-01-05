@@ -1,4 +1,4 @@
-import { AP, assertIsArray } from 'activitypub-core-types';
+import { AP, assertIsApActivity, assertIsArray } from 'activitypub-core-types';
 import type { AuthAdapter, DbAdapter, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import {
@@ -69,15 +69,20 @@ export class OutboxPostEndpoint {
     this.activity.id = activityId; // Overwrite ID
 
     if (isTypeOf(this.activity, AP.ActivityTypes)) {
-      (this.activity as AP.Activity).url = activityId;
+      assertIsApActivity(this.activity);
+      
+      this.activity.url = activityId;
+      
       await this.runSideEffects();
     } else {
       // If not activity type, wrap object in a Create activity.
       await this.wrapInActivity();
     }
 
+    assertIsApActivity(this.activity);
+
     // Address activity and object the same way.
-    this.activity = combineAddresses(this.activity as AP.Activity);
+    this.activity = combineAddresses(this.activity);
 
     await this.saveActivity();
 

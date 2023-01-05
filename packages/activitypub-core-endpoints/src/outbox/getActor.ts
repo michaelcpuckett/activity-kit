@@ -1,3 +1,4 @@
+import { assertIsApActor } from 'activitypub-core-types';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { OutboxPostEndpoint } from '.';
 
@@ -8,9 +9,7 @@ export async function getActor(this: OutboxPostEndpoint) {
     outbox: url.toString(),
   });
 
-  if (!actor || !actor.id || !('outbox' in actor)) {
-    throw new Error('No actor with this outbox.');
-  }
+  assertIsApActor(actor);
 
   this.actor = actor;
 }

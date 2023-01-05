@@ -44,12 +44,14 @@ class OutboxPostEndpoint {
         const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`);
         this.activity.id = activityId;
         if ((0, activitypub_core_utilities_1.isTypeOf)(this.activity, activitypub_core_types_1.AP.ActivityTypes)) {
+            (0, activitypub_core_types_1.assertIsApActivity)(this.activity);
             this.activity.url = activityId;
             await this.runSideEffects();
         }
         else {
             await this.wrapInActivity();
         }
+        (0, activitypub_core_types_1.assertIsApActivity)(this.activity);
         this.activity = (0, activitypub_core_utilities_1.combineAddresses)(this.activity);
         await this.saveActivity();
         if (!this.activity.id) {

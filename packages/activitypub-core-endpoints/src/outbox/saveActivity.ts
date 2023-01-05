@@ -1,68 +1,75 @@
 import { OutboxPostEndpoint } from '.';
-import { AP } from 'activitypub-core-types';
+import { AP, assertExists, assertIsApActivity } from 'activitypub-core-types';
 import { getId, ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
 
 export async function saveActivity(this: OutboxPostEndpoint) {
-  if (!this.activity) {
-    throw new Error('No activity.');
-  }
+  assertIsApActivity(this.activity);
 
   const publishedDate = new Date();
-  (this.activity as AP.Activity).published = publishedDate;
-  const activityId = this.activity.id;
+  this.activity.published = publishedDate;
+
+  const activityId = getId(this.activity);
+
+  assertExists(activityId);
+
+  const actorId = getId(this.activity.actor);
+
+  assertExists(actorId);
 
   // Attach replies, likes, and shares.
 
+  const repliesId = new URL(`${activityId.toString()}/replies`);
   const replies: AP.Collection = {
     '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-    id: new URL(`${activityId.toString()}/replies`),
-    url: new URL(`${activityId.toString()}/replies`),
+    id: repliesId,
+    url: repliesId,
     name: 'Replies',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
     items: [],
+    attributedTo: actorId,
     published: publishedDate,
   };
 
+  const likesId = new URL(`${activityId.toString()}/likes`);
   const likes: AP.OrderedCollection = {
     '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-    id: new URL(`${activityId.toString()}/likes`),
-    url: new URL(`${activityId.toString()}/likes`),
+    id: likesId,
+    url: likesId,
     name: 'Likes',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
     orderedItems: [],
+    attributedTo: actorId,
     published: publishedDate,
   };
 
+  const sharesId = new URL(`${activityId.toString()}/shares`);
   const shares: AP.OrderedCollection = {
     '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-    id: new URL(`${activityId.toString()}/shares`),
-    url: new URL(`${activityId.toString()}/shares`),
+    id: sharesId,
+    url: sharesId,
     name: 'Shares',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
     orderedItems: [],
+    attributedTo: actorId,
     published: publishedDate,
   };
 
-  if (replies.id instanceof URL) {
-    (this.activity as AP.Activity).replies = replies.id;
-  }
+  this.activity.replies = repliesId;
+  this.activity.likes = likesId;
+  this.activity.shares = sharesId;
 
-  if (likes.id instanceof URL) {
-    (this.activity as AP.Activity).likes = likes.id;
-  }
+  const outboxId = getId(this.actor.outbox);
 
-  if (shares.id instanceof URL) {
-    (this.activity as AP.Activity).shares = shares.id;
-  }
+  assertExists(outboxId);
 
   await Promise.all([
     this.adapters.db.saveEntity(this.activity),
     this.adapters.db.saveEntity(replies),
     this.adapters.db.saveEntity(likes),
     this.adapters.db.saveEntity(shares),
-    this.adapters.db.insertOrderedItem(getId(this.actor?.outbox), activityId),
+    this.adapters.db.insertOrderedItem(outboxId, activityId),
   ]);
 }
