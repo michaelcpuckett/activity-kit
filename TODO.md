@@ -1,7 +1,7 @@
 See CHECKLIST.md
 
-* ! Get tests working again
-* Start using assertion library whenever possible
+* Use assertion library whenever possible
+* More test coverage / jest -> jasmine
 
 * Full integration with:
     * Mastodon
