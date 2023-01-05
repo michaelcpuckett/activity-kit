@@ -15,34 +15,31 @@ function GroupsPlugin(config) {
             }
             const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
             (0, activitypub_core_types_1.assertExists)(objectId);
-            const foundObject = await this.adapters.db.findEntityById(objectId);
-            if (foundObject) {
-                const hasAlreadyBeenShared = await (async () => {
-                    const shared = await this.adapters.db.getStreamByName(recipient, 'Shared');
-                    (0, activitypub_core_types_1.assertIsApType)(shared, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
-                    const sharedItems = shared.orderedItems;
-                    (0, activitypub_core_types_1.assertIsArray)(sharedItems);
-                    for (const sharedItem of sharedItems) {
-                        try {
-                            const sharedItemId = (0, activitypub_core_utilities_1.getId)(sharedItem);
-                            (0, activitypub_core_types_1.assertExists)(sharedItemId);
-                            const foundSharedItem = await this.adapters.db.findEntityById(sharedItemId);
-                            (0, activitypub_core_types_1.assertIsApType)(foundSharedItem, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE);
-                            const sharedItemObjectId = (0, activitypub_core_utilities_1.getId)(foundSharedItem.object);
-                            (0, activitypub_core_types_1.assertExists)(sharedItemObjectId);
-                            if (sharedItemObjectId.toString() === objectId.toString()) {
-                                return true;
-                            }
-                        }
-                        catch (error) {
-                            break;
+            const hasAlreadyBeenShared = await (async () => {
+                const shared = await this.adapters.db.getStreamByName(recipient, 'Shared');
+                (0, activitypub_core_types_1.assertIsApType)(shared, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
+                const sharedItems = shared.orderedItems;
+                (0, activitypub_core_types_1.assertIsArray)(sharedItems);
+                for (const sharedItem of sharedItems) {
+                    try {
+                        const sharedItemId = (0, activitypub_core_utilities_1.getId)(sharedItem);
+                        (0, activitypub_core_types_1.assertExists)(sharedItemId);
+                        const foundSharedItem = await this.adapters.db.findEntityById(sharedItemId);
+                        (0, activitypub_core_types_1.assertIsApType)(foundSharedItem, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE);
+                        const sharedItemObjectId = (0, activitypub_core_utilities_1.getId)(foundSharedItem.object);
+                        (0, activitypub_core_types_1.assertExists)(sharedItemObjectId);
+                        if (sharedItemObjectId.toString() === objectId.toString()) {
+                            return true;
                         }
                     }
-                    return false;
-                })();
-                if (hasAlreadyBeenShared) {
-                    return;
+                    catch (error) {
+                        break;
+                    }
                 }
+                return false;
+            })();
+            if (hasAlreadyBeenShared) {
+                return;
             }
             const recipientId = (0, activitypub_core_utilities_1.getId)(recipient);
             (0, activitypub_core_types_1.assertExists)(recipientId);

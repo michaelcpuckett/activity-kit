@@ -32,46 +32,42 @@ export function GroupsPlugin(config?: {}) {
 
       assertExists(objectId);
 
-      const foundObject = await this.adapters.db.findEntityById(objectId);
+      const hasAlreadyBeenShared = await (async (): Promise<boolean> => {
+        const shared = await this.adapters.db.getStreamByName(recipient, 'Shared');
 
-      if (foundObject) {
-        const hasAlreadyBeenShared = await (async (): Promise<boolean> => {
-          const shared = await this.adapters.db.getStreamByName(recipient, 'Shared');
+        assertIsApType<AP.OrderedCollection>(shared, AP.CollectionTypes.ORDERED_COLLECTION);
 
-          assertIsApType<AP.OrderedCollection>(shared, AP.CollectionTypes.ORDERED_COLLECTION);
-  
-          const sharedItems = shared.orderedItems;
-  
-          assertIsArray(sharedItems);
-  
-          for (const sharedItem of sharedItems) {
-            try {
-              const sharedItemId = getId(sharedItem);
+        const sharedItems = shared.orderedItems;
 
-              assertExists(sharedItemId);
+        assertIsArray(sharedItems);
 
-              const foundSharedItem = await this.adapters.db.findEntityById(sharedItemId);
+        for (const sharedItem of sharedItems) {
+          try {
+            const sharedItemId = getId(sharedItem);
 
-              assertIsApType<AP.Announce>(foundSharedItem, AP.ActivityTypes.ANNOUNCE);
+            assertExists(sharedItemId);
 
-              const sharedItemObjectId = getId(foundSharedItem.object);
+            const foundSharedItem = await this.adapters.db.findEntityById(sharedItemId);
 
-              assertExists(sharedItemObjectId);
+            assertIsApType<AP.Announce>(foundSharedItem, AP.ActivityTypes.ANNOUNCE);
 
-              if (sharedItemObjectId.toString() === objectId.toString()) {
-                return true;
-              }
-            } catch (error) {
-              break;
+            const sharedItemObjectId = getId(foundSharedItem.object);
+
+            assertExists(sharedItemObjectId);
+
+            if (sharedItemObjectId.toString() === objectId.toString()) {
+              return true;
             }
+          } catch (error) {
+            break;
           }
-          
-          return false;
-        })();
-
-        if (hasAlreadyBeenShared) {
-          return;
         }
+        
+        return false;
+      })();
+
+      if (hasAlreadyBeenShared) {
+        return;
       }
 
       const recipientId = getId(recipient);
