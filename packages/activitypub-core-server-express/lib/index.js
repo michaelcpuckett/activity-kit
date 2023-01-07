@@ -100,10 +100,7 @@ const activityPub = (config) => async (req, res, next) => {
     }
     catch (error) {
         console.log(error);
-        res.statusCode = 500;
-        res.write(String(error));
-        res.end();
-        next();
+        next(new Error(`${error}`));
         return;
     }
     console.log('Not handled:', req.url);

@@ -9,9 +9,6 @@ export declare const activityPub: (config: {
         home: ({ actor }: {
             actor: AP.Actor;
         }) => Promise<string>;
-        directory: ({ groups, }: {
-            groups: AP.Group[];
-        }) => Promise<string>;
         entity: ({ entity, actor, }: {
             entity: AP.Entity;
             actor?: AP.Actor;

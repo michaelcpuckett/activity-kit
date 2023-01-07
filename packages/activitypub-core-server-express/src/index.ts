@@ -28,12 +28,6 @@ export const activityPub =
 
       home: ({ actor }: { actor: AP.Actor }) => Promise<string>;
 
-      directory: ({
-        groups,
-      }: {
-        groups: AP.Group[],
-      }) => Promise<string>;
-
       entity: ({
         entity,
         actor,
@@ -215,12 +209,9 @@ export const activityPub =
           return;
         }
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.log(error);
-      res.statusCode = 500;
-      res.write(String(error));
-      res.end();
-      next();
+      next(new Error(`${error}`));
       return;
     }
 
