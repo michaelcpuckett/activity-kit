@@ -1,6 +1,7 @@
 /// <reference types="node" />
 /// <reference types="node" />
 import { AP, Plugin } from 'activitypub-core-types';
+import { respond } from './respond';
 import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 export declare class EntityGetEndpoint {
@@ -23,7 +24,5 @@ export declare class EntityGetEndpoint {
     protected handleNotFound(): {
         props: {};
     };
-    respond(render: Function): Promise<void | {
-        props: {};
-    }>;
+    protected respond: typeof respond;
 }
