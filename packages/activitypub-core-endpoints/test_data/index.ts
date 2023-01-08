@@ -9,15 +9,18 @@ export const actor1BlocksId = `${actor1Id}/blocks`;
 export const actor1FollowingId = `${actor1Id}/following`;
 export const actor1FollowersId = `${actor1Id}/followers`;
 export const actor1RequestsId = `${actor1Id}/requests`;
+export const actor1InboxId = `${actor1Id}/inbox`;
+export const actor1OutboxId = `${actor1Id}/outbox`;
 export const actor1: AP.Person = {
   id: new URL(actor1Id),
   url: new URL(actor1Id),
   type: AP.ActorTypes.PERSON,
-  inbox: new URL(`${actor1Id}/inbox`),
-  outbox: new URL(`${actor1Id}/outbox`),
+  inbox: new URL(actor1InboxId),
+  outbox: new URL(actor1OutboxId),
   following: new URL(actor1FollowingId),
   followers: new URL(actor1FollowersId),
   liked: new URL(actor1LikedId),
+  preferredUsername: 'actor1',
   manuallyApprovesFollowers: true,
   streams: [
     new URL(actor1ExamplesId),
@@ -25,6 +28,20 @@ export const actor1: AP.Person = {
     new URL(actor1BlocksId),
     new URL(actor1RequestsId),
   ],
+};
+export const actor1Inbox: AP.OrderedCollection = {
+  id: new URL(actor1InboxId),
+  url: new URL(actor1InboxId),
+  type: AP.CollectionTypes.ORDERED_COLLECTION,
+  attributedTo: new URL(actor1Id),
+  orderedItems: [],
+};
+export const actor1Outbox: AP.OrderedCollection = {
+  id: new URL(actor1OutboxId),
+  url: new URL(actor1OutboxId),
+  type: AP.CollectionTypes.ORDERED_COLLECTION,
+  attributedTo: new URL(actor1Id),
+  orderedItems: [],
 };
 export const actor1Requests: AP.Collection = {
   id: new URL(actor1RequestsId),

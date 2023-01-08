@@ -1,7 +1,6 @@
 /// <reference types="node" />
-import { IncomingMessage } from 'http';
-import { Plugin } from 'activitypub-core-types';
-import type { ServerResponse } from 'http';
+import type { IncomingMessage, ServerResponse } from 'http';
+import type { Plugin } from 'activitypub-core-types';
 import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
 export declare class HomeGetEndpoint {
     req: IncomingMessage;
@@ -15,5 +14,5 @@ export declare class HomeGetEndpoint {
         auth: AuthAdapter;
         db: DbAdapter;
     }, plugins?: Plugin[]);
-    respond(render: Function): Promise<void>;
+    protected respond: (this: HomeGetEndpoint, render: Function) => Promise<void>;
 }
