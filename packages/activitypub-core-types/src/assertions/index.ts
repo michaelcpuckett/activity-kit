@@ -41,13 +41,31 @@ export function assertExists(value: unknown): asserts value {
 
 export function assertIsObject(value: unknown): asserts value is object {
   if (typeof value !== 'object') {
-    throw new Error(`\`${value}\` is not an object`);
+    throw new Error(`\`${value}\` is not an object.`);
+  }
+}
+
+export function assertIsString(value: unknown): asserts value is string {
+  if (typeof value !== 'string') {
+    throw new Error(`\`${value}\` is not a string.`);
+  }
+}
+
+export function assertIsNumber(value: unknown): asserts value is number {
+  if (typeof value !== 'number') {
+    throw new Error(`\`${value}\` is not a number.`);
+  }
+}
+
+export function assertIsDate(value: unknown): asserts value is Date {
+  if (!(value instanceof Date)) {
+    throw new Error(`\`${value}\` is not a Date object.`);
   }
 }
 
 export function assertIsArray(value: unknown): asserts value is Array<unknown> {
   if (!Array.isArray(value)) {
-    throw new Error(`\`${value}\` is not an array`);
+    throw new Error(`\`${value}\` is not an array.`);
   }
 }
 

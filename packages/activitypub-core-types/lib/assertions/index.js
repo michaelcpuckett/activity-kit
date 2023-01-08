@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.assertIsApType = exports.assertIsApTransitiveActivity = exports.assertIsApCollection = exports.assertIsApActor = exports.assertIsApExtendedObject = exports.assertIsApActivity = exports.assertIsApEntity = exports.assertHasApType = exports.assertHasType = exports.assertIsArray = exports.assertIsObject = exports.assertExists = exports.isType = exports.isTypeOf = void 0;
+exports.assertIsApType = exports.assertIsApTransitiveActivity = exports.assertIsApCollection = exports.assertIsApActor = exports.assertIsApExtendedObject = exports.assertIsApActivity = exports.assertIsApEntity = exports.assertHasApType = exports.assertHasType = exports.assertIsArray = exports.assertIsDate = exports.assertIsNumber = exports.assertIsString = exports.assertIsObject = exports.assertExists = exports.isType = exports.isTypeOf = void 0;
 const AP = __importStar(require("../activitypub"));
 function isTypeOf(entity, values) {
     for (const type of Object.values(values)) {
@@ -51,13 +51,31 @@ function assertExists(value) {
 exports.assertExists = assertExists;
 function assertIsObject(value) {
     if (typeof value !== 'object') {
-        throw new Error(`\`${value}\` is not an object`);
+        throw new Error(`\`${value}\` is not an object.`);
     }
 }
 exports.assertIsObject = assertIsObject;
+function assertIsString(value) {
+    if (typeof value !== 'string') {
+        throw new Error(`\`${value}\` is not a string.`);
+    }
+}
+exports.assertIsString = assertIsString;
+function assertIsNumber(value) {
+    if (typeof value !== 'number') {
+        throw new Error(`\`${value}\` is not a number.`);
+    }
+}
+exports.assertIsNumber = assertIsNumber;
+function assertIsDate(value) {
+    if (!(value instanceof Date)) {
+        throw new Error(`\`${value}\` is not a Date object.`);
+    }
+}
+exports.assertIsDate = assertIsDate;
 function assertIsArray(value) {
     if (!Array.isArray(value)) {
-        throw new Error(`\`${value}\` is not an array`);
+        throw new Error(`\`${value}\` is not an array.`);
     }
 }
 exports.assertIsArray = assertIsArray;

@@ -61,6 +61,7 @@ export const example1Id = `${LOCAL_DOMAIN}/entity/example/1`;
 export const example1: AP.Document = {
   id: new URL(example1Id),
   url: new URL(example1Id),
+  name: 'z',
   type: AP.ExtendedObjectTypes.DOCUMENT,
   content: '<example>1</example>',
 };
@@ -68,6 +69,7 @@ export const example2Id = `${LOCAL_DOMAIN}/entity/example/2`;
 export const example2: AP.Document = {
   id: new URL(example2Id),
   url: new URL(example2Id),
+  name: 'A',
   type: AP.ExtendedObjectTypes.DOCUMENT,
   content: '<example>2</example>',
 };
@@ -77,6 +79,14 @@ export const actor1Examples: AP.Collection = {
   type: AP.CollectionTypes.COLLECTION,
   attributedTo: new URL(actor1Id),
   items: [new URL(example1Id)],
+};
+export const actor1DocumentsId = `${actor1Id}/documents`;
+export const actor1Documents: AP.Collection = {
+  id: new URL(actor1DocumentsId),
+  url: new URL(actor1DocumentsId),
+  type: AP.CollectionTypes.COLLECTION,
+  attributedTo: new URL(actor1Id),
+  items: [new URL(example1Id), new URL(example2Id)],
 };
 export const actor1Shared: AP.OrderedCollection = {
   id: new URL(actor1SharedId),

@@ -8,6 +8,9 @@ export declare function isType(entity: unknown & {
 }, type: string): boolean;
 export declare function assertExists(value: unknown): asserts value;
 export declare function assertIsObject(value: unknown): asserts value is object;
+export declare function assertIsString(value: unknown): asserts value is string;
+export declare function assertIsNumber(value: unknown): asserts value is number;
+export declare function assertIsDate(value: unknown): asserts value is Date;
 export declare function assertIsArray(value: unknown): asserts value is Array<unknown>;
 export declare function assertHasType(value: unknown): asserts value is {
     type: string | string[];
