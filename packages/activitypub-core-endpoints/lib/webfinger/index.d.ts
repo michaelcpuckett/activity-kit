@@ -11,5 +11,5 @@ export declare class WebfingerGetEndpoint {
     constructor(req: IncomingMessage, res: ServerResponse, adapters: {
         db: DbAdapter;
     }, plugins?: Plugin[]);
-    protected respond: (this: WebfingerGetEndpoint) => Promise<void>;
+    respond: (this: WebfingerGetEndpoint) => Promise<void>;
 }

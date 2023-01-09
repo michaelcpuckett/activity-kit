@@ -24,5 +24,5 @@ export declare class EntityGetEndpoint {
     protected handleNotFound(): {
         props: {};
     };
-    protected respond: typeof respond;
+    respond: typeof respond;
 }

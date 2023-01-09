@@ -4,6 +4,8 @@ import type { IncomingMessage, ServerResponse } from 'http';
 import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
 import { getActors } from './getActors';
 import { parseBody } from './parseBody';
+import { respond } from './respond';
+import { isBlocked } from './isBlocked';
 import { runSideEffects } from './runSideEffects';
 import { handleAccept } from './sideEffects/accept';
 import { handleAnnounce } from './sideEffects/announce';
@@ -38,6 +40,6 @@ export declare class InboxPostEndpoint {
     protected handleAnnounce: typeof handleAnnounce;
     protected handleFollow: typeof handleFollow;
     protected handleLike: typeof handleLike;
-    private isBlocked;
-    respond(): Promise<void>;
+    protected isBlocked: typeof isBlocked;
+    respond: typeof respond;
 }

@@ -1,14 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OutboxPostEndpoint = void 0;
-const activitypub_core_types_1 = require("activitypub-core-types");
-const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const runSideEffects_1 = require("./runSideEffects");
 const authenticateActor_1 = require("./authenticateActor");
 const wrapInActivity_1 = require("./wrapInActivity");
 const saveActivity_1 = require("./saveActivity");
 const parseBody_1 = require("./parseBody");
 const getActor_1 = require("./getActor");
+const respond_1 = require("./respond");
 const delete_1 = require("./sideEffects/delete");
 const create_1 = require("./sideEffects/create");
 const update_1 = require("./sideEffects/update");
@@ -37,37 +36,13 @@ class OutboxPostEndpoint {
         this.adapters = adapters;
         this.plugins = plugins;
     }
-    async respond() {
-        await this.parseBody();
-        await this.getActor();
-        await this.authenticateActor();
-        const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`);
-        this.activity.id = activityId;
-        if ((0, activitypub_core_utilities_1.isTypeOf)(this.activity, activitypub_core_types_1.AP.ActivityTypes)) {
-            (0, activitypub_core_types_1.assertIsApActivity)(this.activity);
-            this.activity.url = activityId;
-            await this.runSideEffects();
-        }
-        else {
-            await this.wrapInActivity();
-        }
-        (0, activitypub_core_types_1.assertIsApActivity)(this.activity);
-        this.activity = (0, activitypub_core_utilities_1.combineAddresses)(this.activity);
-        await this.saveActivity();
-        if (!this.activity.id) {
-            throw new Error('Bad activity: No ID.');
-        }
-        await this.adapters.delivery.broadcast(this.activity, this.actor);
-        this.res.statusCode = 201;
-        this.res.setHeader('Location', this.activity.id.toString());
-        this.res.end();
-    }
     authenticateActor = authenticateActor_1.authenticateActor;
     getActor = getActor_1.getActor;
     runSideEffects = runSideEffects_1.runSideEffects;
     saveActivity = saveActivity_1.saveActivity;
     wrapInActivity = wrapInActivity_1.wrapInActivity;
     parseBody = parseBody_1.parseBody;
+    respond = respond_1.respond;
     handleAdd = add_1.handleAdd;
     handleAnnounce = announce_1.handleAnnounce;
     handleAccept = accept_1.handleAccept;

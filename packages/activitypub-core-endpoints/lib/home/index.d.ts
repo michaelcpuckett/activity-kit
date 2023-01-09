@@ -14,5 +14,5 @@ export declare class HomeGetEndpoint {
         auth: AuthAdapter;
         db: DbAdapter;
     }, plugins?: Plugin[]);
-    protected respond: (this: HomeGetEndpoint, render: Function) => Promise<void>;
+    respond: (this: HomeGetEndpoint, render: Function) => Promise<void>;
 }

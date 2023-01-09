@@ -60,7 +60,7 @@ export class OutboxPostEndpoint {
   protected saveActivity = saveActivity;
   protected wrapInActivity = wrapInActivity;
   protected parseBody = parseBody;
-  protected respond = respond;
+  public respond = respond;
 
   protected handleAdd = handleAdd;
   protected handleAnnounce = handleAnnounce;

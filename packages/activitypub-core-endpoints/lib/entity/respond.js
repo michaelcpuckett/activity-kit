@@ -22,6 +22,7 @@ async function respond(render) {
     if (!(0, activitypub_core_utilities_1.isTypeOf)(entity, activitypub_core_types_1.AP.CollectionTypes) && !(0, activitypub_core_utilities_1.isTypeOf)(entity, activitypub_core_types_1.AP.CollectionPageTypes)) {
         return await this.handleFoundEntity(render, entity, authorizedActor);
     }
+    assertIsApCollectionOrCollectionPage(entity);
     const isOrderedCollection = (0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
     const query = this.url.searchParams;
     const page = query.get('page');
@@ -35,16 +36,20 @@ async function respond(render) {
     const firstItemIndex = (currentPage - 1) * limit;
     const startIndex = firstItemIndex + 1;
     if (!page) {
+        (0, activitypub_core_types_1.assertIsApCollection)(entity);
+        const baseCollection = {
+            ...entity,
+        };
         try {
-            (0, activitypub_core_types_1.assertIsApType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
-            delete entity.orderedItems;
+            (0, activitypub_core_types_1.assertIsApType)(baseCollection, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
+            delete baseCollection.orderedItems;
         }
         catch (error) {
-            (0, activitypub_core_types_1.assertIsApType)(entity, activitypub_core_types_1.AP.CollectionTypes.COLLECTION);
-            delete entity.items;
+            (0, activitypub_core_types_1.assertIsApType)(baseCollection, activitypub_core_types_1.AP.CollectionTypes.COLLECTION);
+            delete baseCollection.items;
         }
         const collectionEntity = {
-            ...entity,
+            ...baseCollection,
             first: new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${sort ? `&sort=${sort}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`),
             last: new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${sort ? `&sort=${sort}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`),
             current: new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`),
@@ -136,4 +141,10 @@ async function respond(render) {
     return await this.handleFoundEntity(render, collectionPageEntity, authorizedActor);
 }
 exports.respond = respond;
+function assertIsApCollectionOrCollectionPage(value) {
+    (0, activitypub_core_types_1.assertIsApEntity)(value);
+    if (!(0, activitypub_core_utilities_1.isTypeOf)(value, activitypub_core_types_1.AP.CollectionTypes) && !(0, activitypub_core_utilities_1.isTypeOf)(value, activitypub_core_types_1.AP.CollectionPageTypes)) {
+        throw new Error(`\`${value}\` is not a Collection or CollectionPage.`);
+    }
+}
 //# sourceMappingURL=respond.js.map
