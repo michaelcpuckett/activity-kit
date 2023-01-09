@@ -13,16 +13,22 @@ describe('Outbox', () => {
           db: {
             async getStreamByName(actor: AP.Actor, name: string) {
               if (actor.id?.toString() === actor1Id && name === 'Shared') {
-                return actor1Shared;
+                return {
+                  ...actor1Shared,
+                };
               }
             },
             async queryById(entityId: URL) {
               if (`${entityId}` === actor1Id) {
-                return actor1;
+                return {
+                  ...actor1
+                };
               }
 
               if (`${entityId}` === note1Id) {
-                return note1;
+                return {
+                  ...note1,
+                };
               }
             },
             async removeOrderedItem(collectionId: URL, itemToRemove: URL) {
@@ -30,7 +36,9 @@ describe('Outbox', () => {
             },
           }
         }
-      }, announceActivity);
+      }, {
+        ...announceActivity,
+      });
       
       expect(`${removeOrderedItemsArguments[0][0]}`).toBe(actor1SharedId);
       expect(`${removeOrderedItemsArguments[0][1]}`).toBe(announceActivityId);

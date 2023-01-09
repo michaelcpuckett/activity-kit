@@ -14,11 +14,15 @@ describe('Inbox', () => {
           db: {
             async findEntityById(entityId: URL) {
               if (`${entityId}` === note1Id) {
-                return note1;
+                return {
+                  ...note1,
+                };
               }
 
               if (`${entityId}` === note1SharesId) {
-                return note1Shares;
+                return {
+                  ...note1Shares,
+                };
               }
             },
             async insertItem(collectionId: URL, itemToInsert: URL) {
@@ -27,7 +31,11 @@ describe('Inbox', () => {
             },
           }
         }
-      }, announceActivity, actor1);
+      }, {
+        ...announceActivity,
+      }, {
+        ...actor1,
+      });
       
       expect(`${collectionInsertedInto}`).toBe(note1SharesId);
       expect(`${insertedIntoCollection}`).toBe(announceActivityId);

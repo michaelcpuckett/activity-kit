@@ -13,11 +13,15 @@ describe('Outbox', () => {
           db: {
             async queryById(entityId: URL) {
               if (entityId.toString() === actor1Id) {
-                return actor1;
+                return {
+                  ...actor1,
+                };
               }
 
               if (entityId.toString() === note1Id) {
-                return note1;
+                return {
+                  ...note1,
+                };
               }
             },
             async removeOrderedItem(collectionId: URL, itemToRemove: URL) {
@@ -25,7 +29,9 @@ describe('Outbox', () => {
             },
           }
         }
-      }, likeActivity);
+      }, {
+        ...likeActivity,
+      });
       
       expect(`${removeOrderedItemsArguments[0][0]}`).toBe(actor1LikedId);
       expect(`${removeOrderedItemsArguments[0][1]}`).toBe(note1Id);

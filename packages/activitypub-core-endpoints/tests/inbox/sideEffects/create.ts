@@ -16,7 +16,9 @@ describe('Inbox', () => {
           db: {
             async queryById(entityId: URL) {
               if (`${entityId}` === note2Id) {
-                return note2;
+                return {
+                  ...note2,
+                };
               }
             },
             async findEntityById(entityId: URL) {
@@ -25,11 +27,15 @@ describe('Inbox', () => {
               }
               
               if (`${entityId}` === note1Id) {
-                return note1;
+                return {
+                  ...note1,
+                };
               }
               
               if (`${entityId}` === note1RepliesId) {
-                return note1Replies;
+                return {
+                  ...note1Replies,
+                };
               }
             },
             async saveEntity(entity: AP.Entity) {
@@ -41,7 +47,11 @@ describe('Inbox', () => {
             },
           }
         }
-      }, createActivityWithObject, actor1);
+      }, {
+        ...createActivityWithObject,
+      }, {
+        ...actor1,
+      });
 
       expect(saveEntityArguments?.[0]?.toString()).toBe(note2Id);
       expect(`${collectionInsertedInto}`).toBe(note1RepliesId);

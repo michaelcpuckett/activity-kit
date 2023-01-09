@@ -14,12 +14,16 @@ describe('Outbox', () => {
           db: {
             async getStreamByName(actor: AP.Actor, name: string) {
               if (actor.id?.toString() === actor1Id && name === 'Blocks') {
-                return actor1Blocks;
+                return {
+                  ...actor1Blocks,
+                };
               }
             },
             async queryById(entityId: URL) {
               if (entityId.toString() === actor1Id) {
-                return actor1;
+                return {
+                  ...actor1,
+                };
               }
             },
             async insertItem(collectionId: URL, itemToInsert: URL) {
@@ -28,7 +32,9 @@ describe('Outbox', () => {
             },
           }
         }
-      }, blockActivity);
+      }, {
+        ...blockActivity,
+      });
       
       expect(`${collectionInsertedInto}`).toBe(actor1BlocksId);
       expect(`${insertedIntoCollection}`).toBe(blockActivityId);

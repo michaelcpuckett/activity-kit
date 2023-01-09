@@ -13,11 +13,15 @@ describe('Outbox', () => {
           db: {
             async findEntityById(entityId: URL) {
               if (`${entityId}` === actor1Id) {
-                return actor1;
+                return {
+                  ...actor1,
+                };
               }
 
               if (`${entityId}` === note1Id) {
-                return note1;
+                return {
+                  ...note1,
+                };
               }
             },
             async saveEntity(entity: AP.Entity) {
@@ -25,7 +29,9 @@ describe('Outbox', () => {
             }
           }
         }
-      }, updateActivity);
+      }, {
+        ...updateActivity
+      });
       
       expect(updatedObject && 'updated' in updatedObject).toBeTrue();
     });

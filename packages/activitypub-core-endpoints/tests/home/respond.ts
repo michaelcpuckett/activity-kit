@@ -36,16 +36,22 @@ describe('Home', () => {
           db: {
             getActorByUserId(userId: string) {
               if (userId === 'actor1') {
-                return actor1;
+                return {
+                  ...actor1,
+                };
               }
             },
             findEntityById(entityId: URL) {
               if (entityId?.toString() === actor1InboxId) {
-                return actor1Inbox;
+                return {
+                  ...actor1Inbox,
+                };
               }
 
               if (entityId?.toString() === actor1OutboxId) {
-                return actor1Outbox;
+                return {
+                  ...actor1Outbox,
+                };
               }
             },
           }

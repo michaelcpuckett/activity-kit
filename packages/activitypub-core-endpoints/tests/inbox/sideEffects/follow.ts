@@ -15,21 +15,29 @@ describe('Inbox', () => {
           db: {
             async getStreamByName(actor: AP.Actor, name: string) {
               if (actor.id?.toString() === actor1Id && name === 'Requests') {
-                return actor1Requests;
+                return {
+                  ...actor1Requests,
+                };
               }
             },
             async findEntityById(entityId: URL) {
               if (entityId?.toString() === actor1FollowersId) {
-                return actor1Followers;
+                return {
+                  ...actor1Followers,
+                };
               }
             },
             async queryById(entityId: URL) {
               if (entityId?.toString() === actor1Id) {
-                return actor1;
+                return {
+                  ...actor1,
+                };
               }
 
               if (entityId?.toString() === actor2Id) {
-                return actor2;
+                return {
+                  ...actor2,
+                };
               }
             },
             async insertItem(collectionId: URL, itemToInsert: URL) {
@@ -38,7 +46,11 @@ describe('Inbox', () => {
             },
           }
         }
-      }, followActivityWithManualApproval, actor1);
+      }, {
+        ...followActivityWithManualApproval,
+      }, {
+        ...actor1,
+      });
 
       expect(`${collectionInsertedInto}`).toBe(actor1RequestsId);
       expect(`${insertedIntoCollection}`).toBe(followActivityWithManualApprovalId);

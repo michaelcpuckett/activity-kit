@@ -116,11 +116,15 @@ describe('Entity', () => {
             },
             async findEntityById(entityId: URL) {
               if (entityId?.toString() === actor1ExamplesId) {
-                return actor1Examples;
+                return {
+                  ...actor1Examples,
+                };
               }
 
               if (entityId?.toString() === example1Id) {
-                return example1;
+                return {
+                  ...example1,
+                };
               }
             }
           }

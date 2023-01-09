@@ -14,7 +14,9 @@ describe('Outbox', () => {
           db: {
             async findEntityById(entityId: URL) {
               if (entityId.toString() === actor1ExamplesId) {
-                return actor1Examples;
+                return {
+                  ...actor1Examples
+                };
               }
             },
             async insertItem(collectionId: URL, itemToInsert: URL) {
@@ -23,7 +25,9 @@ describe('Outbox', () => {
             },
           }
         }
-      }, addActivity);
+      }, {
+        ...addActivity,
+      });
       
       expect(`${collectionInsertedInto}`).toBe(actor1ExamplesId);
       expect(`${insertedIntoCollection}`).toBe(example2Id);

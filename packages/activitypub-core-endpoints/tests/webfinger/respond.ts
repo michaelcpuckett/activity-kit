@@ -31,7 +31,9 @@ describe('Webfinger', () => {
           db: {
             findOne(collectionName: string, {preferredUsername}: {preferredUsername: string}) {
               if (preferredUsername === actor1.preferredUsername) {
-                return actor1;
+                return {
+                  ...actor1,
+                };
               }
             },
           }
@@ -64,7 +66,9 @@ describe('Webfinger', () => {
           db: {
             findOne(collectionName: string, {preferredUsername}: {preferredUsername: string}) {
               if (preferredUsername === actor1.preferredUsername) {
-                return actor1;
+                return {
+                  ...actor1,
+                };
               }
             },
           }

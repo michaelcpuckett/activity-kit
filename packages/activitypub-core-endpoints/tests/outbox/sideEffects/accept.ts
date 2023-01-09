@@ -16,11 +16,15 @@ describe('Outbox', () => {
           db: {
             async queryById(url: URL) {
               if (url.toString() === actor2Id) {
-                return actor2;
+                return {
+                  ...actor2,
+                };
               }
               
               if (url.toString() === followActivityId) {
-                return followActivity;
+                return {
+                  ...followActivity,
+                };
               }
             },
             async getStreamByName(actor: AP.Actor, name: string) {
@@ -38,7 +42,9 @@ describe('Outbox', () => {
             },
           }
         }
-      }, acceptActivity);
+      }, {
+        ...acceptActivity,
+      });
 
       expect(`${collectionInsertedInto}`).toBe(actor2FollowersId);
       expect(`${collectionRemovedFrom}`).toBe(actor2RequestsId);

@@ -17,7 +17,9 @@ describe('Outbox', () => {
             }
           }
         }
-      }, createActivity);
+      }, {
+        ...createActivity
+      });
       
       const [objectId] = saveEntityArguments;
       const expectedUrls = saveEntityArguments.map(arg => `${arg}`);

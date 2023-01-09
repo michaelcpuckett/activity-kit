@@ -14,12 +14,16 @@ describe('Outbox', () => {
           db: {
             async queryById(entityId: URL) {
               if (`${entityId}` === followActivityId) {
-                return followActivity;
+                return {
+                  ...followActivity,
+                };
               }
             },
             async findEntityById(entityId: URL) {
               if (`${entityId}` === actor2Id) {
-                return actor2;
+                return {
+                  ...actor2,
+                };
               }
             },
             async removeItem(collectionId: URL, itemToRemove: URL) {
@@ -28,7 +32,9 @@ describe('Outbox', () => {
             },
           }
         }
-      }, acceptActivity);
+      }, {
+        ...acceptActivity,
+      });
       
       expect(`${collectionRemovedFrom}`).toBe(actor2FollowersId);
       expect(`${removedFromCollection}`).toBe(actor1Id);

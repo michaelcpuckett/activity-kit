@@ -1,13 +1,6 @@
 import { AP, assertIsApActivity, assertIsArray } from 'activitypub-core-types';
 import type { AuthAdapter, DbAdapter, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
-import {
-  isTypeOf,
-  getGuid,
-  combineAddresses,
-  LOCAL_DOMAIN,
-  getId,
-} from 'activitypub-core-utilities';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
 import { runSideEffects } from './runSideEffects';
 import { authenticateActor } from './authenticateActor';
@@ -15,6 +8,7 @@ import { wrapInActivity } from './wrapInActivity';
 import { saveActivity } from './saveActivity';
 import { parseBody } from './parseBody';
 import { getActor } from './getActor';
+import { respond } from './respond';
 import { handleDelete } from './sideEffects/delete';
 import { handleCreate } from './sideEffects/create';
 import { handleUpdate } from './sideEffects/update';
@@ -60,50 +54,13 @@ export class OutboxPostEndpoint {
     this.plugins = plugins;
   }
 
-  public async respond() {
-    await this.parseBody();
-    await this.getActor();
-    await this.authenticateActor();
-
-    const activityId = new URL(`${LOCAL_DOMAIN}/entity/${getGuid()}`);
-    this.activity.id = activityId; // Overwrite ID
-
-    if (isTypeOf(this.activity, AP.ActivityTypes)) {
-      assertIsApActivity(this.activity);
-      
-      this.activity.url = activityId;
-      
-      await this.runSideEffects();
-    } else {
-      // If not activity type, wrap object in a Create activity.
-      await this.wrapInActivity();
-    }
-
-    assertIsApActivity(this.activity);
-
-    // Address activity and object the same way.
-    this.activity = combineAddresses(this.activity);
-
-    await this.saveActivity();
-
-    if (!this.activity.id) {
-      throw new Error('Bad activity: No ID.');
-    }
-
-    // Broadcast to Fediverse.
-    await this.adapters.delivery.broadcast(this.activity, this.actor);
-
-    this.res.statusCode = 201;
-    this.res.setHeader('Location', this.activity.id.toString());
-    this.res.end();
-  }
-
   protected authenticateActor = authenticateActor;
   protected getActor = getActor;
   protected runSideEffects = runSideEffects;
   protected saveActivity = saveActivity;
   protected wrapInActivity = wrapInActivity;
   protected parseBody = parseBody;
+  protected respond = respond;
 
   protected handleAdd = handleAdd;
   protected handleAnnounce = handleAnnounce;

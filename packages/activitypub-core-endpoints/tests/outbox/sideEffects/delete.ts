@@ -19,12 +19,16 @@ describe('Outbox', () => {
             },
             findEntityById(entityId: URL) {
               if (entityId.toString() === note1Id) {
-                return note1;
+                return {
+                  ...note1,
+                };
               }
             }
           }
         }
-      }, deleteActivity);
+      }, {
+        ...deleteActivity,
+      });
       
       expect(`${deletedItem}`).toBe(note1Id.toString());
     });

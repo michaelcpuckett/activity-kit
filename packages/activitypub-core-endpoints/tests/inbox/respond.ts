@@ -25,13 +25,17 @@ describe('Inbox', () => {
       } = {
         activity: null,
         async parseBody() {
-          this.activity = arriveActivity;
+          this.activity = {
+            ...arriveActivity,
+          };
         },
         async isBlocked() {
           return false;
         },
         async getActors() {
-          return [actor1];
+          return [{
+            ...actor1,
+          }];
         },
         async runSideEffects() {
 

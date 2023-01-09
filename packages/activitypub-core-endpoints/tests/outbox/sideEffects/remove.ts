@@ -14,7 +14,9 @@ describe('Outbox', () => {
           db: {
             async findEntityById(entityId: URL) {
               if (entityId.toString() === actor1ExamplesId) {
-                return actor1Examples;
+                return {
+                  ...actor1Examples,
+                };
               }
             },
             async removeItem(collectionId: URL, itemToRemove: URL) {
@@ -23,7 +25,9 @@ describe('Outbox', () => {
             },
           }
         }
-      }, removeActivity);
+      }, {
+        ...removeActivity
+      });
       
       expect(`${collectionRemovedFrom}`).toBe(actor1ExamplesId);
       expect(`${removedFromCollection}`).toBe(example1Id);

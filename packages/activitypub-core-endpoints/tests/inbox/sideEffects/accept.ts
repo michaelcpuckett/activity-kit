@@ -14,20 +14,28 @@ describe('Inbox', () => {
           db: {
             async queryById(entityId: URL) {
               if (`${entityId}` === actor1Id) {
-                return actor1;
+                return {
+                  ...actor1,
+                };
               }
               
               if (`${entityId}` === actor2Id) {
-                return actor2;
+                return {
+                  ...actor2,
+                };
               }
               
               if (`${entityId}` === actor1FollowingId) {
-                return actor1Following;
+                return {
+                  ...actor1Following,
+                };
               }
             },
             async findEntityById(entityId: URL) {
               if (`${entityId}` === followActivityId) {
-                return followActivity;
+                return {
+                  ...followActivity,
+                };
               }
             },
             async insertItem(collectionId: URL, itemToInsert: URL) {
@@ -36,7 +44,11 @@ describe('Inbox', () => {
             },
           }
         }
-      }, acceptActivity, actor1);
+      }, {
+        ...acceptActivity,
+      }, {
+        ...actor1,
+      });
 
       expect(`${collectionInsertedInto}`).toBe(actor1FollowingId);
       expect(`${insertedIntoCollection}`).toBe(actor2Id);
