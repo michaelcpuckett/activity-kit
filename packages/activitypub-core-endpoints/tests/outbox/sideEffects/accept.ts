@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleAccept } from '../../src/outbox/sideEffects/accept';
-import { acceptActivity, actor1Id, actor2, actor2FollowersId, actor2Id, actor2Requests, actor2RequestsId, followActivity, followActivityId } from '../../test_data';
+import { handleAccept } from '../../../src/outbox/sideEffects/accept';
+import { acceptActivity, actor1Id, actor2, actor2FollowersId, actor2Id, actor2Requests, actor2RequestsId, followActivity, followActivityId } from '../../../test_data';
 
 describe('Outbox', () => {
   describe('Accept Side Effect', () => {

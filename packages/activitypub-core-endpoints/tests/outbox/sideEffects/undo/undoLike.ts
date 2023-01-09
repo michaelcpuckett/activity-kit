@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleUndoLike } from '../../../src/outbox/sideEffects/undo/undoLike';
-import { actor1, actor1Id, actor1LikedId, likeActivity, likeActivityId, note1, note1Id, note1LikesId } from '../../../test_data';
+import { handleUndoLike } from '../../../../src/outbox/sideEffects/undo/undoLike';
+import { actor1, actor1Id, actor1LikedId, likeActivity, likeActivityId, note1, note1Id, note1LikesId } from '../../../../test_data';
 
 describe('Outbox', () => {
   describe('Undo Like Side Effect', () => {

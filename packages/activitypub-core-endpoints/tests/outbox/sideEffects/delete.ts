@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleDelete } from '../../src/outbox/sideEffects/delete';
-import { deleteActivity, note1, note1Id } from '../../test_data';
+import { handleDelete } from '../../../src/outbox/sideEffects/delete';
+import { deleteActivity, note1, note1Id } from '../../../test_data';
 import { getId } from 'activitypub-core-utilities';
 
 describe('Outbox', () => {

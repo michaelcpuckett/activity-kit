@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleUndoBlock } from '../../../src/outbox/sideEffects/undo/undoBlock';
-import { actor1, actor1Blocks, actor1BlocksId, actor1Id, blockActivity, blockActivityId } from '../../../test_data';
+import { handleUndoBlock } from '../../../../src/outbox/sideEffects/undo/undoBlock';
+import { actor1, actor1Blocks, actor1BlocksId, actor1Id, blockActivity, blockActivityId } from '../../../../test_data';
 
 describe('Outbox', () => {
   describe('Undo Block Side Effect', () => {

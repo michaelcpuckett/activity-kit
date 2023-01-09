@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleRemove } from '../../src/outbox/sideEffects/remove';
-import { actor1Examples, actor1ExamplesId, removeActivity, example1Id } from '../../test_data';
+import { handleRemove } from '../../../src/outbox/sideEffects/remove';
+import { actor1Examples, actor1ExamplesId, removeActivity, example1Id } from '../../../test_data';
 
 describe('Outbox', () => {
   describe('Remove Side Effect', () => {

@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleUndoFollow } from '../../../src/outbox/sideEffects/undo/undoFollow';
-import { followActivity, actor1Id, actor1FollowingId, actor2Id, actor1, actor2 } from '../../../test_data';
+import { handleUndoFollow } from '../../../../src/outbox/sideEffects/undo/undoFollow';
+import { followActivity, actor1Id, actor1FollowingId, actor2Id, actor1, actor2 } from '../../../../test_data';
 
 describe('Outbox', () => {
   describe('Undo Follow Side Effect', () => {

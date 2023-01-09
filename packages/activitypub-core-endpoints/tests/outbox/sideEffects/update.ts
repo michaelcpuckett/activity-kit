@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleUpdate } from '../../src/outbox/sideEffects/update';
-import { actor1, actor1Id, note1, note1Id, updateActivity } from '../../test_data';
+import { handleUpdate } from '../../../src/outbox/sideEffects/update';
+import { actor1, actor1Id, note1, note1Id, updateActivity } from '../../../test_data';
 
 describe('Outbox', () => {
   describe('Update Side Effect', () => {

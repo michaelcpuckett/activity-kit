@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleCreate } from '../../src/outbox/sideEffects/create';
-import { createActivity } from '../../test_data';
+import { handleCreate } from '../../../src/outbox/sideEffects/create';
+import { createActivity } from '../../../test_data';
 import { getId } from 'activitypub-core-utilities';
 
 describe('Outbox', () => {

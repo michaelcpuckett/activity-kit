@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleUndoAnnounce } from '../../../src/outbox/sideEffects/undo/undoAnnounce';
-import { actor1, actor1Id, actor1Shared, actor1SharedId, announceActivity, announceActivityId, note1, note1Id, note1SharesId } from '../../../test_data';
+import { handleUndoAnnounce } from '../../../../src/outbox/sideEffects/undo/undoAnnounce';
+import { actor1, actor1Id, actor1Shared, actor1SharedId, announceActivity, announceActivityId, note1, note1Id, note1SharesId } from '../../../../test_data';
 
 describe('Outbox', () => {
   describe('Undo Announce Side Effect', () => {

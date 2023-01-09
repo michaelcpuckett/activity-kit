@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleBlock } from '../../src/outbox/sideEffects/block';
-import { actor1, actor1Blocks, actor1BlocksId, actor1Id, blockActivity, blockActivityId } from '../../test_data';
+import { handleBlock } from '../../../src/outbox/sideEffects/block';
+import { actor1, actor1Blocks, actor1BlocksId, actor1Id, blockActivity, blockActivityId } from '../../../test_data';
 
 describe('Outbox', () => {
   describe('Block Side Effect', () => {

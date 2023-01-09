@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleUndoAccept } from '../../../src/outbox/sideEffects/undo/undoAccept';
-import { acceptActivity, actor1Id, actor2, actor2FollowersId, actor2Id, followActivity, followActivityId } from '../../../test_data';
+import { handleUndoAccept } from '../../../../src/outbox/sideEffects/undo/undoAccept';
+import { acceptActivity, actor1Id, actor2, actor2FollowersId, actor2Id, followActivity, followActivityId } from '../../../../test_data';
 
 describe('Outbox', () => {
   describe('Undo Accept Side Effect', () => {
