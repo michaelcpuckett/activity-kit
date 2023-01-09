@@ -28,6 +28,8 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
     return await this.handleFoundEntity(render, entity, authorizedActor);
   }
 
+  assertIsApCollectionOrCollectionPage(entity);
+
   const isOrderedCollection = isType(entity, AP.CollectionTypes.ORDERED_COLLECTION);
   const query = this.url.searchParams;
   const page = query.get('page');
@@ -44,17 +46,23 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
   const startIndex = firstItemIndex + 1;
 
   if (!page) {
+    assertIsApCollection(entity);
+
+    const baseCollection: AP.Collection|AP.OrderedCollection = {
+      ...entity,
+    };
+
     // Treat as a Collection.
     try {
-      assertIsApType<AP.OrderedCollection>(entity, AP.CollectionTypes.ORDERED_COLLECTION);
-      delete entity.orderedItems;
+      assertIsApType<AP.OrderedCollection>(baseCollection, AP.CollectionTypes.ORDERED_COLLECTION);
+      delete baseCollection.orderedItems;
     } catch (error) {
-      assertIsApType<AP.Collection>(entity, AP.CollectionTypes.COLLECTION);
-      delete entity.items;
+      assertIsApType<AP.Collection>(baseCollection, AP.CollectionTypes.COLLECTION);
+      delete baseCollection.items;
     }
 
     const collectionEntity = {
-      ...entity,
+      ...baseCollection,
       first: new URL(`${LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${sort ? `&sort=${sort}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`),
       last: new URL(`${LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${sort ? `&sort=${sort}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`),
       current: new URL(`${LOCAL_DOMAIN}${this.url.pathname}?current`),
@@ -155,4 +163,12 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
   };
 
   return await this.handleFoundEntity(render, collectionPageEntity, authorizedActor);
+}
+
+function assertIsApCollectionOrCollectionPage(value: unknown): asserts value is AP.Collection|AP.OrderedCollection|AP.CollectionPage|AP.OrderedCollectionPage {
+  assertIsApEntity(value);
+
+  if (!isTypeOf(value, AP.CollectionTypes) && !isTypeOf(value, AP.CollectionPageTypes)) {
+    throw new Error(`\`${value}\` is not a Collection or CollectionPage.`);
+  }
 }

@@ -5,9 +5,6 @@ import { ACTIVITYSTREAMS_CONTENT_TYPE, LOCAL_DOMAIN, LOCAL_HOSTNAME } from 'acti
 import { AP, assertIsApEntity, assertIsArray } from 'activitypub-core-types';
 
 describe('Entity', () => {
-
-  // TODO: Sort, limit, current
-
   describe('Respond', () => {
     let returnedEntity: AP.Entity|null = null;
     let returnedCollection: AP.Collection|AP.OrderedCollection|null = null;
@@ -99,7 +96,7 @@ describe('Entity', () => {
           },
         },
         url: new URL(`${actor1ExamplesId}?page=1`),
-        handleFoundEntity(render: Function, collectionPage: AP.CollectionPage) {
+        async handleFoundEntity(render: Function, collectionPage: AP.CollectionPage) {
           returnedCollectionPage = collectionPage;
         },
         res: {
@@ -109,15 +106,15 @@ describe('Entity', () => {
         },
         adapters: {
           auth: {
-            getUserIdByToken() {
+            async getUserIdByToken() {
 
             },
           },
           db: {
-            getActorByUserId() {
+            async getActorByUserId() {
 
             },
-            findEntityById(entityId: URL) {
+            async findEntityById(entityId: URL) {
               if (entityId?.toString() === actor1ExamplesId) {
                 return actor1Examples;
               }

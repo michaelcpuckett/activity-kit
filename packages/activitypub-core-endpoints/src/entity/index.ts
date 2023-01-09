@@ -3,8 +3,6 @@ import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   CONTENT_TYPE_HEADER,
   HTML_CONTENT_TYPE,
-  isType,
-  isTypeOf,
   JSON_CONTENT_TYPE,
   LINKED_DATA_CONTENT_TYPE,
   LOCAL_DOMAIN,
@@ -107,5 +105,5 @@ export class EntityGetEndpoint {
     };
   }
 
-  protected respond = respond;
+  public respond = respond;
 }

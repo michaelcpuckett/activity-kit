@@ -27,5 +27,5 @@ export class HomeGetEndpoint {
     this.plugins = plugins;
   }
 
-  protected respond = respond;
+  public respond = respond;
 }
