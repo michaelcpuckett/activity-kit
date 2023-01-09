@@ -1,15 +1,16 @@
 import { InboxPostEndpoint } from '.';
 import { getId, stringify } from 'activitypub-core-utilities';
+import { assertExists } from 'activitypub-core-types';
 
 export async function respond(this: InboxPostEndpoint) {
   await this.parseBody();
 
+  assertExists(this.activity);
+
   const activityId = getId(this.activity);
 
   if (activityId) {
-    const existingActivity = await this.adapters.db.findEntityById(getId(this.activity)) ?? await this.adapters.db.findOne('foreign-entity', {
-      id: activityId.toString(),
-    });
+    const existingActivity = await this.adapters.db.findEntityById(activityId);
 
     if (existingActivity) {
       console.log('We have already received this activity. Assuming it was forwarded by another server.');
@@ -29,7 +30,7 @@ export async function respond(this: InboxPostEndpoint) {
 
     await this.adapters.db.insertOrderedItem(
       actor.inbox,
-      getId(this.activity),
+      activityId,
     );
 
     await this.runSideEffects(actor);
@@ -39,6 +40,5 @@ export async function respond(this: InboxPostEndpoint) {
   await this.broadcastActivity();
 
   this.res.statusCode = 200;
-  this.res.write(stringify(this.activity));
   this.res.end();
 }

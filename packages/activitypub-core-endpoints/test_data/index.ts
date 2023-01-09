@@ -186,6 +186,17 @@ export const note2: AP.Note = {
   content: 'Foo bar!',
   inReplyTo: new URL(note1Id),
 };
+export const arriveActivityId = `${LOCAL_DOMAIN}/entity/arrive`;
+export const arriveActivity: AP.Arrive = {
+  id: new URL(arriveActivityId),
+  url: new URL(arriveActivityId),
+  type: AP.ActivityTypes.ARRIVE,
+  actor: new URL(actor1Id),
+  location: {
+    type: 'Place',
+    name: 'California',
+  },
+};
 export const followActivityId = `${LOCAL_DOMAIN}/entity/follow`;
 export const followActivity: AP.Follow = {
   id: new URL(followActivityId),

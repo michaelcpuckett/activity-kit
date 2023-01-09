@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleLike } from '../../src/inbox/sideEffects/like';
-import { actor1, actor2, likeActivity, likeActivityId, note1, note1Id, note1Likes, note1LikesId } from '../../test_data';
+import { handleLike } from '../../../src/inbox/sideEffects/like';
+import { actor1, actor2, likeActivity, likeActivityId, note1, note1Id, note1Likes, note1LikesId } from '../../../test_data';
 
 describe('Inbox', () => {
   describe('Like Side Effect', () => {

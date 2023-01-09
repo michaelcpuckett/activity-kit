@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleAnnounce } from '../../src/inbox/sideEffects/announce';
-import { actor1, actor1Id, actor1Shared, actor1SharedId, announceActivity, announceActivityId, note1, note1Id, note1SharesId, note1Shares } from '../../test_data';
+import { handleAnnounce } from '../../../src/inbox/sideEffects/announce';
+import { actor1, actor1Id, actor1Shared, actor1SharedId, announceActivity, announceActivityId, note1, note1Id, note1SharesId, note1Shares } from '../../../test_data';
 
 describe('Inbox', () => {
   describe('Announce Side Effect', () => {

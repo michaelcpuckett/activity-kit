@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleAccept } from '../../src/inbox/sideEffects/accept';
-import { acceptActivity, actor1, actor1Following, actor1FollowingId, actor1Id, actor2, actor2Id, followActivity, followActivityId } from '../../test_data';
+import { handleAccept } from '../../../src/inbox/sideEffects/accept';
+import { acceptActivity, actor1, actor1Following, actor1FollowingId, actor1Id, actor2, actor2Id, followActivity, followActivityId } from '../../../test_data';
 
 describe('Inbox', () => {
   describe('Accept Side Effect', () => {

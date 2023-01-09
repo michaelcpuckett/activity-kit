@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleCreate } from '../../src/inbox/sideEffects/create';
-import { actor1, createActivityWithObject, note1, note1Id, note1Replies, note1RepliesId, note2, note2Id } from '../../test_data';
+import { handleCreate } from '../../../src/inbox/sideEffects/create';
+import { actor1, createActivityWithObject, note1, note1Id, note1Replies, note1RepliesId, note2, note2Id } from '../../../test_data';
 import { getId } from 'activitypub-core-utilities';
 
 describe('Inbox', () => {

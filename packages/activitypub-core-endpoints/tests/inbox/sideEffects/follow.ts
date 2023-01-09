@@ -1,7 +1,7 @@
 import 'jasmine';
 import { AP } from 'activitypub-core-types';
-import { handleFollow } from '../../src/inbox/sideEffects/follow';
-import { followActivityWithManualApproval, followActivityWithManualApprovalId, actor2Requests, actor1FollowersId, actor1Followers, actor2, actor2Id, actor1, actor1Id, followActivity, actor2Followers, actor2FollowersId, actor2RequestsId, actor1Requests, actor1RequestsId } from '../../test_data';
+import { handleFollow } from '../../../src/inbox/sideEffects/follow';
+import { followActivityWithManualApproval, followActivityWithManualApprovalId, actor2Requests, actor1FollowersId, actor1Followers, actor2, actor2Id, actor1, actor1Id, followActivity, actor2Followers, actor2FollowersId, actor2RequestsId, actor1Requests, actor1RequestsId } from '../../../test_data';
 import { getId, isType } from 'activitypub-core-utilities';
 
 describe('Inbox', () => {
