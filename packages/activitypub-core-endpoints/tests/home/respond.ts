@@ -24,6 +24,9 @@ describe('Home', () => {
             const { actor } = JSON.parse(string);
             writtenActor = actor;
           },
+          end() {
+
+          },
         },
         adapters: {
           auth: {

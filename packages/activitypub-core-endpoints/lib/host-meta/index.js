@@ -39,7 +39,6 @@ class HostMetaGetEndpoint {
       `.trim());
         }
         this.res.end();
-        return;
     }
 }
 exports.HostMetaGetEndpoint = HostMetaGetEndpoint;

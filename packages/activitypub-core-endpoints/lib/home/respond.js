@@ -51,6 +51,7 @@ const respond = async function (render) {
             return [key, (0, activitypub_core_utilities_1.convertUrlsToStrings)(value)];
         }));
         this.res.write(await render(formattedProps));
+        this.res.end();
     }
 };
 exports.respond = respond;

@@ -60,7 +60,7 @@ export class HostMetaGetEndpoint {
       `.trim(),
       );
     }
+
     this.res.end();
-    return;
   }
 }

@@ -87,5 +87,6 @@ export const respond = async function (
     );
 
     this.res.write(await render(formattedProps));
+    this.res.end();
   }
 };
