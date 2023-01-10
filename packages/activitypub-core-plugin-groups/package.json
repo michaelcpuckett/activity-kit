@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-plugin-groups",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "> TODO: description",
   "author": "Michael Puckett <michael@puckett.contact>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -24,9 +24,9 @@
     "test": "ts-node ../../node_modules/jasmine/bin/jasmine tests/**/*.ts"
   },
   "dependencies": {
-    "activitypub-core-endpoints": "^0.1.4",
-    "activitypub-core-types": "^0.1.1",
-    "activitypub-core-utilities": "^0.1.1"
+    "activitypub-core-endpoints": "^0.1.5",
+    "activitypub-core-types": "^0.1.5",
+    "activitypub-core-utilities": "^0.1.5"
   },
   "devDependencies": {
     "@types/jasmine": "^4.3.1",
