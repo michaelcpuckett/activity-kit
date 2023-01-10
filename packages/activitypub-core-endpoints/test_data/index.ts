@@ -1,6 +1,15 @@
 import { AP } from "activitypub-core-types";
 import { LOCAL_DOMAIN } from "activitypub-core-utilities";
 
+export const blockActivityId = `${LOCAL_DOMAIN}/entity/block`;
+export const blockedActorId = `${LOCAL_DOMAIN}/entity/actor/blocked`;
+export const blockedActor: AP.Person = {
+  id: new URL(blockedActorId),
+  url: new URL(blockedActorId),
+  type: AP.ActorTypes.PERSON,
+  inbox: new URL(`${blockedActorId}/inbox`),
+  outbox: new URL(`${blockedActorId}/outbox`),
+};
 export const actor1Id = `${LOCAL_DOMAIN}/entity/actor/1`;
 export const actor1ExamplesId = `${actor1Id}/examples`;
 export const actor1SharedId = `${actor1Id}/shared`;
@@ -114,7 +123,7 @@ export const actor1Blocks: AP.Collection = {
   url: new URL(actor1BlocksId),
   type: AP.CollectionTypes.COLLECTION,
   attributedTo: new URL(actor1Id),
-  items: [],
+  items: [new URL(blockActivityId)],
 };
 export const actor2Id = `${LOCAL_DOMAIN}/entity/actor/2`;
 export const actor2RequestsId = `${actor2Id}/requests`;
@@ -197,6 +206,17 @@ export const arriveActivity: AP.Arrive = {
     name: 'California',
   },
 };
+export const arriveActivityFromBlockedActorId = `${LOCAL_DOMAIN}/entity/arrive/from-blocked`;
+export const arriveActivityFromBlockedActor: AP.Arrive = {
+  id: new URL(arriveActivityFromBlockedActorId),
+  url: new URL(arriveActivityFromBlockedActorId),
+  type: AP.ActivityTypes.ARRIVE,
+  actor: new URL(blockedActorId),
+  location: {
+    type: 'Place',
+    name: 'California',
+  },
+};
 export const followActivityId = `${LOCAL_DOMAIN}/entity/follow`;
 export const followActivity: AP.Follow = {
   id: new URL(followActivityId),
@@ -238,13 +258,12 @@ export const announceActivity: AP.Announce = {
   actor: new URL(actor1Id),
   object: new URL(note1Id),
 };
-export const blockActivityId = `${LOCAL_DOMAIN}/entity/block`;
 export const blockActivity: AP.Block = {
   id: new URL(blockActivityId),
   url: new URL(blockActivityId),
   type: AP.ActivityTypes.BLOCK,
   actor: new URL(actor1Id),
-  object: new URL(actor2Id),
+  object: new URL(blockedActorId),
 };
 export const createActivityId = `${LOCAL_DOMAIN}/entity/create`;
 export const createActivity: AP.Create = {

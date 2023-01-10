@@ -1,4 +1,11 @@
-import { AP } from 'activitypub-core-types';
+import {
+  AP,
+  assertExists,
+  assertIsApActivity,
+  assertIsApActor,
+  assertIsApCollection,
+  assertIsArray,
+} from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
 import { InboxPostEndpoint } from '.';
 
@@ -6,39 +13,35 @@ export async function isBlocked(
   this: InboxPostEndpoint,
   actor: AP.Actor,
 ): Promise<boolean> {
-  if (!('actor' in this.activity)) {
-    return;
-  }
+  try {
+    assertIsApActivity(this.activity);
 
-  const streams = await Promise.all(
-    actor.streams.map(
-      async (stream) => await this.adapters.db.queryById(stream),
-    ),
-  );
+    const activityActorId = getId(this.activity.actor);
 
-  const blocks = streams.find((stream: AP.Collection) => {
-    if (stream.name === 'Blocks') {
-      return true;
-    }
-  });
+    assertExists(activityActorId);
 
-  if (!blocks) {
+    const activityActor = await this.adapters.db.queryById(activityActorId);
+
+    assertIsApActor(activityActor);
+
+    const blocks = await this.adapters.db.getStreamByName(actor, 'Blocks');
+
+    assertIsApCollection(blocks);
+    assertIsArray(blocks.items);
+
+    const blockedActorIds = await Promise.all(
+      blocks.items.map(async (item: AP.EntityReference) => {
+        const id = getId(item);
+        const foundActivity = await this.adapters.db.findEntityById(id);
+        return getId(foundActivity?.object);
+      }),
+    );
+
+    return blockedActorIds
+      .map((id) => `${id}`)
+      .includes(`${activityActorId}`);
+  } catch (error) {
+    console.log(error);
     return false;
   }
-
-  const blockedItems = blocks.items
-    ? Array.isArray(blocks.items)
-      ? blocks.items
-      : [blocks.items]
-    : [];
-  const blockedActors = await Promise.all(
-    blockedItems.map(
-      async (id: URL) => (await this.adapters.db.queryById(id))?.object,
-    ),
-  );
-  const potentiallyBlockedActorId = getId(this.activity.actor);
-
-  return blockedActors
-    .map((id) => id.toString())
-    .includes(potentiallyBlockedActorId.toString());
 }

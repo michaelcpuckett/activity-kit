@@ -1,30 +1,31 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isBlocked = void 0;
+const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function isBlocked(actor) {
-    if (!('actor' in this.activity)) {
-        return;
+    try {
+        (0, activitypub_core_types_1.assertIsApActivity)(this.activity);
+        const activityActorId = (0, activitypub_core_utilities_1.getId)(this.activity.actor);
+        (0, activitypub_core_types_1.assertExists)(activityActorId);
+        const activityActor = await this.adapters.db.queryById(activityActorId);
+        (0, activitypub_core_types_1.assertIsApActor)(activityActor);
+        const blocks = await this.adapters.db.getStreamByName(actor, 'Blocks');
+        (0, activitypub_core_types_1.assertIsApCollection)(blocks);
+        (0, activitypub_core_types_1.assertIsArray)(blocks.items);
+        const blockedActorIds = await Promise.all(blocks.items.map(async (item) => {
+            const id = (0, activitypub_core_utilities_1.getId)(item);
+            const foundActivity = await this.adapters.db.findEntityById(id);
+            return (0, activitypub_core_utilities_1.getId)(foundActivity?.object);
+        }));
+        return blockedActorIds
+            .map((id) => `${id}`)
+            .includes(`${activityActorId}`);
     }
-    const streams = await Promise.all(actor.streams.map(async (stream) => await this.adapters.db.queryById(stream)));
-    const blocks = streams.find((stream) => {
-        if (stream.name === 'Blocks') {
-            return true;
-        }
-    });
-    if (!blocks) {
+    catch (error) {
+        console.log(error);
         return false;
     }
-    const blockedItems = blocks.items
-        ? Array.isArray(blocks.items)
-            ? blocks.items
-            : [blocks.items]
-        : [];
-    const blockedActors = await Promise.all(blockedItems.map(async (id) => (await this.adapters.db.queryById(id))?.object));
-    const potentiallyBlockedActorId = (0, activitypub_core_utilities_1.getId)(this.activity.actor);
-    return blockedActors
-        .map((id) => id.toString())
-        .includes(potentiallyBlockedActorId.toString());
 }
 exports.isBlocked = isBlocked;
 //# sourceMappingURL=isBlocked.js.map
