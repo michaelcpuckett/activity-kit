@@ -1,6 +1,7 @@
 /// <reference types="node" />
 /// <reference types="node" />
-import { AP, Plugin } from 'activitypub-core-types';
+import { Plugin } from 'activitypub-core-types';
+import { handleFoundEntity } from './handleFoundEntity';
 import { respond } from './respond';
 import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
@@ -17,10 +18,10 @@ export declare class EntityGetEndpoint {
         auth: AuthAdapter;
         db: DbAdapter;
     }, plugins?: Plugin[], url?: URL);
+    protected handleFoundEntity: typeof handleFoundEntity;
     protected handleBadRequest(): {
         props: {};
     };
-    protected handleFoundEntity(render: Function, entity: AP.Entity, authorizedActor?: AP.Actor): Promise<void>;
     protected handleNotFound(): {
         props: {};
     };

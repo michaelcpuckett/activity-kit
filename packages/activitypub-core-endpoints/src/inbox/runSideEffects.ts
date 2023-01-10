@@ -2,7 +2,10 @@ import { InboxPostEndpoint } from '.';
 import { isType } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 
-export async function runSideEffects(this: InboxPostEndpoint, recipient: AP.Actor) {
+export async function runSideEffects(
+  this: InboxPostEndpoint,
+  recipient: AP.Actor,
+) {
   for (const plugin of this.plugins) {
     if (plugin.handleInboxSideEffect) {
       try {

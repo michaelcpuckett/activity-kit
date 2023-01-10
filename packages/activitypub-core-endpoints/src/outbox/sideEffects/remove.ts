@@ -1,6 +1,10 @@
 import { OutboxPostEndpoint } from '..';
 import { getId, isType } from 'activitypub-core-utilities';
-import { AP, assertIsApCollection, assertIsApType } from 'activitypub-core-types';
+import {
+  AP,
+  assertIsApCollection,
+  assertIsApType,
+} from 'activitypub-core-types';
 
 export async function handleRemove(
   this: OutboxPostEndpoint,

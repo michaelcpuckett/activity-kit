@@ -5,10 +5,7 @@ import {
   assertIsApExtendedObject,
   assertIsApType,
 } from 'activitypub-core-types';
-import {
-  getId,
-  isType,
-} from 'activitypub-core-utilities';
+import { getId, isType } from 'activitypub-core-utilities';
 import { InboxPostEndpoint } from '..';
 
 // An announcement has been made to a local object.

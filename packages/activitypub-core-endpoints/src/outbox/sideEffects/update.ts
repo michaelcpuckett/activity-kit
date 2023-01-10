@@ -1,8 +1,16 @@
-import { AP, assertIsApActor, assertIsApEntity, assertIsApType } from 'activitypub-core-types';
+import {
+  AP,
+  assertIsApActor,
+  assertIsApEntity,
+  assertIsApType,
+} from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
 import { OutboxPostEndpoint } from '..';
 
-export async function handleUpdate(this: OutboxPostEndpoint, activity: AP.Entity) {
+export async function handleUpdate(
+  this: OutboxPostEndpoint,
+  activity: AP.Entity,
+) {
   assertIsApType<AP.Update>(activity, AP.ActivityTypes.UPDATE);
 
   const actorId = getId(activity.actor);
@@ -34,9 +42,11 @@ export async function handleUpdate(this: OutboxPostEndpoint, activity: AP.Entity
   activity.object = {
     ...object,
     ...activity.object,
-    ...(object.type !== 'Link' && object.type !== 'Mention' ? {
-      updated: new Date(),
-    } : null),
+    ...(object.type !== 'Link' && object.type !== 'Mention'
+      ? {
+          updated: new Date(),
+        }
+      : null),
   };
 
   await this.adapters.db.saveEntity(activity.object);

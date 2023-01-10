@@ -1,4 +1,11 @@
-import { AP, assertExists, assertIsApActor, assertIsApEntity, assertIsApExtendedObject, assertIsApType } from 'activitypub-core-types';
+import {
+  AP,
+  assertExists,
+  assertIsApActor,
+  assertIsApEntity,
+  assertIsApExtendedObject,
+  assertIsApType,
+} from 'activitypub-core-types';
 import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
 import { OutboxPostEndpoint } from '../..';
 
@@ -16,7 +23,7 @@ export async function handleUndoLike(
   const objectId = getId(activity.object);
 
   assertExists(objectId);
- 
+
   const likedId = getId(actor.liked);
 
   assertExists(likedId);

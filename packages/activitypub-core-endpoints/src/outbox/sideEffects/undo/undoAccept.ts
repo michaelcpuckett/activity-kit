@@ -1,5 +1,10 @@
 import { getId } from 'activitypub-core-utilities';
-import { AP, assertExists, assertIsApActor, assertIsApType } from 'activitypub-core-types';
+import {
+  AP,
+  assertExists,
+  assertIsApActor,
+  assertIsApType,
+} from 'activitypub-core-types';
 import { OutboxPostEndpoint } from '../..';
 
 export async function handleUndoAccept(

@@ -1,5 +1,9 @@
 import { HomeGetEndpoint } from '.';
-import { AP, assertExists, assertIsApActor, assertIsApCollection, assertIsApType, Plugin } from 'activitypub-core-types';
+import {
+  AP,
+  assertIsApActor,
+  assertIsApType,
+} from 'activitypub-core-types';
 import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   CONTENT_TYPE_HEADER,
@@ -12,7 +16,10 @@ import {
 import cookie from 'cookie';
 import { stringify } from 'activitypub-core-utilities';
 
-export const respond = async function (this: HomeGetEndpoint, render: Function) {
+export const respond = async function (
+  this: HomeGetEndpoint,
+  render: Function,
+) {
   const cookies = cookie.parse(this.req.headers.cookie ?? '');
 
   const actor = await this.adapters.db.getActorByUserId(
@@ -29,10 +36,18 @@ export const respond = async function (this: HomeGetEndpoint, render: Function) 
   assertIsApActor(actor);
 
   const actorInbox = await this.adapters.db.findEntityById(getId(actor.inbox));
-  const actorOutbox = await this.adapters.db.findEntityById(getId(actor.outbox));
+  const actorOutbox = await this.adapters.db.findEntityById(
+    getId(actor.outbox),
+  );
 
-  assertIsApType<AP.OrderedCollection>(actorInbox, AP.CollectionTypes.ORDERED_COLLECTION);
-  assertIsApType<AP.OrderedCollection>(actorOutbox, AP.CollectionTypes.ORDERED_COLLECTION);
+  assertIsApType<AP.OrderedCollection>(
+    actorInbox,
+    AP.CollectionTypes.ORDERED_COLLECTION,
+  );
+  assertIsApType<AP.OrderedCollection>(
+    actorOutbox,
+    AP.CollectionTypes.ORDERED_COLLECTION,
+  );
 
   actor.inbox = actorInbox;
   actor.outbox = actorOutbox;
@@ -65,12 +80,12 @@ export const respond = async function (this: HomeGetEndpoint, render: Function) 
       }
     }
 
-    const formattedProps = Object.fromEntries(Object.entries(props).map(([key, value]) => {
-      return [key, convertUrlsToStrings(value)];
-    }));
-
-    this.res.write(
-      await render(formattedProps),
+    const formattedProps = Object.fromEntries(
+      Object.entries(props).map(([key, value]) => {
+        return [key, convertUrlsToStrings(value)];
+      }),
     );
+
+    this.res.write(await render(formattedProps));
   }
-}
+};

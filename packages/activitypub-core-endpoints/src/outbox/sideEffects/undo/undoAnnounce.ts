@@ -1,5 +1,11 @@
 import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
-import { AP, assertExists, assertIsApActor, assertIsApEntity, assertIsApType } from 'activitypub-core-types';
+import {
+  AP,
+  assertExists,
+  assertIsApActor,
+  assertIsApEntity,
+  assertIsApType,
+} from 'activitypub-core-types';
 import { OutboxPostEndpoint } from '../..';
 
 export async function handleUndoAnnounce(
@@ -15,7 +21,10 @@ export async function handleUndoAnnounce(
 
   const shared = await this.adapters.db.getStreamByName(actor, 'Shared');
 
-  assertIsApType<AP.OrderedCollection>(shared, AP.CollectionTypes.ORDERED_COLLECTION);
+  assertIsApType<AP.OrderedCollection>(
+    shared,
+    AP.CollectionTypes.ORDERED_COLLECTION,
+  );
 
   await this.adapters.db.removeOrderedItem(shared.id, activity.id);
 
@@ -27,7 +36,7 @@ export async function handleUndoAnnounce(
 
   if (isLocal) {
     const object = await this.adapters.db.queryById(objectId);
-    
+
     assertIsApEntity(object);
 
     if (!('shares' in object)) {

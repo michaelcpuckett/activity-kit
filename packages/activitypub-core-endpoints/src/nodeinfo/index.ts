@@ -16,7 +16,7 @@ export class NodeinfoGetEndpoint {
     adapters: {
       db: DbAdapter;
     },
-    plugins: Plugin[]
+    plugins: Plugin[],
   ) {
     this.req = req;
     this.res = res;
@@ -26,4 +26,3 @@ export class NodeinfoGetEndpoint {
 
   public respond = respond;
 }
-

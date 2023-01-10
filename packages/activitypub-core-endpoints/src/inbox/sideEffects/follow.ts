@@ -86,7 +86,10 @@ export async function handleFollow(
   }
 
   if (followee.manuallyApprovesFollowers) {
-    const requests = await this.adapters.db.getStreamByName(followee, 'Requests');
+    const requests = await this.adapters.db.getStreamByName(
+      followee,
+      'Requests',
+    );
 
     assertIsApType<AP.Collection>(requests, AP.CollectionTypes.COLLECTION);
 

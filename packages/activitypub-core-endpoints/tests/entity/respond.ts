@@ -1,16 +1,38 @@
 import 'jasmine';
 import { respond } from '../../src/entity/respond';
-import { actor1, actor1Documents, actor1DocumentsId, actor1Examples, actor1ExamplesId, actor1Id, example1, example1Id, example2, example2Id } from '../../test_data';
-import { ACTIVITYSTREAMS_CONTENT_TYPE, LOCAL_DOMAIN, LOCAL_HOSTNAME } from 'activitypub-core-utilities';
+import {
+  actor1,
+  actor1Documents,
+  actor1DocumentsId,
+  actor1Examples,
+  actor1ExamplesId,
+  actor1Id,
+  example1,
+  example1Id,
+  example2,
+  example2Id,
+} from '../../test_data';
+import {
+  ACTIVITYSTREAMS_CONTENT_TYPE,
+} from 'activitypub-core-utilities';
 import { AP, assertIsApEntity, assertIsArray } from 'activitypub-core-types';
 
 describe('Entity', () => {
   describe('Respond', () => {
-    let returnedEntity: AP.Entity|null = null;
-    let returnedCollection: AP.Collection|AP.OrderedCollection|null = null;
-    let returnedCollectionPage: AP.CollectionPage|AP.OrderedCollectionPage|null = null;
-    let returnedSortedCollectionPage: AP.CollectionPage|AP.OrderedCollectionPage|null = null;
-    let returnedCurrentSortedCollectionPage: AP.CollectionPage|AP.OrderedCollectionPage|null = null;
+    let returnedEntity: AP.Entity | null = null;
+    let returnedCollection: AP.Collection | AP.OrderedCollection | null = null;
+    let returnedCollectionPage:
+      | AP.CollectionPage
+      | AP.OrderedCollectionPage
+      | null = null;
+    let returnedSortedCollectionPage:
+      | AP.CollectionPage
+      | AP.OrderedCollectionPage
+      | null = null;
+    let returnedCurrentSortedCollectionPage:
+      | AP.CollectionPage
+      | AP.OrderedCollectionPage
+      | null = null;
 
     it('Responds to entity with AS content-type', async () => {
       await (respond as unknown as () => Promise<void>).call({
@@ -24,26 +46,21 @@ describe('Entity', () => {
           returnedEntity = entity;
         },
         res: {
-          setHeader() {
-            
-          },
+          setHeader() {},
         },
         adapters: {
           auth: {
-            getUserIdByToken() {
-            },
+            getUserIdByToken() {},
           },
           db: {
-            getActorByUserId() {
-
-            },
+            getActorByUserId() {},
             findEntityById(entityId: URL) {
               if (entityId?.toString() === actor1Id) {
                 return actor1;
               }
-            }
-          }
-        }
+            },
+          },
+        },
       });
 
       expect(returnedEntity?.id?.toString()).toBe(actor1Id);
@@ -61,27 +78,21 @@ describe('Entity', () => {
           returnedCollection = collection;
         },
         res: {
-          setHeader() {
-            
-          },
+          setHeader() {},
         },
         adapters: {
           auth: {
-            getUserIdByToken() {
-
-            },
+            getUserIdByToken() {},
           },
           db: {
-            getActorByUserId() {
-
-            },
+            getActorByUserId() {},
             findEntityById(entityId: URL) {
               if (entityId?.toString() === actor1ExamplesId) {
                 return actor1Examples;
               }
-            }
-          }
-        }
+            },
+          },
+        },
       });
 
       expect(returnedCollection?.id?.toString()).toBe(actor1ExamplesId);
@@ -96,24 +107,21 @@ describe('Entity', () => {
           },
         },
         url: new URL(`${actor1ExamplesId}?page=1`),
-        async handleFoundEntity(render: Function, collectionPage: AP.CollectionPage) {
+        async handleFoundEntity(
+          render: Function,
+          collectionPage: AP.CollectionPage,
+        ) {
           returnedCollectionPage = collectionPage;
         },
         res: {
-          setHeader() {
-            
-          },
+          setHeader() {},
         },
         adapters: {
           auth: {
-            async getUserIdByToken() {
-
-            },
+            async getUserIdByToken() {},
           },
           db: {
-            async getActorByUserId() {
-
-            },
+            async getActorByUserId() {},
             async findEntityById(entityId: URL) {
               if (entityId?.toString() === actor1ExamplesId) {
                 return {
@@ -126,16 +134,18 @@ describe('Entity', () => {
                   ...example1,
                 };
               }
-            }
-          }
-        }
+            },
+          },
+        },
       });
 
-      expect(returnedCollectionPage?.id?.toString()).toBe(`${actor1ExamplesId}?page=1`);
+      expect(returnedCollectionPage?.id?.toString()).toBe(
+        `${actor1ExamplesId}?page=1`,
+      );
       expect(Array.isArray(returnedCollectionPage?.items)).toBeTruthy();
-      
+
       assertIsArray(returnedCollectionPage?.items);
-      
+
       expect(returnedCollectionPage.items.length).toBe(1);
     });
 
@@ -151,20 +161,14 @@ describe('Entity', () => {
           returnedSortedCollectionPage = collectionPage;
         },
         res: {
-          setHeader() {
-            
-          },
+          setHeader() {},
         },
         adapters: {
           auth: {
-            getUserIdByToken() {
-
-            },
+            getUserIdByToken() {},
           },
           db: {
-            getActorByUserId() {
-
-            },
+            getActorByUserId() {},
             findEntityById(entityId: URL) {
               if (entityId?.toString() === actor1DocumentsId) {
                 return actor1Documents;
@@ -177,22 +181,21 @@ describe('Entity', () => {
               if (entityId?.toString() === example2Id) {
                 return example2;
               }
-            }
-          }
-        }
+            },
+          },
+        },
       });
 
-      expect(returnedSortedCollectionPage?.id?.toString()).toBe(`${actor1DocumentsId}?page=1&sort=name`);
+      expect(returnedSortedCollectionPage?.id?.toString()).toBe(
+        `${actor1DocumentsId}?page=1&sort=name`,
+      );
       expect(Array.isArray(returnedSortedCollectionPage?.items)).toBeTruthy();
-      
+
       assertIsArray(returnedSortedCollectionPage?.items);
-      
+
       expect(returnedSortedCollectionPage.items.length).toBe(2);
 
-      const [
-        item1,
-        item2,
-      ] = returnedSortedCollectionPage.items;
+      const [item1, item2] = returnedSortedCollectionPage.items;
 
       assertIsApEntity(item1);
       assertIsApEntity(item2);
@@ -213,20 +216,14 @@ describe('Entity', () => {
           returnedCurrentSortedCollectionPage = collectionPage;
         },
         res: {
-          setHeader() {
-            
-          },
+          setHeader() {},
         },
         adapters: {
           auth: {
-            getUserIdByToken() {
-
-            },
+            getUserIdByToken() {},
           },
           db: {
-            getActorByUserId() {
-
-            },
+            getActorByUserId() {},
             findEntityById(entityId: URL) {
               if (entityId?.toString() === actor1DocumentsId) {
                 return actor1Documents;
@@ -239,22 +236,23 @@ describe('Entity', () => {
               if (entityId?.toString() === example2Id) {
                 return example2;
               }
-            }
-          }
-        }
+            },
+          },
+        },
       });
 
-      expect(returnedCurrentSortedCollectionPage?.id?.toString()).toBe(`${actor1DocumentsId}?page=1&current&sort=name`);
-      expect(Array.isArray(returnedCurrentSortedCollectionPage?.items)).toBeTruthy();
-      
+      expect(returnedCurrentSortedCollectionPage?.id?.toString()).toBe(
+        `${actor1DocumentsId}?page=1&current&sort=name`,
+      );
+      expect(
+        Array.isArray(returnedCurrentSortedCollectionPage?.items),
+      ).toBeTruthy();
+
       assertIsArray(returnedCurrentSortedCollectionPage?.items);
-      
+
       expect(returnedCurrentSortedCollectionPage.items.length).toBe(2);
 
-      const [
-        item1,
-        item2,
-      ] = returnedCurrentSortedCollectionPage.items;
+      const [item1, item2] = returnedCurrentSortedCollectionPage.items;
 
       assertIsApEntity(item1);
       assertIsApEntity(item2);

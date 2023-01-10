@@ -15,10 +15,16 @@ async function isBlocked(actor) {
     if (!blocks) {
         return false;
     }
-    const blockedItems = blocks.items ? Array.isArray(blocks.items) ? blocks.items : [blocks.items] : [];
+    const blockedItems = blocks.items
+        ? Array.isArray(blocks.items)
+            ? blocks.items
+            : [blocks.items]
+        : [];
     const blockedActors = await Promise.all(blockedItems.map(async (id) => (await this.adapters.db.queryById(id))?.object));
     const potentiallyBlockedActorId = (0, activitypub_core_utilities_1.getId)(this.activity.actor);
-    return blockedActors.map(id => id.toString()).includes(potentiallyBlockedActorId.toString());
+    return blockedActors
+        .map((id) => id.toString())
+        .includes(potentiallyBlockedActorId.toString());
 }
 exports.isBlocked = isBlocked;
 //# sourceMappingURL=isBlocked.js.map

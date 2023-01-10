@@ -1,10 +1,20 @@
 import { OutboxPostEndpoint } from '..';
-import { AP, assertExists, assertIsApEntity, assertIsApExtendedObject, assertIsApTransitiveActivity, assertIsApType } from 'activitypub-core-types';
+import {
+  AP,
+  assertExists,
+  assertIsApEntity,
+  assertIsApExtendedObject,
+  assertIsApTransitiveActivity,
+  assertIsApType,
+} from 'activitypub-core-types';
 import { ACTIVITYSTREAMS_CONTEXT, isTypeOf } from 'activitypub-core-utilities';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { getId, getGuid } from 'activitypub-core-utilities';
 
-export async function handleCreate(this: OutboxPostEndpoint, activity: AP.Entity) {
+export async function handleCreate(
+  this: OutboxPostEndpoint,
+  activity: AP.Entity,
+) {
   assertIsApType<AP.Create>(activity, AP.ActivityTypes.CREATE);
 
   const actorId = getId(activity.actor);

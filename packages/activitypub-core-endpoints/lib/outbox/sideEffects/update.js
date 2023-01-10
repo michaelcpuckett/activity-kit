@@ -23,9 +23,11 @@ async function handleUpdate(activity) {
     activity.object = {
         ...object,
         ...activity.object,
-        ...(object.type !== 'Link' && object.type !== 'Mention' ? {
-            updated: new Date(),
-        } : null),
+        ...(object.type !== 'Link' && object.type !== 'Mention'
+            ? {
+                updated: new Date(),
+            }
+            : null),
     };
     await this.adapters.db.saveEntity(activity.object);
 }

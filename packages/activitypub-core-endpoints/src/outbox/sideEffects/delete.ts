@@ -1,5 +1,10 @@
 import { OutboxPostEndpoint } from '..';
-import { AP, assertExists, assertIsApEntity, assertIsApType } from 'activitypub-core-types';
+import {
+  AP,
+  assertExists,
+  assertIsApEntity,
+  assertIsApType,
+} from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
 
 export async function handleDelete(

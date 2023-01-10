@@ -17,12 +17,12 @@ class HostMetaGetEndpoint {
         if (this.req.headers.accept?.includes(activitypub_core_utilities_1.JSON_CONTENT_TYPE) ||
             this.req.headers.accept?.includes(activitypub_core_utilities_1.JRD_CONTENT_TYPE)) {
             const hostMeta = {
-                "links": [
+                links: [
                     {
-                        "rel": "lrdd",
-                        "template": `${activitypub_core_utilities_1.LOCAL_DOMAIN}/.well-known/webfinger?resource={uri}`
-                    }
-                ]
+                        rel: 'lrdd',
+                        template: `${activitypub_core_utilities_1.LOCAL_DOMAIN}/.well-known/webfinger?resource={uri}`,
+                    },
+                ],
             };
             this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.JRD_CONTENT_TYPE);
             this.res.write(JSON.stringify(hostMeta));

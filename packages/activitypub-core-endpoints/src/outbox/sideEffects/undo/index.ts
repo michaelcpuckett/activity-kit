@@ -2,7 +2,10 @@ import { AP, assertIsApActivity, assertIsApType } from 'activitypub-core-types';
 import { getId, isType } from 'activitypub-core-utilities';
 import { OutboxPostEndpoint } from '../..';
 
-export async function handleUndo(this: OutboxPostEndpoint, activity: AP.Entity) {
+export async function handleUndo(
+  this: OutboxPostEndpoint,
+  activity: AP.Entity,
+) {
   assertIsApType<AP.Undo>(activity, AP.ActivityTypes.UNDO);
 
   const objectId = getId(activity.object);

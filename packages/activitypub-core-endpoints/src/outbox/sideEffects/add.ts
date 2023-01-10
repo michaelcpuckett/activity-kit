@@ -1,11 +1,12 @@
 import { OutboxPostEndpoint } from '..';
 import { getId, isType } from 'activitypub-core-utilities';
-import { AP, assertIsApCollection, assertIsApType } from 'activitypub-core-types';
+import {
+  AP,
+  assertIsApCollection,
+  assertIsApType,
+} from 'activitypub-core-types';
 
-export async function handleAdd(
-  this: OutboxPostEndpoint,
-  activity: AP.Entity,
-) {
+export async function handleAdd(this: OutboxPostEndpoint, activity: AP.Entity) {
   assertIsApType<AP.Add>(activity, AP.ActivityTypes.ADD);
 
   const objectId = getId(activity.object);

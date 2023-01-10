@@ -5,7 +5,9 @@ async function broadcastActivity() {
     if (!this.activity) {
         throw new Error('No activity.');
     }
-    const botActor = await this.adapters.db.findOne('entity', { preferredUsername: 'bot' });
+    const botActor = (await this.adapters.db.findOne('entity', {
+        preferredUsername: 'bot',
+    }));
     if (!botActor) {
         throw new Error('Bot actor not set up.');
     }

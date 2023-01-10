@@ -13,7 +13,9 @@ export async function respond(this: InboxPostEndpoint) {
     const existingActivity = await this.adapters.db.findEntityById(activityId);
 
     if (existingActivity) {
-      console.log('We have already received this activity. Assuming it was forwarded by another server.');
+      console.log(
+        'We have already received this activity. Assuming it was forwarded by another server.',
+      );
       this.res.statusCode = 200;
       this.res.end();
       return;
@@ -28,10 +30,7 @@ export async function respond(this: InboxPostEndpoint) {
       continue;
     }
 
-    await this.adapters.db.insertOrderedItem(
-      actor.inbox,
-      activityId,
-    );
+    await this.adapters.db.insertOrderedItem(actor.inbox, activityId);
 
     await this.runSideEffects(actor);
   }

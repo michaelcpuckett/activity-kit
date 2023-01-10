@@ -1,5 +1,10 @@
 import { OutboxPostEndpoint } from '.';
-import { AP, assertExists, assertIsApActivity, assertIsApActor } from 'activitypub-core-types';
+import {
+  AP,
+  assertExists,
+  assertIsApActivity,
+  assertIsApActor,
+} from 'activitypub-core-types';
 import {
   isTypeOf,
   getGuid,
@@ -22,9 +27,9 @@ export async function respond(this: OutboxPostEndpoint) {
 
   if (isTypeOf(this.activity, AP.ActivityTypes)) {
     assertIsApActivity(this.activity);
-    
+
     this.activity.url = activityId;
-    
+
     await this.runSideEffects();
   } else {
     // If not activity type, wrap object in a Create activity.

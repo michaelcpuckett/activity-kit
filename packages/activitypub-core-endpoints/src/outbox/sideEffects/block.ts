@@ -3,7 +3,10 @@ import { assertIsApActor, assertIsApType } from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 
-export async function handleBlock(this: OutboxPostEndpoint, activity: AP.Entity) {
+export async function handleBlock(
+  this: OutboxPostEndpoint,
+  activity: AP.Entity,
+) {
   assertIsApType<AP.Block>(activity, AP.ActivityTypes.BLOCK);
 
   const actorId = getId(activity.actor);

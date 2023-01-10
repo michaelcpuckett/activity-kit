@@ -50,7 +50,9 @@ export async function handleCreate(
 
     assertExists(repliesCollectionId);
 
-    const repliesCollection = await this.adapters.db.findEntityById(repliesCollectionId);
+    const repliesCollection = await this.adapters.db.findEntityById(
+      repliesCollectionId,
+    );
 
     assertIsApCollection(repliesCollection);
 
@@ -63,10 +65,7 @@ export async function handleCreate(
       return;
     }
 
-    await this.adapters.db.insertOrderedItem(
-      repliesCollectionId,
-      objectId,
-    );
+    await this.adapters.db.insertOrderedItem(repliesCollectionId, objectId);
   } catch (error) {
     console.log(error);
   }

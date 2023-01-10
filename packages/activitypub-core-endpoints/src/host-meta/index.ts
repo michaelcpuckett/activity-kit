@@ -4,7 +4,7 @@ import {
   JRD_CONTENT_TYPE,
   XRD_CONTENT_TYPE,
   JSON_CONTENT_TYPE,
-  LOCAL_DOMAIN
+  LOCAL_DOMAIN,
 } from 'activitypub-core-utilities';
 import type { DbAdapter, Plugin } from 'activitypub-core-types';
 
@@ -21,7 +21,7 @@ export class HostMetaGetEndpoint {
     adapters: {
       db: DbAdapter;
     },
-    plugins: Plugin[]
+    plugins: Plugin[],
   ) {
     this.req = req;
     this.res = res;
@@ -37,26 +37,28 @@ export class HostMetaGetEndpoint {
       this.req.headers.accept?.includes(JRD_CONTENT_TYPE)
     ) {
       const hostMeta = {
-        "links": [
+        links: [
           {
-            "rel": "lrdd",
-            "template": `${LOCAL_DOMAIN}/.well-known/webfinger?resource={uri}`
-          }
-        ]
+            rel: 'lrdd',
+            template: `${LOCAL_DOMAIN}/.well-known/webfinger?resource={uri}`,
+          },
+        ],
       };
 
       this.res.setHeader(CONTENT_TYPE_HEADER, JRD_CONTENT_TYPE);
       this.res.write(JSON.stringify(hostMeta));
     } else {
       this.res.setHeader(CONTENT_TYPE_HEADER, XRD_CONTENT_TYPE);
-      this.res.write(`<?xml version="1.0" encoding="UTF-8" ?>
+      this.res.write(
+        `<?xml version="1.0" encoding="UTF-8" ?>
         <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
           <Link
             rel="lrdd"
             template="${LOCAL_DOMAIN}/.well-known/webfinger?resource={uri}"
           />
         </XRD>
-      `.trim());
+      `.trim(),
+      );
     }
     this.res.end();
     return;

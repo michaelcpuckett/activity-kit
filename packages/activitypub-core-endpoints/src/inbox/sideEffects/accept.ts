@@ -6,10 +6,7 @@ import {
   assertIsArray,
   assertExists,
 } from 'activitypub-core-types';
-import {
-  getId,
-  isType,
-} from 'activitypub-core-utilities';
+import { getId, isType } from 'activitypub-core-utilities';
 import { InboxPostEndpoint } from '..';
 
 // A Follow request has been accepted.
