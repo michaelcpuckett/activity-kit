@@ -40,6 +40,11 @@ export async function handleCreate(
 
     const inReplyToId = getId(object.inReplyTo);
 
+    if (!inReplyToId) {
+      // Not applicable.
+      return;
+    }
+
     assertExists(inReplyToId);
 
     const inReplyTo = await this.adapters.db.findEntityById(inReplyToId);

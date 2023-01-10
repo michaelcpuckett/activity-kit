@@ -18,6 +18,9 @@ async function handleCreate(activity, recipient) {
     try {
         (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
         const inReplyToId = (0, activitypub_core_utilities_1.getId)(object.inReplyTo);
+        if (!inReplyToId) {
+            return;
+        }
         (0, activitypub_core_types_1.assertExists)(inReplyToId);
         const inReplyTo = await this.adapters.db.findEntityById(inReplyToId);
         (0, activitypub_core_types_1.assertIsApExtendedObject)(inReplyTo);
