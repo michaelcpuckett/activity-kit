@@ -71,7 +71,6 @@ describe('Inbox', () => {
               }
             },
             async queryById(entityId: URL) {
-              console.log(entityId?.toString());
               if (entityId?.toString() === actor1Id) {
                 return {
                   ...actor1,
