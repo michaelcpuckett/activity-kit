@@ -26,10 +26,13 @@
   "dependencies": {
     "activitypub-core-endpoints": "^0.1.7",
     "activitypub-core-types": "^0.1.5",
-    "activitypub-core-utilities": "^0.1.5"
+    "activitypub-core-utilities": "^0.1.5",
+    "cheerio": "^1.0.0-rc.12",
+    "jsdom": "^21.1.0"
   },
   "devDependencies": {
     "@types/jasmine": "^4.3.1",
+    "@types/jsdom": "^20.0.1",
     "eslint": "^8.25.0",
     "jasmine": "^4.5.0",
     "prettier": "^2.7.1",

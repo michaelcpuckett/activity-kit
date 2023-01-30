@@ -1,6 +1,7 @@
 import { AP, assertExists, assertIsApCollection, assertIsApExtendedObject, assertIsApType, assertIsArray } from 'activitypub-core-types';
 import type { DbAdapter, Plugin } from 'activitypub-core-types';
-import { getId, getGuid, getCollectionNameByUrl, ACTIVITYSTREAMS_CONTEXT, LOCAL_DOMAIN, isType, PUBLIC_ACTOR } from 'activitypub-core-utilities';
+import { getId, getGuid, getCollectionNameByUrl, ACTIVITYSTREAMS_CONTEXT, LOCAL_DOMAIN, isType, PUBLIC_ACTOR, LOCAL_HOSTNAME } from 'activitypub-core-utilities';
+import * as cheerio from 'cheerio';
 
 // Groups automatically announce activities addressed to them if sent from non-blocked followers.
 
@@ -31,6 +32,29 @@ export function GroupsPlugin(config?: {}) {
       const objectId = getId(activity.object);
 
       assertExists(objectId);
+      
+      const object = await this.adapters.db.queryById(objectId);
+
+      assertIsApExtendedObject(object);
+
+      const objectToBeSharedId =  await (async (): Promise<URL> => {
+        if (object.inReplyTo) {
+          if (object.content) {
+            const textContent = cheerio.load(object.content).text();
+            const groupTag = `@${recipient.preferredUsername}@${LOCAL_HOSTNAME}`;
+
+            if (textContent === groupTag) {
+              const inReplyToId = getId(object.inReplyTo);
+
+              if (inReplyToId) {
+                return inReplyToId;
+              }
+            }
+          }
+        }
+
+        return objectId;
+      })();
 
       const hasAlreadyBeenShared = await (async (): Promise<boolean> => {
         const shared = await this.adapters.db.getStreamByName(recipient, 'Shared');
@@ -55,7 +79,7 @@ export function GroupsPlugin(config?: {}) {
 
             assertExists(sharedItemObjectId);
 
-            if (sharedItemObjectId.toString() === objectId.toString()) {
+            if (sharedItemObjectId.toString() === objectToBeSharedId.toString()) {
               return true;
             }
           } catch (error) {
@@ -150,7 +174,7 @@ export function GroupsPlugin(config?: {}) {
         type: AP.ActivityTypes.ANNOUNCE,
         actor: recipientId,
         to: [new URL(PUBLIC_ACTOR), followersId],
-        object: objectId,
+        object: objectToBeSharedId,
         replies: announceActivityRepliesId,
         likes: announceActivityLikesId,
         shares: announceActivitySharesId,
@@ -159,7 +183,7 @@ export function GroupsPlugin(config?: {}) {
 
       await this.adapters.db.insertOrderedItem(sharedId, new URL(announceActivityId));
 
-      const isLocal = getCollectionNameByUrl(objectId) !== 'foreign-entity';
+      const isLocal = getCollectionNameByUrl(objectToBeSharedId) !== 'foreign-entity';
 
       if (isLocal) {
         const object = await this.adapters.db.findEntityById(objectId);

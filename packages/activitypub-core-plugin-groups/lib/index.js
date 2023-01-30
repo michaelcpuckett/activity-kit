@@ -1,8 +1,32 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GroupsPlugin = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
+const cheerio = __importStar(require("cheerio"));
 function GroupsPlugin(config) {
     const groupsPlugin = {
         async handleInboxSideEffect(activity, recipient) {
@@ -15,6 +39,23 @@ function GroupsPlugin(config) {
             }
             const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
             (0, activitypub_core_types_1.assertExists)(objectId);
+            const object = await this.adapters.db.queryById(objectId);
+            (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
+            const objectToBeSharedId = await (async () => {
+                if (object.inReplyTo) {
+                    if (object.content) {
+                        const textContent = cheerio.load(object.content).text();
+                        const groupTag = `@${recipient.preferredUsername}@${activitypub_core_utilities_1.LOCAL_HOSTNAME}`;
+                        if (textContent === groupTag) {
+                            const inReplyToId = (0, activitypub_core_utilities_1.getId)(object.inReplyTo);
+                            if (inReplyToId) {
+                                return inReplyToId;
+                            }
+                        }
+                    }
+                }
+                return objectId;
+            })();
             const hasAlreadyBeenShared = await (async () => {
                 const shared = await this.adapters.db.getStreamByName(recipient, 'Shared');
                 (0, activitypub_core_types_1.assertIsApType)(shared, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
@@ -28,7 +69,7 @@ function GroupsPlugin(config) {
                         (0, activitypub_core_types_1.assertIsApType)(foundSharedItem, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE);
                         const sharedItemObjectId = (0, activitypub_core_utilities_1.getId)(foundSharedItem.object);
                         (0, activitypub_core_types_1.assertExists)(sharedItemObjectId);
-                        if (sharedItemObjectId.toString() === objectId.toString()) {
+                        if (sharedItemObjectId.toString() === objectToBeSharedId.toString()) {
                             return true;
                         }
                     }
@@ -101,14 +142,14 @@ function GroupsPlugin(config) {
                 type: activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE,
                 actor: recipientId,
                 to: [new URL(activitypub_core_utilities_1.PUBLIC_ACTOR), followersId],
-                object: objectId,
+                object: objectToBeSharedId,
                 replies: announceActivityRepliesId,
                 likes: announceActivityLikesId,
                 shares: announceActivitySharesId,
                 published: publishedDate,
             };
             await this.adapters.db.insertOrderedItem(sharedId, new URL(announceActivityId));
-            const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectId) !== 'foreign-entity';
+            const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectToBeSharedId) !== 'foreign-entity';
             if (isLocal) {
                 const object = await this.adapters.db.findEntityById(objectId);
                 (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
