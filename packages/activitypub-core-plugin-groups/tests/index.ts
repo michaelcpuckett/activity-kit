@@ -169,7 +169,7 @@ describe('Groups Plugin', () => {
         url: noteId,
         type: AP.ExtendedObjectTypes.NOTE,
         attributedTo: personActorId,
-        content: `<p><a href="#">@group123@${LOCAL_HOSTNAME}</a></p>`,
+        content: `<p><span class=\"h-card\"><a href=\"${groupActorId}\" class=\"u-url mention\">@<span>group123</span></a></span></p>`,
         shares: new URL(`${noteId}/shares`),
         inReplyTo: inReplyToId,
       };

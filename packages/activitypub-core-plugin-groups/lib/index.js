@@ -45,7 +45,7 @@ function GroupsPlugin(config) {
                 if (object.inReplyTo) {
                     if (object.content) {
                         const textContent = cheerio.load(object.content).text();
-                        const groupTag = `@${recipient.preferredUsername}@${activitypub_core_utilities_1.LOCAL_HOSTNAME}`;
+                        const groupTag = `@${recipient.preferredUsername}`;
                         if (textContent === groupTag) {
                             const inReplyToId = (0, activitypub_core_utilities_1.getId)(object.inReplyTo);
                             if (inReplyToId) {

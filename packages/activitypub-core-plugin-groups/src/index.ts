@@ -41,7 +41,7 @@ export function GroupsPlugin(config?: {}) {
         if (object.inReplyTo) {
           if (object.content) {
             const textContent = cheerio.load(object.content).text();
-            const groupTag = `@${recipient.preferredUsername}@${LOCAL_HOSTNAME}`;
+            const groupTag = `@${recipient.preferredUsername}`;
 
             if (textContent === groupTag) {
               const inReplyToId = getId(object.inReplyTo);
