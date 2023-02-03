@@ -1,5 +1,5 @@
 import { InboxPostEndpoint } from '.';
-import { getId, stringify } from 'activitypub-core-utilities';
+import { getId } from 'activitypub-core-utilities';
 import { assertExists } from 'activitypub-core-types';
 
 export async function respond(this: InboxPostEndpoint) {
@@ -22,9 +22,9 @@ export async function respond(this: InboxPostEndpoint) {
     }
   }
 
-  for (const actor of await this.getActors()) {
-    await this.savePeer(actor);
+  await this.savePeer();
 
+  for (const actor of await this.getActors()) {
     const isBlocked = await this.isBlocked(actor);
 
     if (isBlocked) {

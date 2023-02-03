@@ -1,8 +1,12 @@
-import { AP, assertExists, assertIsApActor } from 'activitypub-core-types';
+import { AP, assertExists, assertIsApActivity, assertIsApActor } from 'activitypub-core-types';
 import { InboxPostEndpoint } from '.';
 
-export async function savePeer(this: InboxPostEndpoint, actor: AP.Actor) {
+export async function savePeer(this: InboxPostEndpoint) {
   try {
+    assertIsApActivity(this.activity);
+
+    const actor = this.activity.actor;
+
     assertIsApActor(actor);
 
     const sharedInboxUrl = actor.endpoints?.sharedInbox;
