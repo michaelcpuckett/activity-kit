@@ -14,6 +14,13 @@ describe('Nodeinfo', () => {
         req: {
           url: `${LOCAL_DOMAIN}/nodeinfo/2.0`,
         },
+        adapters: {
+          db: {
+            async findAll() {
+              return [];
+            }
+          }
+        },
         res: {
           statusCode: 0,
           setHeader(header: string) {
@@ -38,6 +45,13 @@ describe('Nodeinfo', () => {
       const thisValue = {
         req: {
           url: `${LOCAL_DOMAIN}/nodeinfo/2.1`,
+        },
+        adapters: {
+          db: {
+            async findAll() {
+              return [];
+            }
+          }
         },
         res: {
           statusCode: 0,
