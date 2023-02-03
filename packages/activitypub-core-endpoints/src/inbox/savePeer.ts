@@ -1,11 +1,14 @@
 import { AP, assertExists, assertIsApActivity, assertIsApActor } from 'activitypub-core-types';
+import { getId } from 'activitypub-core-utilities';
 import { InboxPostEndpoint } from '.';
 
 export async function savePeer(this: InboxPostEndpoint) {
   try {
     assertIsApActivity(this.activity);
 
-    const actor = this.activity.actor;
+    const actorId = getId(this.activity.actor);
+
+    const actor = await this.adapters.db.fetchEntityById(actorId);
 
     assertIsApActor(actor);
 
