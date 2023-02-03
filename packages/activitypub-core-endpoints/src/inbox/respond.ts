@@ -23,6 +23,8 @@ export async function respond(this: InboxPostEndpoint) {
   }
 
   for (const actor of await this.getActors()) {
+    await this.savePeer(actor);
+
     const isBlocked = await this.isBlocked(actor);
 
     if (isBlocked) {

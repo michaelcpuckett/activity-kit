@@ -6,6 +6,7 @@ import { getActors } from './getActors';
 import { parseBody } from './parseBody';
 import { respond } from './respond';
 import { isBlocked } from './isBlocked';
+import { savePeer } from './savePeer';
 import { runSideEffects } from './runSideEffects';
 import { handleAccept } from './sideEffects/accept';
 import { handleAnnounce } from './sideEffects/announce';
@@ -41,5 +42,6 @@ export declare class InboxPostEndpoint {
     protected handleFollow: typeof handleFollow;
     protected handleLike: typeof handleLike;
     protected isBlocked: typeof isBlocked;
+    protected savePeer: typeof savePeer;
     respond: typeof respond;
 }

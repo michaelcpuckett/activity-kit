@@ -17,6 +17,7 @@ async function respond() {
         }
     }
     for (const actor of await this.getActors()) {
+        await this.savePeer(actor);
         const isBlocked = await this.isBlocked(actor);
         if (isBlocked) {
             console.log('Blocked from appearing in this inbox.');

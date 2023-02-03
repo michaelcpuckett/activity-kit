@@ -16,6 +16,7 @@ describe('Inbox', () => {
         isBlocked: Function;
         getActors: Function;
         runSideEffects: Function;
+        savePeer: Function;
         broadcastActivity: Function;
         res: {
           [key: string]: number|Function;
@@ -28,6 +29,9 @@ describe('Inbox', () => {
           this.activity = {
             ...arriveActivity,
           };
+        },
+        async savePeer() {
+
         },
         async isBlocked() {
           return false;

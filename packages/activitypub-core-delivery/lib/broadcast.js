@@ -8,7 +8,18 @@ async function broadcast(activity, actor) {
     if (!('actor' in publicActivity)) {
         throw new Error('Not an activity?');
     }
-    const recipients = await this.getRecipientInboxUrls(activity, actor);
+    const recipients = this.isPublic(activity) ? [
+        ...new Set([
+            ...await this.getPeerInboxUrls(),
+            ...await this.getRecipientInboxUrls(activity, actor)
+        ]
+            .map((url) => {
+            return url.toString();
+        }))
+    ]
+        .map((url) => {
+        return new URL(url);
+    }) : await this.getRecipientInboxUrls(activity, actor);
     const results = await Promise.all(recipients.map(async (recipient) => {
         return await this.signAndSendToForeignActorInbox(recipient, actor, publicActivity);
     }));
