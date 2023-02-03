@@ -18,18 +18,7 @@ export async function broadcast(
     throw new Error('Not an activity?');
   }
 
-  const recipients = this.isPublic(activity) ? [
-    ...new Set([
-      ...await this.getPeerInboxUrls(),
-      ...await this.getRecipientInboxUrls(activity, actor)
-    ]
-    .map((url: URL) => {
-      return url.toString();
-    }),
-  )]
-  .map((url: string) => {
-    return new URL(url);
-  }) : await this.getRecipientInboxUrls(activity, actor);
+  const recipients = await this.getRecipientInboxUrls(activity, actor);
 
   const results = await Promise.all(
     recipients.map(async (recipient) => {
