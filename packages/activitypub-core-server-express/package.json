@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-server-express",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -26,8 +26,8 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "activitypub-core-delivery": "^0.1.11",
-    "activitypub-core-endpoints": "^0.1.12",
+    "activitypub-core-delivery": "^0.1.13",
+    "activitypub-core-endpoints": "^0.1.13",
     "activitypub-core-types": "^0.1.5",
     "activitypub-core-utilities": "^0.1.5",
     "express": "^4.18.2"
