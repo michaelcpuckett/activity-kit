@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPeerInboxUrls = void 0;
 async function getPeerInboxUrls() {
-    const peers = this.adapters.db.findAll('peer', {});
+    const peers = await this.adapters.db.findAll('peer', {});
     if (!peers) {
         return [];
     }
