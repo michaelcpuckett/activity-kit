@@ -1,2 +1,2 @@
 import { DeliveryAdapter } from '.';
-export declare function getPeerInboxUrls(this: DeliveryAdapter): Promise<any>;
+export declare function getPeerInboxUrls(this: DeliveryAdapter): Promise<Array<URL>>;
