@@ -210,7 +210,7 @@ export const activityPub =
         }
       }
     } catch (error: unknown) {
-      console.log(error);
+      console.trace(error);
       next(new Error(`${error}`));
       return;
     }

@@ -99,7 +99,7 @@ const activityPub = (config) => async (req, res, next) => {
         }
     }
     catch (error) {
-        console.log(error);
+        console.trace(error);
         next(new Error(`${error}`));
         return;
     }
