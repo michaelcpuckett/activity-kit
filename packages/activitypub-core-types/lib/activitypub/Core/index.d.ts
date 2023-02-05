@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Link } from './Link';
 import { ExtendedObject } from '../Extended/ExtendedObject';
 import { Actor } from '../Extended/Actor';

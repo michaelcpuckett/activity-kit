@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { CollectionTypes, CollectionPageTypes } from '../util/const';
 import { BaseCoreObject } from '../Core/CoreObject';
 import { EntityReference } from '../Core';

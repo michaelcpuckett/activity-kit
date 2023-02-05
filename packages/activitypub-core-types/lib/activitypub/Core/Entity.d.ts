@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { AllTypes } from '../util/const';
 export declare type AnyType = typeof AllTypes[keyof typeof AllTypes];
 export declare type TypeOrArrayWithType<T> = T | Array<T & (AnyType | string)>;

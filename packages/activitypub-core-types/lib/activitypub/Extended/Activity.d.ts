@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { BaseCoreObject } from '../Core/CoreObject';
 import { ActivityTypes } from '../util/const';
 import { EntityReference } from '../Core';
