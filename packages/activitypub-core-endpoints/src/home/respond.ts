@@ -74,7 +74,7 @@ export const respond = async function (
         if ('getHomePageProps' in plugin && plugin.getHomePageProps) {
           props = {
             ...props,
-            ...(await plugin.getHomePageProps(actor, this.req.url)),
+            ...(await plugin.getHomePageProps.call(this, actor, this.req.url)),
           };
         }
       }

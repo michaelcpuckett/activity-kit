@@ -42,7 +42,7 @@ const respond = async function (render) {
                 if ('getHomePageProps' in plugin && plugin.getHomePageProps) {
                     props = {
                         ...props,
-                        ...(await plugin.getHomePageProps(actor, this.req.url)),
+                        ...(await plugin.getHomePageProps.call(this, actor, this.req.url)),
                     };
                 }
             }

@@ -23,7 +23,7 @@ async function handleFoundEntity(render, entity, authorizedActor) {
                 if ('getEntityPageProps' in plugin && plugin.getEntityPageProps) {
                     props = {
                         ...props,
-                        ...(await plugin.getEntityPageProps(entity)),
+                        ...(await plugin.getEntityPageProps.call(this, entity)),
                     };
                 }
             }
