@@ -5,6 +5,7 @@ import {
   LOCAL_DOMAIN,
 } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
+import * as fs from 'fs';
 
 export async function respond(this: NodeinfoGetEndpoint) {
   const url = this.req.url ?? '';
@@ -20,6 +21,26 @@ export async function respond(this: NodeinfoGetEndpoint) {
     return persons.length + groups.length;
   };
 
+  const getSoftwareVersion = async () => {
+    const packageJson: { version?: number } = await new Promise(
+      (resolve, reject) => {
+        fs.readFile('../../package.json', (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(JSON.parse(data.toString()));
+          }
+        });
+      },
+    );
+
+    if (packageJson.version) {
+      return `${packageJson.version}`;
+    }
+
+    return '';
+  };
+
   if (version === 2) {
     this.res.setHeader(CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE);
     this.res.statusCode = 200;
@@ -30,7 +51,7 @@ export async function respond(this: NodeinfoGetEndpoint) {
         protocols: ['activitypub'],
         software: {
           name: 'activitypub-core',
-          version: '0.1.0',
+          version: await getSoftwareVersion(),
         },
         services: {
           inbound: [],
@@ -55,7 +76,7 @@ export async function respond(this: NodeinfoGetEndpoint) {
         software: {
           name: 'activitypub-core',
           repository: 'https://github.com/michaelcpuckett/activitypub-core',
-          version: '0.1.0',
+          version: await getSoftwareVersion(),
         },
         services: {
           inbound: [],
@@ -64,7 +85,7 @@ export async function respond(this: NodeinfoGetEndpoint) {
         usage: {
           users: {
             total: await getTotalUsers(),
-          }
+          },
         },
         metadata: {},
       }),
