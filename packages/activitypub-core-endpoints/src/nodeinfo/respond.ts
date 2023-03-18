@@ -24,7 +24,7 @@ export async function respond(this: NodeinfoGetEndpoint) {
   const getSoftwareVersion = async () => {
     const packageJson: { version?: number } = await new Promise(
       (resolve, reject) => {
-        fs.readFile('../../package.json', (err, data) => {
+        fs.readFile('../../../package.json', (err, data) => {
           if (err) {
             reject(err);
           } else {
