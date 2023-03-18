@@ -6,6 +6,7 @@ import {
 } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 import * as fs from 'fs';
+import * as path from 'path';
 
 export async function respond(this: NodeinfoGetEndpoint) {
   const url = this.req.url ?? '';
@@ -24,7 +25,7 @@ export async function respond(this: NodeinfoGetEndpoint) {
   const getSoftwareVersion = async () => {
     const packageJson: { version?: number } = await new Promise(
       (resolve, reject) => {
-        fs.readFile('../package.json', (err, data) => {
+        fs.readFile(path.resolve(__dirname, '../package.json'), (err, data) => {
           if (err) {
             reject(err);
           } else {

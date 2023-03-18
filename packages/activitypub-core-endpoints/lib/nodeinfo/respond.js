@@ -27,6 +27,7 @@ exports.respond = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_types_1 = require("activitypub-core-types");
 const fs = __importStar(require("fs"));
+const path = __importStar(require("path"));
 async function respond() {
     const url = this.req.url ?? '';
     const version = parseFloat(url.split('nodeinfo/')[1]);
@@ -41,7 +42,7 @@ async function respond() {
     };
     const getSoftwareVersion = async () => {
         const packageJson = await new Promise((resolve, reject) => {
-            fs.readFile('../package.json', (err, data) => {
+            fs.readFile(path.resolve(__dirname, '../package.json'), (err, data) => {
                 if (err) {
                     reject(err);
                 }
