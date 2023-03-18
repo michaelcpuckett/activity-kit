@@ -25,13 +25,16 @@ export async function respond(this: NodeinfoGetEndpoint) {
   const getSoftwareVersion = async () => {
     const packageJson: { version?: number } = await new Promise(
       (resolve, reject) => {
-        fs.readFile(path.resolve(__dirname, '../package.json'), (err, data) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(JSON.parse(data.toString()));
-          }
-        });
+        fs.readFile(
+          path.resolve(__dirname, '../../package.json'),
+          (err, data) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(JSON.parse(data.toString()));
+            }
+          },
+        );
       },
     );
 
