@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-plugin-foaf",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -25,7 +25,7 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "activitypub-core-endpoints": "^0.1.23",
+    "activitypub-core-endpoints": "^0.1.24",
     "activitypub-core-types": "^0.1.17",
     "activitypub-core-utilities": "^0.1.17"
   },
