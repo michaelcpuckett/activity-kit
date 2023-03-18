@@ -41,7 +41,7 @@ async function respond() {
     };
     const getSoftwareVersion = async () => {
         const packageJson = await new Promise((resolve, reject) => {
-            fs.readFile('../../../package.json', (err, data) => {
+            fs.readFile('../package.json', (err, data) => {
                 if (err) {
                     reject(err);
                 }
