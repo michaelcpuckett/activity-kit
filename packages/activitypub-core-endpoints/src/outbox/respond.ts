@@ -48,7 +48,7 @@ export async function respond(this: OutboxPostEndpoint) {
   assertIsApActor(this.actor);
 
   // Broadcast to Fediverse.
-  await this.adapters.delivery.broadcast(this.activity, this.actor);
+  this.adapters.delivery.broadcast(this.activity, this.actor);
 
   this.res.statusCode = 201;
   this.res.setHeader('Location', this.activity.id.toString());

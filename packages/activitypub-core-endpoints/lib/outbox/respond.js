@@ -24,7 +24,7 @@ async function respond() {
     (0, activitypub_core_types_1.assertExists)(this.activity.id);
     await this.saveActivity();
     (0, activitypub_core_types_1.assertIsApActor)(this.actor);
-    await this.adapters.delivery.broadcast(this.activity, this.actor);
+    this.adapters.delivery.broadcast(this.activity, this.actor);
     this.res.statusCode = 201;
     this.res.setHeader('Location', this.activity.id.toString());
     this.res.end();
