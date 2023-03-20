@@ -6,6 +6,7 @@ import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { DbAdapter, AuthAdapter, Plugin, AP } from 'activitypub-core-types';
+import { DeliveryAdapter } from 'activitypub-core-delivery';
 
 export class UserPostEndpoint {
   req: IncomingMessage;
@@ -13,6 +14,7 @@ export class UserPostEndpoint {
   adapters: {
     auth: AuthAdapter;
     db: DbAdapter;
+    delivery: DeliveryAdapter;
   };
   plugins?: Plugin[];
 
@@ -22,6 +24,7 @@ export class UserPostEndpoint {
     adapters: {
       auth: AuthAdapter;
       db: DbAdapter;
+      delivery: DeliveryAdapter;
     },
     plugins?: Plugin[],
   ) {

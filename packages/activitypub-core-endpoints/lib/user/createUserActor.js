@@ -168,8 +168,8 @@ async function createUserActor(user) {
             activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
             activitypub_core_utilities_1.W3ID_SECURITY_CONTEXT,
             {
-                "PropertyValue": "https://schema.org/PropertyValue",
-                "value": "https://schema.org/value",
+                PropertyValue: 'https://schema.org/PropertyValue',
+                value: 'https://schema.org/value',
             },
         ],
         id: new URL(id),
@@ -190,7 +190,7 @@ async function createUserActor(user) {
             userBlocks.id,
             userRequests.id,
             userLists.id,
-            userBookmarks.id
+            userBookmarks.id,
         ],
         endpoints: {
             sharedInbox: new URL(activitypub_core_utilities_3.SHARED_INBOX_ID),
@@ -244,6 +244,7 @@ async function createUserActor(user) {
         type: activitypub_core_types_1.AP.ActivityTypes.CREATE,
         actor: new URL(activitypub_core_utilities_3.SERVER_ACTOR_ID),
         object: userActor,
+        to: [new URL(activitypub_core_utilities_1.PUBLIC_ACTOR)],
         replies: createActorActivityReplies.id,
         likes: createActorActivityLikes.id,
         shares: createActorActivityShares.id,
@@ -288,6 +289,9 @@ async function createUserActor(user) {
             this.adapters.db.insertOrderedItem(userInbox.id, createActorActivity.id),
         ]);
     }
+    this.adapters.delivery.broadcast(createActorActivity, await this.adapters.db.findOne('entity', {
+        preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
+    }));
 }
 exports.createUserActor = createUserActor;
 //# sourceMappingURL=createUserActor.js.map

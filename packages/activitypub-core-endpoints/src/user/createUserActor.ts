@@ -1,4 +1,10 @@
-import { ACTIVITYSTREAMS_CONTEXT, getGuid, W3ID_SECURITY_CONTEXT } from 'activitypub-core-utilities';
+import {
+  ACTIVITYSTREAMS_CONTEXT,
+  getGuid,
+  PUBLIC_ACTOR,
+  SERVER_ACTOR_USERNAME,
+  W3ID_SECURITY_CONTEXT,
+} from 'activitypub-core-utilities';
 import { generateKeyPair } from 'activitypub-core-utilities';
 import {
   LOCAL_DOMAIN,
@@ -15,7 +21,7 @@ export async function createUserActor(
     type: string;
     email: string;
     name: string;
-    preferredUsername: string
+    preferredUsername: string;
   },
 ) {
   const { publicKey, privateKey } = await generateKeyPair();
@@ -133,7 +139,8 @@ export async function createUserActor(
     id: new URL(`${id}/lists`),
     url: new URL(`${id}/lists`),
     name: 'Lists',
-    summary: 'A user\'s set of curated lists of other users, such as "Friends Only".',
+    summary:
+      'A user\'s set of curated lists of other users, such as "Friends Only".',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
     attributedTo: new URL(id),
@@ -189,8 +196,12 @@ export async function createUserActor(
     published: publishedDate,
   };
 
-  if (!Object.values(AP.ActorTypes).includes(user.type as typeof AP.ActorTypes[keyof typeof AP.ActorTypes])) {
-    throw new Error('Bad request: Provided type is not an Actor type.')
+  if (
+    !Object.values(AP.ActorTypes).includes(
+      user.type as typeof AP.ActorTypes[keyof typeof AP.ActorTypes],
+    )
+  ) {
+    throw new Error('Bad request: Provided type is not an Actor type.');
   }
 
   let userActor: AP.Actor = {
@@ -198,8 +209,8 @@ export async function createUserActor(
       ACTIVITYSTREAMS_CONTEXT,
       W3ID_SECURITY_CONTEXT,
       {
-        "PropertyValue": "https://schema.org/PropertyValue",
-        "value": "https://schema.org/value",
+        PropertyValue: 'https://schema.org/PropertyValue',
+        value: 'https://schema.org/value',
       },
     ],
     id: new URL(id),
@@ -220,7 +231,7 @@ export async function createUserActor(
       userBlocks.id,
       userRequests.id,
       userLists.id,
-      userBookmarks.id
+      userBookmarks.id,
     ],
     endpoints: {
       sharedInbox: new URL(SHARED_INBOX_ID),
@@ -279,6 +290,7 @@ export async function createUserActor(
     type: AP.ActivityTypes.CREATE,
     actor: new URL(SERVER_ACTOR_ID),
     object: userActor,
+    to: [new URL(PUBLIC_ACTOR)],
     replies: createActorActivityReplies.id,
     likes: createActorActivityLikes.id,
     shares: createActorActivityShares.id,
@@ -329,4 +341,12 @@ export async function createUserActor(
       this.adapters.db.insertOrderedItem(userInbox.id, createActorActivity.id),
     ]);
   }
+
+  // Broadcast to Fediverse.
+  this.adapters.delivery.broadcast(
+    createActorActivity,
+    await this.adapters.db.findOne('entity', {
+      preferredUsername: SERVER_ACTOR_USERNAME,
+    }),
+  );
 }
