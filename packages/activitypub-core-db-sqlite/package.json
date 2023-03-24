@@ -1,0 +1,45 @@
+{
+  "name": "activitypub-core-db-sqlite",
+  "version": "0.1.20",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michaelcpuckett@gmail.com>",
+  "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelcpuckett/activitypub-core.git"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch",
+    "format": "prettier --config .prettierrc \"**/*.ts\" --write",
+    "lint": "eslint src/**/*.ts"
+  },
+  "bugs": {
+    "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
+  },
+  "dependencies": {
+    "activitypub-core-delivery": "^0.1.19",
+    "activitypub-core-types": "^0.1.17",
+    "activitypub-core-utilities": "^0.1.17",
+    "sql-template-strings": "^2.2.2",
+    "sqlite": "^4.1.2",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "dotenv": "^16.0.3",
+    "eslint": "^8.25.0",
+    "mongodb": "^4.10.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.4"
+  }
+}

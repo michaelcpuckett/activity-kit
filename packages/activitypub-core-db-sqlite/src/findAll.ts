@@ -1,0 +1,22 @@
+import { SqliteDbAdapter } from '.';
+import { AP } from 'activitypub-core-types';
+
+export async function findAll(
+  this: SqliteDbAdapter,
+  collection: string,
+  matchingObject: { [key: string]: unknown },
+): Promise<AP.Entity[] | null> {
+  const [key] = Object.keys(matchingObject);
+  const [keyValue] = Object.values(matchingObject);
+
+  const value = await this.db.all(
+    `SELECT * FROM ${collection} WHERE ${key} = ?;`,
+    keyValue,
+  );
+
+  if (!value) {
+    return null;
+  }
+
+  return value as unknown as AP.Entity[];
+}
