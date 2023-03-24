@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-db-sqlite",
-  "version": "0.1.20",
+  "version": "0.1.28",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
