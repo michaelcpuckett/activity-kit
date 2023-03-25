@@ -20,7 +20,12 @@ export async function findOne(
   }
 
   for (const key of Object.keys(value)) {
-    if (typeof value[key] === 'string' && value[key].startsWith('JSON:')) {
+    if (value[key] === null) {
+      delete value[key];
+    } else if (
+      typeof value[key] === 'string' &&
+      value[key].startsWith('JSON:')
+    ) {
       value[key] = JSON.parse(value[key].slice('JSON:'.length));
     }
   }

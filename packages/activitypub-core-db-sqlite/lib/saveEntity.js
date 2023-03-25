@@ -88,11 +88,7 @@ async function saveEntity(entity) {
         _id,
     };
     for (const key of Object.keys(convertedEntity)) {
-        if (convertedEntity[key] === null) {
-            delete convertedEntity[key];
-        }
-        else if (convertedEntity[key] &&
-            typeof convertedEntity[key] === 'object') {
+        if (convertedEntity[key] && typeof convertedEntity[key] === 'object') {
             convertedEntity[key] = 'JSON:' + JSON.stringify(convertedEntity[key]);
         }
     }
