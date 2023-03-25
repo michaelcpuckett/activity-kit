@@ -11,11 +11,15 @@ import {
   UploadMediaPostEndpoint,
   HostMetaGetEndpoint,
   NodeinfoGetEndpoint,
-  ProxyGetEndpoint
+  ProxyGetEndpoint,
 } from 'activitypub-core-endpoints';
 import { AP, Plugin } from 'activitypub-core-types';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
-import type { DbAdapter, AuthAdapter, StorageAdapter } from 'activitypub-core-types';
+import type {
+  DbAdapter,
+  AuthAdapter,
+  StorageAdapter,
+} from 'activitypub-core-types';
 import {
   CONTENT_TYPE_HEADER,
   HTML_CONTENT_TYPE,
@@ -46,7 +50,11 @@ export const activityPub =
 
     plugins?: Plugin[];
   }) =>
-  async (req: IncomingMessage & { hostname: string; }, res: ServerResponse, next: NextFunction) => {
+  async (
+    req: IncomingMessage & { hostname: string },
+    res: ServerResponse,
+    next: NextFunction,
+  ) => {
     console.log('INCOMING:', req.url);
 
     try {
@@ -161,7 +169,10 @@ export const activityPub =
           return;
         }
 
-        if (req.url.startsWith('/.well-known/nodeinfo') || req.url.startsWith('/nodeinfo')) {
+        if (
+          req.url.startsWith('/.well-known/nodeinfo') ||
+          req.url.startsWith('/nodeinfo')
+        ) {
           await new NodeinfoGetEndpoint(
             req,
             res,
@@ -173,7 +184,6 @@ export const activityPub =
         }
 
         if (
-          req.url === '/' ||
           req.url.startsWith('/@') ||
           req.url.startsWith('/entity/') ||
           req.url.endsWith('/following') ||
@@ -184,12 +194,14 @@ export const activityPub =
           req.url.endsWith('/shared') ||
           req.url.endsWith('/shares') ||
           req.url.endsWith('/blocked') ||
+          req.url.endsWith('/blocks') ||
           req.url.endsWith('/groups') ||
           req.url.endsWith('/bookmarks') ||
           req.url.endsWith('/friends') ||
           req.url.endsWith('/members') ||
           req.url.endsWith('/inbox') ||
-          req.url.endsWith('/outbox') || (() => {
+          req.url.endsWith('/outbox') ||
+          (() => {
             for (const plugin of config.plugins) {
               if ('getIsEntityGetRequest' in plugin) {
                 if (plugin.getIsEntityGetRequest(req.url)) {

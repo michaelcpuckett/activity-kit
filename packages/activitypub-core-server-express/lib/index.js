@@ -62,13 +62,13 @@ const activityPub = (config) => async (req, res, next) => {
                 next();
                 return;
             }
-            if (req.url.startsWith('/.well-known/nodeinfo') || req.url.startsWith('/nodeinfo')) {
+            if (req.url.startsWith('/.well-known/nodeinfo') ||
+                req.url.startsWith('/nodeinfo')) {
                 await new activitypub_core_endpoints_1.NodeinfoGetEndpoint(req, res, config.adapters, config.plugins).respond();
                 next();
                 return;
             }
-            if (req.url === '/' ||
-                req.url.startsWith('/@') ||
+            if (req.url.startsWith('/@') ||
                 req.url.startsWith('/entity/') ||
                 req.url.endsWith('/following') ||
                 req.url.endsWith('/followers') ||
@@ -78,20 +78,22 @@ const activityPub = (config) => async (req, res, next) => {
                 req.url.endsWith('/shared') ||
                 req.url.endsWith('/shares') ||
                 req.url.endsWith('/blocked') ||
+                req.url.endsWith('/blocks') ||
                 req.url.endsWith('/groups') ||
                 req.url.endsWith('/bookmarks') ||
                 req.url.endsWith('/friends') ||
                 req.url.endsWith('/members') ||
                 req.url.endsWith('/inbox') ||
-                req.url.endsWith('/outbox') || (() => {
-                for (const plugin of config.plugins) {
-                    if ('getIsEntityGetRequest' in plugin) {
-                        if (plugin.getIsEntityGetRequest(req.url)) {
-                            return true;
+                req.url.endsWith('/outbox') ||
+                (() => {
+                    for (const plugin of config.plugins) {
+                        if ('getIsEntityGetRequest' in plugin) {
+                            if (plugin.getIsEntityGetRequest(req.url)) {
+                                return true;
+                            }
                         }
                     }
-                }
-            })()) {
+                })()) {
                 await new activitypub_core_endpoints_1.EntityGetEndpoint(req, res, config.adapters, config.plugins).respond(config.pages.entity);
                 next();
                 return;
