@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import { Database } from 'sqlite';
 
+import { initializeDb } from './initializeDb';
 import { findOne } from './findOne';
 import { findEntityById } from './findEntityById';
 import { findStringValueById } from './findStringValueById';
@@ -37,6 +38,10 @@ export class SqliteDbAdapter implements DbAdapter {
     this.db = db;
     this.fetch = adapters?.fetch ?? fetch;
   }
+
+  // Initialize.
+
+  public initializeDb = initializeDb;
 
   // Find.
 

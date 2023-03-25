@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SqliteDbAdapter = void 0;
 const isomorphic_fetch_1 = __importDefault(require("isomorphic-fetch"));
+const initializeDb_1 = require("./initializeDb");
 const findOne_1 = require("./findOne");
 const findEntityById_1 = require("./findEntityById");
 const findStringValueById_1 = require("./findStringValueById");
@@ -28,6 +29,7 @@ class SqliteDbAdapter {
         this.db = db;
         this.fetch = adapters?.fetch ?? isomorphic_fetch_1.default;
     }
+    initializeDb = initializeDb_1.initializeDb;
     findOne = findOne_1.findOne;
     findAll = findAll_1.findAll;
     findEntityById = findEntityById_1.findEntityById;

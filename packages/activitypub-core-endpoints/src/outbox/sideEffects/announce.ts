@@ -34,7 +34,7 @@ export async function handleAnnounce(
 
   assertExists(objectId);
 
-  const isLocal = getCollectionNameByUrl(objectId) !== 'foreign-entity';
+  const isLocal = getCollectionNameByUrl(objectId) !== 'foreignEntity';
 
   if (isLocal) {
     const object = await this.adapters.db.queryById(objectId);

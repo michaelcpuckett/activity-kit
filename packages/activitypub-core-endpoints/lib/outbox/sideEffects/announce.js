@@ -13,7 +13,7 @@ async function handleAnnounce(activity) {
     await this.adapters.db.insertOrderedItem(shared.id, activity.id);
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
     (0, activitypub_core_types_1.assertExists)(objectId);
-    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectId) !== 'foreign-entity';
+    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectId) !== 'foreignEntity';
     if (isLocal) {
         const object = await this.adapters.db.queryById(objectId);
         (0, activitypub_core_types_1.assertIsApEntity)(object);

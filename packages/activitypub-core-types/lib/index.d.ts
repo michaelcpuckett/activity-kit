@@ -15,6 +15,7 @@ export declare type AuthAdapter = {
     authenticatePassword: Function;
 };
 export declare type DbAdapter = {
+    initializeDb?: Function;
     expandCollection: Function;
     expandEntity: Function;
     getPrivateKey: Function;

@@ -7,10 +7,10 @@ async function saveString(dbCollection, _id, value) {
         return await this.db.run(`UPDATE ${dbCollection} SET value = ? WHERE _id = ${_id};`, value);
     }
     else {
-        return await this.db.run(`INSERT INTO ${dbCollection} VALUES (:_id, :value);`, {
+        return await this.db.run(`INSERT INTO ${dbCollection} ("_id", "value") VALUES (?, ?);`, Object.values({
             _id,
             value,
-        });
+        }));
     }
 }
 exports.saveString = saveString;

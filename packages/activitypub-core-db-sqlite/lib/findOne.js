@@ -9,6 +9,16 @@ async function findOne(collection, matchingObject, options) {
     if (!value) {
         return null;
     }
+    for (const key of Object.keys(value)) {
+        if (typeof value[key] === 'string') {
+            if (value[key].startsWith('ARRAY:')) {
+                value[key] = value[key].slice('ARRAY:'.length).split(',');
+            }
+            else if (value[key].startsWith('JSON:')) {
+                value[key] = JSON.parse(value[key].slice('JSON:'.length));
+            }
+        }
+    }
     return (0, activitypub_core_utilities_1.convertStringsToUrls)(value);
 }
 exports.findOne = findOne;

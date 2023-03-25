@@ -6,7 +6,7 @@ async function fetchEntityById(id) {
     if (typeof this.fetch !== 'function') {
         return null;
     }
-    const foundEntity = (await this.findOne('foreign-entity', {
+    const foundEntity = (await this.findOne('foreignEntity', {
         _id: id.toString(),
     }));
     if (foundEntity) {

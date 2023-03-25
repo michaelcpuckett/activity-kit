@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findStringIdByValue = void 0;
 async function findStringIdByValue(dbCollection, value) {
-    const one = await this.db.get(`SELECT * FROM ${dbCollection} WHERE value = ${value};`);
+    const one = await this.db.get(`SELECT * FROM ${dbCollection} WHERE value = "${value}";`);
     if (!one) {
         return '';
     }

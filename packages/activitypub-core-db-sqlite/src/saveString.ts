@@ -18,11 +18,11 @@ export async function saveString(
     );
   } else {
     return await this.db.run(
-      `INSERT INTO ${dbCollection} VALUES (:_id, :value);`,
-      {
+      `INSERT INTO ${dbCollection} ("_id", "value") VALUES (?, ?);`,
+      Object.values({
         _id,
         value,
-      },
+      }),
     );
   }
 }

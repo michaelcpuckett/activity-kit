@@ -91,7 +91,9 @@ function GroupsPlugin(config) {
             (0, activitypub_core_types_1.assertIsArray)(followersCollection.items);
             const actorId = (0, activitypub_core_utilities_1.getId)(activity.actor);
             (0, activitypub_core_types_1.assertExists)(actorId);
-            if (!followersCollection.items.map(id => id.toString()).includes(actorId.toString())) {
+            if (!followersCollection.items
+                .map((id) => id.toString())
+                .includes(actorId.toString())) {
                 return;
             }
             const publishedDate = new Date();
@@ -149,7 +151,7 @@ function GroupsPlugin(config) {
                 published: publishedDate,
             };
             await this.adapters.db.insertOrderedItem(sharedId, new URL(announceActivityId));
-            const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectToBeSharedId) !== 'foreign-entity';
+            const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectToBeSharedId) !== 'foreignEntity';
             if (isLocal) {
                 const object = await this.adapters.db.findEntityById(objectId);
                 (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
@@ -167,7 +169,7 @@ function GroupsPlugin(config) {
                 this.adapters.db.insertOrderedItem(outboxId, announceActivityId),
             ]);
             await this.adapters.delivery.broadcast(announceActivity, recipient);
-        }
+        },
     };
     return groupsPlugin;
 }

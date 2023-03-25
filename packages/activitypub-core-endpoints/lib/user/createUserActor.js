@@ -280,7 +280,7 @@ async function createUserActor(user) {
         this.adapters.db.saveEntity(userLists),
         this.adapters.db.saveEntity(userBookmarks),
         this.adapters.db.saveString('account', user.uid, user.email),
-        this.adapters.db.saveString('private-key', user.uid, privateKey),
+        this.adapters.db.saveString('privateKey', user.uid, privateKey),
         this.adapters.db.saveString('username', user.uid, user.preferredUsername),
     ]);
     if (createActorActivity.id && userInbox.id) {

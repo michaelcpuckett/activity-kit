@@ -17,7 +17,7 @@ export async function fetchEntityById(
   }
 
   // Check cache
-  const foundEntity = (await this.findOne('foreign-entity', {
+  const foundEntity = (await this.findOne('foreignEntity', {
     _id: id.toString(),
   })) as unknown as { [key: string]: string };
 

@@ -5,7 +5,7 @@ import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   convertStringsToUrls,
   compressEntity,
-  getHttpSignature
+  getHttpSignature,
 } from 'activitypub-core-utilities';
 
 export async function fetchEntityById(
@@ -17,25 +17,24 @@ export async function fetchEntityById(
   }
 
   // Check cache
-  const foundEntity = await this.findOne('foreign-entity', {
+  const foundEntity = (await this.findOne('foreignEntity', {
     _id: id.toString(),
-  }) as unknown as { [key: string]: string; };
+  })) as unknown as { [key: string]: string };
 
   if (foundEntity) {
     return compressEntity(convertStringsToUrls(foundEntity));
   }
 
   // Send HTTP Signature for Mastodon in secure mode.
-  const actor = await this.findOne('entity', { preferredUsername: 'bot' }) as AP.Actor;
+  const actor = (await this.findOne('entity', {
+    preferredUsername: 'bot',
+  })) as AP.Actor;
 
   if (!actor) {
     throw new Error('Bot actor not set up.');
   }
 
-  const {
-    dateHeader,
-    signatureHeader
-  } = await getHttpSignature(
+  const { dateHeader, signatureHeader } = await getHttpSignature(
     id,
     actor.id,
     await this.getPrivateKey(actor),
@@ -51,10 +50,10 @@ export async function fetchEntityById(
     headers: {
       [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
       date: dateHeader,
-      signature: signatureHeader
+      signature: signatureHeader,
     },
   })
-    .then(async response => {
+    .then(async (response) => {
       clearTimeout(timeout);
       if (response.status === 200) {
         return await response.json();

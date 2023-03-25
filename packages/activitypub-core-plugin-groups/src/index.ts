@@ -1,6 +1,22 @@
-import { AP, assertExists, assertIsApCollection, assertIsApExtendedObject, assertIsApType, assertIsArray } from 'activitypub-core-types';
+import {
+  AP,
+  assertExists,
+  assertIsApCollection,
+  assertIsApExtendedObject,
+  assertIsApType,
+  assertIsArray,
+} from 'activitypub-core-types';
 import type { DbAdapter, Plugin } from 'activitypub-core-types';
-import { getId, getGuid, getCollectionNameByUrl, ACTIVITYSTREAMS_CONTEXT, LOCAL_DOMAIN, isType, PUBLIC_ACTOR, LOCAL_HOSTNAME } from 'activitypub-core-utilities';
+import {
+  getId,
+  getGuid,
+  getCollectionNameByUrl,
+  ACTIVITYSTREAMS_CONTEXT,
+  LOCAL_DOMAIN,
+  isType,
+  PUBLIC_ACTOR,
+  LOCAL_HOSTNAME,
+} from 'activitypub-core-utilities';
 import * as cheerio from 'cheerio';
 
 // Groups automatically announce activities addressed to them if sent from non-blocked followers.
@@ -14,8 +30,8 @@ export function GroupsPlugin(config?: {}) {
           delivery: {
             broadcast: Function;
           };
-        }
-      }, 
+        };
+      },
       activity: AP.Activity,
       recipient: AP.Actor,
     ) {
@@ -32,12 +48,12 @@ export function GroupsPlugin(config?: {}) {
       const objectId = getId(activity.object);
 
       assertExists(objectId);
-      
+
       const object = await this.adapters.db.queryById(objectId);
 
       assertIsApExtendedObject(object);
 
-      const objectToBeSharedId =  await (async (): Promise<URL> => {
+      const objectToBeSharedId = await (async (): Promise<URL> => {
         if (object.inReplyTo) {
           if (object.content) {
             const textContent = cheerio.load(object.content).text();
@@ -57,9 +73,15 @@ export function GroupsPlugin(config?: {}) {
       })();
 
       const hasAlreadyBeenShared = await (async (): Promise<boolean> => {
-        const shared = await this.adapters.db.getStreamByName(recipient, 'Shared');
+        const shared = await this.adapters.db.getStreamByName(
+          recipient,
+          'Shared',
+        );
 
-        assertIsApType<AP.OrderedCollection>(shared, AP.CollectionTypes.ORDERED_COLLECTION);
+        assertIsApType<AP.OrderedCollection>(
+          shared,
+          AP.CollectionTypes.ORDERED_COLLECTION,
+        );
 
         const sharedItems = shared.orderedItems;
 
@@ -71,22 +93,29 @@ export function GroupsPlugin(config?: {}) {
 
             assertExists(sharedItemId);
 
-            const foundSharedItem = await this.adapters.db.findEntityById(sharedItemId);
+            const foundSharedItem = await this.adapters.db.findEntityById(
+              sharedItemId,
+            );
 
-            assertIsApType<AP.Announce>(foundSharedItem, AP.ActivityTypes.ANNOUNCE);
+            assertIsApType<AP.Announce>(
+              foundSharedItem,
+              AP.ActivityTypes.ANNOUNCE,
+            );
 
             const sharedItemObjectId = getId(foundSharedItem.object);
 
             assertExists(sharedItemObjectId);
 
-            if (sharedItemObjectId.toString() === objectToBeSharedId.toString()) {
+            if (
+              sharedItemObjectId.toString() === objectToBeSharedId.toString()
+            ) {
               return true;
             }
           } catch (error) {
             break;
           }
         }
-        
+
         return false;
       })();
 
@@ -102,7 +131,8 @@ export function GroupsPlugin(config?: {}) {
 
       assertExists(followersId);
 
-      const followersCollection: AP.Collection = await this.adapters.db.findEntityById(followersId);
+      const followersCollection: AP.Collection =
+        await this.adapters.db.findEntityById(followersId);
 
       assertIsApCollection(followersCollection);
       assertIsArray(followersCollection.items);
@@ -111,7 +141,11 @@ export function GroupsPlugin(config?: {}) {
 
       assertExists(actorId);
 
-      if (!followersCollection.items.map(id => id.toString()).includes(actorId.toString())) {
+      if (
+        !followersCollection.items
+          .map((id) => id.toString())
+          .includes(actorId.toString())
+      ) {
         // The actor is not a follower.
         return;
       }
@@ -120,8 +154,11 @@ export function GroupsPlugin(config?: {}) {
 
       const publishedDate = new Date();
       const announceActivityId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
-      
-      const shared = await this.adapters.db.getStreamByName(recipient, 'Shared');
+
+      const shared = await this.adapters.db.getStreamByName(
+        recipient,
+        'Shared',
+      );
 
       assertIsApCollection(shared);
 
@@ -129,7 +166,9 @@ export function GroupsPlugin(config?: {}) {
 
       assertExists(sharedId);
 
-      const announceActivityRepliesId = new URL(`${announceActivityId}/replies`);
+      const announceActivityRepliesId = new URL(
+        `${announceActivityId}/replies`,
+      );
       const announceActivityReplies: AP.Collection = {
         '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
         id: announceActivityRepliesId,
@@ -181,9 +220,13 @@ export function GroupsPlugin(config?: {}) {
         published: publishedDate,
       };
 
-      await this.adapters.db.insertOrderedItem(sharedId, new URL(announceActivityId));
+      await this.adapters.db.insertOrderedItem(
+        sharedId,
+        new URL(announceActivityId),
+      );
 
-      const isLocal = getCollectionNameByUrl(objectToBeSharedId) !== 'foreign-entity';
+      const isLocal =
+        getCollectionNameByUrl(objectToBeSharedId) !== 'foreignEntity';
 
       if (isLocal) {
         const object = await this.adapters.db.findEntityById(objectId);
@@ -210,7 +253,7 @@ export function GroupsPlugin(config?: {}) {
       ]);
 
       await this.adapters.delivery.broadcast(announceActivity, recipient);
-    }
+    },
   };
 
   return groupsPlugin;

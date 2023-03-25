@@ -89,6 +89,6 @@ export async function createServerActor(this: UserPostEndpoint) {
     this.adapters.db.saveEntity(botFollowing),
     this.adapters.db.saveEntity(botFollowers),
     this.adapters.db.saveString('username', 'bot', 'bot'),
-    this.adapters.db.saveString('private-key', 'bot', botPrivateKey),
+    this.adapters.db.saveString('privateKey', 'bot', botPrivateKey),
   ]);
 }

@@ -4,7 +4,7 @@ export const getCollectionNameByUrl = (url: URL) => {
   const isLocal = url.hostname === LOCAL_HOSTNAME;
 
   if (!isLocal) {
-    return 'foreign-entity';
+    return 'foreignEntity';
   }
 
   return 'entity';

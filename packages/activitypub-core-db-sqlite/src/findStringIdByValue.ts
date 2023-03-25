@@ -6,7 +6,7 @@ export async function findStringIdByValue(
   value: string,
 ): Promise<string> {
   const one = await this.db.get(
-    `SELECT * FROM ${dbCollection} WHERE value = ${value};`,
+    `SELECT * FROM ${dbCollection} WHERE value = "${value}";`,
   );
 
   if (!one) {

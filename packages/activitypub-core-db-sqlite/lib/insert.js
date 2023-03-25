@@ -1,50 +1,55 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeItem = exports.insertItem = exports.removeOrderedItem = exports.insertOrderedItem = void 0;
-const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function insertOrderedItem(path, url) {
-    const collectionName = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(path);
-    const currentRecord = await this.db.get(`SELECT * FROM ${collectionName} WHERE _id = ?;`, path.toString());
-    await this.db.run(`UPDATE ${collectionName} WHERE _id = ${path.toString()} VALUES (?);`, {
+    const currentRecord = (await this.findEntityById(path));
+    const originalItems = currentRecord?.orderedItems ?? [];
+    await this.saveEntity({
         ...currentRecord,
-        totalItems: currentRecord.totalItems + 1,
-        orderedItems: [url.toString(), ...currentRecord.orderedItems],
+        totalItems: (currentRecord?.totalItems ?? 0) + 1,
+        orderedItems: [url, ...originalItems],
     });
 }
 exports.insertOrderedItem = insertOrderedItem;
 async function removeOrderedItem(path, url) {
-    const collectionName = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(path);
-    const currentRecord = await this.db.get(`SELECT * FROM ${collectionName} WHERE _id = ?;`, path.toString());
-    if (!currentRecord.items.includes(url.toString())) {
+    const currentRecord = (await this.findEntityById(path));
+    const originalItems = currentRecord?.orderedItems ?? [];
+    if (!originalItems.map((item) => item.toString()).includes(url.toString())) {
         return;
     }
-    await this.db.run(`UPDATE ${collectionName} WHERE _id = ${path.toString()} VALUES (?);`, {
+    await this.saveEntity({
         ...currentRecord,
-        totalItems: currentRecord.totalItems - 1,
-        items: currentRecord.items.filter((item) => item !== url.toString()),
+        totalItems: currentRecord?.totalItems - 1,
+        orderedItems: originalItems
+            .map((item) => item.toString())
+            .filter((item) => item !== url.toString())
+            .map((item) => new URL(item)),
     });
 }
 exports.removeOrderedItem = removeOrderedItem;
 async function insertItem(path, url) {
-    const collectionName = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(path);
-    const currentRecord = await this.db.get(`SELECT * FROM ${collectionName} WHERE _id = ?;`, path.toString());
-    await this.db.run(`UPDATE ${collectionName} WHERE _id = ${path.toString()} VALUES (?);`, {
+    const currentRecord = (await this.findEntityById(path));
+    const originalItems = currentRecord?.items ?? [];
+    await this.saveEntity({
         ...currentRecord,
-        totalItems: currentRecord.totalItems + 1,
-        items: [url.toString(), ...currentRecord.items],
+        totalItems: (currentRecord?.totalItems ?? 0) + 1,
+        items: [url, ...originalItems],
     });
 }
 exports.insertItem = insertItem;
 async function removeItem(path, url) {
-    const collectionName = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(path);
-    const currentRecord = await this.db.get(`SELECT * FROM ${collectionName} WHERE _id = ?;`, path.toString());
-    if (!currentRecord.items.includes(url.toString())) {
+    const currentRecord = (await this.findEntityById(path));
+    const originalItems = currentRecord?.items ?? [];
+    if (!originalItems.map((item) => item.toString()).includes(url.toString())) {
         return;
     }
-    await this.db.run(`UPDATE ${collectionName} WHERE _id = ${path.toString()} VALUES (?);`, {
+    await this.saveEntity({
         ...currentRecord,
-        totalItems: currentRecord.totalItems - 1,
-        items: currentRecord.items.filter((item) => item !== url.toString()),
+        totalItems: currentRecord?.totalItems - 1,
+        items: originalItems
+            .map((item) => item.toString())
+            .filter((item) => item !== url.toString())
+            .map((item) => new URL(item)),
     });
 }
 exports.removeItem = removeItem;

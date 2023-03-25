@@ -6,13 +6,15 @@ async function fetchEntityById(id) {
     if (typeof this.fetch !== 'function') {
         return null;
     }
-    const foundEntity = await this.findOne('foreign-entity', {
+    const foundEntity = (await this.findOne('foreignEntity', {
         _id: id.toString(),
-    });
+    }));
     if (foundEntity) {
         return (0, activitypub_core_utilities_1.compressEntity)((0, activitypub_core_utilities_1.convertStringsToUrls)(foundEntity));
     }
-    const actor = await this.findOne('entity', { preferredUsername: 'bot' });
+    const actor = (await this.findOne('entity', {
+        preferredUsername: 'bot',
+    }));
     if (!actor) {
         throw new Error('Bot actor not set up.');
     }
@@ -24,7 +26,7 @@ async function fetchEntityById(id) {
         headers: {
             [activitypub_core_utilities_1.ACCEPT_HEADER]: activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE,
             date: dateHeader,
-            signature: signatureHeader
+            signature: signatureHeader,
         },
     })
         .then(async (response) => {

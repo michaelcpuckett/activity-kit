@@ -6,7 +6,7 @@ async function getPrivateKey(actor) {
         throw new Error('Actor has no `preferredUsername`.');
     }
     const userId = await this.findStringIdByValue('username', actor.preferredUsername);
-    const privateKey = await this.findStringValueById('private-key', userId);
+    const privateKey = await this.findStringValueById('privateKey', userId);
     if (!privateKey) {
         throw new Error('Private key not found for this Actor.');
     }

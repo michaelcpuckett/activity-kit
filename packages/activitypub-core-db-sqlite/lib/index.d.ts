@@ -1,4 +1,5 @@
 import { Database } from 'sqlite';
+import { initializeDb } from './initializeDb';
 import { findOne } from './findOne';
 import { findEntityById } from './findEntityById';
 import { findStringValueById } from './findStringValueById';
@@ -21,6 +22,7 @@ export declare class SqliteDbAdapter implements DbAdapter {
     constructor(db: Database, adapters?: {
         fetch?: Function;
     });
+    initializeDb: typeof initializeDb;
     findOne: typeof findOne;
     findAll: typeof findAll;
     findEntityById: typeof findEntityById;

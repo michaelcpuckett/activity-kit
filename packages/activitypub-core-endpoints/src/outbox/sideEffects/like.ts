@@ -41,7 +41,7 @@ export async function handleLike(
 
     assertExists(likesId);
 
-    const isLocal = getCollectionNameByUrl(objectId) !== 'foreign-entity';
+    const isLocal = getCollectionNameByUrl(objectId) !== 'foreignEntity';
 
     if (!isLocal) {
       throw new Error('Cannot add to remote collection.');

@@ -5,7 +5,7 @@ const globals_1 = require("./globals");
 const getCollectionNameByUrl = (url) => {
     const isLocal = url.hostname === globals_1.LOCAL_HOSTNAME;
     if (!isLocal) {
-        return 'foreign-entity';
+        return 'foreignEntity';
     }
     return 'entity';
 };

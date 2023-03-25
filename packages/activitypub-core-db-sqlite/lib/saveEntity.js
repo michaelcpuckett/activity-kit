@@ -85,16 +85,30 @@ async function saveEntity(entity) {
         units: null,
         describes: null,
         ...(0, activitypub_core_utilities_1.cleanProps)((0, activitypub_core_utilities_1.convertUrlsToStrings)((0, activitypub_core_utilities_1.applyContext)(entity))),
+        _id,
     };
+    for (const key of Object.keys(convertedEntity)) {
+        if (convertedEntity[key]) {
+            if (Array.isArray(convertedEntity[key])) {
+                convertedEntity[key] = 'ARRAY:' + convertedEntity[key].join(',');
+            }
+            else {
+                convertedEntity[key] = 'JSON:' + JSON.stringify(convertedEntity[key]);
+            }
+        }
+    }
     const existingRecord = await this.db.get(`SELECT * from ${collectionName} WHERE _id = ?;`, _id);
     if (existingRecord) {
-        return await this.db.run(`UPDATE ${collectionName} WHERE _id = ${_id} VALUES (?);`, convertedEntity);
+        const updateQuery = `UPDATE ${collectionName} WHERE _id = ${_id} ("${Object.keys(convertedEntity).join('", "')}") VALUES (${Object.keys(convertedEntity)
+            .map(() => '?')
+            .join(', ')});`;
+        return await this.db.run(updateQuery, Object.values(convertedEntity));
     }
     else {
-        return await this.db.run(`INSERT INTO ${collectionName} VALUES (?);`, {
-            _id,
-            ...convertedEntity,
-        });
+        const insertQuery = `INSERT INTO ${collectionName} ("${Object.keys(convertedEntity).join('", "')}") VALUES (${Object.keys(convertedEntity)
+            .map(() => '?')
+            .join(', ')});`;
+        return await this.db.run(insertQuery, Object.values(convertedEntity));
     }
 }
 exports.saveEntity = saveEntity;

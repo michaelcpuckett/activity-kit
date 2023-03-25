@@ -11,7 +11,7 @@ export async function getPrivateKey(this: SqliteDbAdapter, actor: AP.Actor) {
     actor.preferredUsername,
   );
 
-  const privateKey = await this.findStringValueById('private-key', userId);
+  const privateKey = await this.findStringValueById('privateKey', userId);
 
   if (!privateKey) {
     throw new Error('Private key not found for this Actor.');

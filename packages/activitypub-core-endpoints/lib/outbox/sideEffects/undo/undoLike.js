@@ -18,7 +18,7 @@ async function handleUndoLike(activity) {
         (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
         const likesId = (0, activitypub_core_utilities_1.getId)(object.likes);
         (0, activitypub_core_types_1.assertExists)(likesId);
-        const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectId) !== 'foreign-entity';
+        const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectId) !== 'foreignEntity';
         if (!isLocal) {
             throw new Error('Cannot add to remote collection.');
         }

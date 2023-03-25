@@ -1,25 +1,21 @@
 import { SqliteDbAdapter } from '.';
-import { getCollectionNameByUrl } from 'activitypub-core-utilities';
+import { AP } from 'activitypub-core-types';
 
 export async function insertOrderedItem(
   this: SqliteDbAdapter,
   path: URL,
   url: URL,
 ) {
-  const collectionName = getCollectionNameByUrl(path);
-  const currentRecord = await this.db.get<{
-    totalItems: number;
-    orderedItems: string[];
-  }>(`SELECT * FROM ${collectionName} WHERE _id = ?;`, path.toString());
+  const currentRecord = (await this.findEntityById(
+    path,
+  )) as AP.OrderedCollection;
+  const originalItems: URL[] = (currentRecord?.orderedItems as URL[]) ?? [];
 
-  await this.db.run(
-    `UPDATE ${collectionName} WHERE _id = ${path.toString()} VALUES (?);`,
-    {
-      ...currentRecord,
-      totalItems: currentRecord.totalItems + 1,
-      orderedItems: [url.toString(), ...currentRecord.orderedItems],
-    },
-  );
+  await this.saveEntity({
+    ...currentRecord,
+    totalItems: (currentRecord?.totalItems ?? 0) + 1,
+    orderedItems: [url, ...originalItems],
+  });
 }
 
 export async function removeOrderedItem(
@@ -27,66 +23,52 @@ export async function removeOrderedItem(
   path: URL,
   url: URL,
 ) {
-  const collectionName = getCollectionNameByUrl(path);
+  const currentRecord = (await this.findEntityById(
+    path,
+  )) as AP.OrderedCollection;
+  const originalItems: URL[] = (currentRecord?.orderedItems as URL[]) ?? [];
 
-  const currentRecord = await this.db.get<{
-    totalItems: number;
-    items: string[];
-  }>(`SELECT * FROM ${collectionName} WHERE _id = ?;`, path.toString());
-
-  if (!currentRecord.items.includes(url.toString())) {
+  if (!originalItems.map((item) => item.toString()).includes(url.toString())) {
     return;
   }
 
-  await this.db.run(
-    `UPDATE ${collectionName} WHERE _id = ${path.toString()} VALUES (?);`,
-    {
-      ...currentRecord,
-      totalItems: currentRecord.totalItems - 1,
-      items: currentRecord.items.filter(
-        (item: string) => item !== url.toString(),
-      ),
-    },
-  );
+  await this.saveEntity({
+    ...currentRecord,
+    totalItems: currentRecord?.totalItems - 1,
+    orderedItems: originalItems
+      .map((item) => item.toString())
+      .filter((item: string) => item !== url.toString())
+      .map((item) => new URL(item)),
+  });
 }
 
 export async function insertItem(this: SqliteDbAdapter, path: URL, url: URL) {
-  const collectionName = getCollectionNameByUrl(path);
-  const currentRecord = await this.db.get<{
-    totalItems: number;
-    items: string[];
-  }>(`SELECT * FROM ${collectionName} WHERE _id = ?;`, path.toString());
+  const currentRecord = (await this.findEntityById(path)) as AP.Collection;
+  const originalItems: URL[] = (currentRecord?.items as URL[]) ?? [];
 
-  await this.db.run(
-    `UPDATE ${collectionName} WHERE _id = ${path.toString()} VALUES (?);`,
-    {
-      ...currentRecord,
-      totalItems: currentRecord.totalItems + 1,
-      items: [url.toString(), ...currentRecord.items],
-    },
-  );
+  await this.saveEntity({
+    ...currentRecord,
+    totalItems: (currentRecord?.totalItems ?? 0) + 1,
+    items: [url, ...originalItems],
+  });
 }
 
 export async function removeItem(this: SqliteDbAdapter, path: URL, url: URL) {
-  const collectionName = getCollectionNameByUrl(path);
+  const currentRecord = (await this.findEntityById(
+    path,
+  )) as AP.OrderedCollection;
+  const originalItems: URL[] = (currentRecord?.items as URL[]) ?? [];
 
-  const currentRecord = await this.db.get<{
-    totalItems: number;
-    items: string[];
-  }>(`SELECT * FROM ${collectionName} WHERE _id = ?;`, path.toString());
-
-  if (!currentRecord.items.includes(url.toString())) {
+  if (!originalItems.map((item) => item.toString()).includes(url.toString())) {
     return;
   }
 
-  await this.db.run(
-    `UPDATE ${collectionName} WHERE _id = ${path.toString()} VALUES (?);`,
-    {
-      ...currentRecord,
-      totalItems: currentRecord.totalItems - 1,
-      items: currentRecord.items.filter(
-        (item: string) => item !== url.toString(),
-      ),
-    },
-  );
+  await this.saveEntity({
+    ...currentRecord,
+    totalItems: currentRecord?.totalItems - 1,
+    items: originalItems
+      .map((item) => item.toString())
+      .filter((item: string) => item !== url.toString())
+      .map((item) => new URL(item)),
+  });
 }

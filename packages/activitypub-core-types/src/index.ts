@@ -18,6 +18,7 @@ export type AuthAdapter = {
 };
 
 export type DbAdapter = {
+  initializeDb?: Function;
   expandCollection: Function;
   expandEntity: Function;
   getPrivateKey: Function;
