@@ -95,12 +95,13 @@ export async function saveEntity(this: SqliteDbAdapter, entity: AP.Entity) {
   };
 
   for (const key of Object.keys(convertedEntity)) {
-    if (convertedEntity[key] && typeof convertedEntity[key] === 'object') {
-      if (Array.isArray(convertedEntity[key])) {
-        convertedEntity[key] = 'ARRAY:' + convertedEntity[key].join(',');
-      } else {
-        convertedEntity[key] = 'JSON:' + JSON.stringify(convertedEntity[key]);
-      }
+    if (convertedEntity[key] === null) {
+      delete convertedEntity[key];
+    } else if (
+      convertedEntity[key] &&
+      typeof convertedEntity[key] === 'object'
+    ) {
+      convertedEntity[key] = 'JSON:' + JSON.stringify(convertedEntity[key]);
     }
   }
 

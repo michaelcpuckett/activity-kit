@@ -88,13 +88,12 @@ async function saveEntity(entity) {
         _id,
     };
     for (const key of Object.keys(convertedEntity)) {
-        if (convertedEntity[key] && typeof convertedEntity[key] === 'object') {
-            if (Array.isArray(convertedEntity[key])) {
-                convertedEntity[key] = 'ARRAY:' + convertedEntity[key].join(',');
-            }
-            else {
-                convertedEntity[key] = 'JSON:' + JSON.stringify(convertedEntity[key]);
-            }
+        if (convertedEntity[key] === null) {
+            delete convertedEntity[key];
+        }
+        else if (convertedEntity[key] &&
+            typeof convertedEntity[key] === 'object') {
+            convertedEntity[key] = 'JSON:' + JSON.stringify(convertedEntity[key]);
         }
     }
     const existingRecord = await this.db.get(`SELECT * from ${collectionName} WHERE _id = ?;`, _id);
