@@ -2,28 +2,23 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeDb = void 0;
 async function initializeDb() {
-    await this.db.exec('DROP TABLE peer;');
-    await this.db.exec(`CREATE TABLE peer (
+    await this.db.exec(`CREATE TABLE IF NOT EXISTS peer (
     _id TEXT PRIMARY KEY,
     value TEXT NOT NULL
   );`);
-    await this.db.exec('DROP TABLE username;');
-    await this.db.exec(`CREATE TABLE username (
+    await this.db.exec(`CREATE TABLE IF NOT EXISTS username (
     _id TEXT PRIMARY KEY,
     value TEXT NOT NULL
   );`);
-    await this.db.exec('DROP TABLE privateKey;');
-    await this.db.exec(`CREATE TABLE privateKey (
+    await this.db.exec(`CREATE TABLE IF NOT EXISTS privateKey (
     _id TEXT PRIMARY KEY,
     value TEXT NOT NULL
   );`);
-    await this.db.exec('DROP TABLE account;');
-    await this.db.exec(`CREATE TABLE account (
+    await this.db.exec(`CREATE TABLE IF NOT EXISTS account (
     _id TEXT PRIMARY KEY,
     value TEXT NOT NULL
   );`);
-    await this.db.exec(`DROP TABLE entity;`);
-    await this.db.exec(`CREATE TABLE entity (
+    await this.db.exec(`CREATE TABLE IF NOT EXISTS entity (
     _id TEXT PRIMARY KEY,
     id TEXT NOT NULL UNIQUE,
     type TEXT NOT NULL,
@@ -104,8 +99,7 @@ async function initializeDb() {
     units TEXT,
     describes TEXT
   );`);
-    await this.db.exec(`DROP TABLE foreignEntity;`);
-    await this.db.exec(`CREATE TABLE foreignEntity (
+    await this.db.exec(`CREATE TABLE IF NOT EXISTS foreignEntity (
     _id TEXT PRIMARY KEY,
     id TEXT NOT NULL UNIQUE,
     type TEXT NOT NULL,
