@@ -19,6 +19,10 @@ export async function findOne(
     return null;
   }
 
+  if ('_id' in value && value._id) {
+    delete value._id;
+  }
+
   for (const key of Object.keys(value)) {
     if (value[key] === null) {
       delete value[key];
