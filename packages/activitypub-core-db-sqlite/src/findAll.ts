@@ -9,10 +9,10 @@ export async function findAll(
   const [key] = Object.keys(matchingObject);
   const [keyValue] = Object.values(matchingObject);
 
-  const value = await this.db.all(
-    `SELECT * FROM ${collection} WHERE ${key} = ?;`,
-    keyValue,
-  );
+  const value = await this.db.all.apply(this.db, [
+    `SELECT * FROM ${collection}${key ? ` WHERE ${key} = ?` : ''};`,
+    ...(keyValue ? [keyValue] : []),
+  ]);
 
   if (!value) {
     return null;

@@ -1,6 +1,12 @@
 import { SqliteDbAdapter } from '.';
 
 export async function initializeDb(this: SqliteDbAdapter) {
+  await this.db.exec('DROP TABLE peer;');
+  await this.db.exec(`CREATE TABLE peer (
+    _id TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+  );`);
+
   await this.db.exec('DROP TABLE username;');
   await this.db.exec(`CREATE TABLE username (
     _id TEXT PRIMARY KEY,

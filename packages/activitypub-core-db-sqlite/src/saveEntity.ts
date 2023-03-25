@@ -95,7 +95,7 @@ export async function saveEntity(this: SqliteDbAdapter, entity: AP.Entity) {
   };
 
   for (const key of Object.keys(convertedEntity)) {
-    if (convertedEntity[key]) {
+    if (convertedEntity[key] && typeof convertedEntity[key] === 'object') {
       if (Array.isArray(convertedEntity[key])) {
         convertedEntity[key] = 'ARRAY:' + convertedEntity[key].join(',');
       } else {
@@ -110,11 +110,11 @@ export async function saveEntity(this: SqliteDbAdapter, entity: AP.Entity) {
   );
 
   if (existingRecord) {
-    const updateQuery = `UPDATE ${collectionName} WHERE _id = ${_id} ("${Object.keys(
+    const updateQuery = `UPDATE ${collectionName} SET ${Object.keys(
       convertedEntity,
-    ).join('", "')}") VALUES (${Object.keys(convertedEntity)
-      .map(() => '?')
-      .join(', ')});`;
+    )
+      .map((key) => `"${key}" = ?`)
+      .join(', ')} WHERE _id = "${_id}";`;
 
     return await this.db.run(updateQuery, Object.values(convertedEntity));
   } else {

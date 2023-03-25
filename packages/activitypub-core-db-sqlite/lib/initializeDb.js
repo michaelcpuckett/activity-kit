@@ -2,6 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeDb = void 0;
 async function initializeDb() {
+    await this.db.exec('DROP TABLE peer;');
+    await this.db.exec(`CREATE TABLE peer (
+    _id TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+  );`);
     await this.db.exec('DROP TABLE username;');
     await this.db.exec(`CREATE TABLE username (
     _id TEXT PRIMARY KEY,

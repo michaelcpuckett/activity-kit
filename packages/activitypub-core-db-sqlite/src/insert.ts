@@ -34,7 +34,7 @@ export async function removeOrderedItem(
 
   await this.saveEntity({
     ...currentRecord,
-    totalItems: currentRecord?.totalItems - 1,
+    totalItems: currentRecord.totalItems - 1,
     orderedItems: originalItems
       .map((item) => item.toString())
       .filter((item: string) => item !== url.toString())
@@ -65,7 +65,7 @@ export async function removeItem(this: SqliteDbAdapter, path: URL, url: URL) {
 
   await this.saveEntity({
     ...currentRecord,
-    totalItems: currentRecord?.totalItems - 1,
+    totalItems: currentRecord.totalItems - 1,
     items: originalItems
       .map((item) => item.toString())
       .filter((item: string) => item !== url.toString())

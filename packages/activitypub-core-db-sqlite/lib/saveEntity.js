@@ -88,7 +88,7 @@ async function saveEntity(entity) {
         _id,
     };
     for (const key of Object.keys(convertedEntity)) {
-        if (convertedEntity[key]) {
+        if (convertedEntity[key] && typeof convertedEntity[key] === 'object') {
             if (Array.isArray(convertedEntity[key])) {
                 convertedEntity[key] = 'ARRAY:' + convertedEntity[key].join(',');
             }
@@ -99,9 +99,9 @@ async function saveEntity(entity) {
     }
     const existingRecord = await this.db.get(`SELECT * from ${collectionName} WHERE _id = ?;`, _id);
     if (existingRecord) {
-        const updateQuery = `UPDATE ${collectionName} WHERE _id = ${_id} ("${Object.keys(convertedEntity).join('", "')}") VALUES (${Object.keys(convertedEntity)
-            .map(() => '?')
-            .join(', ')});`;
+        const updateQuery = `UPDATE ${collectionName} SET ${Object.keys(convertedEntity)
+            .map((key) => `"${key}" = ?`)
+            .join(', ')} WHERE _id = "${_id}";`;
         return await this.db.run(updateQuery, Object.values(convertedEntity));
     }
     else {

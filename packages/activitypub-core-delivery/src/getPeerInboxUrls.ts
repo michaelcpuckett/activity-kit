@@ -7,7 +7,7 @@ export async function getPeerInboxUrls(
 
   const peers = await this.adapters.db.findAll('peer', {});
 
-  if (!peers) {
+  if (!peers || !peers.length) {
     return [];
   }
 

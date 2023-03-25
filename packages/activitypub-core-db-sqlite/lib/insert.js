@@ -19,7 +19,7 @@ async function removeOrderedItem(path, url) {
     }
     await this.saveEntity({
         ...currentRecord,
-        totalItems: currentRecord?.totalItems - 1,
+        totalItems: currentRecord.totalItems - 1,
         orderedItems: originalItems
             .map((item) => item.toString())
             .filter((item) => item !== url.toString())
@@ -45,7 +45,7 @@ async function removeItem(path, url) {
     }
     await this.saveEntity({
         ...currentRecord,
-        totalItems: currentRecord?.totalItems - 1,
+        totalItems: currentRecord.totalItems - 1,
         items: originalItems
             .map((item) => item.toString())
             .filter((item) => item !== url.toString())
