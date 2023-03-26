@@ -330,6 +330,38 @@ export async function createUserActor(
     this.adapters.db.saveString('account', user.uid, user.email),
     this.adapters.db.saveString('privateKey', user.uid, privateKey),
     this.adapters.db.saveString('username', user.uid, user.preferredUsername),
+    ...((): Array<Promise<unknown>> => {
+      if (!this.plugins) {
+        return [];
+      }
+
+      let entitiesToSave = [];
+      for (const plugin of this.plugins) {
+        if ('declareUserActorStreams' in plugin) {
+          const streams: Array<{
+            id: URL;
+            url: URL;
+            name: string;
+          }> = plugin.declareUserActorStreams(userActor) ?? [];
+
+          entitiesToSave = [
+            ...entitiesToSave,
+            ...streams.map((stream) =>
+              this.adapters.db.saveEntity({
+                '@context': ACTIVITYSTREAMS_CONTEXT,
+                type: AP.CollectionTypes.ORDERED_COLLECTION,
+                totalItems: 0,
+                attributedTo: new URL(id),
+                orderedItems: [],
+                published: publishedDate,
+                ...stream,
+              }),
+            ),
+          ];
+        }
+      }
+      return entitiesToSave;
+    })(),
   ]);
 
   if (createActorActivity.id && userInbox.id) {
