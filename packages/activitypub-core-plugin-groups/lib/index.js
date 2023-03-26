@@ -157,7 +157,7 @@ function GroupsPlugin(config) {
                 (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
                 const sharesId = (0, activitypub_core_utilities_1.getId)(object.shares);
                 (0, activitypub_core_types_1.assertExists)(sharesId);
-                await this.adapters.db.insertOrderedItem(sharesId, announceActivityId);
+                await this.adapters.db.insertOrderedItem(sharesId, new URL(announceActivityId));
             }
             const outboxId = (0, activitypub_core_utilities_1.getId)(recipient.outbox);
             (0, activitypub_core_types_1.assertExists)(outboxId);
@@ -166,7 +166,7 @@ function GroupsPlugin(config) {
                 this.adapters.db.saveEntity(announceActivityReplies),
                 this.adapters.db.saveEntity(announceActivityLikes),
                 this.adapters.db.saveEntity(announceActivityShares),
-                this.adapters.db.insertOrderedItem(outboxId, announceActivityId),
+                this.adapters.db.insertOrderedItem(outboxId, new URL(announceActivityId)),
             ]);
             await this.adapters.delivery.broadcast(announceActivity, recipient);
         },

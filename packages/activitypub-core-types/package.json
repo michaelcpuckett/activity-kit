@@ -25,5 +25,8 @@
     "prettier": "^2.7.1",
     "ts-node": "^10.9.1"
   },
-  "gitHead": "237f2c816e3c96fa691f99af85300a3a9884745a"
+  "gitHead": "237f2c816e3c96fa691f99af85300a3a9884745a",
+  "dependencies": {
+    "formidable": "^2.1.1"
+  }
 }

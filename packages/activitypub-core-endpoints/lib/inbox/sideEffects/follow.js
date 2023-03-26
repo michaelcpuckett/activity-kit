@@ -107,7 +107,7 @@ async function handleFollow(activity, recipient) {
         this.adapters.db.saveEntity(acceptActivityReplies),
         this.adapters.db.saveEntity(acceptActivityLikes),
         this.adapters.db.saveEntity(acceptActivityShares),
-        this.adapters.db.insertOrderedItem(followeeOutboxId, acceptActivityId),
+        this.adapters.db.insertOrderedItem(followeeOutboxId, new URL(acceptActivityId)),
         this.adapters.db.insertItem(followersId, followerId),
     ]);
     await this.adapters.delivery.broadcast(acceptActivity, followee);

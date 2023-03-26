@@ -15,12 +15,12 @@ import { getCollectionItems } from './getCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
-import type { DbAdapter } from 'activitypub-core-types';
+import type { DbAdapter, FetchPolyfill } from 'activitypub-core-types';
 export declare class SqliteDbAdapter implements DbAdapter {
     db: Database;
-    fetch: Function;
+    fetch: FetchPolyfill;
     constructor(db: Database, adapters?: {
-        fetch?: Function;
+        fetch?: FetchPolyfill;
     });
     initializeDb: typeof initializeDb;
     findOne: typeof findOne;

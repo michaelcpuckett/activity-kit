@@ -11,7 +11,7 @@ export async function getPeerInboxUrls(
     return [];
   }
 
-  return peers.map((peer: { [key: string]: string }) => {
+  return peers.map((peer) => {
     const [[domain, sharedInboxUrl]] = Object.entries(peer);
     return new URL(sharedInboxUrl);
   });

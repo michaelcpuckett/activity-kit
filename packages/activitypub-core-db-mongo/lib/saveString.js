@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.saveString = void 0;
 async function saveString(dbCollection, _id, value) {
-    return await this.db.collection(dbCollection).replaceOne({
+    await this.db.collection(dbCollection).replaceOne({
         _id,
     }, JSON.parse(JSON.stringify({
         value,

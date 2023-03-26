@@ -31,7 +31,7 @@ export async function createUserActor(
   if (this.plugins) {
     for (const plugin of this.plugins) {
       if (plugin.generateActorId) {
-        id = plugin.generateActorId(this.adapters)(user.preferredUsername);
+        id = plugin.generateActorId.call(this, user.preferredUsername);
       }
     }
   }
@@ -345,8 +345,8 @@ export async function createUserActor(
   // Broadcast to Fediverse.
   this.adapters.delivery.broadcast(
     createActorActivity,
-    await this.adapters.db.findOne('entity', {
+    (await this.adapters.db.findOne('entity', {
       preferredUsername: SERVER_ACTOR_USERNAME,
-    }),
+    })) as AP.Actor,
   );
 }

@@ -12,12 +12,12 @@ export async function saveString(
   );
 
   if (existingRecord) {
-    return await this.db.run(
+    await this.db.run(
       `UPDATE ${dbCollection} SET value = ? WHERE _id = ${_id};`,
       value,
     );
   } else {
-    return await this.db.run(
+    await this.db.run(
       `INSERT INTO ${dbCollection} ("_id", "value") VALUES (?, ?);`,
       Object.values({
         _id,

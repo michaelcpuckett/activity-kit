@@ -97,13 +97,13 @@ async function saveEntity(entity) {
         const updateQuery = `UPDATE ${collectionName} SET ${Object.keys(convertedEntity)
             .map((key) => `"${key}" = ?`)
             .join(', ')} WHERE _id = "${_id}";`;
-        return await this.db.run(updateQuery, Object.values(convertedEntity));
+        await this.db.run(updateQuery, Object.values(convertedEntity));
     }
     else {
         const insertQuery = `INSERT INTO ${collectionName} ("${Object.keys(convertedEntity).join('", "')}") VALUES (${Object.keys(convertedEntity)
             .map(() => '?')
             .join(', ')});`;
-        return await this.db.run(insertQuery, Object.values(convertedEntity));
+        await this.db.run(insertQuery, Object.values(convertedEntity));
     }
 }
 exports.saveEntity = saveEntity;

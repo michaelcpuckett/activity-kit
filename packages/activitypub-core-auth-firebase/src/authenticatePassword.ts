@@ -5,9 +5,8 @@ import { initializeApp } from 'firebase/app';
 export async function authenticatePassword(
   this: FirebaseAuthAdapter,
   email: string,
-  password: string
-): Promise<Boolean> {
-  console.log('AUTHENTICATE PASSWORD');
+  password: string,
+): Promise<boolean> {
   const app = initializeApp(this.appOptions);
   const auth = getAuth(app);
   const user = await signInWithEmailAndPassword(auth, email, password);

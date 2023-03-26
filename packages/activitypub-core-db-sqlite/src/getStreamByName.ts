@@ -2,7 +2,6 @@ import { SqliteDbAdapter } from '.';
 import {
   AP,
   assertIsApCollection,
-  assertIsApEntity,
   assertIsArray,
 } from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';

@@ -30,16 +30,19 @@ export async function isBlocked(
     assertIsArray(blocks.items);
 
     const blockedActorIds = await Promise.all(
-      blocks.items.map(async (item: AP.EntityReference) => {
-        const id = getId(item);
-        const foundActivity = await this.adapters.db.findEntityById(id);
-        return getId(foundActivity?.object);
-      }),
+      blocks.items
+        .map(async (item: AP.EntityReference) => {
+          const id = getId(item);
+          const foundActivity = await this.adapters.db.findEntityById(id);
+          if (!('object' in foundActivity)) {
+            return null;
+          }
+          return getId(foundActivity.object);
+        })
+        .filter((id) => !!id),
     );
 
-    return blockedActorIds
-      .map((id) => `${id}`)
-      .includes(`${activityActorId}`);
+    return blockedActorIds.map((id) => `${id}`).includes(`${activityActorId}`);
   } catch (error) {
     console.log(error);
     return false;

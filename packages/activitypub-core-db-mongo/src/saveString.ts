@@ -5,8 +5,8 @@ export async function saveString(
   dbCollection: string,
   _id: string,
   value: string,
-) {
-  return await this.db.collection(dbCollection).replaceOne(
+): Promise<void> {
+  await this.db.collection(dbCollection).replaceOne(
     {
       _id,
     },

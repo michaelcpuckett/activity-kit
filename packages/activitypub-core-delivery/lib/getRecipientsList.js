@@ -19,28 +19,30 @@ async function getRecipientsList(to) {
             }
             if (typeof foundThing === 'object' &&
                 (0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
-                if (foundThing.orderedItems) {
+                if ('orderedItems' in foundThing && foundThing.orderedItems) {
                     return foundThing.orderedItems;
                 }
             }
             if (typeof foundThing === 'object' &&
                 (0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
-                if (foundThing.items) {
+                if ('items' in foundThing && foundThing.items) {
                     return foundThing.items;
                 }
             }
             if (typeof foundThing === 'object' &&
                 ((0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
                     (0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
-                if (foundThing.first) {
+                if ('first' in foundThing && foundThing.first instanceof URL) {
                     const foundCollectionPage = await this.adapters.db.queryById(foundThing.first);
                     if (typeof foundCollectionPage === 'object' &&
                         (0, activitypub_core_utilities_1.isType)(foundCollectionPage, activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE) &&
+                        'orderedItems' in foundCollectionPage &&
                         foundCollectionPage.orderedItems) {
                         return foundCollectionPage.orderedItems;
                     }
                     if (typeof foundCollectionPage === 'object' &&
                         (0, activitypub_core_utilities_1.isType)(foundCollectionPage, activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE) &&
+                        'items' in foundCollectionPage &&
                         foundCollectionPage.items) {
                         return foundCollectionPage.items;
                     }

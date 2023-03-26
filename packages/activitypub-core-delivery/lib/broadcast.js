@@ -8,14 +8,14 @@ async function broadcast(activity, actor) {
     if (!('actor' in publicActivity)) {
         throw new Error('Not an activity?');
     }
-    let recipients = await (async () => {
+    const recipients = await (async () => {
         if (this.isPublic(activity)) {
             return [
                 ...new Set([
-                    ...await this.getRecipientInboxUrls(activity, actor),
-                    ...await this.getPeerInboxUrls()
-                ].map(url => url.toString()))
-            ].map(url => new URL(url));
+                    ...(await this.getRecipientInboxUrls(activity, actor)),
+                    ...(await this.getPeerInboxUrls()),
+                ].map((url) => url.toString())),
+            ].map((url) => new URL(url));
         }
         else {
             return await this.getRecipientInboxUrls(activity, actor);

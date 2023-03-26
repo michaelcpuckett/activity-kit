@@ -6,7 +6,7 @@ import {
   assertIsApType,
   assertIsArray,
 } from 'activitypub-core-types';
-import type { DbAdapter, Plugin } from 'activitypub-core-types';
+import type { Adapters, Plugin } from 'activitypub-core-types';
 import {
   getId,
   getGuid,
@@ -15,7 +15,6 @@ import {
   LOCAL_DOMAIN,
   isType,
   PUBLIC_ACTOR,
-  LOCAL_HOSTNAME,
 } from 'activitypub-core-utilities';
 import * as cheerio from 'cheerio';
 
@@ -25,12 +24,7 @@ export function GroupsPlugin(config?: {}) {
   const groupsPlugin: Plugin = {
     async handleInboxSideEffect(
       this: {
-        adapters: {
-          db: DbAdapter;
-          delivery: {
-            broadcast: Function;
-          };
-        };
+        adapters: Adapters;
       },
       activity: AP.Activity,
       recipient: AP.Actor,
@@ -131,8 +125,9 @@ export function GroupsPlugin(config?: {}) {
 
       assertExists(followersId);
 
-      const followersCollection: AP.Collection =
-        await this.adapters.db.findEntityById(followersId);
+      const followersCollection = await this.adapters.db.findEntityById(
+        followersId,
+      );
 
       assertIsApCollection(followersCollection);
       assertIsArray(followersCollection.items);
@@ -237,7 +232,10 @@ export function GroupsPlugin(config?: {}) {
 
         assertExists(sharesId);
 
-        await this.adapters.db.insertOrderedItem(sharesId, announceActivityId);
+        await this.adapters.db.insertOrderedItem(
+          sharesId,
+          new URL(announceActivityId),
+        );
       }
 
       const outboxId = getId(recipient.outbox);
@@ -249,7 +247,10 @@ export function GroupsPlugin(config?: {}) {
         this.adapters.db.saveEntity(announceActivityReplies),
         this.adapters.db.saveEntity(announceActivityLikes),
         this.adapters.db.saveEntity(announceActivityShares),
-        this.adapters.db.insertOrderedItem(outboxId, announceActivityId),
+        this.adapters.db.insertOrderedItem(
+          outboxId,
+          new URL(announceActivityId),
+        ),
       ]);
 
       await this.adapters.delivery.broadcast(announceActivity, recipient);

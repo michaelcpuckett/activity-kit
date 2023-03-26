@@ -72,10 +72,10 @@ async function handleCreate(activity) {
         ]);
         if (object.inReplyTo) {
             const objectInReplyTo = await this.adapters.db.findEntityById((0, activitypub_core_utilities_3.getId)(object.inReplyTo));
-            if (objectInReplyTo) {
+            if (objectInReplyTo && 'replies' in objectInReplyTo) {
                 const repliesCollectionId = (0, activitypub_core_utilities_3.getId)(objectInReplyTo.replies);
                 if (repliesCollectionId) {
-                    await this.adapters.db.insertOrderedItem(repliesCollectionId, objectId);
+                    await this.adapters.db.insertOrderedItem(repliesCollectionId, new URL(objectId));
                 }
             }
         }

@@ -33,7 +33,7 @@ export async function getRecipientsList(
             typeof foundThing === 'object' &&
             isType(foundThing, AP.CollectionTypes.ORDERED_COLLECTION)
           ) {
-            if (foundThing.orderedItems) {
+            if ('orderedItems' in foundThing && foundThing.orderedItems) {
               return foundThing.orderedItems;
             }
           }
@@ -42,7 +42,7 @@ export async function getRecipientsList(
             typeof foundThing === 'object' &&
             isType(foundThing, AP.CollectionTypes.COLLECTION)
           ) {
-            if (foundThing.items) {
+            if ('items' in foundThing && foundThing.items) {
               return foundThing.items;
             }
           }
@@ -52,7 +52,7 @@ export async function getRecipientsList(
             (isType(foundThing, AP.CollectionTypes.COLLECTION) ||
               isType(foundThing, AP.CollectionTypes.ORDERED_COLLECTION))
           ) {
-            if (foundThing.first) {
+            if ('first' in foundThing && foundThing.first instanceof URL) {
               const foundCollectionPage = await this.adapters.db.queryById(
                 foundThing.first,
               );
@@ -63,6 +63,7 @@ export async function getRecipientsList(
                   foundCollectionPage,
                   AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE,
                 ) &&
+                'orderedItems' in foundCollectionPage &&
                 foundCollectionPage.orderedItems
               ) {
                 return foundCollectionPage.orderedItems;
@@ -74,6 +75,7 @@ export async function getRecipientsList(
                   foundCollectionPage,
                   AP.CollectionPageTypes.COLLECTION_PAGE,
                 ) &&
+                'items' in foundCollectionPage &&
                 foundCollectionPage.items
               ) {
                 return foundCollectionPage.items;

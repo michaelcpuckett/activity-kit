@@ -114,11 +114,11 @@ export async function saveActivity(this: UploadMediaPostEndpoint) {
     this.adapters.db.saveEntity(objectReplies),
     this.adapters.db.saveEntity(objectLikes),
     this.adapters.db.saveEntity(objectShares),
-    this.adapters.db.saveEntity(this.activity.object),
+    this.adapters.db.saveEntity(this.activity.object as AP.Entity),
     this.adapters.db.saveEntity(activityReplies),
     this.adapters.db.saveEntity(activityLikes),
     this.adapters.db.saveEntity(activityShares),
-    this.adapters.db.saveEntity(this.activity),
+    this.adapters.db.saveEntity(this.activity as AP.Entity),
     this.adapters.db.insertOrderedItem(
       getId(this.actor?.outbox),
       this.activity.id,

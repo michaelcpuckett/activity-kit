@@ -1,4 +1,4 @@
-import type { DbAdapter } from 'activitypub-core-types';
+import type { DbAdapter, FetchPolyfill } from 'activitypub-core-types';
 import { broadcast } from './broadcast';
 import { getRecipientInboxUrls } from './getRecipientInboxUrls';
 import { getRecipientsList } from './getRecipientsList';
@@ -8,12 +8,12 @@ import { signAndSendToForeignActorInbox } from './signAndSendToForeignActorInbox
 export declare class DeliveryAdapter {
     adapters: {
         db: DbAdapter;
-        fetch: Function;
+        fetch: FetchPolyfill;
     };
     constructor(config: {
         adapters: {
             db: DbAdapter;
-            fetch?: Function;
+            fetch?: FetchPolyfill;
         };
     });
     signAndSendToForeignActorInbox: typeof signAndSendToForeignActorInbox;

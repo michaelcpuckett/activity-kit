@@ -6,7 +6,10 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function findOne(collection, matchingObject, options) {
     let value = null;
     if (options && options.includes(activitypub_core_types_1.DbOptions.CASE_INSENSITIVE)) {
-        const cursor = this.db.collection(collection).find(matchingObject).collation({ locale: 'en', strength: 1 });
+        const cursor = this.db
+            .collection(collection)
+            .find(matchingObject)
+            .collation({ locale: 'en', strength: 1 });
         const results = await cursor.toArray();
         if (results.length) {
             value = results[0];

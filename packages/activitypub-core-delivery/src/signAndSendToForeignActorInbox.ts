@@ -38,11 +38,7 @@ export async function signAndSendToForeignActorInbox(
         Signature: signatureHeader,
       },
     })
-    .then(async (res) => {
-      console.log(await res.text(), res.statusCode);
-      return res;
-    })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 }

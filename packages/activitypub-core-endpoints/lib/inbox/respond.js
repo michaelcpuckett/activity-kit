@@ -23,7 +23,7 @@ async function respond() {
             console.log('Blocked from appearing in this inbox.');
             continue;
         }
-        await this.adapters.db.insertOrderedItem(actor.inbox, activityId);
+        await this.adapters.db.insertOrderedItem((0, activitypub_core_utilities_1.getId)(actor.inbox), activityId);
         await this.runSideEffects(actor);
     }
     await this.adapters.db.saveEntity(this.activity);

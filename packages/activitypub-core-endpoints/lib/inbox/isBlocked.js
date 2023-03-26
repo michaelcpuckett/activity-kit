@@ -13,14 +13,17 @@ async function isBlocked(actor) {
         const blocks = await this.adapters.db.getStreamByName(actor, 'Blocks');
         (0, activitypub_core_types_1.assertIsApCollection)(blocks);
         (0, activitypub_core_types_1.assertIsArray)(blocks.items);
-        const blockedActorIds = await Promise.all(blocks.items.map(async (item) => {
+        const blockedActorIds = await Promise.all(blocks.items
+            .map(async (item) => {
             const id = (0, activitypub_core_utilities_1.getId)(item);
             const foundActivity = await this.adapters.db.findEntityById(id);
-            return (0, activitypub_core_utilities_1.getId)(foundActivity?.object);
-        }));
-        return blockedActorIds
-            .map((id) => `${id}`)
-            .includes(`${activityActorId}`);
+            if (!('object' in foundActivity)) {
+                return null;
+            }
+            return (0, activitypub_core_utilities_1.getId)(foundActivity.object);
+        })
+            .filter((id) => !!id));
+        return blockedActorIds.map((id) => `${id}`).includes(`${activityActorId}`);
     }
     catch (error) {
         console.log(error);

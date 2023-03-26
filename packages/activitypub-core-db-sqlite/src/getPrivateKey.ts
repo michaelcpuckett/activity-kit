@@ -1,7 +1,10 @@
 import { SqliteDbAdapter } from '.';
 import { AP } from 'activitypub-core-types';
 
-export async function getPrivateKey(this: SqliteDbAdapter, actor: AP.Actor) {
+export async function getPrivateKey(
+  this: SqliteDbAdapter,
+  actor: AP.Actor,
+): Promise<string> {
   if (!actor.preferredUsername) {
     throw new Error('Actor has no `preferredUsername`.');
   }

@@ -16,6 +16,9 @@ async function findOne(collection, matchingObject, options) {
         if (value[key] === null) {
             delete value[key];
         }
+        else if (['manuallyApprovesFollowers', 'sensitive'].includes(key)) {
+            value[key] = value[key] === 1 ? true : false;
+        }
         else if (typeof value[key] === 'string' &&
             value[key].startsWith('JSON:')) {
             value[key] = JSON.parse(value[key].slice('JSON:'.length));

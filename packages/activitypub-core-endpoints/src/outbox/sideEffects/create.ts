@@ -4,7 +4,6 @@ import {
   assertExists,
   assertIsApEntity,
   assertIsApExtendedObject,
-  assertIsApTransitiveActivity,
   assertIsApType,
 } from 'activitypub-core-types';
 import { ACTIVITYSTREAMS_CONTEXT, isTypeOf } from 'activitypub-core-utilities';
@@ -103,13 +102,13 @@ export async function handleCreate(
         getId(object.inReplyTo),
       );
 
-      if (objectInReplyTo) {
+      if (objectInReplyTo && 'replies' in objectInReplyTo) {
         const repliesCollectionId = getId(objectInReplyTo.replies);
 
         if (repliesCollectionId) {
           await this.adapters.db.insertOrderedItem(
             repliesCollectionId,
-            objectId,
+            new URL(objectId),
           );
         }
       }

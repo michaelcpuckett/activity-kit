@@ -14,12 +14,12 @@ import { getCollectionItems } from './getCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
-import type { DbAdapter } from 'activitypub-core-types';
+import type { DbAdapter, FetchPolyfill } from 'activitypub-core-types';
 export declare class MongoDbAdapter implements DbAdapter {
     db: Db;
-    fetch: Function;
+    fetch: FetchPolyfill;
     constructor(db: Db, adapters?: {
-        fetch?: Function;
+        fetch?: FetchPolyfill;
     });
     findOne: typeof findOne;
     findAll: typeof findAll;

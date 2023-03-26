@@ -19,11 +19,7 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity
             Signature: signatureHeader,
         },
     })
-        .then(async (res) => {
-        console.log(await res.text(), res.statusCode);
-        return res;
-    })
-        .catch(error => {
+        .catch((error) => {
         console.log(error);
     });
 }

@@ -32,7 +32,7 @@ export async function respond(this: InboxPostEndpoint) {
       continue;
     }
 
-    await this.adapters.db.insertOrderedItem(actor.inbox, activityId);
+    await this.adapters.db.insertOrderedItem(getId(actor.inbox), activityId);
 
     await this.runSideEffects(actor);
   }

@@ -7,7 +7,10 @@ import {
   getCollectionNameByUrl,
 } from 'activitypub-core-utilities';
 
-export async function saveEntity(this: MongoDbAdapter, entity: AP.Entity) {
+export async function saveEntity(
+  this: MongoDbAdapter,
+  entity: AP.Entity,
+): Promise<void> {
   if (!entity.id) {
     throw new Error('No ID.');
   }
@@ -18,7 +21,7 @@ export async function saveEntity(this: MongoDbAdapter, entity: AP.Entity) {
     convertUrlsToStrings(applyContext(entity)),
   );
 
-  return await this.db.collection(collectionName).replaceOne(
+  await this.db.collection(collectionName).replaceOne(
     {
       _id,
     },

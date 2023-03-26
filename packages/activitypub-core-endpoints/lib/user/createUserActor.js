@@ -11,7 +11,7 @@ async function createUserActor(user) {
     if (this.plugins) {
         for (const plugin of this.plugins) {
             if (plugin.generateActorId) {
-                id = plugin.generateActorId(this.adapters)(user.preferredUsername);
+                id = plugin.generateActorId.call(this, user.preferredUsername);
             }
         }
     }
@@ -289,9 +289,9 @@ async function createUserActor(user) {
             this.adapters.db.insertOrderedItem(userInbox.id, createActorActivity.id),
         ]);
     }
-    this.adapters.delivery.broadcast(createActorActivity, await this.adapters.db.findOne('entity', {
+    this.adapters.delivery.broadcast(createActorActivity, (await this.adapters.db.findOne('entity', {
         preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
-    }));
+    })));
 }
 exports.createUserActor = createUserActor;
 //# sourceMappingURL=createUserActor.js.map
