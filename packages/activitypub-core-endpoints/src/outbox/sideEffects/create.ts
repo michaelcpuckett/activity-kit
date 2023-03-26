@@ -34,7 +34,21 @@ export async function handleCreate(
 
   assertIsApEntity(object);
 
-  const objectId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
+  let objectId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
+
+  if (this.plugins && isTypeOf(object, AP.ExtendedObjectTypes)) {
+    assertIsApExtendedObject(object);
+
+    for (const plugin of this.plugins) {
+      if ('generateObjectId' in plugin) {
+        const pluginObjectId = plugin.generateObjectId(object);
+
+        if (pluginObjectId) {
+          objectId = pluginObjectId;
+        }
+      }
+    }
+  }
 
   object.id = new URL(objectId);
 

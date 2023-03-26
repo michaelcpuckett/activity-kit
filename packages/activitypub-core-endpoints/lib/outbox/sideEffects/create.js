@@ -17,7 +17,18 @@ async function handleCreate(activity) {
         throw new Error('Internal error: Object array not supported currently. TODO.');
     }
     (0, activitypub_core_types_1.assertIsApEntity)(object);
-    const objectId = `${activitypub_core_utilities_2.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_3.getGuid)()}`;
+    let objectId = `${activitypub_core_utilities_2.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_3.getGuid)()}`;
+    if (this.plugins && (0, activitypub_core_utilities_1.isTypeOf)(object, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
+        (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
+        for (const plugin of this.plugins) {
+            if ('generateObjectId' in plugin) {
+                const pluginObjectId = plugin.generateObjectId(object);
+                if (pluginObjectId) {
+                    objectId = pluginObjectId;
+                }
+            }
+        }
+    }
     object.id = new URL(objectId);
     if ((0, activitypub_core_utilities_1.isTypeOf)(object, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
         (0, activitypub_core_types_1.assertIsApExtendedObject)(object);

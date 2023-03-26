@@ -7,6 +7,7 @@ export type Plugin = {
   }) => AP.Activity & { object: AP.Actor };
   handleOutboxSideEffect?: (this: {
     activity: AP.Activity;
+    actor: AP.Actor;
     adapters: Adapters;
   }) => Promise<void>;
   handleInboxSideEffect?: (
@@ -22,6 +23,7 @@ export type Plugin = {
     },
     preferredUsername: string,
   ) => string;
+  generateObjectId?: (object: AP.ExtendedObject) => string;
   getHomePageProps?: (
     this: {
       adapters: Adapters;

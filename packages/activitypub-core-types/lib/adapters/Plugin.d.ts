@@ -10,6 +10,7 @@ export declare type Plugin = {
     };
     handleOutboxSideEffect?: (this: {
         activity: AP.Activity;
+        actor: AP.Actor;
         adapters: Adapters;
     }) => Promise<void>;
     handleInboxSideEffect?: (this: {
@@ -18,6 +19,7 @@ export declare type Plugin = {
     generateActorId?: (this: {
         adapters: Adapters;
     }, preferredUsername: string) => string;
+    generateObjectId?: (object: AP.ExtendedObject) => string;
     getHomePageProps?: (this: {
         adapters: Adapters;
     }, actor: AP.Actor, rawUrl: string) => Promise<object>;
