@@ -11,7 +11,11 @@ export async function findOne(
   const [key] = Object.keys(matchingObject);
   const [keyValue] = Object.values(matchingObject);
   const value = await this.db.get(
-    `SELECT * FROM ${collection} WHERE ${key} = ?;`,
+    `SELECT * FROM ${collection} WHERE ${key} = ?${
+      options && options.includes(DbOptions.CASE_INSENSITIVE)
+        ? ' COLLATE NOCASE'
+        : ''
+    };`,
     keyValue,
   );
 
