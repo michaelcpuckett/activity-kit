@@ -307,7 +307,7 @@ export async function createUserActor(
       }
 
       if ('declareUserActorStreams' in plugin) {
-        userActor.streams.concat(
+        userActor.streams = userActor.streams.concat(
           plugin.declareUserActorStreams(userActor).map((entity) => entity.id),
         );
       }
