@@ -305,6 +305,12 @@ export async function createUserActor(
         });
         userActor = createActorActivity.object as AP.Actor;
       }
+
+      if ('declareUserActorStreams' in plugin) {
+        userActor.streams.concat(
+          plugin.declareUserActorStreams(userActor).map((entity) => entity.id),
+        );
+      }
     }
   }
 

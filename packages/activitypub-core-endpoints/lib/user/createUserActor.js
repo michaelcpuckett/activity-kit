@@ -258,6 +258,9 @@ async function createUserActor(user) {
                 });
                 userActor = createActorActivity.object;
             }
+            if ('declareUserActorStreams' in plugin) {
+                userActor.streams.concat(plugin.declareUserActorStreams(userActor).map((entity) => entity.id));
+            }
         }
     }
     await Promise.all([
