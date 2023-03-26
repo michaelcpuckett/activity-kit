@@ -286,22 +286,23 @@ async function createUserActor(user) {
             if (!this.plugins) {
                 return [];
             }
-            let entitiesToSave = [];
+            const entitiesToSave = [];
             for (const plugin of this.plugins) {
                 if ('declareUserActorStreams' in plugin) {
                     const streams = plugin.declareUserActorStreams(userActor) ?? [];
-                    entitiesToSave = [
-                        ...entitiesToSave,
-                        ...streams.map((stream) => this.adapters.db.saveEntity({
-                            '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-                            type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-                            totalItems: 0,
-                            attributedTo: new URL(id),
-                            orderedItems: [],
-                            published: publishedDate,
-                            ...stream,
-                        })),
-                    ];
+                    streams
+                        .map((stream) => this.adapters.db.saveEntity({
+                        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+                        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+                        totalItems: 0,
+                        attributedTo: new URL(id),
+                        orderedItems: [],
+                        published: publishedDate,
+                        ...stream,
+                    }))
+                        .forEach((stream) => {
+                        entitiesToSave.push(stream);
+                    });
                 }
             }
             return entitiesToSave;

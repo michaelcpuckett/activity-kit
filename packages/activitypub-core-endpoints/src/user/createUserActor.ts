@@ -335,7 +335,7 @@ export async function createUserActor(
         return [];
       }
 
-      let entitiesToSave = [];
+      const entitiesToSave: Array<Promise<void>> = [];
       for (const plugin of this.plugins) {
         if ('declareUserActorStreams' in plugin) {
           const streams: Array<{
@@ -344,9 +344,8 @@ export async function createUserActor(
             name: string;
           }> = plugin.declareUserActorStreams(userActor) ?? [];
 
-          entitiesToSave = [
-            ...entitiesToSave,
-            ...streams.map((stream) =>
+          streams
+            .map((stream) =>
               this.adapters.db.saveEntity({
                 '@context': ACTIVITYSTREAMS_CONTEXT,
                 type: AP.CollectionTypes.ORDERED_COLLECTION,
@@ -356,8 +355,10 @@ export async function createUserActor(
                 published: publishedDate,
                 ...stream,
               }),
-            ),
-          ];
+            )
+            .forEach((stream) => {
+              entitiesToSave.push(stream);
+            });
         }
       }
       return entitiesToSave;
