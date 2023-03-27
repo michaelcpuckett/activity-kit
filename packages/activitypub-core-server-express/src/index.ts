@@ -1,5 +1,6 @@
 import type { NextFunction } from 'express';
 import type { IncomingMessage, ServerResponse } from 'http';
+import { pathToRegexp } from 'path-to-regexp';
 import {
   UserPostEndpoint,
   HomeGetEndpoint,
@@ -27,6 +28,23 @@ import {
 
 export const activityPub =
   (config: {
+    routes?: {
+      actor?: string | ((actor: string) => string);
+      inbox?: string | ((actor: string) => string);
+      outbox?: string | ((actor: string) => string);
+      followers?: string | ((actor: string) => string);
+      following?: string | ((actor: string) => string);
+      liked?: string | ((actor: string) => string);
+      shared?: string | ((actor: string) => string);
+      blocked?: string | ((actor: string) => string);
+      uploadMedia?: string | ((actor: string) => string);
+
+      activity?: string | ((id: string, type: string) => string);
+      object?: string | ((id: string, type: string) => string);
+      likes?: string | ((id: string, type: string) => string);
+      shares?: string | ((id: string, type: string) => string);
+      replies?: string | ((id: string, type: string) => string);
+    };
     pages: {
       login: () => Promise<string>;
 
@@ -57,6 +75,28 @@ export const activityPub =
   ) => {
     console.log('INCOMING:', req.url);
 
+    const routes = {
+      actor: '/@:actor',
+      object: '/:type/:id',
+      activity: '/:type/:id',
+      inbox: '/@:actor/inbox',
+      outbox: '/@:actor/outbox',
+      followers: '/@:actor/followers',
+      following: '/@:actor/following',
+      liked: '/@:actor/liked',
+      shared: '/@:actor/shared',
+
+      uploadMedia: '/@:actor/uploadMedia',
+      collections: '/@:actor/collection/:id',
+      blocked: '/@:actor/blocked',
+      likes: '/:type/:id/likes',
+      shares: '/:type/:id/shares',
+      replies: '/:type/:id/replies',
+      ...config.routes,
+    };
+
+    const matches = (path: string) => req.url.match(pathToRegexp(path));
+
     try {
       if (req.method === 'POST') {
         if (req.url === '/user') {
@@ -81,7 +121,13 @@ export const activityPub =
           return;
         }
 
-        if (req.url.endsWith('/inbox')) {
+        if (
+          matches(
+            typeof routes.inbox === 'function'
+              ? routes.inbox(':actor')
+              : routes.inbox,
+          )
+        ) {
           await new InboxPostEndpoint(
             req,
             res,
@@ -92,7 +138,13 @@ export const activityPub =
           return;
         }
 
-        if (req.url.endsWith('/uploadMedia')) {
+        if (
+          matches(
+            typeof routes.uploadMedia === 'function'
+              ? routes.uploadMedia(':actor')
+              : routes.uploadMedia,
+          )
+        ) {
           await new UploadMediaPostEndpoint(
             req,
             res,
@@ -103,7 +155,13 @@ export const activityPub =
           return;
         }
 
-        if (req.url.endsWith('/outbox')) {
+        if (
+          matches(
+            typeof routes.inbox === 'function'
+              ? routes.inbox(':actor')
+              : routes.inbox,
+          )
+        ) {
           await new OutboxPostEndpoint(
             req,
             res,
@@ -147,7 +205,7 @@ export const activityPub =
           return;
         }
 
-        if (req.url.startsWith('/.well-known/webfinger')) {
+        if (req.url === '/.well-known/webfinger') {
           await new WebfingerGetEndpoint(
             req,
             res,
@@ -158,7 +216,7 @@ export const activityPub =
           return;
         }
 
-        if (req.url.startsWith('/.well-known/host-meta')) {
+        if (req.url === '/.well-known/host-meta') {
           await new HostMetaGetEndpoint(
             req,
             res,
@@ -184,23 +242,61 @@ export const activityPub =
         }
 
         if (
-          req.url.startsWith('/@') ||
-          req.url.startsWith('/entity/') ||
-          req.url.endsWith('/following') ||
-          req.url.endsWith('/followers') ||
-          req.url.endsWith('/liked') ||
-          req.url.endsWith('/likes') ||
-          req.url.endsWith('/replies') ||
-          req.url.endsWith('/shared') ||
-          req.url.endsWith('/shares') ||
-          req.url.endsWith('/blocked') ||
-          req.url.endsWith('/blocks') ||
-          req.url.endsWith('/groups') ||
-          req.url.endsWith('/bookmarks') ||
-          req.url.endsWith('/friends') ||
-          req.url.endsWith('/members') ||
-          req.url.endsWith('/inbox') ||
-          req.url.endsWith('/outbox') ||
+          matches(
+            typeof routes.actor === 'function'
+              ? routes.actor(':actor')
+              : routes.actor,
+          ) ||
+          matches(
+            typeof routes.following === 'function'
+              ? routes.following(':actor')
+              : routes.following,
+          ) ||
+          matches(
+            typeof routes.followers === 'function'
+              ? routes.followers(':actor')
+              : routes.followers,
+          ) ||
+          matches(
+            typeof routes.liked === 'function'
+              ? routes.liked(':actor')
+              : routes.liked,
+          ) ||
+          matches(
+            typeof routes.likes === 'function'
+              ? routes.likes(':id', ':type')
+              : routes.likes,
+          ) ||
+          matches(
+            typeof routes.replies === 'function'
+              ? routes.replies(':id', ':type')
+              : routes.replies,
+          ) ||
+          matches(
+            typeof routes.shared === 'function'
+              ? routes.shared(':actor')
+              : routes.shared,
+          ) ||
+          matches(
+            typeof routes.shares === 'function'
+              ? routes.shares(':id', ':type')
+              : routes.shares,
+          ) ||
+          matches(
+            typeof routes.blocked === 'function'
+              ? routes.blocked(':actor')
+              : routes.blocked,
+          ) ||
+          matches(
+            typeof routes.inbox === 'function'
+              ? routes.inbox(':actor')
+              : routes.inbox,
+          ) ||
+          matches(
+            typeof routes.outbox === 'function'
+              ? routes.outbox(':actor')
+              : routes.outbox,
+          ) ||
           (() => {
             for (const plugin of config.plugins) {
               if ('getIsEntityGetRequest' in plugin) {
