@@ -15,11 +15,19 @@ async function createUserActor(user) {
             }
         }
     }
+    let baseId = id;
+    if (this.plugins) {
+        for (const plugin of this.plugins) {
+            if (plugin.generateActorBaseId) {
+                baseId = plugin.generateActorBaseId.call(this, user.preferredUsername);
+            }
+        }
+    }
     const publishedDate = new Date();
     const userInbox = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/inbox`),
-        url: new URL(`${id}/inbox`),
+        id: new URL(`${baseId}/inbox`),
+        url: new URL(`${baseId}/inbox`),
         name: 'Inbox',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
@@ -27,10 +35,18 @@ async function createUserActor(user) {
         orderedItems: [],
         published: publishedDate,
     };
+    let outboxId = `${baseId}/outbox`;
+    if (this.plugins) {
+        for (const plugin of this.plugins) {
+            if (plugin.generateActorOutboxId) {
+                outboxId = plugin.generateActorOutboxId.call(this, user.preferredUsername);
+            }
+        }
+    }
     const userOutbox = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/outbox`),
-        url: new URL(`${id}/outbox`),
+        id: new URL(outboxId),
+        url: new URL(outboxId),
         name: 'Outbox',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
@@ -40,8 +56,8 @@ async function createUserActor(user) {
     };
     const userFollowers = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/followers`),
-        url: new URL(`${id}/followers`),
+        id: new URL(`${baseId}/followers`),
+        url: new URL(`${baseId}/followers`),
         name: 'Followers',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
@@ -51,8 +67,8 @@ async function createUserActor(user) {
     };
     const userFollowing = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/following`),
-        url: new URL(`${id}/following`),
+        id: new URL(`${baseId}/following`),
+        url: new URL(`${baseId}/following`),
         name: 'Following',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
@@ -62,8 +78,8 @@ async function createUserActor(user) {
     };
     const userLiked = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/liked`),
-        url: new URL(`${id}/liked`),
+        id: new URL(`${baseId}/liked`),
+        url: new URL(`${baseId}/liked`),
         name: 'Liked',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
@@ -73,8 +89,8 @@ async function createUserActor(user) {
     };
     const userShared = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/shared`),
-        url: new URL(`${id}/shared`),
+        id: new URL(`${baseId}/shared`),
+        url: new URL(`${baseId}/shared`),
         name: 'Shared',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
@@ -84,8 +100,8 @@ async function createUserActor(user) {
     };
     const userBlocks = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/blocks`),
-        url: new URL(`${id}/blocks`),
+        id: new URL(`${baseId}/blocks`),
+        url: new URL(`${baseId}/blocks`),
         name: 'Blocks',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
@@ -95,8 +111,8 @@ async function createUserActor(user) {
     };
     const userRequests = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/requests`),
-        url: new URL(`${id}/requests`),
+        id: new URL(`${baseId}/requests`),
+        url: new URL(`${baseId}/requests`),
         name: 'Requests',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
@@ -106,8 +122,8 @@ async function createUserActor(user) {
     };
     const userLists = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/lists`),
-        url: new URL(`${id}/lists`),
+        id: new URL(`${baseId}/lists`),
+        url: new URL(`${baseId}/lists`),
         name: 'Lists',
         summary: 'A user\'s set of curated lists of other users, such as "Friends Only".',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
@@ -118,8 +134,8 @@ async function createUserActor(user) {
     };
     const userReplies = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/replies`),
-        url: new URL(`${id}/replies`),
+        id: new URL(`${baseId}/replies`),
+        url: new URL(`${baseId}/replies`),
         name: 'Replies',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
@@ -129,8 +145,8 @@ async function createUserActor(user) {
     };
     const userLikes = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/likes`),
-        url: new URL(`${id}/likes`),
+        id: new URL(`${baseId}/likes`),
+        url: new URL(`${baseId}/likes`),
         name: 'Likes',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
@@ -140,8 +156,8 @@ async function createUserActor(user) {
     };
     const userShares = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/shares`),
-        url: new URL(`${id}/shares`),
+        id: new URL(`${baseId}/shares`),
+        url: new URL(`${baseId}/shares`),
         name: 'Shares',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
@@ -151,8 +167,8 @@ async function createUserActor(user) {
     };
     const userBookmarks = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${id}/bookmarks`),
-        url: new URL(`${id}/bookmarks`),
+        id: new URL(`${baseId}/bookmarks`),
+        url: new URL(`${baseId}/bookmarks`),
         name: 'Bookmarks',
         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
@@ -194,7 +210,7 @@ async function createUserActor(user) {
         ],
         endpoints: {
             sharedInbox: new URL(activitypub_core_utilities_3.SHARED_INBOX_ID),
-            uploadMedia: new URL(`${id}/uploadMedia`),
+            uploadMedia: new URL(`${baseId}/uploadMedia`),
         },
         publicKey: {
             id: `${id}#main-key`,

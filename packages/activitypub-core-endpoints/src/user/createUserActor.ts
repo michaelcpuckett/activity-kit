@@ -36,12 +36,22 @@ export async function createUserActor(
     }
   }
 
+  let baseId = id;
+
+  if (this.plugins) {
+    for (const plugin of this.plugins) {
+      if (plugin.generateActorBaseId) {
+        baseId = plugin.generateActorBaseId.call(this, user.preferredUsername);
+      }
+    }
+  }
+
   const publishedDate = new Date();
 
   const userInbox: AP.OrderedCollection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/inbox`),
-    url: new URL(`${id}/inbox`),
+    id: new URL(`${baseId}/inbox`),
+    url: new URL(`${baseId}/inbox`),
     name: 'Inbox',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
@@ -50,10 +60,23 @@ export async function createUserActor(
     published: publishedDate,
   };
 
+  let outboxId = `${baseId}/outbox`;
+
+  if (this.plugins) {
+    for (const plugin of this.plugins) {
+      if (plugin.generateActorOutboxId) {
+        outboxId = plugin.generateActorOutboxId.call(
+          this,
+          user.preferredUsername,
+        );
+      }
+    }
+  }
+
   const userOutbox: AP.OrderedCollection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/outbox`),
-    url: new URL(`${id}/outbox`),
+    id: new URL(outboxId),
+    url: new URL(outboxId),
     name: 'Outbox',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
@@ -64,8 +87,8 @@ export async function createUserActor(
 
   const userFollowers: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/followers`),
-    url: new URL(`${id}/followers`),
+    id: new URL(`${baseId}/followers`),
+    url: new URL(`${baseId}/followers`),
     name: 'Followers',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
@@ -76,8 +99,8 @@ export async function createUserActor(
 
   const userFollowing: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/following`),
-    url: new URL(`${id}/following`),
+    id: new URL(`${baseId}/following`),
+    url: new URL(`${baseId}/following`),
     name: 'Following',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
@@ -88,8 +111,8 @@ export async function createUserActor(
 
   const userLiked: AP.OrderedCollection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/liked`),
-    url: new URL(`${id}/liked`),
+    id: new URL(`${baseId}/liked`),
+    url: new URL(`${baseId}/liked`),
     name: 'Liked',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
@@ -100,8 +123,8 @@ export async function createUserActor(
 
   const userShared: AP.OrderedCollection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/shared`),
-    url: new URL(`${id}/shared`),
+    id: new URL(`${baseId}/shared`),
+    url: new URL(`${baseId}/shared`),
     name: 'Shared',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
@@ -112,8 +135,8 @@ export async function createUserActor(
 
   const userBlocks: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/blocks`),
-    url: new URL(`${id}/blocks`),
+    id: new URL(`${baseId}/blocks`),
+    url: new URL(`${baseId}/blocks`),
     name: 'Blocks',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
@@ -124,8 +147,8 @@ export async function createUserActor(
 
   const userRequests: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/requests`),
-    url: new URL(`${id}/requests`),
+    id: new URL(`${baseId}/requests`),
+    url: new URL(`${baseId}/requests`),
     name: 'Requests',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
@@ -136,8 +159,8 @@ export async function createUserActor(
 
   const userLists: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/lists`),
-    url: new URL(`${id}/lists`),
+    id: new URL(`${baseId}/lists`),
+    url: new URL(`${baseId}/lists`),
     name: 'Lists',
     summary:
       'A user\'s set of curated lists of other users, such as "Friends Only".',
@@ -150,8 +173,8 @@ export async function createUserActor(
 
   const userReplies: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/replies`),
-    url: new URL(`${id}/replies`),
+    id: new URL(`${baseId}/replies`),
+    url: new URL(`${baseId}/replies`),
     name: 'Replies',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,
@@ -162,8 +185,8 @@ export async function createUserActor(
 
   const userLikes: AP.OrderedCollection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/likes`),
-    url: new URL(`${id}/likes`),
+    id: new URL(`${baseId}/likes`),
+    url: new URL(`${baseId}/likes`),
     name: 'Likes',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
@@ -174,8 +197,8 @@ export async function createUserActor(
 
   const userShares: AP.OrderedCollection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/shares`),
-    url: new URL(`${id}/shares`),
+    id: new URL(`${baseId}/shares`),
+    url: new URL(`${baseId}/shares`),
     name: 'Shares',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
@@ -186,8 +209,8 @@ export async function createUserActor(
 
   const userBookmarks: AP.OrderedCollection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${id}/bookmarks`),
-    url: new URL(`${id}/bookmarks`),
+    id: new URL(`${baseId}/bookmarks`),
+    url: new URL(`${baseId}/bookmarks`),
     name: 'Bookmarks',
     type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
@@ -235,7 +258,7 @@ export async function createUserActor(
     ],
     endpoints: {
       sharedInbox: new URL(SHARED_INBOX_ID),
-      uploadMedia: new URL(`${id}/uploadMedia`),
+      uploadMedia: new URL(`${baseId}/uploadMedia`),
     },
     publicKey: {
       id: `${id}#main-key`,

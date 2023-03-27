@@ -23,6 +23,18 @@ export type Plugin = {
     },
     preferredUsername: string,
   ) => string;
+  generateActorBaseId?: (
+    this: {
+      adapters: Adapters;
+    },
+    preferredUsername: string,
+  ) => string;
+  generateActorOutboxId?: (
+    this: {
+      adapters: Adapters;
+    },
+    preferredUsername: string,
+  ) => string;
   generateObjectId?: (object: AP.ExtendedObject) => string;
   getHomePageProps?: (
     this: {

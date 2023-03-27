@@ -19,6 +19,12 @@ export declare type Plugin = {
     generateActorId?: (this: {
         adapters: Adapters;
     }, preferredUsername: string) => string;
+    generateActorBaseId?: (this: {
+        adapters: Adapters;
+    }, preferredUsername: string) => string;
+    generateActorOutboxId?: (this: {
+        adapters: Adapters;
+    }, preferredUsername: string) => string;
     generateObjectId?: (object: AP.ExtendedObject) => string;
     getHomePageProps?: (this: {
         adapters: Adapters;
