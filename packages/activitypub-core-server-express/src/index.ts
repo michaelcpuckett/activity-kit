@@ -24,6 +24,7 @@ import type {
 } from 'activitypub-core-types';
 import {
   CONTENT_TYPE_HEADER,
+  DEFAULT_ROUTES,
   HTML_CONTENT_TYPE,
 } from 'activitypub-core-utilities';
 
@@ -62,25 +63,21 @@ export const activityPub =
     console.log('INCOMING:', req.url);
 
     const routes: Routes = {
-      actor: '/@:username',
-      inbox: '/@:username/inbox',
-      outbox: '/@:username/outbox',
-      followers: '/@:username/followers',
-      following: '/@:username/following',
-      liked: '/@:username/liked',
-      shared: '/@:username/shared',
-      uploadMedia: '/@:username/uploadMedia',
-      blocked: '/@:username/blocked',
-
-      object: '/:type/:id',
-      activity: '/:type/:id',
-      likes: '/:type/:id/likes',
-      shares: '/:type/:id/shares',
-      replies: '/:type/:id/replies',
+      ...DEFAULT_ROUTES,
       ...config.routes,
     };
 
-    const matches = (path: string) => req.url.match(pathToRegexp(path));
+    const matchesRoute = (path: string) => req.url.match(pathToRegexp(path));
+
+    const matchesEntityRoute = () => {
+      for (const route of Object.values(routes)) {
+        if (matchesRoute(route)) {
+          return true;
+        }
+      }
+
+      return false;
+    };
 
     try {
       if (req.method === 'POST') {
@@ -107,7 +104,7 @@ export const activityPub =
           return;
         }
 
-        if (matches(routes.inbox)) {
+        if (matchesRoute(routes.inbox)) {
           await new InboxPostEndpoint(
             req,
             res,
@@ -118,7 +115,8 @@ export const activityPub =
           return;
         }
 
-        if (matches(routes.uploadMedia)) {
+        if (matchesRoute(routes.endpoint)) {
+          // TODO
           await new UploadMediaPostEndpoint(
             req,
             res,
@@ -129,7 +127,8 @@ export const activityPub =
           return;
         }
 
-        if (matches(routes.outbox)) {
+        if (matchesRoute(routes.outbox)) {
+          console.log(matchesRoute(routes.outbox));
           await new OutboxPostEndpoint(
             req,
             res,
@@ -209,28 +208,7 @@ export const activityPub =
           return;
         }
 
-        if (
-          matches(routes.actor) ||
-          matches(routes.following) ||
-          matches(routes.followers) ||
-          matches(routes.liked) ||
-          matches(routes.likes) ||
-          matches(routes.replies) ||
-          matches(routes.shared) ||
-          matches(routes.shares) ||
-          matches(routes.blocked) ||
-          matches(routes.inbox) ||
-          matches(routes.outbox)
-          // (() => {
-          //   for (const plugin of config.plugins) {
-          //     if ('getIsEntityGetRequest' in plugin) {
-          //       if (plugin.getIsEntityGetRequest(req.url)) {
-          //         return true;
-          //       }
-          //     }
-          //   }
-          // })()
-        ) {
+        if (matchesEntityRoute()) {
           await new EntityGetEndpoint(
             req,
             res,

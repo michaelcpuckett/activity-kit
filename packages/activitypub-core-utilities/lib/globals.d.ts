@@ -1,3 +1,4 @@
+import { Routes } from 'activitypub-core-types';
 export declare const PORT: number;
 export declare const LOCAL_HOSTNAME: string;
 export declare const PROTOCOL: string;
@@ -22,4 +23,5 @@ export declare const JRD_CONTENT_TYPE = "application/jrd+json";
 export declare const JSON_CONTENT_TYPE = "application/json";
 export declare const HTML_CONTENT_TYPE = "text/html";
 export declare const USERNAME_REGEXP: RegExp;
+export declare const DEFAULT_ROUTES: Routes;
 export declare const RESERVED_USERNAMES: string[];

@@ -1,3 +1,5 @@
+import { Routes } from 'activitypub-core-types';
+
 export const PORT = Number(process.env.AP_PORT ?? 3000);
 export const LOCAL_HOSTNAME = process.env.AP_HOST_NAME ?? 'localhost';
 export const PROTOCOL = process.env.AP_PROTOCOL ?? 'http:';
@@ -24,8 +26,74 @@ export const JRD_CONTENT_TYPE = 'application/jrd+json';
 export const JSON_CONTENT_TYPE = 'application/json';
 export const HTML_CONTENT_TYPE = 'text/html';
 export const USERNAME_REGEXP = /^[\w\d]{3,12}$/;
+export const DEFAULT_ROUTES: Routes = {
+  // Actor Types.
+  person: '/@:username',
+  group: '/group/:username',
+  application: '/application/:username',
+  service: '/service/:username',
+  organization: '/organization/:username',
+
+  // Object Types.
+  article: '/article/:guid',
+  event: '/event/:guid',
+  note: '/note/:guid', // :slug
+  page: '/page/:guid',
+  place: '/place/:guid',
+  relationship: '/relationship/:guid',
+  profile: '/profile/:guid',
+  video: '/video/:guid',
+  document: '/document/:guid',
+  audio: '/audio/:guid',
+  image: '/image/:guid',
+
+  // Activity Types
+  accept: '/accept/:guid',
+  follow: '/follow/:guid',
+  delete: '/delete/:guid',
+  create: '/create/:guid',
+  arrive: '/arrive/:guid',
+  add: '/add/:guid',
+  offer: '/offer/:guid',
+  like: '/like/:guid',
+  leave: '/leave/:guid',
+  ignore: '/ignore/:guid',
+  join: '/join/:guid',
+  reject: '/reject/:guid',
+  invite: '/invite/:guid',
+  tentativeReject: '/tentative-reject/:guid',
+  tentativeAccept: '/tentative-accept/:guid',
+  view: '/view/:guid',
+  update: '/update/:guid',
+  undo: '/undo/:guid',
+  remove: '/remove/:guid',
+  read: '/read/:guid',
+  listen: '/listen/:guid',
+  move: '/move/:guid',
+  travel: '/travel/:guid',
+  announce: '/announce/:guid',
+  block: '/block/:guid',
+  flag: '/flag/:guid',
+  dislike: '/dislike/:guid',
+  question: '/question/:guid',
+
+  // Actor Collections
+  inbox: '/:entityRoute/inbox',
+  outbox: '/:entityRoute/outbox',
+  followers: '/:entityRoute/followers',
+  following: '/:entityRoute/following',
+  liked: '/:entityRoute/liked',
+  stream: '/:entityRoute/stream/:slug',
+  endpoint: '/:entityRoute/endpoint/:slug',
+
+  // Object Collections
+  likes: '/:entityRoute/likes',
+  shares: '/:entityRoute/shares',
+  replies: '/:entityRoute/replies',
+};
 export const RESERVED_USERNAMES = [
   SERVER_ACTOR_USERNAME,
+  ...Object.keys(DEFAULT_ROUTES),
   'app',
   'test',
   'user',
@@ -35,13 +103,6 @@ export const RESERVED_USERNAMES = [
   'actor',
   'collection',
   'entity',
-  'inbox',
-  'outbox',
-  'replies',
-  'likes',
-  'shares',
-  'liked',
-  'shared',
   'sharedinbox',
   'shared-inbox',
   'shared_inbox',
@@ -53,4 +114,5 @@ export const RESERVED_USERNAMES = [
   'home',
   'settings',
   'help',
+  'login',
 ];

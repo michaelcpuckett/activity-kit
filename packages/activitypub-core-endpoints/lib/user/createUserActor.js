@@ -14,13 +14,12 @@ async function createUserActor(user) {
     const publishedDate = new Date();
     const compileOptions = { encode: encodeURIComponent };
     const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_3.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, compileOptions)(data)}`);
-    const userId = getRouteUrl(this.routes.actor, {
-        type: user.type.toLowerCase(),
+    const userId = getRouteUrl(this.routes[user.type], {
         username: user.preferredUsername,
     });
+    const entityRoute = userId.pathname;
     const inboxId = getRouteUrl(this.routes.inbox, {
-        actorType: user.type.toLowerCase(),
-        username: user.preferredUsername,
+        entityRoute,
     });
     const userInbox = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
@@ -34,8 +33,7 @@ async function createUserActor(user) {
         published: publishedDate,
     };
     const outboxId = getRouteUrl(this.routes.outbox, {
-        actorType: user.type.toLowerCase(),
-        username: user.preferredUsername,
+        entityRoute,
     });
     const userOutbox = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
@@ -49,8 +47,7 @@ async function createUserActor(user) {
         published: publishedDate,
     };
     const followersId = getRouteUrl(this.routes.followers, {
-        actorType: user.type.toLowerCase(),
-        username: user.preferredUsername,
+        entityRoute,
     });
     const userFollowers = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
@@ -64,8 +61,7 @@ async function createUserActor(user) {
         published: publishedDate,
     };
     const followingId = getRouteUrl(this.routes.following, {
-        actorType: user.type.toLowerCase(),
-        username: user.preferredUsername,
+        entityRoute,
     });
     const userFollowing = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
@@ -79,8 +75,7 @@ async function createUserActor(user) {
         published: publishedDate,
     };
     const likedId = getRouteUrl(this.routes.liked, {
-        actorType: user.type.toLowerCase(),
-        username: user.preferredUsername,
+        entityRoute,
     });
     const userLiked = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
@@ -93,9 +88,9 @@ async function createUserActor(user) {
         orderedItems: [],
         published: publishedDate,
     };
-    const sharedId = getRouteUrl(this.routes.shared, {
-        actorType: user.type.toLowerCase(),
-        username: user.preferredUsername,
+    const sharedId = getRouteUrl(this.routes.stream, {
+        entityRoute,
+        slug: 'shared',
     });
     const userShared = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
@@ -119,9 +114,55 @@ async function createUserActor(user) {
         items: [],
         published: publishedDate,
     };
-    const uploadMediaId = getRouteUrl(this.routes.uploadMedia, {
-        actorType: user.type.toLowerCase(),
-        username: user.preferredUsername,
+    const userRequestsId = getRouteUrl(this.routes.stream, {
+        entityRoute,
+        slug: 'requests',
+    });
+    const userRequests = {
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        id: userRequestsId,
+        url: userRequestsId,
+        name: 'Requests',
+        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
+        totalItems: 0,
+        attributedTo: userId,
+        items: [],
+        published: publishedDate,
+    };
+    const userListsId = getRouteUrl(this.routes.stream, {
+        entityRoute,
+        slug: 'lists',
+    });
+    const userLists = {
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        id: userListsId,
+        url: userListsId,
+        name: 'Lists',
+        summary: 'A user\'s set of curated lists of other users, such as "Friends Only".',
+        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
+        totalItems: 0,
+        attributedTo: userId,
+        items: [],
+        published: publishedDate,
+    };
+    const userBookmarksId = getRouteUrl(this.routes.stream, {
+        entityRoute,
+        slug: 'bookmarks',
+    });
+    const userBookmarks = {
+        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+        id: userBookmarksId,
+        url: userBookmarksId,
+        name: 'Bookmarks',
+        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        totalItems: 0,
+        attributedTo: userId,
+        orderedItems: [],
+        published: publishedDate,
+    };
+    const uploadMediaId = getRouteUrl(this.routes.endpoint, {
+        entityRoute,
+        slug: 'upload-media',
     });
     const userActor = {
         '@context': [
@@ -145,6 +186,9 @@ async function createUserActor(user) {
         streams: [
             userShared.id,
             userBlocks.id,
+            userRequests.id,
+            userLists.id,
+            userBookmarks.id,
         ],
         endpoints: {
             sharedInbox: new URL(activitypub_core_utilities_3.SHARED_INBOX_ID),
@@ -158,45 +202,9 @@ async function createUserActor(user) {
         published: publishedDate,
     };
     (0, activitypub_core_types_1.assertIsApActor)(userActor);
-    const createActorActivityId = getRouteUrl(this.routes.activity, {
-        actorType: user.type.toLowerCase(),
-        username: user.preferredUsername,
-        type: activitypub_core_types_1.AP.ActivityTypes.CREATE.toLowerCase(),
-        id: (0, activitypub_core_utilities_1.getGuid)(),
+    const createActorActivityId = getRouteUrl(this.routes.create, {
+        guid: (0, activitypub_core_utilities_1.getGuid)(),
     });
-    const createActorActivityReplies = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${createActorActivityId}/replies`),
-        url: new URL(`${createActorActivityId}/replies`),
-        name: 'Replies',
-        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
-        totalItems: 0,
-        attributedTo: userId,
-        items: [],
-        published: publishedDate,
-    };
-    const createActorActivityLikes = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${createActorActivityId}/likes`),
-        url: new URL(`${createActorActivityId}/likes`),
-        name: 'Likes',
-        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-        totalItems: 0,
-        attributedTo: userId,
-        orderedItems: [],
-        published: publishedDate,
-    };
-    const createActorActivityShares = {
-        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${createActorActivityId}/shares`),
-        url: new URL(`${createActorActivityId}/shares`),
-        name: 'Shares',
-        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-        totalItems: 0,
-        attributedTo: userId,
-        orderedItems: [],
-        published: publishedDate,
-    };
     const createActorActivity = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: createActorActivityId,
@@ -205,16 +213,10 @@ async function createUserActor(user) {
         actor: new URL(activitypub_core_utilities_3.SERVER_ACTOR_ID),
         object: userActor,
         to: [new URL(activitypub_core_utilities_1.PUBLIC_ACTOR)],
-        replies: createActorActivityReplies.id,
-        likes: createActorActivityLikes.id,
-        shares: createActorActivityShares.id,
         published: publishedDate,
     };
     await Promise.all([
         this.adapters.db.saveEntity(createActorActivity),
-        this.adapters.db.saveEntity(createActorActivityReplies),
-        this.adapters.db.saveEntity(createActorActivityLikes),
-        this.adapters.db.saveEntity(createActorActivityShares),
         this.adapters.db.saveEntity(userActor),
         this.adapters.db.saveEntity(userInbox),
         this.adapters.db.saveEntity(userOutbox),
@@ -222,7 +224,10 @@ async function createUserActor(user) {
         this.adapters.db.saveEntity(userFollowers),
         this.adapters.db.saveEntity(userFollowing),
         this.adapters.db.saveEntity(userShared),
+        this.adapters.db.saveEntity(userRequests),
         this.adapters.db.saveEntity(userBlocks),
+        this.adapters.db.saveEntity(userLists),
+        this.adapters.db.saveEntity(userBookmarks),
         this.adapters.db.saveString('account', user.uid, user.email),
         this.adapters.db.saveString('privateKey', user.uid, privateKey),
         this.adapters.db.saveString('username', user.uid, user.preferredUsername),

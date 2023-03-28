@@ -7,23 +7,18 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activityPub = (config) => async (req, res, next) => {
     console.log('INCOMING:', req.url);
     const routes = {
-        actor: '/@:username',
-        inbox: '/@:username/inbox',
-        outbox: '/@:username/outbox',
-        followers: '/@:username/followers',
-        following: '/@:username/following',
-        liked: '/@:username/liked',
-        shared: '/@:username/shared',
-        uploadMedia: '/@:username/uploadMedia',
-        blocked: '/@:username/blocked',
-        object: '/:type/:id',
-        activity: '/:type/:id',
-        likes: '/:type/:id/likes',
-        shares: '/:type/:id/shares',
-        replies: '/:type/:id/replies',
+        ...activitypub_core_utilities_1.DEFAULT_ROUTES,
         ...config.routes,
     };
-    const matches = (path) => req.url.match((0, path_to_regexp_1.pathToRegexp)(path));
+    const matchesRoute = (path) => req.url.match((0, path_to_regexp_1.pathToRegexp)(path));
+    const matchesEntityRoute = () => {
+        for (const route of Object.values(routes)) {
+            if (matchesRoute(route)) {
+                return true;
+            }
+        }
+        return false;
+    };
     try {
         if (req.method === 'POST') {
             if (req.url === '/user') {
@@ -36,17 +31,18 @@ const activityPub = (config) => async (req, res, next) => {
                 next();
                 return;
             }
-            if (matches(routes.inbox)) {
+            if (matchesRoute(routes.inbox)) {
                 await new activitypub_core_endpoints_1.InboxPostEndpoint(req, res, config.adapters, config.plugins).respond();
                 next();
                 return;
             }
-            if (matches(routes.uploadMedia)) {
+            if (matchesRoute(routes.endpoint)) {
                 await new activitypub_core_endpoints_1.UploadMediaPostEndpoint(req, res, config.adapters, config.plugins).respond();
                 next();
                 return;
             }
-            if (matches(routes.outbox)) {
+            if (matchesRoute(routes.outbox)) {
+                console.log(matchesRoute(routes.outbox));
                 await new activitypub_core_endpoints_1.OutboxPostEndpoint(req, res, config.adapters, config.plugins).respond();
                 next();
                 return;
@@ -87,17 +83,7 @@ const activityPub = (config) => async (req, res, next) => {
                 next();
                 return;
             }
-            if (matches(routes.actor) ||
-                matches(routes.following) ||
-                matches(routes.followers) ||
-                matches(routes.liked) ||
-                matches(routes.likes) ||
-                matches(routes.replies) ||
-                matches(routes.shared) ||
-                matches(routes.shares) ||
-                matches(routes.blocked) ||
-                matches(routes.inbox) ||
-                matches(routes.outbox)) {
+            if (matchesEntityRoute()) {
                 await new activitypub_core_endpoints_1.EntityGetEndpoint(req, res, config.adapters, config.plugins).respond(config.pages.entity);
                 next();
                 return;
