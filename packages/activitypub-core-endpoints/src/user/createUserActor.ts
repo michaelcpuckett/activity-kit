@@ -42,7 +42,7 @@ export async function createUserActor(
   const getRouteUrl = (route: string, data: Record<string, string>) =>
     new URL(`${LOCAL_DOMAIN}${compile(route, compileOptions)(data)}`);
 
-  const userId = getRouteUrl(this.routes[user.type], {
+  const userId = getRouteUrl(this.routes[user.type.toLowerCase()], {
     username: user.preferredUsername,
   });
 

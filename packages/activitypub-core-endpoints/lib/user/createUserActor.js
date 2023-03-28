@@ -14,7 +14,7 @@ async function createUserActor(user) {
     const publishedDate = new Date();
     const compileOptions = { encode: encodeURIComponent };
     const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_3.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, compileOptions)(data)}`);
-    const userId = getRouteUrl(this.routes[user.type], {
+    const userId = getRouteUrl(this.routes[user.type.toLowerCase()], {
         username: user.preferredUsername,
     });
     const entityRoute = userId.pathname;
