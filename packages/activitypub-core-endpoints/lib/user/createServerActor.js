@@ -14,9 +14,7 @@ async function createServerActor() {
         username: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
     });
     const entityRoute = userId.pathname;
-    const inboxId = getRouteUrl(this.routes.inbox, {
-        entityRoute,
-    });
+    const inboxId = new URL(`${userId}/inbox`);
     const botInbox = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: inboxId,
@@ -27,9 +25,7 @@ async function createServerActor() {
         orderedItems: [],
         published: publishedDate,
     };
-    const outboxId = getRouteUrl(this.routes.outbox, {
-        entityRoute,
-    });
+    const outboxId = new URL(`${userId}/outbox`);
     const botOutbox = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: outboxId,
@@ -40,9 +36,7 @@ async function createServerActor() {
         orderedItems: [],
         published: publishedDate,
     };
-    const followersId = getRouteUrl(this.routes.followers, {
-        entityRoute,
-    });
+    const followersId = new URL(`${userId}/followers`);
     const botFollowers = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: followersId,
@@ -54,9 +48,7 @@ async function createServerActor() {
         items: [],
         published: publishedDate,
     };
-    const followingId = getRouteUrl(this.routes.following, {
-        entityRoute,
-    });
+    const followingId = new URL(`${userId}/following`);
     const botFollowing = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: followingId,

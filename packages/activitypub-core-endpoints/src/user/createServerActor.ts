@@ -26,9 +26,7 @@ export async function createServerActor(this: UserPostEndpoint) {
 
   const entityRoute = userId.pathname;
 
-  const inboxId = getRouteUrl(this.routes.inbox, {
-    entityRoute,
-  });
+  const inboxId = new URL(`${userId}/inbox`);
 
   const botInbox: AP.OrderedCollection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
@@ -41,9 +39,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     published: publishedDate,
   };
 
-  const outboxId = getRouteUrl(this.routes.outbox, {
-    entityRoute,
-  });
+  const outboxId = new URL(`${userId}/outbox`);
 
   const botOutbox: AP.OrderedCollection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
@@ -56,9 +52,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     published: publishedDate,
   };
 
-  const followersId = getRouteUrl(this.routes.followers, {
-    entityRoute,
-  });
+  const followersId = new URL(`${userId}/followers`);
 
   const botFollowers: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
@@ -72,9 +66,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     published: publishedDate,
   };
 
-  const followingId = getRouteUrl(this.routes.following, {
-    entityRoute,
-  });
+  const followingId = new URL(`${userId}/following`);
 
   const botFollowing: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
