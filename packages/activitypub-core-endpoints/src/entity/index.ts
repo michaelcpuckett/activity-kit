@@ -2,7 +2,7 @@ import { Plugin } from 'activitypub-core-types';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { handleFoundEntity } from './handleFoundEntity';
 import { respond } from './respond';
-import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
+import type { DbAdapter, AuthAdapter, Routes } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 
 export class EntityGetEndpoint {
@@ -13,6 +13,7 @@ export class EntityGetEndpoint {
     db: DbAdapter;
   };
   plugins?: Plugin[];
+  routes?: Routes;
   url: URL;
 
   constructor(

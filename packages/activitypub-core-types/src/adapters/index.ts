@@ -9,6 +9,7 @@ export { DeliveryAdapter } from './Delivery';
 export { StorageAdapter } from './Storage';
 
 export { Plugin } from './Plugin';
+export { Routes } from './Routes';
 export { FetchPolyfill } from './FetchPolyfill';
 
 export type Adapters = {

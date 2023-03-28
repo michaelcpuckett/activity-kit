@@ -20,6 +20,7 @@ import type {
   DbAdapter,
   AuthAdapter,
   StorageAdapter,
+  Routes,
 } from 'activitypub-core-types';
 import {
   CONTENT_TYPE_HEADER,
@@ -28,23 +29,8 @@ import {
 
 export const activityPub =
   (config: {
-    routes?: {
-      actor?: string | ((actor: string) => string);
-      inbox?: string | ((actor: string) => string);
-      outbox?: string | ((actor: string) => string);
-      followers?: string | ((actor: string) => string);
-      following?: string | ((actor: string) => string);
-      liked?: string | ((actor: string) => string);
-      shared?: string | ((actor: string) => string);
-      blocked?: string | ((actor: string) => string);
-      uploadMedia?: string | ((actor: string) => string);
+    routes?: Partial<Routes>;
 
-      activity?: string | ((id: string, type: string) => string);
-      object?: string | ((id: string, type: string) => string);
-      likes?: string | ((id: string, type: string) => string);
-      shares?: string | ((id: string, type: string) => string);
-      replies?: string | ((id: string, type: string) => string);
-    };
     pages: {
       login: () => Promise<string>;
 
@@ -75,20 +61,19 @@ export const activityPub =
   ) => {
     console.log('INCOMING:', req.url);
 
-    const routes = {
-      actor: '/@:actor',
+    const routes: Routes = {
+      actor: '/@:username',
+      inbox: '/@:username/inbox',
+      outbox: '/@:username/outbox',
+      followers: '/@:username/followers',
+      following: '/@:username/following',
+      liked: '/@:username/liked',
+      shared: '/@:username/shared',
+      uploadMedia: '/@:username/uploadMedia',
+      blocked: '/@:username/blocked',
+
       object: '/:type/:id',
       activity: '/:type/:id',
-      inbox: '/@:actor/inbox',
-      outbox: '/@:actor/outbox',
-      followers: '/@:actor/followers',
-      following: '/@:actor/following',
-      liked: '/@:actor/liked',
-      shared: '/@:actor/shared',
-
-      uploadMedia: '/@:actor/uploadMedia',
-      collections: '/@:actor/collection/:id',
-      blocked: '/@:actor/blocked',
       likes: '/:type/:id/likes',
       shares: '/:type/:id/shares',
       replies: '/:type/:id/replies',
@@ -101,6 +86,7 @@ export const activityPub =
       if (req.method === 'POST') {
         if (req.url === '/user') {
           await new UserPostEndpoint(
+            routes,
             req,
             res,
             config.adapters,
@@ -121,13 +107,7 @@ export const activityPub =
           return;
         }
 
-        if (
-          matches(
-            typeof routes.inbox === 'function'
-              ? routes.inbox(':actor')
-              : routes.inbox,
-          )
-        ) {
+        if (matches(routes.inbox)) {
           await new InboxPostEndpoint(
             req,
             res,
@@ -138,13 +118,7 @@ export const activityPub =
           return;
         }
 
-        if (
-          matches(
-            typeof routes.uploadMedia === 'function'
-              ? routes.uploadMedia(':actor')
-              : routes.uploadMedia,
-          )
-        ) {
+        if (matches(routes.uploadMedia)) {
           await new UploadMediaPostEndpoint(
             req,
             res,
@@ -155,13 +129,7 @@ export const activityPub =
           return;
         }
 
-        if (
-          matches(
-            typeof routes.inbox === 'function'
-              ? routes.inbox(':actor')
-              : routes.inbox,
-          )
-        ) {
+        if (matches(routes.inbox)) {
           await new OutboxPostEndpoint(
             req,
             res,
@@ -242,70 +210,26 @@ export const activityPub =
         }
 
         if (
-          matches(
-            typeof routes.actor === 'function'
-              ? routes.actor(':actor')
-              : routes.actor,
-          ) ||
-          matches(
-            typeof routes.following === 'function'
-              ? routes.following(':actor')
-              : routes.following,
-          ) ||
-          matches(
-            typeof routes.followers === 'function'
-              ? routes.followers(':actor')
-              : routes.followers,
-          ) ||
-          matches(
-            typeof routes.liked === 'function'
-              ? routes.liked(':actor')
-              : routes.liked,
-          ) ||
-          matches(
-            typeof routes.likes === 'function'
-              ? routes.likes(':id', ':type')
-              : routes.likes,
-          ) ||
-          matches(
-            typeof routes.replies === 'function'
-              ? routes.replies(':id', ':type')
-              : routes.replies,
-          ) ||
-          matches(
-            typeof routes.shared === 'function'
-              ? routes.shared(':actor')
-              : routes.shared,
-          ) ||
-          matches(
-            typeof routes.shares === 'function'
-              ? routes.shares(':id', ':type')
-              : routes.shares,
-          ) ||
-          matches(
-            typeof routes.blocked === 'function'
-              ? routes.blocked(':actor')
-              : routes.blocked,
-          ) ||
-          matches(
-            typeof routes.inbox === 'function'
-              ? routes.inbox(':actor')
-              : routes.inbox,
-          ) ||
-          matches(
-            typeof routes.outbox === 'function'
-              ? routes.outbox(':actor')
-              : routes.outbox,
-          ) ||
-          (() => {
-            for (const plugin of config.plugins) {
-              if ('getIsEntityGetRequest' in plugin) {
-                if (plugin.getIsEntityGetRequest(req.url)) {
-                  return true;
-                }
-              }
-            }
-          })()
+          matches(routes.actor) ||
+          matches(routes.following) ||
+          matches(routes.followers) ||
+          matches(routes.liked) ||
+          matches(routes.likes) ||
+          matches(routes.replies) ||
+          matches(routes.shared) ||
+          matches(routes.shares) ||
+          matches(routes.blocked) ||
+          matches(routes.inbox) ||
+          matches(routes.outbox)
+          // (() => {
+          //   for (const plugin of config.plugins) {
+          //     if ('getIsEntityGetRequest' in plugin) {
+          //       if (plugin.getIsEntityGetRequest(req.url)) {
+          //         return true;
+          //       }
+          //     }
+          //   }
+          // })()
         ) {
           await new EntityGetEndpoint(
             req,

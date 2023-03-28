@@ -9,6 +9,7 @@ class EntityGetEndpoint {
     res;
     adapters;
     plugins;
+    routes;
     url;
     constructor(req, res, adapters, plugins, url) {
         this.req = req;

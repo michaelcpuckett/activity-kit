@@ -7,6 +7,7 @@ export { DbAdapter, DbOptions } from './Db';
 export { DeliveryAdapter } from './Delivery';
 export { StorageAdapter } from './Storage';
 export { Plugin } from './Plugin';
+export { Routes } from './Routes';
 export { FetchPolyfill } from './FetchPolyfill';
 export declare type Adapters = {
     auth: AuthAdapter;

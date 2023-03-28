@@ -5,11 +5,13 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const createServerActor_1 = require("./createServerActor");
 const createUserActor_1 = require("./createUserActor");
 class UserPostEndpoint {
+    routes;
     req;
     res;
     adapters;
     plugins;
-    constructor(req, res, adapters, plugins) {
+    constructor(routes, req, res, adapters, plugins) {
+        this.routes = routes;
         this.req = req;
         this.res = res;
         this.adapters = adapters;
