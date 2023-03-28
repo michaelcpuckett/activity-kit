@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-server-express",
-  "version": "0.2.20",
+  "version": "0.2.21",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "activitypub-core-delivery": "^0.2.18",
-    "activitypub-core-endpoints": "^0.2.20",
+    "activitypub-core-endpoints": "^0.2.21",
     "activitypub-core-types": "^0.2.18",
     "activitypub-core-utilities": "^0.2.18",
     "express": "^4.18.2",
