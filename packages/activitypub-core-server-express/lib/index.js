@@ -46,7 +46,7 @@ const activityPub = (config) => async (req, res, next) => {
                 next();
                 return;
             }
-            if (matches(routes.inbox)) {
+            if (matches(routes.outbox)) {
                 await new activitypub_core_endpoints_1.OutboxPostEndpoint(req, res, config.adapters, config.plugins).respond();
                 next();
                 return;

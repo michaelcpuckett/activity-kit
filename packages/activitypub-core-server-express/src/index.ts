@@ -129,7 +129,7 @@ export const activityPub =
           return;
         }
 
-        if (matches(routes.inbox)) {
+        if (matches(routes.outbox)) {
           await new OutboxPostEndpoint(
             req,
             res,
