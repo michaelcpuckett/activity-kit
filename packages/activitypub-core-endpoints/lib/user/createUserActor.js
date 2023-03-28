@@ -232,15 +232,17 @@ async function createUserActor(user) {
         this.adapters.db.saveString('privateKey', user.uid, privateKey),
         this.adapters.db.saveString('username', user.uid, user.preferredUsername),
     ]);
+    const botActor = await this.adapters.db.findOne('entity', {
+        preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
+    });
+    (0, activitypub_core_types_1.assertIsApActor)(botActor);
     if (createActorActivity.id && userInbox.id) {
         await Promise.all([
-            this.adapters.db.insertOrderedItem(new URL(`${activitypub_core_utilities_3.SERVER_ACTOR_ID}/outbox`), createActorActivity.id),
+            this.adapters.db.insertOrderedItem(new URL(`${botActor.id}/outbox`), createActorActivity.id),
             this.adapters.db.insertOrderedItem(userInbox.id, createActorActivity.id),
         ]);
     }
-    this.adapters.delivery.broadcast(createActorActivity, (await this.adapters.db.findOne('entity', {
-        preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
-    })));
+    this.adapters.delivery.broadcast(createActorActivity, botActor);
 }
 exports.createUserActor = createUserActor;
 //# sourceMappingURL=createUserActor.js.map

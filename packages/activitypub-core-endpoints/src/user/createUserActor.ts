@@ -394,10 +394,16 @@ export async function createUserActor(
     })(),*/
   ]);
 
+  const botActor = await this.adapters.db.findOne('entity', {
+    preferredUsername: SERVER_ACTOR_USERNAME,
+  });
+
+  assertIsApActor(botActor);
+
   if (createActorActivity.id && userInbox.id) {
     await Promise.all([
       this.adapters.db.insertOrderedItem(
-        new URL(`${SERVER_ACTOR_ID}/outbox`),
+        new URL(`${botActor.id}/outbox`),
         createActorActivity.id,
       ),
       this.adapters.db.insertOrderedItem(userInbox.id, createActorActivity.id),
@@ -405,10 +411,5 @@ export async function createUserActor(
   }
 
   // Broadcast to Fediverse.
-  this.adapters.delivery.broadcast(
-    createActorActivity,
-    (await this.adapters.db.findOne('entity', {
-      preferredUsername: SERVER_ACTOR_USERNAME,
-    })) as AP.Actor,
-  );
+  this.adapters.delivery.broadcast(createActorActivity, botActor);
 }
