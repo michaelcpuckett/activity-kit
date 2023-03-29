@@ -55,6 +55,7 @@ export class OutboxPostEndpoint {
     },
     plugins?: Plugin[],
   ) {
+    this.routes = routes;
     this.req = req;
     this.res = res;
     this.adapters = adapters;

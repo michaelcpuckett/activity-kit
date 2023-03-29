@@ -32,6 +32,7 @@ class OutboxPostEndpoint {
     actor = null;
     activity = null;
     constructor(routes, req, res, adapters, plugins) {
+        this.routes = routes;
         this.req = req;
         this.res = res;
         this.adapters = adapters;
