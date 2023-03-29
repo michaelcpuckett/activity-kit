@@ -10,7 +10,7 @@ const activityPub = (config) => async (req, res, next) => {
         ...activitypub_core_utilities_1.DEFAULT_ROUTES,
         ...config.routes,
     };
-    const matchesRoute = (path) => req.url.match((0, path_to_regexp_1.pathToRegexp)(path));
+    const matchesRoute = (path) => new URL(req.url, activitypub_core_utilities_1.LOCAL_DOMAIN).pathname.match((0, path_to_regexp_1.pathToRegexp)(path));
     const matchesEntityRoute = () => {
         for (const route of Object.values(routes)) {
             if (matchesRoute(route)) {

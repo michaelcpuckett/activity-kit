@@ -147,11 +147,15 @@ export async function createUserActor(
     published: publishedDate,
   };
 
-  // TODO should this be "blocked"?
+  const blocksId = getRouteUrl(this.routes.stream, {
+    entityRoute,
+    slug: 'blocks',
+  });
+
   const userBlocks: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${userId}/blocks`),
-    url: new URL(`${userId}/blocks`),
+    id: blocksId,
+    url: blocksId,
     name: 'Blocks',
     type: AP.CollectionTypes.COLLECTION,
     totalItems: 0,

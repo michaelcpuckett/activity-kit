@@ -104,10 +104,14 @@ async function createUserActor(user) {
         orderedItems: [],
         published: publishedDate,
     };
+    const blocksId = getRouteUrl(this.routes.stream, {
+        entityRoute,
+        slug: 'blocks',
+    });
     const userBlocks = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-        id: new URL(`${userId}/blocks`),
-        url: new URL(`${userId}/blocks`),
+        id: blocksId,
+        url: blocksId,
         name: 'Blocks',
         type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,

@@ -26,6 +26,7 @@ import {
   CONTENT_TYPE_HEADER,
   DEFAULT_ROUTES,
   HTML_CONTENT_TYPE,
+  LOCAL_DOMAIN,
 } from 'activitypub-core-utilities';
 
 export const activityPub =
@@ -67,7 +68,8 @@ export const activityPub =
       ...config.routes,
     };
 
-    const matchesRoute = (path: string) => req.url.match(pathToRegexp(path));
+    const matchesRoute = (path: string) =>
+      new URL(req.url, LOCAL_DOMAIN).pathname.match(pathToRegexp(path));
 
     const matchesEntityRoute = () => {
       for (const route of Object.values(routes)) {
