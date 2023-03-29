@@ -1,4 +1,9 @@
-import { AP, assertIsApActivity, assertIsArray } from 'activitypub-core-types';
+import {
+  AP,
+  assertIsApActivity,
+  assertIsArray,
+  Routes,
+} from 'activitypub-core-types';
 import type { AuthAdapter, DbAdapter, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
@@ -26,6 +31,7 @@ import { handleUndoLike } from './sideEffects/undo/undoLike';
 import { handleUndoAnnounce } from './sideEffects/undo/undoAnnounce';
 
 export class OutboxPostEndpoint {
+  routes: Routes;
   req: IncomingMessage;
   res: ServerResponse;
   adapters: {
@@ -39,6 +45,7 @@ export class OutboxPostEndpoint {
   activity: AP.Entity | null = null;
 
   constructor(
+    routes: Routes,
     req: IncomingMessage,
     res: ServerResponse,
     adapters: {

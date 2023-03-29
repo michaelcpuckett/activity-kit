@@ -130,6 +130,7 @@ export const activityPub =
         if (matchesRoute(routes.outbox)) {
           console.log(matchesRoute(routes.outbox));
           await new OutboxPostEndpoint(
+            routes,
             req,
             res,
             config.adapters,

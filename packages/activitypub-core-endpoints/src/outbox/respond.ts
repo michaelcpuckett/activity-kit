@@ -11,6 +11,7 @@ import {
   combineAddresses,
   LOCAL_DOMAIN,
 } from 'activitypub-core-utilities';
+import { compile } from 'path-to-regexp';
 
 export async function respond(this: OutboxPostEndpoint) {
   await this.parseBody();
@@ -22,7 +23,21 @@ export async function respond(this: OutboxPostEndpoint) {
 
   assertIsApActor(this.actor);
 
-  const activityId = new URL(`${LOCAL_DOMAIN}/entity/${getGuid()}`);
+  const compileOptions = { encode: encodeURIComponent };
+
+  const type = Array.isArray(this.activity.type)
+    ? this.activity.type[0]
+    : this.activity.type;
+
+  const activityId = new URL(
+    `${LOCAL_DOMAIN}${compile(
+      this.routes[type.toLowerCase()],
+      compileOptions,
+    )({
+      guid: getGuid(),
+    })}`,
+  );
+
   this.activity.id = activityId; // Overwrite ID
 
   if (isTypeOf(this.activity, AP.ActivityTypes)) {

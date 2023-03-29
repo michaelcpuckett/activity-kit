@@ -5,6 +5,7 @@ import {
   getGuid,
 } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
+import { compile } from 'path-to-regexp';
 
 export async function wrapInActivity(this: OutboxPostEndpoint) {
   this.activity = combineAddresses({
@@ -13,7 +14,20 @@ export async function wrapInActivity(this: OutboxPostEndpoint) {
     object: this.activity,
   });
 
-  const activityId = new URL(`${LOCAL_DOMAIN}/entity/${getGuid()}`);
+  const compileOptions = { encode: encodeURIComponent };
+
+  const type = Array.isArray(this.activity.type)
+    ? this.activity.type[0]
+    : this.activity.type;
+
+  const activityId = new URL(
+    `${LOCAL_DOMAIN}${compile(
+      this.routes[type.toLowerCase()],
+      compileOptions,
+    )({
+      guid: getGuid(),
+    })}`,
+  );
   this.activity.id = activityId; // Overwrite ID
   this.activity.url = activityId;
 

@@ -13,7 +13,6 @@ async function createServerActor() {
     const userId = getRouteUrl(this.routes.application, {
         username: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
     });
-    const entityRoute = userId.pathname;
     const inboxId = new URL(`${userId}/inbox`);
     const botInbox = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,

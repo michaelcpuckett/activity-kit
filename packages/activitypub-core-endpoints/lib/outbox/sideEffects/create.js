@@ -5,6 +5,7 @@ const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
+const path_to_regexp_1 = require("path-to-regexp");
 async function handleCreate(activity) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.CREATE);
     const actorId = (0, activitypub_core_utilities_3.getId)(activity.actor);
@@ -17,18 +18,11 @@ async function handleCreate(activity) {
         throw new Error('Internal error: Object array not supported currently. TODO.');
     }
     (0, activitypub_core_types_1.assertIsApEntity)(object);
-    let objectId = `${activitypub_core_utilities_2.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_3.getGuid)()}`;
-    if (this.plugins && (0, activitypub_core_utilities_1.isTypeOf)(object, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
-        (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
-        for (const plugin of this.plugins) {
-            if ('generateObjectId' in plugin) {
-                const pluginObjectId = plugin.generateObjectId(object);
-                if (pluginObjectId) {
-                    objectId = pluginObjectId;
-                }
-            }
-        }
-    }
+    const compileOptions = { encode: encodeURIComponent };
+    const type = Array.isArray(object.type) ? object.type[0] : object.type;
+    const objectId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()], compileOptions)({
+        guid: (0, activitypub_core_utilities_3.getGuid)(),
+    })}`);
     object.id = new URL(objectId);
     if ((0, activitypub_core_utilities_1.isTypeOf)(object, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
         (0, activitypub_core_types_1.assertIsApExtendedObject)(object);

@@ -43,7 +43,7 @@ const activityPub = (config) => async (req, res, next) => {
             }
             if (matchesRoute(routes.outbox)) {
                 console.log(matchesRoute(routes.outbox));
-                await new activitypub_core_endpoints_1.OutboxPostEndpoint(req, res, config.adapters, config.plugins).respond();
+                await new activitypub_core_endpoints_1.OutboxPostEndpoint(routes, req, res, config.adapters, config.plugins).respond();
                 next();
                 return;
             }

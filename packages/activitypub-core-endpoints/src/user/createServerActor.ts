@@ -24,8 +24,6 @@ export async function createServerActor(this: UserPostEndpoint) {
     username: SERVER_ACTOR_USERNAME,
   });
 
-  const entityRoute = userId.pathname;
-
   const inboxId = new URL(`${userId}/inbox`);
 
   const botInbox: AP.OrderedCollection = {

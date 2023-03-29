@@ -5,10 +5,12 @@ import {
   assertIsApEntity,
   assertIsApExtendedObject,
   assertIsApType,
+  assertIsString,
 } from 'activitypub-core-types';
 import { ACTIVITYSTREAMS_CONTEXT, isTypeOf } from 'activitypub-core-utilities';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { getId, getGuid } from 'activitypub-core-utilities';
+import { compile } from 'path-to-regexp';
 
 export async function handleCreate(
   this: OutboxPostEndpoint,
@@ -34,21 +36,18 @@ export async function handleCreate(
 
   assertIsApEntity(object);
 
-  let objectId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
+  const compileOptions = { encode: encodeURIComponent };
 
-  if (this.plugins && isTypeOf(object, AP.ExtendedObjectTypes)) {
-    assertIsApExtendedObject(object);
+  const type = Array.isArray(object.type) ? object.type[0] : object.type;
 
-    for (const plugin of this.plugins) {
-      if ('generateObjectId' in plugin) {
-        const pluginObjectId = plugin.generateObjectId(object);
-
-        if (pluginObjectId) {
-          objectId = pluginObjectId;
-        }
-      }
-    }
-  }
+  const objectId = new URL(
+    `${LOCAL_DOMAIN}${compile(
+      this.routes[type.toLowerCase()],
+      compileOptions,
+    )({
+      guid: getGuid(),
+    })}`,
+  );
 
   object.id = new URL(objectId);
 

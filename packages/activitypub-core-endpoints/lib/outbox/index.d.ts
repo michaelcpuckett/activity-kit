@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { AP } from 'activitypub-core-types';
+import { AP, Routes } from 'activitypub-core-types';
 import type { AuthAdapter, DbAdapter, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
@@ -26,6 +26,7 @@ import { handleUndoAccept } from './sideEffects/undo/undoAccept';
 import { handleUndoLike } from './sideEffects/undo/undoLike';
 import { handleUndoAnnounce } from './sideEffects/undo/undoAnnounce';
 export declare class OutboxPostEndpoint {
+    routes: Routes;
     req: IncomingMessage;
     res: ServerResponse;
     adapters: {
@@ -36,7 +37,7 @@ export declare class OutboxPostEndpoint {
     plugins?: Plugin[];
     actor: AP.Actor | null;
     activity: AP.Entity | null;
-    constructor(req: IncomingMessage, res: ServerResponse, adapters: {
+    constructor(routes: Routes, req: IncomingMessage, res: ServerResponse, adapters: {
         auth: AuthAdapter;
         db: DbAdapter;
         delivery: DeliveryAdapter;

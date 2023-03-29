@@ -24,13 +24,14 @@ const undoAccept_1 = require("./sideEffects/undo/undoAccept");
 const undoLike_1 = require("./sideEffects/undo/undoLike");
 const undoAnnounce_1 = require("./sideEffects/undo/undoAnnounce");
 class OutboxPostEndpoint {
+    routes;
     req;
     res;
     adapters;
     plugins;
     actor = null;
     activity = null;
-    constructor(req, res, adapters, plugins) {
+    constructor(routes, req, res, adapters, plugins) {
         this.req = req;
         this.res = res;
         this.adapters = adapters;
