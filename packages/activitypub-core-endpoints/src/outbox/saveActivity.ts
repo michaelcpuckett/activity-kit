@@ -26,7 +26,9 @@ export async function saveActivity(this: OutboxPostEndpoint) {
   const entityRoute = activityId.pathname;
 
   const repliesId = new URL(
-    `${LOCAL_DOMAIN}${compile(this.routes.replies)({
+    `${LOCAL_DOMAIN}${compile(this.routes.replies, {
+      validate: false,
+    })({
       entityRoute,
     })}`,
   );
@@ -44,7 +46,9 @@ export async function saveActivity(this: OutboxPostEndpoint) {
   };
 
   const likesId = new URL(
-    `${LOCAL_DOMAIN}${compile(this.routes.likes)({
+    `${LOCAL_DOMAIN}${compile(this.routes.likes, {
+      validate: false,
+    })({
       entityRoute,
     })}`,
   );
@@ -62,7 +66,9 @@ export async function saveActivity(this: OutboxPostEndpoint) {
   };
 
   const sharesId = new URL(
-    `${LOCAL_DOMAIN}${compile(this.routes.shares)({
+    `${LOCAL_DOMAIN}${compile(this.routes.shares, {
+      validate: false,
+    })({
       entityRoute,
     })}`,
   );

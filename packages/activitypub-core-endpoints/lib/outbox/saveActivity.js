@@ -13,7 +13,9 @@ async function saveActivity() {
     const actorId = (0, activitypub_core_utilities_1.getId)(this.activity.actor);
     (0, activitypub_core_types_1.assertExists)(actorId);
     const entityRoute = activityId.pathname;
-    const repliesId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.replies)({
+    const repliesId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.replies, {
+        validate: false,
+    })({
         entityRoute,
     })}`);
     const replies = {
@@ -27,7 +29,9 @@ async function saveActivity() {
         attributedTo: actorId,
         published: publishedDate,
     };
-    const likesId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.likes)({
+    const likesId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.likes, {
+        validate: false,
+    })({
         entityRoute,
     })}`);
     const likes = {
@@ -41,7 +45,9 @@ async function saveActivity() {
         attributedTo: actorId,
         published: publishedDate,
     };
-    const sharesId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.shares)({
+    const sharesId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.shares, {
+        validate: false,
+    })({
         entityRoute,
     })}`);
     const shares = {
