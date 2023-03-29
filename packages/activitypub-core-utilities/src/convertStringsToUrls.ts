@@ -44,7 +44,10 @@ export function convertStringsToUrls(originalEntity: {
             } else {
               const date = Date.parse(item);
 
-              if (!isNaN(new Date(item).getDate())) {
+              if (
+                !Number.isNaN(date) &&
+                item === new Date(date).toISOString()
+              ) {
                 return new Date(date);
               } else {
                 return item;
