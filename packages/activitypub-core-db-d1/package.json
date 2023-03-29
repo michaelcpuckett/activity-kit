@@ -1,0 +1,29 @@
+{
+  "name": "activitypub-core-db-d1",
+  "version": "0.2.33",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michaelcpuckett@gmail.com>",
+  "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelcpuckett/activitypub-core.git"
+  },
+  "scripts": {
+    "test": "node ./__tests__/activitypub-core-db-d1.test.js"
+  },
+  "bugs": {
+    "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
+  },
+  "dependencies": {
+    "@cloudflare/workers-types": "^4.20230321.0"
+  }
+}
