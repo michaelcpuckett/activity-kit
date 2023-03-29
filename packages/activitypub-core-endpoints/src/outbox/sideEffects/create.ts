@@ -36,6 +36,26 @@ export async function handleCreate(
 
   assertIsApEntity(object);
 
+  const publishedDate = new Date();
+
+  const dateFormatter = new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+
+  const [{ value: month }, , { value: day }, , { value: year }] =
+    dateFormatter.formatToParts(publishedDate);
+
+  const slug =
+    'summary' in object
+      ? object.summary
+          ?.toLowerCase()
+          .trim() // Remove whitespace from both ends of the string
+          .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
+          .replace(/^-+|-+$/g, '') ?? ''
+      : ''; // Remove leading and trailing hyphens;
+
   const compileOptions = { encode: encodeURIComponent };
 
   const type = Array.isArray(object.type) ? object.type[0] : object.type;
@@ -46,6 +66,10 @@ export async function handleCreate(
       compileOptions,
     )({
       guid: getGuid(),
+      year,
+      month,
+      day,
+      slug,
     })}`,
   );
 
@@ -55,8 +79,6 @@ export async function handleCreate(
     assertIsApExtendedObject(object);
 
     object.url = new URL(objectId);
-
-    const publishedDate = new Date();
 
     const objectRepliesId = new URL(`${objectId.toString()}/replies`);
     const objectReplies: AP.Collection = {

@@ -18,16 +18,33 @@ async function handleCreate(activity) {
         throw new Error('Internal error: Object array not supported currently. TODO.');
     }
     (0, activitypub_core_types_1.assertIsApEntity)(object);
+    const publishedDate = new Date();
+    const dateFormatter = new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    });
+    const [{ value: month }, , { value: day }, , { value: year }] = dateFormatter.formatToParts(publishedDate);
+    const slug = 'summary' in object
+        ? object.summary
+            ?.toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '') ?? ''
+        : '';
     const compileOptions = { encode: encodeURIComponent };
     const type = Array.isArray(object.type) ? object.type[0] : object.type;
     const objectId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()], compileOptions)({
         guid: (0, activitypub_core_utilities_3.getGuid)(),
+        year,
+        month,
+        day,
+        slug,
     })}`);
     object.id = new URL(objectId);
     if ((0, activitypub_core_utilities_1.isTypeOf)(object, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
         (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
         object.url = new URL(objectId);
-        const publishedDate = new Date();
         const objectRepliesId = new URL(`${objectId.toString()}/replies`);
         const objectReplies = {
             '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
