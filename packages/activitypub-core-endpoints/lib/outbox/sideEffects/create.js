@@ -41,11 +41,14 @@ async function handleCreate(activity) {
         day,
         slug,
     })}`);
-    object.id = new URL(objectId);
+    object.id = objectId;
     if ((0, activitypub_core_utilities_1.isTypeOf)(object, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
         (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
-        object.url = new URL(objectId);
-        const objectRepliesId = new URL(`${objectId.toString()}/replies`);
+        object.url = objectId;
+        const entityRoute = objectId.pathname;
+        const objectRepliesId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.replies, compileOptions)({
+            entityRoute,
+        })}`);
         const objectReplies = {
             '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
             id: objectRepliesId,
@@ -57,7 +60,9 @@ async function handleCreate(activity) {
             published: publishedDate,
             attributedTo: actorId,
         };
-        const objectLikesId = new URL(`${objectId.toString()}/likes`);
+        const objectLikesId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.likes, compileOptions)({
+            entityRoute,
+        })}`);
         const objectLikes = {
             '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
             id: objectLikesId,
@@ -69,7 +74,9 @@ async function handleCreate(activity) {
             published: publishedDate,
             attributedTo: actorId,
         };
-        const objectSharesId = new URL(`${objectId.toString()}/shares`);
+        const objectSharesId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.shares, compileOptions)({
+            entityRoute,
+        })}`);
         const objectShares = {
             '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
             id: objectSharesId,
@@ -97,7 +104,7 @@ async function handleCreate(activity) {
             if (objectInReplyTo && 'replies' in objectInReplyTo) {
                 const repliesCollectionId = (0, activitypub_core_utilities_3.getId)(objectInReplyTo.replies);
                 if (repliesCollectionId) {
-                    await this.adapters.db.insertOrderedItem(repliesCollectionId, new URL(objectId));
+                    await this.adapters.db.insertOrderedItem(repliesCollectionId, objectId);
                 }
             }
         }

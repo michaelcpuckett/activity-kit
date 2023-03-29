@@ -5,7 +5,6 @@ import {
   assertIsApEntity,
   assertIsApExtendedObject,
   assertIsApType,
-  assertIsString,
 } from 'activitypub-core-types';
 import { ACTIVITYSTREAMS_CONTEXT, isTypeOf } from 'activitypub-core-utilities';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
@@ -73,14 +72,24 @@ export async function handleCreate(
     })}`,
   );
 
-  object.id = new URL(objectId);
+  object.id = objectId;
 
   if (isTypeOf(object, AP.ExtendedObjectTypes)) {
     assertIsApExtendedObject(object);
 
-    object.url = new URL(objectId);
+    object.url = objectId;
 
-    const objectRepliesId = new URL(`${objectId.toString()}/replies`);
+    const entityRoute = objectId.pathname;
+
+    const objectRepliesId = new URL(
+      `${LOCAL_DOMAIN}${compile(
+        this.routes.replies,
+        compileOptions,
+      )({
+        entityRoute,
+      })}`,
+    );
+
     const objectReplies: AP.Collection = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: objectRepliesId,
@@ -93,7 +102,15 @@ export async function handleCreate(
       attributedTo: actorId,
     };
 
-    const objectLikesId = new URL(`${objectId.toString()}/likes`);
+    const objectLikesId = new URL(
+      `${LOCAL_DOMAIN}${compile(
+        this.routes.likes,
+        compileOptions,
+      )({
+        entityRoute,
+      })}`,
+    );
+
     const objectLikes: AP.OrderedCollection = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: objectLikesId,
@@ -106,7 +123,15 @@ export async function handleCreate(
       attributedTo: actorId,
     };
 
-    const objectSharesId = new URL(`${objectId.toString()}/shares`);
+    const objectSharesId = new URL(
+      `${LOCAL_DOMAIN}${compile(
+        this.routes.shares,
+        compileOptions,
+      )({
+        entityRoute,
+      })}`,
+    );
+
     const objectShares: AP.OrderedCollection = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: objectSharesId,
@@ -143,7 +168,7 @@ export async function handleCreate(
         if (repliesCollectionId) {
           await this.adapters.db.insertOrderedItem(
             repliesCollectionId,
-            new URL(objectId),
+            objectId,
           );
         }
       }
