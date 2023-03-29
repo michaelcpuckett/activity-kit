@@ -43,7 +43,7 @@ function convertStringsToUrls(originalEntity) {
                         }
                         else {
                             const date = Date.parse(item);
-                            if (!Number.isNaN(date)) {
+                            if (!isNaN(new Date(item).getDate())) {
                                 return new Date(date);
                             }
                             else {
