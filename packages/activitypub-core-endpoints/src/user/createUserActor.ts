@@ -37,10 +37,8 @@ export async function createUserActor(
 
   const publishedDate = new Date();
 
-  const compileOptions = { encode: encodeURIComponent };
-
   const getRouteUrl = (route: string, data: Record<string, string>) =>
-    new URL(`${LOCAL_DOMAIN}${compile(route, compileOptions)(data)}`);
+    new URL(`${LOCAL_DOMAIN}${compile(route)(data)}`);
 
   const userId = getRouteUrl(this.routes[user.type.toLowerCase()], {
     username: user.preferredUsername,

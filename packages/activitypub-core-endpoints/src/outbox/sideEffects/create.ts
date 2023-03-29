@@ -55,15 +55,10 @@ export async function handleCreate(
           .replace(/^-+|-+$/g, '') ?? ''
       : ''; // Remove leading and trailing hyphens;
 
-  const compileOptions = { encode: encodeURIComponent };
-
   const type = Array.isArray(object.type) ? object.type[0] : object.type;
 
   const objectId = new URL(
-    `${LOCAL_DOMAIN}${compile(
-      this.routes[type.toLowerCase()],
-      compileOptions,
-    )({
+    `${LOCAL_DOMAIN}${compile(this.routes[type.toLowerCase()])({
       guid: getGuid(),
       year,
       month,
@@ -82,10 +77,7 @@ export async function handleCreate(
     const entityRoute = objectId.pathname;
 
     const objectRepliesId = new URL(
-      `${LOCAL_DOMAIN}${compile(
-        this.routes.replies,
-        compileOptions,
-      )({
+      `${LOCAL_DOMAIN}${compile(this.routes.replies)({
         entityRoute,
       })}`,
     );
@@ -103,10 +95,7 @@ export async function handleCreate(
     };
 
     const objectLikesId = new URL(
-      `${LOCAL_DOMAIN}${compile(
-        this.routes.likes,
-        compileOptions,
-      )({
+      `${LOCAL_DOMAIN}${compile(this.routes.likes)({
         entityRoute,
       })}`,
     );
@@ -124,10 +113,7 @@ export async function handleCreate(
     };
 
     const objectSharesId = new URL(
-      `${LOCAL_DOMAIN}${compile(
-        this.routes.shares,
-        compileOptions,
-      )({
+      `${LOCAL_DOMAIN}${compile(this.routes.shares)({
         entityRoute,
       })}`,
     );
