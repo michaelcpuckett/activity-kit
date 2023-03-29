@@ -45,7 +45,9 @@ async function handleCreate(activity) {
         (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
         object.url = objectId;
         const entityRoute = objectId.pathname;
-        const objectRepliesId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.replies)({
+        const objectRepliesId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.replies, {
+            validate: false,
+        })({
             entityRoute,
         })}`);
         const objectReplies = {
@@ -59,7 +61,9 @@ async function handleCreate(activity) {
             published: publishedDate,
             attributedTo: actorId,
         };
-        const objectLikesId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.likes)({
+        const objectLikesId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.likes, {
+            validate: false,
+        })({
             entityRoute,
         })}`);
         const objectLikes = {
@@ -73,7 +77,9 @@ async function handleCreate(activity) {
             published: publishedDate,
             attributedTo: actorId,
         };
-        const objectSharesId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.shares)({
+        const objectSharesId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.shares, {
+            validate: false,
+        })({
             entityRoute,
         })}`);
         const objectShares = {

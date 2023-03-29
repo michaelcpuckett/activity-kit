@@ -77,7 +77,9 @@ export async function handleCreate(
     const entityRoute = objectId.pathname;
 
     const objectRepliesId = new URL(
-      `${LOCAL_DOMAIN}${compile(this.routes.replies)({
+      `${LOCAL_DOMAIN}${compile(this.routes.replies, {
+        validate: false,
+      })({
         entityRoute,
       })}`,
     );
@@ -95,7 +97,9 @@ export async function handleCreate(
     };
 
     const objectLikesId = new URL(
-      `${LOCAL_DOMAIN}${compile(this.routes.likes)({
+      `${LOCAL_DOMAIN}${compile(this.routes.likes, {
+        validate: false,
+      })({
         entityRoute,
       })}`,
     );
@@ -113,7 +117,9 @@ export async function handleCreate(
     };
 
     const objectSharesId = new URL(
-      `${LOCAL_DOMAIN}${compile(this.routes.shares)({
+      `${LOCAL_DOMAIN}${compile(this.routes.shares, {
+        validate: false,
+      })({
         entityRoute,
       })}`,
     );

@@ -12,7 +12,9 @@ async function createUserActor(user) {
     }
     const { publicKey, privateKey } = await (0, activitypub_core_utilities_2.generateKeyPair)();
     const publishedDate = new Date();
-    const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_3.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route)(data)}`);
+    const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_3.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
+        validate: false,
+    })(data)}`);
     const userId = getRouteUrl(this.routes[user.type.toLowerCase()], {
         username: user.preferredUsername,
     });
