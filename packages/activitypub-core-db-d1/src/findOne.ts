@@ -1,6 +1,16 @@
 import { D1DbAdapter } from '.';
-import { AP, DbOptions } from 'activitypub-core-types';
+import { AP, assertIsObject, DbOptions } from 'activitypub-core-types';
 import { convertStringsToUrls } from 'activitypub-core-utilities';
+
+type stringObjectFromDb = { _id: string };
+
+function assertHasIdKey(value: unknown): asserts value is stringObjectFromDb {
+  assertIsObject(value);
+
+  if (!('_id' in value)) {
+    throw new Error('Missing ID key');
+  }
+}
 
 export async function findOne(
   this: D1DbAdapter,
@@ -16,11 +26,13 @@ export async function findOne(
     .bind(keyValue)
     .first();
 
-  if (!value) {
+  try {
+    assertHasIdKey(value);
+  } catch (error) {
     return null;
   }
 
-  if (value && typeof value === 'object' && '_id' in value && value._id) {
+  if ('_id' in value && value._id) {
     delete value._id;
   }
 
@@ -40,5 +52,7 @@ export async function findOne(
     }
   }
 
-  return convertStringsToUrls(value as { [key: string]: string }) as AP.Entity;
+  return convertStringsToUrls(
+    value as unknown as { [key: string]: string },
+  ) as AP.Entity;
 }

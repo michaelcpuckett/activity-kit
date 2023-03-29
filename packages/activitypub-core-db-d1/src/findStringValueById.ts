@@ -1,4 +1,17 @@
+import { assertIsObject } from 'activitypub-core-types';
 import { D1DbAdapter } from '.';
+
+type stringObjectFromDb = { value: string };
+
+function assertHasValueKey(
+  value: unknown,
+): asserts value is stringObjectFromDb {
+  assertIsObject(value);
+
+  if (!('value' in value)) {
+    throw new Error('Missing value key');
+  }
+}
 
 export async function findStringValueById(
   this: D1DbAdapter,
@@ -14,11 +27,13 @@ export async function findStringValueById(
     return '';
   }
 
-  if (
-    typeof one !== 'object' ||
-    !('value' in one) ||
-    typeof one.value !== 'string'
-  ) {
+  try {
+    assertHasValueKey(one);
+  } catch (error) {
+    return '';
+  }
+
+  if (!('value' in one) || typeof one.value !== 'string') {
     return '';
   }
 

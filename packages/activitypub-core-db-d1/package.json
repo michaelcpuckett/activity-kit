@@ -5,10 +5,10 @@
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
   "license": "MIT",
+  
   "main": "lib/index.js",
   "directories": {
-    "lib": "lib",
-    "test": "__tests__"
+    "lib": "lib"
   },
   "files": [
     "lib"
@@ -16,9 +16,11 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/michaelcpuckett/activitypub-core.git"
-  },
+  },  
   "scripts": {
-    "test": "node ./__tests__/activitypub-core-db-d1.test.js"
+    "build": "tsc --project tsconfig.json",
+    "format": "prettier --config .prettierrc \"**/*.ts\" --write",
+    "lint": "eslint src/**/*.ts"
   },
   "bugs": {
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
