@@ -10,6 +10,7 @@ import { ACTIVITYSTREAMS_CONTEXT, isTypeOf } from 'activitypub-core-utilities';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { getId, getGuid } from 'activitypub-core-utilities';
 import { compile } from 'path-to-regexp';
+import * as cheerio from 'cheerio';
 
 export async function handleCreate(
   this: OutboxPostEndpoint,
@@ -46,14 +47,15 @@ export async function handleCreate(
   const [{ value: month }, , { value: day }, , { value: year }] =
     dateFormatter.formatToParts(publishedDate);
 
-  const slug =
-    'summary' in object
-      ? object.summary
-          ?.toLowerCase()
-          .trim() // Remove whitespace from both ends of the string
-          .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
-          .replace(/^-+|-+$/g, '') ?? ''
-      : ''; // Remove leading and trailing hyphens;
+  const summary = 'summary' in object ? object.summary ?? '' : '';
+
+  const slug = cheerio
+    .load(summary, null, false)
+    .text()
+    .toLowerCase()
+    .trim() // Remove whitespace from both ends of the string
+    .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
+    .replace(/^-+|-+$/g, '');
 
   const type = Array.isArray(object.type) ? object.type[0] : object.type;
 

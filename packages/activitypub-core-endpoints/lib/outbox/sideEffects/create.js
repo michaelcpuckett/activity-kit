@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleCreate = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
@@ -6,6 +29,7 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
 const path_to_regexp_1 = require("path-to-regexp");
+const cheerio = __importStar(require("cheerio"));
 async function handleCreate(activity) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.CREATE);
     const actorId = (0, activitypub_core_utilities_3.getId)(activity.actor);
@@ -25,13 +49,14 @@ async function handleCreate(activity) {
         day: '2-digit',
     });
     const [{ value: month }, , { value: day }, , { value: year }] = dateFormatter.formatToParts(publishedDate);
-    const slug = 'summary' in object
-        ? object.summary
-            ?.toLowerCase()
-            .trim()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '') ?? ''
-        : '';
+    const summary = 'summary' in object ? object.summary ?? '' : '';
+    const slug = cheerio
+        .load(summary, null, false)
+        .text()
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
     const type = Array.isArray(object.type) ? object.type[0] : object.type;
     const objectId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()])({
         guid: (0, activitypub_core_utilities_3.getGuid)(),
