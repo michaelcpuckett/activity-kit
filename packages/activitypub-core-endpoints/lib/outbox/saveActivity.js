@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.saveActivity = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
+const path_to_regexp_1 = require("path-to-regexp");
 async function saveActivity() {
     (0, activitypub_core_types_1.assertIsApActivity)(this.activity);
     const publishedDate = new Date();
@@ -11,7 +12,10 @@ async function saveActivity() {
     (0, activitypub_core_types_1.assertExists)(activityId);
     const actorId = (0, activitypub_core_utilities_1.getId)(this.activity.actor);
     (0, activitypub_core_types_1.assertExists)(actorId);
-    const repliesId = new URL(`${activityId.toString()}/replies`);
+    const entityRoute = activityId.pathname;
+    const repliesId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.replies)({
+        entityRoute,
+    })}`);
     const replies = {
         '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
         id: repliesId,
@@ -23,7 +27,9 @@ async function saveActivity() {
         attributedTo: actorId,
         published: publishedDate,
     };
-    const likesId = new URL(`${activityId.toString()}/likes`);
+    const likesId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.likes)({
+        entityRoute,
+    })}`);
     const likes = {
         '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
         id: likesId,
@@ -35,7 +41,9 @@ async function saveActivity() {
         attributedTo: actorId,
         published: publishedDate,
     };
-    const sharesId = new URL(`${activityId.toString()}/shares`);
+    const sharesId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.shares)({
+        entityRoute,
+    })}`);
     const shares = {
         '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
         id: sharesId,

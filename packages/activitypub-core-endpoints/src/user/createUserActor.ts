@@ -192,44 +192,6 @@ export async function createUserActor(
     published: publishedDate,
   };
 
-  /*
-  const userReplies: AP.Collection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${userId}/replies`),
-    url: new URL(`${userId}/replies`),
-    name: 'Replies',
-    type: AP.CollectionTypes.COLLECTION,
-    totalItems: 0,
-    attributedTo: userId,
-    items: [],
-    published: publishedDate,
-  };
-
-  const userLikes: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${userId}/likes`),
-    url: new URL(`${userId}/likes`),
-    name: 'Likes',
-    type: AP.CollectionTypes.ORDERED_COLLECTION,
-    totalItems: 0,
-    attributedTo: userId,
-    orderedItems: [],
-    published: publishedDate,
-  };
-
-  const userShares: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
-    id: new URL(`${userId}/shares`),
-    url: new URL(`${userId}/shares`),
-    name: 'Shares',
-    type: AP.CollectionTypes.ORDERED_COLLECTION,
-    totalItems: 0,
-    attributedTo: userId,
-    orderedItems: [],
-    published: publishedDate,
-  };
-  */
-
   const userBookmarksId = getRouteUrl(this.routes.stream, {
     entityRoute,
     slug: 'bookmarks',
@@ -271,11 +233,6 @@ export async function createUserActor(
     followers: userFollowers.id,
     following: userFollowing.id,
     liked: userLiked.id,
-    /*
-    replies: userReplies.id,
-    likes: userLikes.id,
-    shares: userShares.id,
-    */
     streams: [
       userShared.id,
       userBlocks.id,
@@ -333,20 +290,10 @@ export async function createUserActor(
 
   await Promise.all([
     this.adapters.db.saveEntity(createActorActivity),
-    /*
-    this.adapters.db.saveEntity(createActorActivityReplies),
-    this.adapters.db.saveEntity(createActorActivityLikes),
-    this.adapters.db.saveEntity(createActorActivityShares),
-    */
     this.adapters.db.saveEntity(userActor),
     this.adapters.db.saveEntity(userInbox),
     this.adapters.db.saveEntity(userOutbox),
     this.adapters.db.saveEntity(userLiked),
-    /*
-    this.adapters.db.saveEntity(userReplies),
-    this.adapters.db.saveEntity(userLikes),
-    this.adapters.db.saveEntity(userShares),
-    */
     this.adapters.db.saveEntity(userFollowers),
     this.adapters.db.saveEntity(userFollowing),
     this.adapters.db.saveEntity(userShared),

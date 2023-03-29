@@ -28,6 +28,7 @@ export async function wrapInActivity(this: OutboxPostEndpoint) {
       guid: getGuid(),
     })}`,
   );
+
   this.activity.id = activityId; // Overwrite ID
   this.activity.url = activityId;
 

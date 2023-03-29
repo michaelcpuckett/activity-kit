@@ -1,6 +1,11 @@
 import { OutboxPostEndpoint } from '.';
 import { AP, assertExists, assertIsApActivity } from 'activitypub-core-types';
-import { getId, ACTIVITYSTREAMS_CONTEXT } from 'activitypub-core-utilities';
+import {
+  getId,
+  ACTIVITYSTREAMS_CONTEXT,
+  LOCAL_DOMAIN,
+} from 'activitypub-core-utilities';
+import { compile } from 'path-to-regexp';
 
 export async function saveActivity(this: OutboxPostEndpoint) {
   assertIsApActivity(this.activity);
@@ -18,7 +23,14 @@ export async function saveActivity(this: OutboxPostEndpoint) {
 
   // Attach replies, likes, and shares.
 
-  const repliesId = new URL(`${activityId.toString()}/replies`);
+  const entityRoute = activityId.pathname;
+
+  const repliesId = new URL(
+    `${LOCAL_DOMAIN}${compile(this.routes.replies)({
+      entityRoute,
+    })}`,
+  );
+
   const replies: AP.Collection = {
     '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
     id: repliesId,
@@ -31,7 +43,12 @@ export async function saveActivity(this: OutboxPostEndpoint) {
     published: publishedDate,
   };
 
-  const likesId = new URL(`${activityId.toString()}/likes`);
+  const likesId = new URL(
+    `${LOCAL_DOMAIN}${compile(this.routes.likes)({
+      entityRoute,
+    })}`,
+  );
+
   const likes: AP.OrderedCollection = {
     '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
     id: likesId,
@@ -44,7 +61,12 @@ export async function saveActivity(this: OutboxPostEndpoint) {
     published: publishedDate,
   };
 
-  const sharesId = new URL(`${activityId.toString()}/shares`);
+  const sharesId = new URL(
+    `${LOCAL_DOMAIN}${compile(this.routes.shares)({
+      entityRoute,
+    })}`,
+  );
+
   const shares: AP.OrderedCollection = {
     '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
     id: sharesId,

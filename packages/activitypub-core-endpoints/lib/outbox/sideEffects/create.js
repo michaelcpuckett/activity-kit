@@ -111,7 +111,8 @@ async function handleCreate(activity) {
     else {
         await this.adapters.db.saveEntity(object);
     }
-    activity.object = object;
+    (0, activitypub_core_types_1.assertIsApType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.CREATE);
+    this.activity.object = object;
 }
 exports.handleCreate = handleCreate;
 //# sourceMappingURL=create.js.map
