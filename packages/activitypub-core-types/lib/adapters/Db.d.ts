@@ -22,6 +22,7 @@ export declare type DbAdapter = {
     findStringValueById: (this: DbAdapter, dbCollection: string, _id: string) => Promise<string>;
     getActorByUserId: (this: DbAdapter, userId: string) => Promise<AP.Actor | null>;
     getStreamByName: (this: DbAdapter, actor: AP.Actor, name: string) => Promise<AP.Collection | AP.OrderedCollection | null>;
+    getCollectionItems: (this: DbAdapter, entity: URL | AP.Collection | AP.OrderedCollection) => Promise<AP.EntityReference[]>;
     insertItem: (this: DbAdapter, path: URL, url: URL) => Promise<void>;
     removeItem: (this: DbAdapter, path: URL, url: URL) => Promise<void>;
     insertOrderedItem: (this: DbAdapter, path: URL, url: URL) => Promise<void>;
