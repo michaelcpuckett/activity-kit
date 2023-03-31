@@ -14,10 +14,10 @@ export async function createUser(
   },
 ) {
   if (!firebaseAdmin.apps.length) {
-    firebaseAdmin.initializeApp(this.appOptions);
+    firebaseAdmin.initializeApp(this.params.appOptions);
   }
 
-  return await firebaseAdmin.auth().createUser({
+  const { uid } = await firebaseAdmin.auth().createUser({
     email,
     emailVerified: false,
     ...(password
@@ -28,4 +28,6 @@ export async function createUser(
     displayName: preferredUsername,
     disabled: false,
   });
+
+  return { uid, token: '' };
 }

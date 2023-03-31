@@ -114,7 +114,7 @@ export class UserPostEndpoint {
     }
 
     try {
-      const user = await this.adapters.auth.createUser({
+      const { uid, token } = await this.adapters.auth.createUser({
         email,
         password,
         preferredUsername,
@@ -129,7 +129,7 @@ export class UserPostEndpoint {
       }
 
       await this.createUserActor({
-        uid: user.uid,
+        uid,
         type,
         email,
         preferredUsername,
@@ -139,7 +139,7 @@ export class UserPostEndpoint {
       this.res.statusCode = 200;
       this.res.write(
         JSON.stringify({
-          success: true,
+          token,
         }),
       );
       this.res.end();

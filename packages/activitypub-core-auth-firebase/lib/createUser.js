@@ -27,9 +27,9 @@ exports.createUser = void 0;
 const firebaseAdmin = __importStar(require("firebase-admin"));
 async function createUser({ email, password, preferredUsername, }) {
     if (!firebaseAdmin.apps.length) {
-        firebaseAdmin.initializeApp(this.appOptions);
+        firebaseAdmin.initializeApp(this.params.appOptions);
     }
-    return await firebaseAdmin.auth().createUser({
+    const { uid } = await firebaseAdmin.auth().createUser({
         email,
         emailVerified: false,
         ...(password
@@ -40,6 +40,7 @@ async function createUser({ email, password, preferredUsername, }) {
         displayName: preferredUsername,
         disabled: false,
     });
+    return { uid, token: '' };
 }
 exports.createUser = createUser;
 //# sourceMappingURL=createUser.js.map

@@ -1,17 +1,18 @@
-import type { ServiceAccount } from 'firebase-admin';
-import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
+import type { AuthAdapter, DbAdapter } from 'activitypub-core-types';
 import { createUser } from './createUser';
 import { getUserIdByToken } from './getUserIdByToken';
 import { getTokenByUserId } from './getTokenByUserId';
 import { authenticatePassword } from './authenticatePassword';
-export declare class FirebaseAuthAdapter implements AuthAdapter {
+export declare class CryptoAuthAdapter implements AuthAdapter {
     adapters: {
         db: DbAdapter;
     };
     params: {
         [key: string]: unknown;
     };
-    constructor(serviceAccount: ServiceAccount, projectId: string);
+    constructor(adapters: {
+        db: DbAdapter;
+    });
     authenticatePassword: typeof authenticatePassword;
     createUser: typeof createUser;
     getUserIdByToken: typeof getUserIdByToken;

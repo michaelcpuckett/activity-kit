@@ -3,4 +3,7 @@ export declare function createUser(this: FirebaseAuthAdapter, { email, password,
     email: string;
     password?: string;
     preferredUsername: string;
-}): Promise<import("firebase-admin/lib/auth/user-record").UserRecord>;
+}): Promise<{
+    uid: string;
+    token: string;
+}>;

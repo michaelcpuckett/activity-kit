@@ -6,7 +6,7 @@ export async function getUserIdByToken(
   token: string,
 ): Promise<string | null> {
   if (!firebaseAdmin.apps.length) {
-    firebaseAdmin.initializeApp(this.appOptions);
+    firebaseAdmin.initializeApp(this.params.appOptions);
   }
 
   const user = !token
@@ -22,9 +22,8 @@ export async function getUserIdByToken(
           return null;
         });
 
-  if (!user?.uid) {
-    return null;
+  if (user.uid) {
+    return user.uid;
   }
-
-  return user.uid;
+  return null;
 }

@@ -27,7 +27,7 @@ exports.getUserIdByToken = void 0;
 const firebaseAdmin = __importStar(require("firebase-admin"));
 async function getUserIdByToken(token) {
     if (!firebaseAdmin.apps.length) {
-        firebaseAdmin.initializeApp(this.appOptions);
+        firebaseAdmin.initializeApp(this.params.appOptions);
     }
     const user = !token
         ? null
@@ -41,10 +41,10 @@ async function getUserIdByToken(token) {
             console.error(String(error));
             return null;
         });
-    if (!user?.uid) {
-        return null;
+    if (user.uid) {
+        return user.uid;
     }
-    return user.uid;
+    return null;
 }
 exports.getUserIdByToken = getUserIdByToken;
 //# sourceMappingURL=getUserIdByToken.js.map

@@ -27,11 +27,13 @@ exports.FirebaseAuthAdapter = void 0;
 const firebaseAdmin = __importStar(require("firebase-admin"));
 const createUser_1 = require("./createUser");
 const getUserIdByToken_1 = require("./getUserIdByToken");
+const getTokenByUserId_1 = require("./getTokenByUserId");
 const authenticatePassword_1 = require("./authenticatePassword");
 class FirebaseAuthAdapter {
-    appOptions;
+    adapters;
+    params;
     constructor(serviceAccount, projectId) {
-        this.appOptions = {
+        this.params.appOptions = {
             credential: firebaseAdmin.credential.cert(serviceAccount),
             projectId,
         };
@@ -39,6 +41,7 @@ class FirebaseAuthAdapter {
     authenticatePassword = authenticatePassword_1.authenticatePassword;
     createUser = createUser_1.createUser;
     getUserIdByToken = getUserIdByToken_1.getUserIdByToken;
+    getTokenByUserId = getTokenByUserId_1.getTokenByUserId;
 }
 exports.FirebaseAuthAdapter = FirebaseAuthAdapter;
 //# sourceMappingURL=index.js.map
