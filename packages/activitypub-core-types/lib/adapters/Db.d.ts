@@ -1,8 +1,11 @@
 import * as AP from '../activitypub';
+import { FetchPolyfill } from './FetchPolyfill';
 export declare const DbOptions: {
     readonly CASE_INSENSITIVE: "CASE_INSENSITIVE";
 };
 export declare type DbAdapter = {
+    db: unknown;
+    fetch: FetchPolyfill;
     initializeDb?: (this: DbAdapter) => Promise<void>;
     expandCollection: (this: DbAdapter, collection: AP.EitherCollectionReference) => Promise<null | AP.EitherCollection>;
     expandEntity: (this: DbAdapter, originalEntity: AP.Entity) => Promise<AP.Entity>;

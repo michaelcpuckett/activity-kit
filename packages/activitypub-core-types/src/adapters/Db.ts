@@ -1,4 +1,5 @@
 import * as AP from '../activitypub';
+import { FetchPolyfill } from './FetchPolyfill';
 
 export const DbOptions = {
   CASE_INSENSITIVE: 'CASE_INSENSITIVE',
@@ -6,6 +7,9 @@ export const DbOptions = {
 
 // TODO Strip out functions from Db Adapter that don't need direct DB access
 export type DbAdapter = {
+  db: unknown;
+  fetch: FetchPolyfill;
+
   initializeDb?: (this: DbAdapter) => Promise<void>;
   expandCollection: (
     this: DbAdapter,
