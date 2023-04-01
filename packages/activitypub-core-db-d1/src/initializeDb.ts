@@ -1,7 +1,7 @@
 import { D1DbAdapter } from '.';
 import { D1Database } from '@cloudflare/workers-types';
 
-export async function initializeDb(this: D1DbAdapter) {
+export async function initializeDb(this: D1DbAdapter): Promise<void> {
   if (!(this.db instanceof D1Database)) {
     throw new Error('Bad database type.');
   }
