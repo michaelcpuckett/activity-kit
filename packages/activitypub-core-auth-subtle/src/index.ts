@@ -4,7 +4,7 @@ import { getUserIdByToken } from './getUserIdByToken';
 import { getTokenByUserId } from './getTokenByUserId';
 import { authenticatePassword } from './authenticatePassword';
 
-export class CryptoAuthAdapter implements AuthAdapter {
+export class SubtleAuthAdapter implements AuthAdapter {
   adapters: { db: DbAdapter };
   params: {
     [key: string]: unknown;

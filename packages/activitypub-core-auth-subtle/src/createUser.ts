@@ -1,4 +1,4 @@
-import { CryptoAuthAdapter } from '.';
+import { SubtleAuthAdapter } from '.';
 import { subtle } from 'crypto';
 
 const randomBytes = () => {
@@ -33,7 +33,7 @@ async function hashPassword(rawPassword: string): Promise<string> {
 }
 
 export async function createUser(
-  this: CryptoAuthAdapter,
+  this: SubtleAuthAdapter,
   {
     email,
     password,

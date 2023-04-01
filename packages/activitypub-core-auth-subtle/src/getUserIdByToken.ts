@@ -1,7 +1,7 @@
-import { CryptoAuthAdapter } from '.';
+import { SubtleAuthAdapter } from '.';
 
 export async function getUserIdByToken(
-  this: CryptoAuthAdapter,
+  this: SubtleAuthAdapter,
   token: string,
 ): Promise<string | null> {
   if (!('cookieStore' in this.params)) {

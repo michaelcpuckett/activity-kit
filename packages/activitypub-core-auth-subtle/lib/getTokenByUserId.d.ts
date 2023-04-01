@@ -1,2 +1,2 @@
-import { CryptoAuthAdapter } from '.';
-export declare function getTokenByUserId(this: CryptoAuthAdapter, userId: string): string;
+import { SubtleAuthAdapter } from '.';
+export declare function getTokenByUserId(this: SubtleAuthAdapter, userId: string): string;

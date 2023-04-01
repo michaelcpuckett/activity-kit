@@ -1,4 +1,4 @@
-import { CryptoAuthAdapter } from '.';
+import { SubtleAuthAdapter } from '.';
 import { subtle } from 'crypto';
 
 async function verifyPassword(
@@ -31,7 +31,7 @@ async function verifyPassword(
 }
 
 export async function authenticatePassword(
-  this: CryptoAuthAdapter,
+  this: SubtleAuthAdapter,
   email: string,
   password: string,
 ): Promise<{

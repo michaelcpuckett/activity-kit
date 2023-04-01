@@ -1,4 +1,4 @@
-import { CryptoAuthAdapter } from '.';
+import { SubtleAuthAdapter } from '.';
 
 const randomBytes = () => {
   const array = new Uint32Array(16);
@@ -7,7 +7,7 @@ const randomBytes = () => {
 };
 
 export function getTokenByUserId(
-  this: CryptoAuthAdapter,
+  this: SubtleAuthAdapter,
   userId: string,
 ): string {
   const token = randomBytes();

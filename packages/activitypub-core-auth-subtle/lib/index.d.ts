@@ -3,7 +3,7 @@ import { createUser } from './createUser';
 import { getUserIdByToken } from './getUserIdByToken';
 import { getTokenByUserId } from './getTokenByUserId';
 import { authenticatePassword } from './authenticatePassword';
-export declare class CryptoAuthAdapter implements AuthAdapter {
+export declare class SubtleAuthAdapter implements AuthAdapter {
     adapters: {
         db: DbAdapter;
     };
