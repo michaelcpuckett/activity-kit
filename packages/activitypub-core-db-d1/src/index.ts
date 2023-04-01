@@ -41,7 +41,7 @@ export class D1DbAdapter implements DbAdapter {
 
   // Initialize.
 
-  public initializeDb = initializeDb;
+  public initializeDb? = initializeDb;
 
   // Find.
 

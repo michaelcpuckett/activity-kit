@@ -22,7 +22,7 @@ export declare class D1DbAdapter implements DbAdapter {
     constructor(db: D1Database, adapters?: {
         fetch?: FetchPolyfill;
     });
-    initializeDb: typeof initializeDb;
+    initializeDb?: typeof initializeDb;
     findOne: typeof findOne;
     findAll: typeof findAll;
     findEntityById: typeof findEntityById;
