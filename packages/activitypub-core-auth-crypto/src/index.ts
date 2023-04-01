@@ -12,7 +12,9 @@ export class CryptoAuthAdapter implements AuthAdapter {
 
   constructor(adapters: { db: DbAdapter }) {
     this.adapters = adapters;
-    this.params.cookieStore = {};
+    this.params = {
+      cookieStore: {},
+    };
   }
 
   public authenticatePassword = authenticatePassword;

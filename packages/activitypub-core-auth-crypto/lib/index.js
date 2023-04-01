@@ -10,7 +10,9 @@ class CryptoAuthAdapter {
     params;
     constructor(adapters) {
         this.adapters = adapters;
-        this.params.cookieStore = {};
+        this.params = {
+            cookieStore: {},
+        };
     }
     authenticatePassword = authenticatePassword_1.authenticatePassword;
     createUser = createUser_1.createUser;
