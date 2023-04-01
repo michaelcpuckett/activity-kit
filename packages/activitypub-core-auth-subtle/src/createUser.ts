@@ -44,7 +44,7 @@ export async function createUser(
     preferredUsername: string;
   },
 ) {
-  const uid = randomBytes(16).toString('hex');
+  const uid = randomBytes();
   const hashedPassword = await hashPassword(password);
   const token = this.getTokenByUserId(uid);
   this.adapters.db.saveString('username', uid, preferredUsername);
