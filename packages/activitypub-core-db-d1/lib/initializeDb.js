@@ -6,23 +6,36 @@ async function initializeDb() {
     if (!(this.db instanceof workers_types_1.D1Database)) {
         throw new Error('Bad database type.');
     }
-    await this.db.exec(`CREATE TABLE IF NOT EXISTS peer (
+    await this.db
+        .prepare(`CREATE TABLE IF NOT EXISTS peer (
     _id TEXT PRIMARY KEY,
     value TEXT NOT NULL
-  );`);
-    await this.db.exec(`CREATE TABLE IF NOT EXISTS username (
+  );`)
+        .bind()
+        .run();
+    await this.db
+        .prepare(`CREATE TABLE IF NOT EXISTS username (
     _id TEXT PRIMARY KEY,
     value TEXT NOT NULL
-  );`);
-    await this.db.exec(`CREATE TABLE IF NOT EXISTS privateKey (
+  );`)
+        .bind()
+        .run();
+    await this.db
+        .prepare(`CREATE TABLE IF NOT EXISTS privateKey (
     _id TEXT PRIMARY KEY,
     value TEXT NOT NULL
-  );`);
-    await this.db.exec(`CREATE TABLE IF NOT EXISTS account (
+  );`)
+        .bind()
+        .run();
+    await this.db
+        .prepare(`CREATE TABLE IF NOT EXISTS account (
     _id TEXT PRIMARY KEY,
     value TEXT NOT NULL
-  );`);
-    await this.db.exec(`CREATE TABLE IF NOT EXISTS entity (
+  );`)
+        .bind()
+        .run();
+    await this.db
+        .prepare(`CREATE TABLE IF NOT EXISTS entity (
     _id TEXT PRIMARY KEY,
     id TEXT NOT NULL UNIQUE,
     type TEXT NOT NULL,
@@ -102,8 +115,11 @@ async function initializeDb() {
     radius INTEGER,
     units TEXT,
     describes TEXT
-  );`);
-    await this.db.exec(`CREATE TABLE IF NOT EXISTS foreignEntity (
+  );`)
+        .bind()
+        .run();
+    await this.db
+        .prepare(`CREATE TABLE IF NOT EXISTS foreignEntity (
     _id TEXT PRIMARY KEY,
     id TEXT NOT NULL UNIQUE,
     type TEXT NOT NULL,
@@ -183,7 +199,9 @@ async function initializeDb() {
     radius INTEGER,
     units TEXT,
     describes TEXT
-  );`);
+  );`)
+        .bind()
+        .run();
 }
 exports.initializeDb = initializeDb;
 //# sourceMappingURL=initializeDb.js.map
