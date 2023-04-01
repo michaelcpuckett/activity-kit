@@ -6,6 +6,12 @@ export function getTokenByUserId(
   userId: string,
 ): string {
   const token = randomBytes(16).toString('hex');
+
+  if (!('cookieStore' in this.params)) {
+    throw new Error('Error');
+  }
+
   this.params.cookieStore[token] = userId;
+
   return token;
 }
