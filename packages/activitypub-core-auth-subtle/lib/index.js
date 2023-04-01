@@ -8,9 +8,10 @@ const authenticatePassword_1 = require("./authenticatePassword");
 class SubtleAuthAdapter {
     adapters;
     params;
-    constructor(adapters) {
+    constructor(adapters, params) {
         this.adapters = adapters;
         this.params = {
+            ...params,
             cookieStore: {},
         };
     }

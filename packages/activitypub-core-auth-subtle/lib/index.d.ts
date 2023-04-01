@@ -12,6 +12,8 @@ export declare class SubtleAuthAdapter implements AuthAdapter {
     };
     constructor(adapters: {
         db: DbAdapter;
+    }, params: {
+        [key: string]: unknown;
     });
     authenticatePassword: typeof authenticatePassword;
     createUser: typeof createUser;

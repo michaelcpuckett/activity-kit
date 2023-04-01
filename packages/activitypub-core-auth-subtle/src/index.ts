@@ -10,9 +10,10 @@ export class SubtleAuthAdapter implements AuthAdapter {
     [key: string]: unknown;
   };
 
-  constructor(adapters: { db: DbAdapter }) {
+  constructor(adapters: { db: DbAdapter }, params: { [key: string]: unknown }) {
     this.adapters = adapters;
     this.params = {
+      ...params,
       cookieStore: {},
     };
   }
