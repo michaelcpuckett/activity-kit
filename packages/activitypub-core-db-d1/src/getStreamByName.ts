@@ -6,7 +6,7 @@ import {
 } from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
 
-export const getStreamByName = async function (
+export async function getStreamByName(
   this: D1DbAdapter,
   actor: AP.Actor,
   name: string,
@@ -38,4 +38,4 @@ export const getStreamByName = async function (
   }
 
   return null;
-};
+}

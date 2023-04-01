@@ -14,6 +14,7 @@ import { getCollectionItems } from './getCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
+import { getStreamByName } from './getStreamByName';
 import type { DbAdapter, FetchPolyfill } from 'activitypub-core-types';
 import type { D1Database } from '@cloudflare/workers-types';
 export declare class D1DbAdapter implements DbAdapter {
@@ -29,7 +30,7 @@ export declare class D1DbAdapter implements DbAdapter {
     findStringValueById: typeof findStringValueById;
     findStringIdByValue: typeof findStringIdByValue;
     getPrivateKey: typeof getPrivateKey;
-    getStreamByName: (this: D1DbAdapter, actor: import("activitypub-core-types/lib/activitypub").Actor, name: string) => Promise<import("activitypub-core-types/lib/activitypub").Collection | import("activitypub-core-types/lib/activitypub").OrderedCollection>;
+    getStreamByName: typeof getStreamByName;
     getActorByUserId: typeof getActorByUserId;
     saveEntity: typeof saveEntity;
     saveString: typeof saveString;
