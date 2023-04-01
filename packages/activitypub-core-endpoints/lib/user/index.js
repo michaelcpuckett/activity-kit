@@ -20,18 +20,7 @@ class UserPostEndpoint {
     createServerActor = createServerActor_1.createServerActor;
     createUserActor = createUserActor_1.createUserActor;
     async respond() {
-        const body = await new Promise((resolve, reject) => {
-            let data = '';
-            this.req.on('data', function (chunk) {
-                data += chunk;
-            });
-            this.req.on('end', function () {
-                resolve(JSON.parse(data));
-            });
-            this.req.on('error', function () {
-                reject('Failed to make an OAuth request');
-            });
-        });
+        const body = JSON.parse(await (0, activitypub_core_utilities_1.streamToString)(this.req));
         const { email, type, password, name, preferredUsername } = body;
         if (!email) {
             this.res.statusCode = 300;

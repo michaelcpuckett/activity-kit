@@ -1,6 +1,7 @@
 import {
   RESERVED_USERNAMES,
   SERVER_ACTOR_USERNAME,
+  streamToString,
 } from 'activitypub-core-utilities';
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
@@ -41,22 +42,8 @@ export class UserPostEndpoint {
   protected createUserActor = createUserActor;
 
   public async respond() {
-    const body: { [key: string]: string } = await new Promise(
-      (resolve, reject) => {
-        let data = '';
-
-        this.req.on('data', function (chunk) {
-          data += chunk;
-        });
-
-        this.req.on('end', function () {
-          resolve(JSON.parse(data));
-        });
-
-        this.req.on('error', function () {
-          reject('Failed to make an OAuth request');
-        });
-      },
+    const body: { [key: string]: string } = JSON.parse(
+      await streamToString(this.req),
     );
 
     const { email, type, password, name, preferredUsername } = body;
