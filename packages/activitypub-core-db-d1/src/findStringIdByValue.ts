@@ -1,5 +1,6 @@
 import { assertIsObject } from 'activitypub-core-types';
 import { D1DbAdapter } from '.';
+import { D1Database } from '@cloudflare/workers-types';
 
 type stringObjectFromDb = { _id: string };
 
@@ -16,6 +17,10 @@ export async function findStringIdByValue(
   dbCollection: string,
   value: string,
 ): Promise<string> {
+  if (!(this.db instanceof D1Database)) {
+    throw new Error('Bad database type.');
+  }
+
   const one = await this.db
     .prepare(`SELECT * FROM ${dbCollection} WHERE value = ?;`)
     .bind(value)

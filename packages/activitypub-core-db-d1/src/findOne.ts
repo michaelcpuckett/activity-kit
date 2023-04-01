@@ -1,6 +1,7 @@
 import { D1DbAdapter } from '.';
 import { AP, assertIsObject, DbOptions } from 'activitypub-core-types';
 import { convertStringsToUrls } from 'activitypub-core-utilities';
+import { D1Database } from '@cloudflare/workers-types';
 
 type stringObjectFromDb = { _id: string };
 
@@ -18,6 +19,10 @@ export async function findOne(
   matchingObject: { [key: string]: unknown },
   options?: Array<keyof typeof DbOptions>,
 ): Promise<AP.Entity | null> {
+  if (!(this.db instanceof D1Database)) {
+    throw new Error('Bad database type.');
+  }
+
   const [key] = Object.keys(matchingObject);
   const [keyValue] = Object.values(matchingObject);
 

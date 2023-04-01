@@ -6,8 +6,13 @@ import {
   convertUrlsToStrings,
   getCollectionNameByUrl,
 } from 'activitypub-core-utilities';
+import { D1Database } from '@cloudflare/workers-types';
 
 export async function saveEntity(this: D1DbAdapter, entity: AP.Entity) {
+  if (!(this.db instanceof D1Database)) {
+    throw new Error('Bad database type.');
+  }
+
   if (!entity.id) {
     throw new Error('No ID.');
   }

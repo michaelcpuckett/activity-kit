@@ -1,6 +1,11 @@
 import { D1DbAdapter } from '.';
+import { D1Database } from '@cloudflare/workers-types';
 
 export async function initializeDb(this: D1DbAdapter) {
+  if (!(this.db instanceof D1Database)) {
+    throw new Error('Bad database type.');
+  }
+
   await this.db.exec(`CREATE TABLE IF NOT EXISTS peer (
     _id TEXT PRIMARY KEY,
     value TEXT NOT NULL

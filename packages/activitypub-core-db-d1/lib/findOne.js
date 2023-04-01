@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.findOne = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
+const workers_types_1 = require("@cloudflare/workers-types");
 function assertHasIdKey(value) {
     (0, activitypub_core_types_1.assertIsObject)(value);
     if (!('_id' in value)) {
@@ -10,6 +11,9 @@ function assertHasIdKey(value) {
     }
 }
 async function findOne(collection, matchingObject, options) {
+    if (!(this.db instanceof workers_types_1.D1Database)) {
+        throw new Error('Bad database type.');
+    }
     const [key] = Object.keys(matchingObject);
     const [keyValue] = Object.values(matchingObject);
     const value = await this.db

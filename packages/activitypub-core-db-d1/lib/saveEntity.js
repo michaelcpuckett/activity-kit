@@ -2,7 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.saveEntity = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
+const workers_types_1 = require("@cloudflare/workers-types");
 async function saveEntity(entity) {
+    if (!(this.db instanceof workers_types_1.D1Database)) {
+        throw new Error('Bad database type.');
+    }
     if (!entity.id) {
         throw new Error('No ID.');
     }

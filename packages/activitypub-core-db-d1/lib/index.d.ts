@@ -17,7 +17,7 @@ import { getActorByUserId } from './getActorByUserId';
 import type { DbAdapter, FetchPolyfill } from 'activitypub-core-types';
 import type { D1Database } from '@cloudflare/workers-types';
 export declare class D1DbAdapter implements DbAdapter {
-    db: D1Database;
+    db: unknown;
     fetch: FetchPolyfill;
     constructor(db: D1Database, adapters?: {
         fetch?: FetchPolyfill;

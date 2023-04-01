@@ -1,4 +1,5 @@
 import { D1DbAdapter } from '.';
+import { D1Database } from '@cloudflare/workers-types';
 
 export async function saveString(
   this: D1DbAdapter,
@@ -6,6 +7,10 @@ export async function saveString(
   _id: string,
   value: string,
 ) {
+  if (!(this.db instanceof D1Database)) {
+    throw new Error('Bad database type.');
+  }
+
   const existingRecord = await this.db
     .prepare(`SELECT * from ${dbCollection} WHERE _id = ?;`)
     .bind(_id)

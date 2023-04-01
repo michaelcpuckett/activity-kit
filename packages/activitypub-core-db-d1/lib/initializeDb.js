@@ -1,7 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeDb = void 0;
+const workers_types_1 = require("@cloudflare/workers-types");
 async function initializeDb() {
+    if (!(this.db instanceof workers_types_1.D1Database)) {
+        throw new Error('Bad database type.');
+    }
     await this.db.exec(`CREATE TABLE IF NOT EXISTS peer (
     _id TEXT PRIMARY KEY,
     value TEXT NOT NULL
