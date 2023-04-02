@@ -1,4 +1,5 @@
 import * as AP from '../activitypub';
+import { CryptoAdapter } from './Crypto';
 import { FetchPolyfill } from './FetchPolyfill';
 
 export const DbOptions = {
@@ -8,7 +9,10 @@ export const DbOptions = {
 // TODO Strip out functions from Db Adapter that don't need direct DB access
 export type DbAdapter = {
   db: unknown;
-  fetch: FetchPolyfill;
+  adapters: {
+    crypto: CryptoAdapter;
+    fetch?: FetchPolyfill;
+  };
 
   initializeDb?: (this: DbAdapter) => Promise<void>;
   expandCollection: (

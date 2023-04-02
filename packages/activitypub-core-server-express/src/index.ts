@@ -14,7 +14,7 @@ import {
   NodeinfoGetEndpoint,
   ProxyGetEndpoint,
 } from 'activitypub-core-endpoints';
-import { AP, Plugin } from 'activitypub-core-types';
+import { Adapters, AP, Plugin } from 'activitypub-core-types';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
 import type {
   DbAdapter,
@@ -47,12 +47,7 @@ export const activityPub =
       }) => Promise<string>;
     };
 
-    adapters: {
-      auth: AuthAdapter;
-      db: DbAdapter;
-      delivery: DeliveryAdapter;
-      storage: StorageAdapter;
-    };
+    adapters: Adapters;
 
     plugins?: Plugin[];
   }) =>
@@ -97,6 +92,7 @@ export const activityPub =
 
         if (req.url === '/sharedInbox') {
           await new SharedInboxPostEndpoint(
+            routes,
             req,
             res,
             config.adapters,
@@ -108,6 +104,7 @@ export const activityPub =
 
         if (matchesRoute(routes.inbox)) {
           await new InboxPostEndpoint(
+            routes,
             req,
             res,
             config.adapters,

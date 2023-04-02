@@ -1,17 +1,11 @@
 import { CryptoAuthAdapter } from '.';
-import { pbkdf2 } from 'crypto';
 
 async function verifyPassword(
   password: string,
   hashedPassword: string,
 ): Promise<boolean> {
   const [salt, storedHashedPassword] = hashedPassword.split(':');
-  const derivedKey = await new Promise<string>((resolve, reject) => {
-    pbkdf2(password, salt, 100000, 64, 'sha512', (err, key) => {
-      if (err) reject(err);
-      resolve(key.toString('hex'));
-    });
-  });
+  const derivedKey = await this.adapters.crypto.hashPassword(password, salt);
   return derivedKey === storedHashedPassword;
 }
 
@@ -35,7 +29,7 @@ export async function authenticatePassword(
   );
 
   if (await verifyPassword(password, hashedPassword)) {
-    const token = this.getTokenByUserId(uid);
+    const token = await this.getTokenByUserId(uid);
 
     return {
       uid,

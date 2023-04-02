@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTokenByUserId = void 0;
-const crypto_1 = require("crypto");
-function getTokenByUserId(userId) {
-    const token = (0, crypto_1.randomBytes)(16).toString('hex');
+async function getTokenByUserId(userId) {
+    const token = await this.adapters.crypto.randomBytes(16);
     if (!('cookieStore' in this.params)) {
         throw new Error('Error');
     }

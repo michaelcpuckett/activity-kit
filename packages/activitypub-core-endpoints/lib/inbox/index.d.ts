@@ -1,7 +1,6 @@
 /// <reference types="node" />
-import { AP, Plugin } from 'activitypub-core-types';
+import { Adapters, AP, Plugin, Routes } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
-import type { DbAdapter, AuthAdapter } from 'activitypub-core-types';
 import { getActors } from './getActors';
 import { parseBody } from './parseBody';
 import { respond } from './respond';
@@ -15,22 +14,14 @@ import { handleLike } from './sideEffects/like';
 import { handleCreate } from './sideEffects/create';
 import { shouldForwardActivity } from './shouldForwardActivity';
 import { broadcastActivity } from './broadcastActivity';
-import { DeliveryAdapter } from 'activitypub-core-delivery';
 export declare class InboxPostEndpoint {
+    routes: Routes;
     req: IncomingMessage;
     res: ServerResponse;
-    adapters: {
-        auth: AuthAdapter;
-        db: DbAdapter;
-        delivery: DeliveryAdapter;
-    };
+    adapters: Adapters;
     plugins?: Plugin[];
     activity: AP.Entity | null;
-    constructor(req: IncomingMessage, res: ServerResponse, adapters: {
-        auth: AuthAdapter;
-        db: DbAdapter;
-        delivery: DeliveryAdapter;
-    }, plugins?: Plugin[]);
+    constructor(routes: Routes, req: IncomingMessage, res: ServerResponse, adapters: Adapters, plugins?: Plugin[]);
     protected getActors: typeof getActors;
     protected runSideEffects: typeof runSideEffects;
     protected parseBody: typeof parseBody;

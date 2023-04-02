@@ -1,14 +1,11 @@
 import { CryptoAuthAdapter } from '.';
-import { pbkdf2, randomBytes } from 'crypto';
 
 async function hashPassword(password: string): Promise<string> {
-  const salt = randomBytes(16).toString('hex');
-  const hashedPassword = await new Promise<string>((resolve, reject) => {
-    pbkdf2(password, salt, 100000, 64, 'sha512', (err, derivedKey) => {
-      if (err) reject(err);
-      resolve(derivedKey.toString('hex'));
-    });
-  });
+  const salt = await this.adapters.crypto.randomBytes(16);
+  const hashedPassword = await this.adapters.crypto.hashPassword(
+    password,
+    salt,
+  );
 
   return `${salt}:${hashedPassword}`;
 }
@@ -25,9 +22,9 @@ export async function createUser(
     preferredUsername: string;
   },
 ) {
-  const uid = randomBytes(16).toString('hex');
+  const uid = await this.adapters.crypto.randomBytes(16);
   const hashedPassword = await hashPassword(password);
-  const token = this.getTokenByUserId(uid);
+  const token = await this.getTokenByUserId(uid);
   this.adapters.db.saveString('username', uid, preferredUsername);
   this.adapters.db.saveString('email', uid, email);
   this.adapters.db.saveString('hashedPassword', uid, hashedPassword);

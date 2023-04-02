@@ -24,10 +24,13 @@ const getActorByUserId_1 = require("./getActorByUserId");
 const getStreamByName_1 = require("./getStreamByName");
 class D1DbAdapter {
     db;
-    fetch;
+    adapters;
     constructor(db, adapters) {
         this.db = db;
-        this.fetch = adapters?.fetch ?? isomorphic_fetch_1.default;
+        this.adapters = {
+            fetch: isomorphic_fetch_1.default,
+            ...adapters,
+        };
     }
     initializeDb = initializeDb_1.initializeDb;
     findOne = findOne_1.findOne;

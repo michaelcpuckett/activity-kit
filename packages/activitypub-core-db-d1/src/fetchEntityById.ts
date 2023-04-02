@@ -5,14 +5,13 @@ import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   convertStringsToUrls,
   compressEntity,
-  getHttpSignature,
 } from 'activitypub-core-utilities';
 
 export async function fetchEntityById(
   this: D1DbAdapter,
   id: URL,
 ): Promise<AP.Entity | null> {
-  if (typeof this.fetch !== 'function') {
+  if (typeof this.adapters.fetch !== 'function') {
     return null;
   }
 
@@ -34,25 +33,27 @@ export async function fetchEntityById(
     throw new Error('Bot actor not set up.');
   }
 
-  const { dateHeader, signatureHeader } = await getHttpSignature(
-    id,
-    actor.id,
-    await this.getPrivateKey(actor),
-  );
+  const { dateHeader, signatureHeader } =
+    await this.adapters.crypto.getHttpSignature(
+      id,
+      actor.id,
+      await this.getPrivateKey(actor),
+    );
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 1250);
 
   // GET requests (eg. to the inbox) MUST be made with an Accept header of
   // `application/ld+json; profile="https://www.w3.org/ns/activitystreams"`
-  const fetchedEntity = await this.fetch(id.toString(), {
-    signal: controller.signal,
-    headers: {
-      [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
-      date: dateHeader,
-      signature: signatureHeader,
-    },
-  })
+  const fetchedEntity = await this.adapters
+    .fetch(id.toString(), {
+      signal: controller.signal,
+      headers: {
+        [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
+        date: dateHeader,
+        signature: signatureHeader,
+      },
+    })
     .then(async (response) => {
       clearTimeout(timeout);
       if (response.status === 200) {

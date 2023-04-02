@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchEntityById = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function fetchEntityById(id) {
-    if (typeof this.fetch !== 'function') {
+    if (typeof this.adapters.fetch !== 'function') {
         return null;
     }
     const foundEntity = (await this.findOne('foreignEntity', {
@@ -18,10 +18,11 @@ async function fetchEntityById(id) {
     if (!actor) {
         throw new Error('Bot actor not set up.');
     }
-    const { dateHeader, signatureHeader } = await (0, activitypub_core_utilities_1.getHttpSignature)(id, actor.id, await this.getPrivateKey(actor));
+    const { dateHeader, signatureHeader } = await this.adapters.crypto.getHttpSignature(id, actor.id, await this.getPrivateKey(actor));
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 1250);
-    const fetchedEntity = await this.fetch(id.toString(), {
+    const fetchedEntity = await this.adapters
+        .fetch(id.toString(), {
         signal: controller.signal,
         headers: {
             [activitypub_core_utilities_1.ACCEPT_HEADER]: activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE,

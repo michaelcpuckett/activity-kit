@@ -4,7 +4,7 @@ import {
   assertIsArray,
   Routes,
 } from 'activitypub-core-types';
-import type { AuthAdapter, DbAdapter, Plugin } from 'activitypub-core-types';
+import type { Adapters, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
 import { runSideEffects } from './runSideEffects';
@@ -34,11 +34,7 @@ export class OutboxPostEndpoint {
   routes: Routes;
   req: IncomingMessage;
   res: ServerResponse;
-  adapters: {
-    auth: AuthAdapter;
-    db: DbAdapter;
-    delivery: DeliveryAdapter;
-  };
+  adapters: Adapters;
   plugins?: Plugin[];
 
   actor: AP.Actor | null = null;
@@ -48,11 +44,7 @@ export class OutboxPostEndpoint {
     routes: Routes,
     req: IncomingMessage,
     res: ServerResponse,
-    adapters: {
-      auth: AuthAdapter;
-      db: DbAdapter;
-      delivery: DeliveryAdapter;
-    },
+    adapters: Adapters,
     plugins?: Plugin[],
   ) {
     this.routes = routes;

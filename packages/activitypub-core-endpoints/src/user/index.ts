@@ -6,29 +6,27 @@ import {
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { DbAdapter, AuthAdapter, Plugin, Routes } from 'activitypub-core-types';
+import {
+  DbAdapter,
+  AuthAdapter,
+  Plugin,
+  Routes,
+  Adapters,
+} from 'activitypub-core-types';
 import { DeliveryAdapter } from 'activitypub-core-delivery';
 
 export class UserPostEndpoint {
   routes: Routes;
   req: IncomingMessage;
   res: ServerResponse;
-  adapters: {
-    auth: AuthAdapter;
-    db: DbAdapter;
-    delivery: DeliveryAdapter;
-  };
+  adapters: Adapters;
   plugins?: Plugin[];
 
   constructor(
     routes: Routes,
     req: IncomingMessage,
     res: ServerResponse,
-    adapters: {
-      auth: AuthAdapter;
-      db: DbAdapter;
-      delivery: DeliveryAdapter;
-    },
+    adapters: Adapters,
     plugins?: Plugin[],
   ) {
     this.routes = routes;

@@ -5,12 +5,12 @@ const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_utilities_3 = require("activitypub-core-utilities");
-const activitypub_core_utilities_4 = require("activitypub-core-utilities");
+const path_to_regexp_1 = require("path-to-regexp");
 async function handleFollow(activity, recipient) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.FOLLOW);
-    const activityId = (0, activitypub_core_utilities_4.getId)(activity);
+    const activityId = (0, activitypub_core_utilities_3.getId)(activity);
     (0, activitypub_core_types_1.assertExists)(activityId);
-    const objectId = (0, activitypub_core_utilities_4.getId)(activity.object);
+    const objectId = (0, activitypub_core_utilities_3.getId)(activity.object);
     (0, activitypub_core_types_1.assertExists)(objectId);
     const object = await this.adapters.db.queryById(objectId);
     (0, activitypub_core_types_1.assertIsApEntity)(object);
@@ -18,20 +18,20 @@ async function handleFollow(activity, recipient) {
         return;
     }
     (0, activitypub_core_types_1.assertIsApActor)(object);
-    const actorId = (0, activitypub_core_utilities_4.getId)(activity.actor);
+    const actorId = (0, activitypub_core_utilities_3.getId)(activity.actor);
     (0, activitypub_core_types_1.assertExists)(actorId);
     const actor = await this.adapters.db.queryById(actorId);
     (0, activitypub_core_types_1.assertIsApActor)(actor);
     const follower = actor;
-    const followerId = (0, activitypub_core_utilities_4.getId)(follower);
+    const followerId = (0, activitypub_core_utilities_3.getId)(follower);
     (0, activitypub_core_types_1.assertExists)(followerId);
     const followee = object;
-    const followeeId = (0, activitypub_core_utilities_4.getId)(followee);
+    const followeeId = (0, activitypub_core_utilities_3.getId)(followee);
     (0, activitypub_core_types_1.assertExists)(followeeId);
-    if (followeeId.toString() !== (0, activitypub_core_utilities_4.getId)(recipient)?.toString()) {
+    if (followeeId.toString() !== (0, activitypub_core_utilities_3.getId)(recipient)?.toString()) {
         return;
     }
-    const followersId = (0, activitypub_core_utilities_4.getId)(followee.followers);
+    const followersId = (0, activitypub_core_utilities_3.getId)(followee.followers);
     (0, activitypub_core_types_1.assertExists)(followersId);
     const followers = await this.adapters.db.findEntityById(followersId);
     (0, activitypub_core_types_1.assertIsApType)(followers, activitypub_core_types_1.AP.CollectionTypes.COLLECTION);
@@ -45,15 +45,17 @@ async function handleFollow(activity, recipient) {
     if (followee.manuallyApprovesFollowers) {
         const requests = await this.adapters.db.getStreamByName(followee, 'Requests');
         (0, activitypub_core_types_1.assertIsApType)(requests, activitypub_core_types_1.AP.CollectionTypes.COLLECTION);
-        const requestsId = (0, activitypub_core_utilities_4.getId)(requests);
+        const requestsId = (0, activitypub_core_utilities_3.getId)(requests);
         await this.adapters.db.insertItem(requestsId, activityId);
         return;
     }
-    const acceptActivityId = `${activitypub_core_utilities_3.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_2.getGuid)()}`;
+    const acceptActivityId = `${new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.accept)({
+        guid: await this.adapters.crypto.randomBytes(16),
+    })}`)}`;
     const publishedDate = new Date();
     const acceptActivityRepliesId = new URL(`${acceptActivityId}/replies`);
     const acceptActivityReplies = {
-        '@context': new URL(activitypub_core_utilities_3.ACTIVITYSTREAMS_CONTEXT),
+        '@context': new URL(activitypub_core_utilities_2.ACTIVITYSTREAMS_CONTEXT),
         id: acceptActivityRepliesId,
         url: acceptActivityRepliesId,
         name: 'Replies',
@@ -65,7 +67,7 @@ async function handleFollow(activity, recipient) {
     };
     const acceptActivityLikesId = new URL(`${acceptActivityId}/likes`);
     const acceptActivityLikes = {
-        '@context': new URL(activitypub_core_utilities_3.ACTIVITYSTREAMS_CONTEXT),
+        '@context': new URL(activitypub_core_utilities_2.ACTIVITYSTREAMS_CONTEXT),
         id: acceptActivityLikesId,
         url: acceptActivityLikesId,
         name: 'Likes',
@@ -77,7 +79,7 @@ async function handleFollow(activity, recipient) {
     };
     const acceptActivitySharesId = new URL(`${acceptActivityId}/shares`);
     const acceptActivityShares = {
-        '@context': new URL(activitypub_core_utilities_3.ACTIVITYSTREAMS_CONTEXT),
+        '@context': new URL(activitypub_core_utilities_2.ACTIVITYSTREAMS_CONTEXT),
         id: acceptActivitySharesId,
         url: acceptActivitySharesId,
         name: 'Likes',
@@ -88,11 +90,11 @@ async function handleFollow(activity, recipient) {
         published: publishedDate,
     };
     const acceptActivity = {
-        '@context': activitypub_core_utilities_3.ACTIVITYSTREAMS_CONTEXT,
+        '@context': activitypub_core_utilities_2.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(acceptActivityId),
         url: new URL(acceptActivityId),
         type: activitypub_core_types_1.AP.ActivityTypes.ACCEPT,
-        to: [new URL(activitypub_core_utilities_3.PUBLIC_ACTOR), followerId],
+        to: [new URL(activitypub_core_utilities_2.PUBLIC_ACTOR), followerId],
         actor: followeeId,
         object: activityId,
         replies: acceptActivityRepliesId,
@@ -100,7 +102,7 @@ async function handleFollow(activity, recipient) {
         shares: acceptActivitySharesId,
         published: publishedDate,
     };
-    const followeeOutboxId = (0, activitypub_core_utilities_4.getId)(followee.outbox);
+    const followeeOutboxId = (0, activitypub_core_utilities_3.getId)(followee.outbox);
     (0, activitypub_core_types_1.assertExists)(followeeOutboxId);
     await Promise.all([
         this.adapters.db.saveEntity(acceptActivity),

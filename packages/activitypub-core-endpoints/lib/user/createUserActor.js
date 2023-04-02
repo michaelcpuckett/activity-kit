@@ -3,16 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUserActor = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
-const activitypub_core_utilities_3 = require("activitypub-core-utilities");
 const activitypub_core_types_1 = require("activitypub-core-types");
 const path_to_regexp_1 = require("path-to-regexp");
 async function createUserActor(user) {
     if (!Object.values(activitypub_core_types_1.AP.ActorTypes).includes(user.type)) {
         throw new Error('Bad request: Provided type is not an Actor type.');
     }
-    const { publicKey, privateKey } = await (0, activitypub_core_utilities_2.generateKeyPair)();
+    const { publicKey, privateKey } = await this.adapters.crypto.generateKeyPair();
     const publishedDate = new Date();
-    const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_3.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
+    const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
         validate: false,
     })(data)}`);
     const userId = getRouteUrl(this.routes[user.type.toLowerCase()], {
@@ -196,7 +195,7 @@ async function createUserActor(user) {
             userBookmarks.id,
         ],
         endpoints: {
-            sharedInbox: new URL(activitypub_core_utilities_3.SHARED_INBOX_ID),
+            sharedInbox: new URL(activitypub_core_utilities_2.SHARED_INBOX_ID),
             uploadMedia: uploadMediaId,
         },
         publicKey: {
@@ -208,14 +207,14 @@ async function createUserActor(user) {
     };
     (0, activitypub_core_types_1.assertIsApActor)(userActor);
     const createActorActivityId = getRouteUrl(this.routes.create, {
-        guid: (0, activitypub_core_utilities_1.getGuid)(),
+        guid: await this.adapters.crypto.randomBytes(16),
     });
     const createActorActivity = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: createActorActivityId,
         url: createActorActivityId,
         type: activitypub_core_types_1.AP.ActivityTypes.CREATE,
-        actor: new URL(activitypub_core_utilities_3.SERVER_ACTOR_ID),
+        actor: new URL(activitypub_core_utilities_2.SERVER_ACTOR_ID),
         object: userActor,
         to: [new URL(activitypub_core_utilities_1.PUBLIC_ACTOR)],
         published: publishedDate,

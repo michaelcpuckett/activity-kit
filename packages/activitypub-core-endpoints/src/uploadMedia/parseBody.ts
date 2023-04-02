@@ -1,11 +1,11 @@
 import { AP } from 'activitypub-core-types';
 import {
   ACTIVITYSTREAMS_CONTEXT,
-  getGuid,
   LOCAL_DOMAIN,
   PUBLIC_ACTOR,
 } from 'activitypub-core-utilities';
 import * as formidable from 'formidable';
+import { compile } from 'path-to-regexp';
 import { UploadMediaPostEndpoint } from '.';
 
 export async function parseBody(this: UploadMediaPostEndpoint) {
@@ -36,8 +36,13 @@ export async function parseBody(this: UploadMediaPostEndpoint) {
   ) {
     this.file = files.file;
 
-    const objectId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
-    const activityId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
+    // TODO use compile paths
+    const objectId = `${LOCAL_DOMAIN}/entity/${await this.adapters.crypto.randomBytes(
+      16,
+    )}`;
+    const activityId = `${LOCAL_DOMAIN}/entity/${await this.adapters.crypto.randomBytes(
+      16,
+    )}`;
 
     const object: AP.Image | AP.Document | AP.Audio | AP.Video = {
       '@context': ACTIVITYSTREAMS_CONTEXT,

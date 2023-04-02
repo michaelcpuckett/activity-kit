@@ -1,9 +1,5 @@
 import { OutboxPostEndpoint } from '.';
-import {
-  LOCAL_DOMAIN,
-  combineAddresses,
-  getGuid,
-} from 'activitypub-core-utilities';
+import { LOCAL_DOMAIN, combineAddresses } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 import { compile } from 'path-to-regexp';
 
@@ -25,7 +21,7 @@ export async function wrapInActivity(this: OutboxPostEndpoint) {
       this.routes[type.toLowerCase()],
       compileOptions,
     )({
-      guid: getGuid(),
+      guid: await this.adapters.crypto.randomBytes(16),
     })}`,
   );
 

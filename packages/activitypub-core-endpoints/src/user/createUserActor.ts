@@ -1,11 +1,9 @@
 import {
   ACTIVITYSTREAMS_CONTEXT,
-  getGuid,
   PUBLIC_ACTOR,
   SERVER_ACTOR_USERNAME,
   W3ID_SECURITY_CONTEXT,
 } from 'activitypub-core-utilities';
-import { generateKeyPair } from 'activitypub-core-utilities';
 import {
   LOCAL_DOMAIN,
   SERVER_ACTOR_ID,
@@ -33,7 +31,8 @@ export async function createUserActor(
     throw new Error('Bad request: Provided type is not an Actor type.');
   }
 
-  const { publicKey, privateKey } = await generateKeyPair();
+  const { publicKey, privateKey } =
+    await this.adapters.crypto.generateKeyPair();
 
   const publishedDate = new Date();
 
@@ -263,7 +262,7 @@ export async function createUserActor(
   assertIsApActor(userActor);
 
   const createActorActivityId = getRouteUrl(this.routes.create, {
-    guid: getGuid(),
+    guid: await this.adapters.crypto.randomBytes(16),
   });
 
   const createActorActivity: AP.Create = {

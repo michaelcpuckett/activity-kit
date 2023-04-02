@@ -7,7 +7,6 @@ import {
 } from 'activitypub-core-types';
 import {
   isTypeOf,
-  getGuid,
   combineAddresses,
   LOCAL_DOMAIN,
 } from 'activitypub-core-utilities';
@@ -34,7 +33,7 @@ export async function respond(this: OutboxPostEndpoint) {
       this.routes[type.toLowerCase()],
       compileOptions,
     )({
-      guid: getGuid(),
+      guid: await this.adapters.crypto.randomBytes(16),
     })}`,
   );
 

@@ -15,12 +15,14 @@ const create_1 = require("./sideEffects/create");
 const shouldForwardActivity_1 = require("./shouldForwardActivity");
 const broadcastActivity_1 = require("./broadcastActivity");
 class InboxPostEndpoint {
+    routes;
     req;
     res;
     adapters;
     plugins;
     activity = null;
-    constructor(req, res, adapters, plugins) {
+    constructor(routes, req, res, adapters, plugins) {
+        this.routes = routes;
         this.req = req;
         this.res = res;
         this.adapters = adapters;

@@ -15,7 +15,7 @@ async function respond() {
         ? this.activity.type[0]
         : this.activity.type;
     const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()], compileOptions)({
-        guid: (0, activitypub_core_utilities_1.getGuid)(),
+        guid: await this.adapters.crypto.randomBytes(16),
     })}`);
     this.activity.id = activityId;
     if ((0, activitypub_core_utilities_1.isTypeOf)(this.activity, activitypub_core_types_1.AP.ActivityTypes)) {

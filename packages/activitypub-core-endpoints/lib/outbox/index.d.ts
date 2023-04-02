@@ -1,8 +1,7 @@
 /// <reference types="node" />
 import { AP, Routes } from 'activitypub-core-types';
-import type { AuthAdapter, DbAdapter, Plugin } from 'activitypub-core-types';
+import type { Adapters, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { DeliveryAdapter } from 'activitypub-core-delivery';
 import { runSideEffects } from './runSideEffects';
 import { authenticateActor } from './authenticateActor';
 import { wrapInActivity } from './wrapInActivity';
@@ -29,19 +28,11 @@ export declare class OutboxPostEndpoint {
     routes: Routes;
     req: IncomingMessage;
     res: ServerResponse;
-    adapters: {
-        auth: AuthAdapter;
-        db: DbAdapter;
-        delivery: DeliveryAdapter;
-    };
+    adapters: Adapters;
     plugins?: Plugin[];
     actor: AP.Actor | null;
     activity: AP.Entity | null;
-    constructor(routes: Routes, req: IncomingMessage, res: ServerResponse, adapters: {
-        auth: AuthAdapter;
-        db: DbAdapter;
-        delivery: DeliveryAdapter;
-    }, plugins?: Plugin[]);
+    constructor(routes: Routes, req: IncomingMessage, res: ServerResponse, adapters: Adapters, plugins?: Plugin[]);
     protected authenticateActor: typeof authenticateActor;
     protected getActor: typeof getActor;
     protected runSideEffects: typeof runSideEffects;

@@ -6,13 +6,13 @@ import {
   W3ID_SECURITY_CONTEXT,
 } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
-import { generateKeyPair } from 'activitypub-core-utilities';
 import { UserPostEndpoint } from '.';
 import { compile } from 'path-to-regexp';
 
 export async function createServerActor(this: UserPostEndpoint) {
   const { publicKey: botPublicKey, privateKey: botPrivateKey } =
-    await generateKeyPair();
+    await this.adapters.crypto.generateKeyPair();
+
   const publishedDate = new Date();
 
   const compileOptions = { encode: encodeURIComponent };

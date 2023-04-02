@@ -1,11 +1,10 @@
 import { CryptoAuthAdapter } from '.';
-import { randomBytes } from 'crypto';
 
-export function getTokenByUserId(
+export async function getTokenByUserId(
   this: CryptoAuthAdapter,
   userId: string,
-): string {
-  const token = randomBytes(16).toString('hex');
+): Promise<string> {
+  const token = await this.adapters.crypto.randomBytes(16);
 
   if (!('cookieStore' in this.params)) {
     throw new Error('Error');

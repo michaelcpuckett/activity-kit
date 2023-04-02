@@ -8,7 +8,7 @@ import {
 } from 'activitypub-core-types';
 import { ACTIVITYSTREAMS_CONTEXT, isTypeOf } from 'activitypub-core-utilities';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
-import { getId, getGuid } from 'activitypub-core-utilities';
+import { getId } from 'activitypub-core-utilities';
 import { compile } from 'path-to-regexp';
 import * as cheerio from 'cheerio';
 
@@ -61,7 +61,7 @@ export async function handleCreate(
 
   const objectId = new URL(
     `${LOCAL_DOMAIN}${compile(this.routes[type.toLowerCase()])({
-      guid: getGuid(),
+      guid: await this.adapters.crypto.randomBytes(16),
       year,
       month,
       day,

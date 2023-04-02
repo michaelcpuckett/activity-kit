@@ -1,6 +1,5 @@
 /// <reference types="node" />
-import { AP, Plugin } from 'activitypub-core-types';
-import type { AuthAdapter, DbAdapter, StorageAdapter } from 'activitypub-core-types';
+import { Adapters, AP, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import formidable from 'formidable';
 import { getActor } from './getActor';
@@ -11,11 +10,7 @@ import { saveActivity } from './saveActivity';
 export declare class UploadMediaPostEndpoint {
     req: IncomingMessage;
     res: ServerResponse;
-    adapters: {
-        auth: AuthAdapter;
-        db: DbAdapter;
-        storage: StorageAdapter;
-    };
+    adapters: Adapters;
     plugins?: Plugin[];
     actor: AP.Actor | null;
     activity: (AP.Create & {
@@ -27,10 +22,6 @@ export declare class UploadMediaPostEndpoint {
     protected parseBody: typeof parseBody;
     protected cleanup: typeof cleanup;
     protected saveActivity: typeof saveActivity;
-    constructor(req: IncomingMessage, res: ServerResponse, adapters: {
-        auth: AuthAdapter;
-        db: DbAdapter;
-        storage: StorageAdapter;
-    }, plugins?: Plugin[]);
+    constructor(req: IncomingMessage, res: ServerResponse, adapters: Adapters, plugins?: Plugin[]);
     respond(): Promise<void>;
 }

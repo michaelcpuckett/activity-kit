@@ -3,10 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createServerActor = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_types_1 = require("activitypub-core-types");
-const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const path_to_regexp_1 = require("path-to-regexp");
 async function createServerActor() {
-    const { publicKey: botPublicKey, privateKey: botPrivateKey } = await (0, activitypub_core_utilities_2.generateKeyPair)();
+    const { publicKey: botPublicKey, privateKey: botPrivateKey } = await this.adapters.crypto.generateKeyPair();
     const publishedDate = new Date();
     const compileOptions = { encode: encodeURIComponent };
     const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, compileOptions)(data)}`);

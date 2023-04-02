@@ -1,16 +1,20 @@
-import type { AuthAdapter, DbAdapter } from 'activitypub-core-types';
+import type {
+  AuthAdapter,
+  CryptoAdapter,
+  DbAdapter,
+} from 'activitypub-core-types';
 import { createUser } from './createUser';
 import { getUserIdByToken } from './getUserIdByToken';
 import { getTokenByUserId } from './getTokenByUserId';
 import { authenticatePassword } from './authenticatePassword';
 
 export class CryptoAuthAdapter implements AuthAdapter {
-  adapters: { db: DbAdapter };
+  adapters: { db: DbAdapter; crypto: CryptoAdapter };
   params: {
     [key: string]: unknown;
   };
 
-  constructor(adapters: { db: DbAdapter }) {
+  constructor(adapters: { db: DbAdapter; crypto: CryptoAdapter }) {
     this.adapters = adapters;
     this.params = {
       cookieStore: {},

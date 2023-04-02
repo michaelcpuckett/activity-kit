@@ -7,13 +7,13 @@ import {
   assertIsArray,
 } from 'activitypub-core-types';
 import { isTypeOf } from 'activitypub-core-utilities';
-import { getGuid } from 'activitypub-core-utilities';
 import {
   ACTIVITYSTREAMS_CONTEXT,
   LOCAL_DOMAIN,
   PUBLIC_ACTOR,
 } from 'activitypub-core-utilities';
 import { getId } from 'activitypub-core-utilities';
+import { compile } from 'path-to-regexp';
 import { InboxPostEndpoint } from '..';
 
 // A Follow request has been made to a local user.
@@ -102,7 +102,11 @@ export async function handleFollow(
 
   // Now we're in outbox, because this is auto-generated:
 
-  const acceptActivityId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
+  const acceptActivityId = `${new URL(
+    `${LOCAL_DOMAIN}${compile(this.routes.accept)({
+      guid: await this.adapters.crypto.randomBytes(16),
+    })}`,
+  )}`;
   const publishedDate = new Date();
 
   const acceptActivityRepliesId = new URL(`${acceptActivityId}/replies`);

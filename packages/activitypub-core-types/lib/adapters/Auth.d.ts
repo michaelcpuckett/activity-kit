@@ -6,7 +6,7 @@ export declare type AuthAdapter = {
     params: {
         [key: string]: unknown;
     };
-    getTokenByUserId: (userId: string) => string;
+    getTokenByUserId: (userId: string) => Promise<string>;
     createUser: (this: AuthAdapter, { email, password, preferredUsername, }: {
         email: string;
         password?: string;

@@ -22,21 +22,33 @@ import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
 import { getStreamByName } from './getStreamByName';
-import type { DbAdapter, FetchPolyfill } from 'activitypub-core-types';
+import type {
+  CryptoAdapter,
+  DbAdapter,
+  FetchPolyfill,
+} from 'activitypub-core-types';
 import type { D1Database } from '@cloudflare/workers-types';
 
 export class D1DbAdapter implements DbAdapter {
-  db: unknown;
-  fetch: FetchPolyfill;
+  db: D1Database;
+  adapters: {
+    crypto: CryptoAdapter;
+    fetch?: FetchPolyfill;
+  };
 
   constructor(
     db: D1Database,
-    adapters?: {
+    adapters: {
+      crypto: CryptoAdapter;
       fetch?: FetchPolyfill;
     },
   ) {
     this.db = db;
-    this.fetch = adapters?.fetch ?? fetch;
+
+    this.adapters = {
+      fetch,
+      ...adapters,
+    };
   }
 
   // Initialize.

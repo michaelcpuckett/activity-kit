@@ -27,12 +27,12 @@ const activityPub = (config) => async (req, res, next) => {
                 return;
             }
             if (req.url === '/sharedInbox') {
-                await new activitypub_core_endpoints_1.SharedInboxPostEndpoint(req, res, config.adapters, config.plugins).respond();
+                await new activitypub_core_endpoints_1.SharedInboxPostEndpoint(routes, req, res, config.adapters, config.plugins).respond();
                 next();
                 return;
             }
             if (matchesRoute(routes.inbox)) {
-                await new activitypub_core_endpoints_1.InboxPostEndpoint(req, res, config.adapters, config.plugins).respond();
+                await new activitypub_core_endpoints_1.InboxPostEndpoint(routes, req, res, config.adapters, config.plugins).respond();
                 next();
                 return;
             }

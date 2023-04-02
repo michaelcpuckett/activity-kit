@@ -9,7 +9,6 @@ import {
 import type { Adapters, Plugin } from 'activitypub-core-types';
 import {
   getId,
-  getGuid,
   getCollectionNameByUrl,
   ACTIVITYSTREAMS_CONTEXT,
   LOCAL_DOMAIN,
@@ -148,7 +147,10 @@ export function GroupsPlugin(config?: {}) {
       // We're in outbox, because this is auto-generated:
 
       const publishedDate = new Date();
-      const announceActivityId = `${LOCAL_DOMAIN}/entity/${getGuid()}`;
+      // TODO compile path
+      const announceActivityId = `${LOCAL_DOMAIN}/entity/${await this.adapters.crypto.randomBytes(
+        16,
+      )}`;
 
       const shared = await this.adapters.db.getStreamByName(
         recipient,

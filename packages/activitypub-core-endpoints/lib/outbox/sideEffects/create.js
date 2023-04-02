@@ -59,7 +59,7 @@ async function handleCreate(activity) {
         .replace(/^-+|-+$/g, '');
     const type = Array.isArray(object.type) ? object.type[0] : object.type;
     const objectId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()])({
-        guid: (0, activitypub_core_utilities_3.getGuid)(),
+        guid: await this.adapters.crypto.randomBytes(16),
         year,
         month,
         day,
