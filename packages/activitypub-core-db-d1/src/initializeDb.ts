@@ -38,6 +38,26 @@ export async function initializeDb(this: D1DbAdapter): Promise<void> {
 
   await this.db
     .prepare(
+      `CREATE TABLE IF NOT EXISTS email (
+  _id TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);`,
+    )
+    .bind()
+    .run();
+
+  await this.db
+    .prepare(
+      `CREATE TABLE IF NOT EXISTS hashedPassword (
+  _id TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);`,
+    )
+    .bind()
+    .run();
+
+  await this.db
+    .prepare(
       `CREATE TABLE IF NOT EXISTS account (
     _id TEXT PRIMARY KEY,
     value TEXT NOT NULL
