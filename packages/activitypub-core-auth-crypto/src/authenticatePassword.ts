@@ -1,14 +1,5 @@
 import { CryptoAuthAdapter } from '.';
 
-async function verifyPassword(
-  password: string,
-  hashedPassword: string,
-): Promise<boolean> {
-  const [salt, storedHashedPassword] = hashedPassword.split(':');
-  const derivedKey = await this.adapters.crypto.hashPassword(password, salt);
-  return derivedKey === storedHashedPassword;
-}
-
 export async function authenticatePassword(
   this: CryptoAuthAdapter,
   email: string,
@@ -28,7 +19,13 @@ export async function authenticatePassword(
     uid,
   );
 
-  if (await verifyPassword(password, hashedPassword)) {
+  const verifyPassword = async (): Promise<boolean> => {
+    const [salt, storedHashedPassword] = hashedPassword.split(':');
+    const derivedKey = await this.adapters.crypto.hashPassword(password, salt);
+    return derivedKey === storedHashedPassword;
+  };
+
+  if (await verifyPassword()) {
     const token = await this.getTokenByUserId(uid);
 
     return {
