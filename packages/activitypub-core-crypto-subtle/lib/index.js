@@ -8,7 +8,9 @@ const getHttpSignature_1 = require("./getHttpSignature");
 class SubtleCryptoAdapter {
     params;
     constructor(subtle) {
-        this.params.subtle = subtle;
+        this.params = {
+            subtle,
+        };
     }
     generateKeyPair = generateKeyPair_1.generateKeyPair;
     randomBytes = randomBytes_1.randomBytes;

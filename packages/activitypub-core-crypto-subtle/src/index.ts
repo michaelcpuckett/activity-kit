@@ -10,7 +10,9 @@ export class SubtleCryptoAdapter implements CryptoAdapter {
   };
 
   constructor(subtle: SubtleCrypto) {
-    this.params.subtle = subtle;
+    this.params = {
+      subtle,
+    };
   }
 
   public generateKeyPair = generateKeyPair;
