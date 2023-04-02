@@ -30,7 +30,7 @@ import type {
 import type { D1Database } from '@cloudflare/workers-types';
 
 export class D1DbAdapter implements DbAdapter {
-  db: D1Database;
+  db: unknown;
   adapters: {
     crypto: CryptoAdapter;
     fetch?: FetchPolyfill;

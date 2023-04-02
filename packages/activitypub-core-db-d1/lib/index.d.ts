@@ -18,7 +18,7 @@ import { getStreamByName } from './getStreamByName';
 import type { CryptoAdapter, DbAdapter, FetchPolyfill } from 'activitypub-core-types';
 import type { D1Database } from '@cloudflare/workers-types';
 export declare class D1DbAdapter implements DbAdapter {
-    db: D1Database;
+    db: unknown;
     adapters: {
         crypto: CryptoAdapter;
         fetch?: FetchPolyfill;
