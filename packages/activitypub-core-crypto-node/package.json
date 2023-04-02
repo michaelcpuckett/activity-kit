@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-crypto-node",
-  "version": "0.2.49",
+  "version": "0.2.50",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -22,7 +22,7 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "activitypub-core-types": "^0.2.37"
+    "activitypub-core-types": "^0.2.50"
   },
   "bugs": {
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
