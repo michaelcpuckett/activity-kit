@@ -1,6 +1,10 @@
 import { AP } from '../';
 
 export type CryptoAdapter = {
+  params: {
+    [key: string]: unknown;
+  };
+
   hashPassword(
     this: CryptoAdapter,
     password: string,

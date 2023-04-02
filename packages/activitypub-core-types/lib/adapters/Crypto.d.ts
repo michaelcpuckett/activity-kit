@@ -1,5 +1,8 @@
 import { AP } from '../';
 export declare type CryptoAdapter = {
+    params: {
+        [key: string]: unknown;
+    };
     hashPassword(this: CryptoAdapter, password: string, salt: string): Promise<string>;
     generateKeyPair: (this: CryptoAdapter) => Promise<{
         privateKey: string;
