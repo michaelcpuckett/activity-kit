@@ -5,18 +5,23 @@ import { OutboxPostEndpoint } from '.';
 
 export async function authenticateActor(this: OutboxPostEndpoint) {
   const cookies = cookie.parse(this.req.headers.cookie ?? '');
-
-  const authenticatedActor = await this.adapters.db.getActorByUserId(
-    await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''),
+  const userId = await this.adapters.auth.getUserIdByToken(
+    cookies.__session ?? '',
   );
 
-  assertIsApActor(authenticatedActor);
+  try {
+    const authenticatedActor = await this.adapters.db.getActorByUserId(userId);
 
-  const authenticatedActorId = getId(authenticatedActor);
+    assertIsApActor(authenticatedActor);
 
-  assertExists(authenticatedActorId);
+    const authenticatedActorId = getId(authenticatedActor);
 
-  if (authenticatedActorId.toString() !== this.actor.id.toString()) {
+    assertExists(authenticatedActorId);
+
+    if (authenticatedActorId.toString() !== this.actor.id.toString()) {
+      throw new Error('No match.');
+    }
+  } catch (error) {
     throw new Error('Not authorized.');
   }
 }
