@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { Adapters, AP, Plugin } from 'activitypub-core-types';
+import { Adapters, AP, Plugin, Routes } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import formidable from 'formidable';
 import { getActor } from './getActor';
@@ -8,6 +8,7 @@ import { parseBody } from './parseBody';
 import { cleanup } from './cleanup';
 import { saveActivity } from './saveActivity';
 export declare class UploadMediaPostEndpoint {
+    routes: Routes;
     req: IncomingMessage;
     res: ServerResponse;
     adapters: Adapters;
@@ -22,6 +23,6 @@ export declare class UploadMediaPostEndpoint {
     protected parseBody: typeof parseBody;
     protected cleanup: typeof cleanup;
     protected saveActivity: typeof saveActivity;
-    constructor(req: IncomingMessage, res: ServerResponse, adapters: Adapters, plugins?: Plugin[]);
+    constructor(routes: Routes, req: IncomingMessage, res: ServerResponse, adapters: Adapters, plugins?: Plugin[]);
     respond(): Promise<void>;
 }

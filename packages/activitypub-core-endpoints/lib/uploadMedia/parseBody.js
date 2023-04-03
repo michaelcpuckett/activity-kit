@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseBody = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const formidable = __importStar(require("formidable"));
+const path_to_regexp_1 = require("path-to-regexp");
 async function parseBody() {
     const form = formidable.default({
         multiples: true,
@@ -47,23 +48,27 @@ async function parseBody() {
         files.file &&
         !Array.isArray(files.file)) {
         this.file = files.file;
-        const objectId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${await this.adapters.crypto.randomBytes(16)}`;
-        const activityId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${await this.adapters.crypto.randomBytes(16)}`;
+        const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.create)({
+            guid: await this.adapters.crypto.randomBytes(16),
+        })}`);
+        const objectId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[getType(this.file.mimetype).toLowerCase()])({
+            guid: await this.adapters.crypto.randomBytes(16),
+        })}`);
         const object = {
             '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
             to: new URL(activitypub_core_utilities_1.PUBLIC_ACTOR),
             type: getType(this.file.mimetype),
             mediaType: this.file.mimetype,
             ...JSON.parse(fields.object),
-            id: new URL(objectId),
+            id: objectId,
             attributedTo: this.actor.id,
         };
         this.activity = {
             '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
             to: new URL(activitypub_core_utilities_1.PUBLIC_ACTOR),
             type: 'Create',
-            id: new URL(activityId),
-            url: new URL(activityId),
+            id: activityId,
+            url: activityId,
             actor: this.actor.id,
             object,
         };

@@ -1,4 +1,4 @@
-import { Adapters, AP, Plugin } from 'activitypub-core-types';
+import { Adapters, AP, Plugin, Routes } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import formidable from 'formidable';
 import { getActor } from './getActor';
@@ -8,6 +8,7 @@ import { cleanup } from './cleanup';
 import { saveActivity } from './saveActivity';
 
 export class UploadMediaPostEndpoint {
+  routes: Routes;
   req: IncomingMessage;
   res: ServerResponse;
   adapters: Adapters;
@@ -28,11 +29,13 @@ export class UploadMediaPostEndpoint {
   protected saveActivity = saveActivity;
 
   constructor(
+    routes: Routes,
     req: IncomingMessage,
     res: ServerResponse,
     adapters: Adapters,
     plugins?: Plugin[],
   ) {
+    this.routes = routes;
     this.req = req;
     this.res = res;
     this.adapters = adapters;

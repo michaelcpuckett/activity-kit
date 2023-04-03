@@ -36,13 +36,19 @@ export async function parseBody(this: UploadMediaPostEndpoint) {
   ) {
     this.file = files.file;
 
-    // TODO use compile paths
-    const objectId = `${LOCAL_DOMAIN}/entity/${await this.adapters.crypto.randomBytes(
-      16,
-    )}`;
-    const activityId = `${LOCAL_DOMAIN}/entity/${await this.adapters.crypto.randomBytes(
-      16,
-    )}`;
+    const activityId = new URL(
+      `${LOCAL_DOMAIN}${compile(this.routes.create)({
+        guid: await this.adapters.crypto.randomBytes(16),
+      })}`,
+    );
+
+    const objectId = new URL(
+      `${LOCAL_DOMAIN}${compile(
+        this.routes[getType(this.file.mimetype).toLowerCase()],
+      )({
+        guid: await this.adapters.crypto.randomBytes(16),
+      })}`,
+    );
 
     const object: AP.Image | AP.Document | AP.Audio | AP.Video = {
       '@context': ACTIVITYSTREAMS_CONTEXT,
@@ -50,7 +56,7 @@ export async function parseBody(this: UploadMediaPostEndpoint) {
       type: getType(this.file.mimetype),
       mediaType: this.file.mimetype,
       ...JSON.parse(fields.object),
-      id: new URL(objectId),
+      id: objectId,
       attributedTo: this.actor.id,
     };
 
@@ -58,8 +64,8 @@ export async function parseBody(this: UploadMediaPostEndpoint) {
       '@context': ACTIVITYSTREAMS_CONTEXT,
       to: new URL(PUBLIC_ACTOR),
       type: 'Create',
-      id: new URL(activityId),
-      url: new URL(activityId),
+      id: activityId,
+      url: activityId,
       actor: this.actor.id,
       object,
     };

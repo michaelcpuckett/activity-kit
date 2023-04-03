@@ -7,6 +7,7 @@ const parseBody_1 = require("./parseBody");
 const cleanup_1 = require("./cleanup");
 const saveActivity_1 = require("./saveActivity");
 class UploadMediaPostEndpoint {
+    routes;
     req;
     res;
     adapters;
@@ -19,7 +20,8 @@ class UploadMediaPostEndpoint {
     parseBody = parseBody_1.parseBody;
     cleanup = cleanup_1.cleanup;
     saveActivity = saveActivity_1.saveActivity;
-    constructor(req, res, adapters, plugins) {
+    constructor(routes, req, res, adapters, plugins) {
+        this.routes = routes;
         this.req = req;
         this.res = res;
         this.adapters = adapters;
