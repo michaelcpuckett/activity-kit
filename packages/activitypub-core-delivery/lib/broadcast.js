@@ -9,7 +9,7 @@ async function broadcast(activity, actor) {
         throw new Error('Not an activity?');
     }
     const recipients = await (async () => {
-        if (this.isPublic(activity)) {
+        if (await this.isPublic(activity)) {
             return [
                 ...new Set([
                     ...(await this.getRecipientInboxUrls(activity, actor)),

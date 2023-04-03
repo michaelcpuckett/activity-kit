@@ -20,7 +20,7 @@ export async function broadcast(
   }
 
   const recipients = await (async () => {
-    if (this.isPublic(activity)) {
+    if (await this.isPublic(activity)) {
       return [
         ...new Set(
           [
