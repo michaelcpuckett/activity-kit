@@ -3,7 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.findOne = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
+const mongodb_1 = require("mongodb");
 async function findOne(collection, matchingObject, options) {
+    if (!(this.db instanceof mongodb_1.Db)) {
+        throw new Error('Bad database.');
+    }
     let value = null;
     if (options && options.includes(activitypub_core_types_1.DbOptions.CASE_INSENSITIVE)) {
         const cursor = this.db

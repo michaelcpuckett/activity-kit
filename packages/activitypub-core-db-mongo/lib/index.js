@@ -23,10 +23,13 @@ const getActorByUserId_1 = require("./getActorByUserId");
 const getStreamByName_1 = require("./getStreamByName");
 class MongoDbAdapter {
     db;
-    fetch;
+    adapters;
     constructor(db, adapters) {
         this.db = db;
-        this.fetch = adapters?.fetch ?? isomorphic_fetch_1.default;
+        this.adapters = {
+            fetch: isomorphic_fetch_1.default,
+            ...adapters,
+        };
     }
     findOne = findOne_1.findOne;
     findAll = findAll_1.findAll;

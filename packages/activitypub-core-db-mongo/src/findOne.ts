@@ -1,6 +1,7 @@
 import { MongoDbAdapter } from '.';
 import { AP, DbOptions } from 'activitypub-core-types';
 import { convertStringsToUrls } from 'activitypub-core-utilities';
+import { Db } from 'mongodb';
 
 export async function findOne(
   this: MongoDbAdapter,
@@ -8,6 +9,10 @@ export async function findOne(
   matchingObject: { [key: string]: unknown },
   options?: Array<keyof typeof DbOptions>,
 ): Promise<AP.Entity | null> {
+  if (!(this.db instanceof Db)) {
+    throw new Error('Bad database.');
+  }
+
   let value = null;
 
   if (options && options.includes(DbOptions.CASE_INSENSITIVE)) {

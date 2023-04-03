@@ -1,5 +1,6 @@
 import { MongoDbAdapter } from '.';
 import { AP } from 'activitypub-core-types';
+import { Db } from 'mongodb';
 import {
   applyContext,
   cleanProps,
@@ -11,6 +12,10 @@ export async function saveEntity(
   this: MongoDbAdapter,
   entity: AP.Entity,
 ): Promise<void> {
+  if (!(this.db instanceof Db)) {
+    throw new Error('Bad database.');
+  }
+
   if (!entity.id) {
     throw new Error('No ID.');
   }

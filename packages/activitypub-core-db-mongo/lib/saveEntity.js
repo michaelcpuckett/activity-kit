@@ -1,8 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.saveEntity = void 0;
+const mongodb_1 = require("mongodb");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function saveEntity(entity) {
+    if (!(this.db instanceof mongodb_1.Db)) {
+        throw new Error('Bad database.');
+    }
     if (!entity.id) {
         throw new Error('No ID.');
     }

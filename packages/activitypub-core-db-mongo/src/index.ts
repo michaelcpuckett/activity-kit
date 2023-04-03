@@ -22,20 +22,31 @@ import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
 import { getStreamByName } from './getStreamByName';
-import type { DbAdapter, FetchPolyfill } from 'activitypub-core-types';
+import type {
+  CryptoAdapter,
+  DbAdapter,
+  FetchPolyfill,
+} from 'activitypub-core-types';
 
 export class MongoDbAdapter implements DbAdapter {
-  db: Db;
-  fetch: FetchPolyfill;
+  db: unknown;
+  adapters: {
+    crypto: CryptoAdapter;
+    fetch?: FetchPolyfill;
+  };
 
   constructor(
     db: Db,
-    adapters?: {
+    adapters: {
+      crypto: CryptoAdapter;
       fetch?: FetchPolyfill;
     },
   ) {
     this.db = db;
-    this.fetch = adapters?.fetch ?? fetch;
+    this.adapters = {
+      fetch,
+      ...adapters,
+    };
   }
 
   // Find.

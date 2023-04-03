@@ -14,11 +14,15 @@ import { getCollectionItems } from './getCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
-import type { DbAdapter, FetchPolyfill } from 'activitypub-core-types';
+import type { CryptoAdapter, DbAdapter, FetchPolyfill } from 'activitypub-core-types';
 export declare class MongoDbAdapter implements DbAdapter {
-    db: Db;
-    fetch: FetchPolyfill;
-    constructor(db: Db, adapters?: {
+    db: unknown;
+    adapters: {
+        crypto: CryptoAdapter;
+        fetch?: FetchPolyfill;
+    };
+    constructor(db: Db, adapters: {
+        crypto: CryptoAdapter;
         fetch?: FetchPolyfill;
     });
     findOne: typeof findOne;

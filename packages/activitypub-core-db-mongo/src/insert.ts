@@ -1,11 +1,15 @@
 import { MongoDbAdapter } from '.';
 import { getCollectionNameByUrl } from 'activitypub-core-utilities';
+import { Db } from 'mongodb';
 
 export async function insertOrderedItem(
   this: MongoDbAdapter,
   path: URL,
   url: URL,
 ) {
+  if (!(this.db instanceof Db)) {
+    throw new Error('Bad database.');
+  }
   const collectionName = getCollectionNameByUrl(path);
   await this.db.collection(collectionName).updateOne(
     {
@@ -33,6 +37,9 @@ export async function removeOrderedItem(
   path: URL,
   url: URL,
 ) {
+  if (!(this.db instanceof Db)) {
+    throw new Error('Bad database.');
+  }
   const collectionName = getCollectionNameByUrl(path);
 
   const existingItem = this.findOne(collectionName, {
@@ -63,6 +70,9 @@ export async function removeOrderedItem(
 }
 
 export async function insertItem(this: MongoDbAdapter, path: URL, url: URL) {
+  if (!(this.db instanceof Db)) {
+    throw new Error('Bad database.');
+  }
   const collectionName = getCollectionNameByUrl(path);
   await this.db.collection(collectionName).updateOne(
     {
@@ -85,6 +95,9 @@ export async function insertItem(this: MongoDbAdapter, path: URL, url: URL) {
 }
 
 export async function removeItem(this: MongoDbAdapter, path: URL, url: URL) {
+  if (!(this.db instanceof Db)) {
+    throw new Error('Bad database.');
+  }
   const collectionName = getCollectionNameByUrl(path);
 
   const existingItem = this.findOne(collectionName, {
