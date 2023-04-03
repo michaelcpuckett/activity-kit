@@ -2,6 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUser = void 0;
 async function createUser({ email, password, preferredUsername, }) {
+    const existingUser = await this.adapters.db.findStringIdByValue('account', email);
+    if (existingUser) {
+        throw new Error('Account already exists.');
+    }
     const salt = await this.adapters.crypto.randomBytes(16);
     const hashedPassword = await this.adapters.crypto.hashPassword(password, salt);
     const uid = await this.adapters.crypto.randomBytes(16);

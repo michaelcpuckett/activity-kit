@@ -12,6 +12,15 @@ export async function createUser(
     preferredUsername: string;
   },
 ) {
+  const existingUser = await this.adapters.db.findStringIdByValue(
+    'account',
+    email,
+  );
+
+  if (existingUser) {
+    throw new Error('Account already exists.');
+  }
+
   const salt = await this.adapters.crypto.randomBytes(16);
   const hashedPassword = await this.adapters.crypto.hashPassword(
     password,
