@@ -117,6 +117,7 @@ export const activityPub =
         if (matchesRoute(routes.endpoint)) {
           // TODO
           await new UploadMediaPostEndpoint(
+            routes,
             req,
             res,
             config.adapters,

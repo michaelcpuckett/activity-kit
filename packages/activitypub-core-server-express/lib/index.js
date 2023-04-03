@@ -37,7 +37,7 @@ const activityPub = (config) => async (req, res, next) => {
                 return;
             }
             if (matchesRoute(routes.endpoint)) {
-                await new activitypub_core_endpoints_1.UploadMediaPostEndpoint(req, res, config.adapters, config.plugins).respond();
+                await new activitypub_core_endpoints_1.UploadMediaPostEndpoint(routes, req, res, config.adapters, config.plugins).respond();
                 next();
                 return;
             }
