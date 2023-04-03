@@ -4,7 +4,7 @@ import { FetchPolyfill } from './FetchPolyfill';
 export declare type DeliveryAdapter = {
     adapters: {
         db: DbAdapter;
-        fetch?: FetchPolyfill;
+        fetch: FetchPolyfill;
     };
     signAndSendToForeignActorInbox: (this: DeliveryAdapter, foreignActorInbox: URL, actor: AP.Actor, activity: AP.Activity) => Promise<unknown>;
     broadcast: (this: DeliveryAdapter, activity: AP.Activity, actor: AP.Actor) => Promise<unknown>;

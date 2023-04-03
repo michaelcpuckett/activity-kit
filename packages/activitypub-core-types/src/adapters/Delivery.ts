@@ -5,7 +5,7 @@ import { FetchPolyfill } from './FetchPolyfill';
 export type DeliveryAdapter = {
   adapters: {
     db: DbAdapter;
-    fetch?: FetchPolyfill;
+    fetch: FetchPolyfill;
   };
   signAndSendToForeignActorInbox: (
     this: DeliveryAdapter,
