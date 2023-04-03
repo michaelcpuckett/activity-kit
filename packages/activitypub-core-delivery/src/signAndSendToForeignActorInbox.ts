@@ -4,7 +4,6 @@ import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   ACCEPT_HEADER,
   convertUrlsToStrings,
-  getHttpSignature,
 } from 'activitypub-core-utilities';
 import { DeliveryAdapter } from '.';
 
@@ -17,12 +16,13 @@ export async function signAndSendToForeignActorInbox(
   console.log('SENDING TO...', foreignActorInbox.toString());
 
   const convertedActivity = convertUrlsToStrings(activity);
-  const { dateHeader, digestHeader, signatureHeader } = await getHttpSignature(
-    foreignActorInbox,
-    actor.id,
-    await this.adapters.db.getPrivateKey(actor),
-    convertedActivity,
-  );
+  const { dateHeader, digestHeader, signatureHeader } =
+    await this.adapters.crypto.getHttpSignature(
+      foreignActorInbox,
+      actor.id,
+      await this.adapters.db.getPrivateKey(actor),
+      convertedActivity,
+    );
 
   // send
   return await this.adapters

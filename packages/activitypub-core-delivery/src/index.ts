@@ -1,4 +1,8 @@
-import type { DbAdapter, FetchPolyfill } from 'activitypub-core-types';
+import type {
+  CryptoAdapter,
+  DbAdapter,
+  FetchPolyfill,
+} from 'activitypub-core-types';
 import { broadcast } from './broadcast';
 import { getRecipientInboxUrls } from './getRecipientInboxUrls';
 import { getRecipientsList } from './getRecipientsList';
@@ -10,12 +14,14 @@ import fetch from 'isomorphic-fetch';
 export class DeliveryAdapter {
   adapters: {
     db: DbAdapter;
+    crypto: CryptoAdapter;
     fetch: FetchPolyfill;
   };
 
   constructor(config: {
     adapters: {
       db: DbAdapter;
+      crypto: CryptoAdapter;
       fetch?: FetchPolyfill;
     };
   }) {

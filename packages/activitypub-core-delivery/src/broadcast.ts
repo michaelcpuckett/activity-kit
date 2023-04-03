@@ -7,11 +7,12 @@ import { applyContext } from 'activitypub-core-utilities';
  *    [x] Removes the `bto` and `bcc` properties from Objects before delivery
  *        (`outbox:removes-bto-and-bcc`) *MUST*
  */
+
 export async function broadcast(
   this: DeliveryAdapter,
   activity: AP.Activity,
   actor: AP.Actor,
-) {
+): Promise<unknown> {
   const publicActivity = cleanProps(applyContext(activity));
 
   if (!('actor' in publicActivity)) {

@@ -1,9 +1,11 @@
 import * as AP from '../activitypub';
+import { CryptoAdapter } from './Crypto';
 import { DbAdapter } from './Db';
 import { FetchPolyfill } from './FetchPolyfill';
 export declare type DeliveryAdapter = {
     adapters: {
         db: DbAdapter;
+        crypto: CryptoAdapter;
         fetch: FetchPolyfill;
     };
     signAndSendToForeignActorInbox: (this: DeliveryAdapter, foreignActorInbox: URL, actor: AP.Actor, activity: AP.Activity) => Promise<unknown>;
