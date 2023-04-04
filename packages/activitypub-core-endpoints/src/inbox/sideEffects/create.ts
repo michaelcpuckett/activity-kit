@@ -65,10 +65,12 @@ export async function handleCreate(
 
     assertExists(attributedToId);
 
-    if (attributedToId.toString() !== getId(recipient)?.toString()) {
+    console.log(attributedToId.toString(), getId(recipient)?.toString());
+
+    /*if (attributedToId.toString() !== getId(recipient)?.toString()) {
       // Not applicable to this Actor.
       return;
-    }
+    }*/
 
     await this.adapters.db.insertOrderedItem(repliesCollectionId, objectId);
   } catch (error) {

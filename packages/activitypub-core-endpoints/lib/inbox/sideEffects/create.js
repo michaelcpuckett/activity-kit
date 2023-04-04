@@ -30,9 +30,7 @@ async function handleCreate(activity, recipient) {
         (0, activitypub_core_types_1.assertIsApCollection)(repliesCollection);
         const attributedToId = (0, activitypub_core_utilities_1.getId)(repliesCollection.attributedTo);
         (0, activitypub_core_types_1.assertExists)(attributedToId);
-        if (attributedToId.toString() !== (0, activitypub_core_utilities_1.getId)(recipient)?.toString()) {
-            return;
-        }
+        console.log(attributedToId.toString(), (0, activitypub_core_utilities_1.getId)(recipient)?.toString());
         await this.adapters.db.insertOrderedItem(repliesCollectionId, objectId);
     }
     catch (error) {
