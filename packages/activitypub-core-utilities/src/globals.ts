@@ -78,18 +78,18 @@ export const DEFAULT_ROUTES: Routes = {
   question: '/question/:guid',
 
   // Actor Collections
-  inbox: ':entityRoute/inbox',
-  outbox: ':entityRoute/outbox',
-  followers: ':entityRoute/followers',
-  following: ':entityRoute/following',
-  liked: ':entityRoute/liked',
-  stream: ':entityRoute/stream/:slug',
-  endpoint: ':entityRoute/endpoint/:slug',
+  inbox: '(.+)?:entityRoute/inbox',
+  outbox: '(.+)?:entityRoute/outbox',
+  followers: '(.+)?:entityRoute/followers',
+  following: '(.+)?:entityRoute/following',
+  liked: '(.+)?:entityRoute/liked',
+  stream: '(.+)?:entityRoute/stream/:slug',
+  endpoint: '(.+)?:entityRoute/endpoint/:slug',
 
   // Object Collections
-  likes: ':entityRoute/likes',
-  shares: ':entityRoute/shares',
-  replies: ':entityRoute/replies',
+  likes: '(.+)?:entityRoute/likes',
+  shares: '(.+)?:entityRoute/shares',
+  replies: '(.+)?:entityRoute/replies',
 };
 export const RESERVED_USERNAMES = [
   SERVER_ACTOR_USERNAME,
