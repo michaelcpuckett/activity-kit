@@ -172,7 +172,7 @@ export const activityPub =
           return;
         }
 
-        if (req.url === '/.well-known/webfinger') {
+        if (req.url.startsWith('/.well-known/webfinger')) {
           await new WebfingerGetEndpoint(
             req,
             res,
