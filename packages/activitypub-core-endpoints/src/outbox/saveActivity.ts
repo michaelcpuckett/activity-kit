@@ -33,14 +33,14 @@ export async function saveActivity(this: OutboxPostEndpoint) {
     })}`,
   );
 
-  const replies: AP.Collection = {
+  const replies: AP.OrderedCollection = {
     '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
     id: repliesId,
     url: repliesId,
     name: 'Replies',
-    type: AP.CollectionTypes.COLLECTION,
+    type: AP.CollectionTypes.ORDERED_COLLECTION,
     totalItems: 0,
-    items: [],
+    orderedItems: [],
     attributedTo: actorId,
     published: publishedDate,
   };

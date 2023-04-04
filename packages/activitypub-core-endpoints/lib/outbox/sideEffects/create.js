@@ -80,9 +80,9 @@ async function handleCreate(activity) {
             id: objectRepliesId,
             url: objectRepliesId,
             name: 'Replies',
-            type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
+            type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
             totalItems: 0,
-            items: [],
+            orderedItems: [],
             published: publishedDate,
             attributedTo: actorId,
         };

@@ -86,14 +86,14 @@ export async function handleCreate(
       })}`,
     );
 
-    const objectReplies: AP.Collection = {
+    const objectReplies: AP.OrderedCollection = {
       '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
       id: objectRepliesId,
       url: objectRepliesId,
       name: 'Replies',
-      type: AP.CollectionTypes.COLLECTION,
+      type: AP.CollectionTypes.ORDERED_COLLECTION,
       totalItems: 0,
-      items: [],
+      orderedItems: [],
       published: publishedDate,
       attributedTo: actorId,
     };

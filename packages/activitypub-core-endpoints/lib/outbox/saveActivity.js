@@ -23,9 +23,9 @@ async function saveActivity() {
         id: repliesId,
         url: repliesId,
         name: 'Replies',
-        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
+        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
-        items: [],
+        orderedItems: [],
         attributedTo: actorId,
         published: publishedDate,
     };
