@@ -8,111 +8,16 @@ This is a [Lerna](https://lerna.js.org/) monorepo that holds packages related to
 
 This project is still incomplete at the moment. Much of the core functionality is complete, but refer to:
 
-* [TODO.md](TODO.md)
-* [CHECKLIST.md](CHECKLIST.md)
-* [CONTRIBUTING.md](CONTRIBUTING.md)
+- [TODO.md](TODO.md)
+- [CHECKLIST.md](CHECKLIST.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Running in a Project
 
 Canonical example using Express, MongoDB, Firebase Auth, JSX:
 
 ```ts
-(async () => {
-  const app = express();
-
-  // Firebase Authentication adapter.
-  const firebaseServiceAccount: ServiceAccount = JSON.parse(decodeURIComponent(process.env.AP_SERVICE_ACCOUNT));
-  const firebaseAuthAdapter =
-    new FirebaseAuthAdapter(
-      firebaseServiceAccount,
-      'firebase-project-id'
-    );
-
-  // Mongo DB adapter.
-  const mongoClient = new MongoClient(process.env.AP_MONGO_CLIENT_URL);
-  await mongoClient.connect();
-  const mongoDb = mongoClient.db(process.env.AP_MONGO_DB_NAME);
-  const mongoDbAdapter = new MongoDbAdapter(mongoDb);
-
-  // Server-to-Server Delivery adapter.
-  const defaultDeliveryAdapter =
-    new DeliveryAdapter({
-      adapters: {
-        db: mongoDbAdapter,
-      },
-    });
-
-  // FTP Storage adapter.
-  const ftpStorageAdapter =
-    new FtpStorageAdapter(
-      JSON.parse(decodeURIComponent(process.env.AP_FTP_CONFIG)),
-      '/uploads'
-    );
-
-  const renderLoginPage = async () => {
-    return `
-      <!doctype html>
-      ${renderToString(
-        <LoginPage />
-      )}`;
-  };
-
-  const renderHomePage = async ({ actor }) => {
-    return `
-      <!doctype html>
-      ${renderToString(
-        <DashboardPage actor={actor} />
-      )}
-    `;
-  };
-
-  const renderEntityPage = async ({ entity, actor }) => {
-    return `
-      <!doctype html>
-      ${renderToString(
-        <EntityPage
-          entity={entity}
-          actor={actor}
-        />
-      )}
-    `;
-  };
-
-  app.use(
-    activityPub({
-      pages: {
-        login: renderLoginPage,
-        home: renderHomePage,
-        entity: renderEntityPage,
-      },
-
-      adapters: {
-        auth: firebaseAuthAdapter,
-        db: mongoDbAdapter,
-        delivery: defaultDeliveryAdapter,
-        storage: ftpStorageAdapter,
-      }
-    }),
-  );
-
-  app.get('/', (req: IncomingMessage, res: ServerResponse) => {
-    const indexPage = `
-      <!doctype html>
-      ${renderToString(
-        <IndexPage />
-      )}
-    `;
-
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/html')
-    res.write(indexPage);
-    res.end();
-  });
-
-  app.listen(process.env.PORT ?? 3000, () => {
-    console.log('Running...');
-  });
-})();
+// TODO
 ```
 
 ## General Philosophy
@@ -191,8 +96,9 @@ There is a large amount of data related to profiles and interactions that must b
 Currently this project comes with:
 
 - `activitypub-core-db-mongo`
+- `activitypub-core-db-sqlite`
 
-* TODO: SQLite, PostreSQL
+* TODO: PostreSQL
 
 #### Authentication Adapters
 
@@ -200,9 +106,8 @@ Users can sign up and log in to their account.
 
 Current this project comes with:
 
+- `activitypub-core-auth-crypto`
 - `activitypub-core-auth-firebase`
-
-* TODO: Passport.js
 
 #### Storage Adapters
 
@@ -232,8 +137,8 @@ Injectables that can modify core functionality.
 
 Currently this project comes with:
 
-- `activitypub-core-plugin-foaf`
+- `activitypub-core-plugin-groups`
 
 ### Client/Rendering Layer
 
-TBD. Currently using JSX (React) server-side.
+TBD.
