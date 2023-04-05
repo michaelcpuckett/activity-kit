@@ -7,12 +7,16 @@ const path_to_regexp_1 = require("path-to-regexp");
 async function createServerActor() {
     const { publicKey: botPublicKey, privateKey: botPrivateKey } = await this.adapters.crypto.generateKeyPair();
     const publishedDate = new Date();
-    const compileOptions = { encode: encodeURIComponent };
-    const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, compileOptions)(data)}`);
-    const userId = getRouteUrl(this.routes.application, {
+    const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
+        validate: false,
+    })(data)}`);
+    const userId = getRouteUrl(this.routes.serverActor, {
         username: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
     });
-    const inboxId = new URL(`${userId}/inbox`);
+    const entityRoute = userId.pathname;
+    const inboxId = getRouteUrl(this.routes.serverInbox, {
+        entityRoute,
+    });
     const botInbox = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: inboxId,
@@ -23,7 +27,9 @@ async function createServerActor() {
         orderedItems: [],
         published: publishedDate,
     };
-    const outboxId = new URL(`${userId}/outbox`);
+    const outboxId = getRouteUrl(this.routes.serverOutbox, {
+        entityRoute,
+    });
     const botOutbox = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: outboxId,
@@ -34,7 +40,9 @@ async function createServerActor() {
         orderedItems: [],
         published: publishedDate,
     };
-    const followersId = new URL(`${userId}/followers`);
+    const followersId = getRouteUrl(this.routes.serverFollowers, {
+        entityRoute,
+    });
     const botFollowers = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: followersId,
@@ -46,7 +54,9 @@ async function createServerActor() {
         items: [],
         published: publishedDate,
     };
-    const followingId = new URL(`${userId}/following`);
+    const followingId = getRouteUrl(this.routes.serverFollowing, {
+        entityRoute,
+    });
     const botFollowing = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: followingId,

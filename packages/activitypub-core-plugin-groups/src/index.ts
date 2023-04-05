@@ -1,5 +1,6 @@
 import {
   AP,
+  Routes,
   assertExists,
   assertIsApCollection,
   assertIsApExtendedObject,
@@ -10,20 +11,21 @@ import type { Adapters, Plugin } from 'activitypub-core-types';
 import {
   getId,
   getCollectionNameByUrl,
-  ACTIVITYSTREAMS_CONTEXT,
   LOCAL_DOMAIN,
   isType,
   PUBLIC_ACTOR,
 } from 'activitypub-core-utilities';
 import * as cheerio from 'cheerio';
+import { compile } from 'path-to-regexp';
 
 // Groups automatically announce activities addressed to them if sent from non-blocked followers.
 
-export function GroupsPlugin(config?: {}) {
+export function GroupsPlugin() {
   const groupsPlugin: Plugin = {
     async handleInboxSideEffect(
       this: {
         adapters: Adapters;
+        routes: Routes;
       },
       activity: AP.Activity,
       recipient: AP.Actor,
@@ -147,10 +149,14 @@ export function GroupsPlugin(config?: {}) {
       // We're in outbox, because this is auto-generated:
 
       const publishedDate = new Date();
-      // TODO compile path
-      const announceActivityId = `${LOCAL_DOMAIN}/entity/${await this.adapters.crypto.randomBytes(
-        16,
-      )}`;
+
+      const announceActivityId = new URL(
+        `${LOCAL_DOMAIN}${compile(this.routes.announce, {
+          validate: false,
+        })({
+          guid: await this.adapters.crypto.randomBytes(16),
+        })}`,
+      );
 
       const shared = await this.adapters.db.getStreamByName(
         recipient,
@@ -163,47 +169,6 @@ export function GroupsPlugin(config?: {}) {
 
       assertExists(sharedId);
 
-      const announceActivityRepliesId = new URL(
-        `${announceActivityId}/replies`,
-      );
-      const announceActivityReplies: AP.Collection = {
-        '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-        id: announceActivityRepliesId,
-        url: announceActivityRepliesId,
-        name: 'Replies',
-        type: AP.CollectionTypes.COLLECTION,
-        attributedTo: recipientId,
-        totalItems: 0,
-        items: [],
-        published: publishedDate,
-      };
-
-      const announceActivityLikesId = new URL(`${announceActivityId}/likes`);
-      const announceActivityLikes = {
-        '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-        id: announceActivityLikesId,
-        url: announceActivityLikesId,
-        name: 'Likes',
-        type: AP.CollectionTypes.ORDERED_COLLECTION,
-        attributedTo: recipientId,
-        totalItems: 0,
-        orderedItems: [],
-        published: publishedDate,
-      };
-
-      const announceActivitySharesId = new URL(`${announceActivityId}/shares`);
-      const announceActivityShares = {
-        '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-        id: announceActivitySharesId,
-        url: announceActivitySharesId,
-        name: 'Shares',
-        type: AP.CollectionTypes.ORDERED_COLLECTION,
-        attributedTo: recipientId,
-        totalItems: 0,
-        orderedItems: [],
-        published: publishedDate,
-      };
-
       const announceActivity: AP.Announce = {
         id: new URL(announceActivityId),
         url: new URL(announceActivityId),
@@ -211,9 +176,6 @@ export function GroupsPlugin(config?: {}) {
         actor: recipientId,
         to: [new URL(PUBLIC_ACTOR), followersId],
         object: objectToBeSharedId,
-        replies: announceActivityRepliesId,
-        likes: announceActivityLikesId,
-        shares: announceActivitySharesId,
         published: publishedDate,
       };
 
@@ -246,9 +208,6 @@ export function GroupsPlugin(config?: {}) {
 
       await Promise.all([
         this.adapters.db.saveEntity(announceActivity),
-        this.adapters.db.saveEntity(announceActivityReplies),
-        this.adapters.db.saveEntity(announceActivityLikes),
-        this.adapters.db.saveEntity(announceActivityShares),
         this.adapters.db.insertOrderedItem(
           outboxId,
           new URL(announceActivityId),

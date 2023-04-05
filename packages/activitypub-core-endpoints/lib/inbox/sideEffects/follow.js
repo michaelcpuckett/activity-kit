@@ -53,42 +53,6 @@ async function handleFollow(activity, recipient) {
         guid: await this.adapters.crypto.randomBytes(16),
     })}`)}`;
     const publishedDate = new Date();
-    const acceptActivityRepliesId = new URL(`${acceptActivityId}/replies`);
-    const acceptActivityReplies = {
-        '@context': new URL(activitypub_core_utilities_2.ACTIVITYSTREAMS_CONTEXT),
-        id: acceptActivityRepliesId,
-        url: acceptActivityRepliesId,
-        name: 'Replies',
-        type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
-        attributedTo: followeeId,
-        totalItems: 0,
-        items: [],
-        published: publishedDate,
-    };
-    const acceptActivityLikesId = new URL(`${acceptActivityId}/likes`);
-    const acceptActivityLikes = {
-        '@context': new URL(activitypub_core_utilities_2.ACTIVITYSTREAMS_CONTEXT),
-        id: acceptActivityLikesId,
-        url: acceptActivityLikesId,
-        name: 'Likes',
-        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-        attributedTo: followeeId,
-        totalItems: 0,
-        orderedItems: [],
-        published: publishedDate,
-    };
-    const acceptActivitySharesId = new URL(`${acceptActivityId}/shares`);
-    const acceptActivityShares = {
-        '@context': new URL(activitypub_core_utilities_2.ACTIVITYSTREAMS_CONTEXT),
-        id: acceptActivitySharesId,
-        url: acceptActivitySharesId,
-        name: 'Likes',
-        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-        attributedTo: followeeId,
-        totalItems: 0,
-        orderedItems: [],
-        published: publishedDate,
-    };
     const acceptActivity = {
         '@context': activitypub_core_utilities_2.ACTIVITYSTREAMS_CONTEXT,
         id: new URL(acceptActivityId),
@@ -97,18 +61,12 @@ async function handleFollow(activity, recipient) {
         to: [new URL(activitypub_core_utilities_2.PUBLIC_ACTOR), followerId],
         actor: followeeId,
         object: activityId,
-        replies: acceptActivityRepliesId,
-        likes: acceptActivityLikesId,
-        shares: acceptActivitySharesId,
         published: publishedDate,
     };
     const followeeOutboxId = (0, activitypub_core_utilities_3.getId)(followee.outbox);
     (0, activitypub_core_types_1.assertExists)(followeeOutboxId);
     await Promise.all([
         this.adapters.db.saveEntity(acceptActivity),
-        this.adapters.db.saveEntity(acceptActivityReplies),
-        this.adapters.db.saveEntity(acceptActivityLikes),
-        this.adapters.db.saveEntity(acceptActivityShares),
         this.adapters.db.insertOrderedItem(followeeOutboxId, new URL(acceptActivityId)),
         this.adapters.db.insertItem(followersId, followerId),
     ]);

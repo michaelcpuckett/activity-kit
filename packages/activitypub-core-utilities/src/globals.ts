@@ -15,7 +15,6 @@ export const CHANGESET_CONTEXT = 'http://purl.org/vocab/changeset/schema#';
 export const PUBLIC_ACTOR = `${ACTIVITYSTREAMS_CONTEXT}#Public`;
 export const LINKED_DATA_CONTENT_TYPE = 'application/ld+json';
 export const SERVER_ACTOR_USERNAME = 'bot';
-export const SERVER_ACTOR_ID = `${LOCAL_DOMAIN}/entity/${SERVER_ACTOR_USERNAME}`;
 export const SHARED_INBOX_ID = `${LOCAL_DOMAIN}/sharedInbox`;
 export const ACCEPT_HEADER = 'Accept';
 export const CONTENT_TYPE_HEADER = 'Content-Type';
@@ -27,6 +26,13 @@ export const JSON_CONTENT_TYPE = 'application/json';
 export const HTML_CONTENT_TYPE = 'text/html';
 export const USERNAME_REGEXP = /^[\w\d]{3,12}$/;
 export const DEFAULT_ROUTES: Routes = {
+  // Server Actor.
+  serverActor: '/:username',
+  serverInbox: '(.+)?:entityRoute/inbox',
+  serverOutbox: '(.+)?:entityRoute/outbox',
+  serverFollowers: '(.+)?:entityRoute/followers',
+  serverFollowing: '(.+)?:entityRoute/following',
+
   // Actor Types.
   person: '/@:username',
   group: '/group/:username',

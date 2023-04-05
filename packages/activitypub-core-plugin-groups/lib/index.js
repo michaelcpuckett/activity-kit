@@ -27,7 +27,8 @@ exports.GroupsPlugin = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const cheerio = __importStar(require("cheerio"));
-function GroupsPlugin(config) {
+const path_to_regexp_1 = require("path-to-regexp");
+function GroupsPlugin() {
     const groupsPlugin = {
         async handleInboxSideEffect(activity, recipient) {
             if (!(0, activitypub_core_utilities_1.isType)(activity, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
@@ -97,47 +98,15 @@ function GroupsPlugin(config) {
                 return;
             }
             const publishedDate = new Date();
-            const announceActivityId = `${activitypub_core_utilities_1.LOCAL_DOMAIN}/entity/${(0, activitypub_core_utilities_1.getGuid)()}`;
+            const announceActivityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.announce, {
+                validate: false,
+            })({
+                guid: await this.adapters.crypto.randomBytes(16),
+            })}`);
             const shared = await this.adapters.db.getStreamByName(recipient, 'Shared');
             (0, activitypub_core_types_1.assertIsApCollection)(shared);
             const sharedId = (0, activitypub_core_utilities_1.getId)(shared);
             (0, activitypub_core_types_1.assertExists)(sharedId);
-            const announceActivityRepliesId = new URL(`${announceActivityId}/replies`);
-            const announceActivityReplies = {
-                '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
-                id: announceActivityRepliesId,
-                url: announceActivityRepliesId,
-                name: 'Replies',
-                type: activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
-                attributedTo: recipientId,
-                totalItems: 0,
-                items: [],
-                published: publishedDate,
-            };
-            const announceActivityLikesId = new URL(`${announceActivityId}/likes`);
-            const announceActivityLikes = {
-                '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
-                id: announceActivityLikesId,
-                url: announceActivityLikesId,
-                name: 'Likes',
-                type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-                attributedTo: recipientId,
-                totalItems: 0,
-                orderedItems: [],
-                published: publishedDate,
-            };
-            const announceActivitySharesId = new URL(`${announceActivityId}/shares`);
-            const announceActivityShares = {
-                '@context': new URL(activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT),
-                id: announceActivitySharesId,
-                url: announceActivitySharesId,
-                name: 'Shares',
-                type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-                attributedTo: recipientId,
-                totalItems: 0,
-                orderedItems: [],
-                published: publishedDate,
-            };
             const announceActivity = {
                 id: new URL(announceActivityId),
                 url: new URL(announceActivityId),
@@ -145,9 +114,6 @@ function GroupsPlugin(config) {
                 actor: recipientId,
                 to: [new URL(activitypub_core_utilities_1.PUBLIC_ACTOR), followersId],
                 object: objectToBeSharedId,
-                replies: announceActivityRepliesId,
-                likes: announceActivityLikesId,
-                shares: announceActivitySharesId,
                 published: publishedDate,
             };
             await this.adapters.db.insertOrderedItem(sharedId, new URL(announceActivityId));
@@ -163,9 +129,6 @@ function GroupsPlugin(config) {
             (0, activitypub_core_types_1.assertExists)(outboxId);
             await Promise.all([
                 this.adapters.db.saveEntity(announceActivity),
-                this.adapters.db.saveEntity(announceActivityReplies),
-                this.adapters.db.saveEntity(announceActivityLikes),
-                this.adapters.db.saveEntity(announceActivityShares),
                 this.adapters.db.insertOrderedItem(outboxId, new URL(announceActivityId)),
             ]);
             await this.adapters.delivery.broadcast(announceActivity, recipient);

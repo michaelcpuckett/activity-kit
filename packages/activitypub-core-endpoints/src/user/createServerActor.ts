@@ -15,16 +15,22 @@ export async function createServerActor(this: UserPostEndpoint) {
 
   const publishedDate = new Date();
 
-  const compileOptions = { encode: encodeURIComponent };
-
   const getRouteUrl = (route: string, data: Record<string, string>) =>
-    new URL(`${LOCAL_DOMAIN}${compile(route, compileOptions)(data)}`);
+    new URL(
+      `${LOCAL_DOMAIN}${compile(route, {
+        validate: false,
+      })(data)}`,
+    );
 
-  const userId = getRouteUrl(this.routes.application, {
+  const userId = getRouteUrl(this.routes.serverActor, {
     username: SERVER_ACTOR_USERNAME,
   });
 
-  const inboxId = new URL(`${userId}/inbox`);
+  const entityRoute = userId.pathname;
+
+  const inboxId = getRouteUrl(this.routes.serverInbox, {
+    entityRoute,
+  });
 
   const botInbox: AP.OrderedCollection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
@@ -37,7 +43,9 @@ export async function createServerActor(this: UserPostEndpoint) {
     published: publishedDate,
   };
 
-  const outboxId = new URL(`${userId}/outbox`);
+  const outboxId = getRouteUrl(this.routes.serverOutbox, {
+    entityRoute,
+  });
 
   const botOutbox: AP.OrderedCollection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
@@ -50,7 +58,9 @@ export async function createServerActor(this: UserPostEndpoint) {
     published: publishedDate,
   };
 
-  const followersId = new URL(`${userId}/followers`);
+  const followersId = getRouteUrl(this.routes.serverFollowers, {
+    entityRoute,
+  });
 
   const botFollowers: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
@@ -64,7 +74,9 @@ export async function createServerActor(this: UserPostEndpoint) {
     published: publishedDate,
   };
 
-  const followingId = new URL(`${userId}/following`);
+  const followingId = getRouteUrl(this.routes.serverFollowing, {
+    entityRoute,
+  });
 
   const botFollowing: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,

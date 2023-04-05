@@ -3,10 +3,7 @@ import {
   PUBLIC_ACTOR,
   SERVER_ACTOR_USERNAME,
   W3ID_SECURITY_CONTEXT,
-} from 'activitypub-core-utilities';
-import {
   LOCAL_DOMAIN,
-  SERVER_ACTOR_ID,
   SHARED_INBOX_ID,
 } from 'activitypub-core-utilities';
 import { AP, assertIsApActor } from 'activitypub-core-types';
@@ -261,6 +258,12 @@ export async function createUserActor(
 
   assertIsApActor(userActor);
 
+  const botActor = await this.adapters.db.findOne('entity', {
+    preferredUsername: SERVER_ACTOR_USERNAME,
+  });
+
+  assertIsApActor(botActor);
+
   const createActorActivityId = getRouteUrl(this.routes.create, {
     guid: await this.adapters.crypto.randomBytes(16),
   });
@@ -270,7 +273,7 @@ export async function createUserActor(
     id: createActorActivityId,
     url: createActorActivityId,
     type: AP.ActivityTypes.CREATE,
-    actor: new URL(SERVER_ACTOR_ID),
+    actor: botActor,
     object: userActor,
     to: [new URL(PUBLIC_ACTOR)],
     published: publishedDate,
@@ -345,12 +348,6 @@ export async function createUserActor(
       return entitiesToSave;
     })(),*/
   ]);
-
-  const botActor = await this.adapters.db.findOne('entity', {
-    preferredUsername: SERVER_ACTOR_USERNAME,
-  });
-
-  assertIsApActor(botActor);
 
   if (createActorActivity.id && userInbox.id) {
     await Promise.all([

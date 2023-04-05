@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUserActor = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
-const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const activitypub_core_types_1 = require("activitypub-core-types");
 const path_to_regexp_1 = require("path-to-regexp");
 async function createUserActor(user) {
@@ -11,7 +10,7 @@ async function createUserActor(user) {
     }
     const { publicKey, privateKey } = await this.adapters.crypto.generateKeyPair();
     const publishedDate = new Date();
-    const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
+    const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
         validate: false,
     })(data)}`);
     const userId = getRouteUrl(this.routes[user.type.toLowerCase()], {
@@ -195,7 +194,7 @@ async function createUserActor(user) {
             userBookmarks.id,
         ],
         endpoints: {
-            sharedInbox: new URL(activitypub_core_utilities_2.SHARED_INBOX_ID),
+            sharedInbox: new URL(activitypub_core_utilities_1.SHARED_INBOX_ID),
             uploadMedia: uploadMediaId,
         },
         publicKey: {
@@ -206,6 +205,10 @@ async function createUserActor(user) {
         published: publishedDate,
     };
     (0, activitypub_core_types_1.assertIsApActor)(userActor);
+    const botActor = await this.adapters.db.findOne('entity', {
+        preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
+    });
+    (0, activitypub_core_types_1.assertIsApActor)(botActor);
     const createActorActivityId = getRouteUrl(this.routes.create, {
         guid: await this.adapters.crypto.randomBytes(16),
     });
@@ -214,7 +217,7 @@ async function createUserActor(user) {
         id: createActorActivityId,
         url: createActorActivityId,
         type: activitypub_core_types_1.AP.ActivityTypes.CREATE,
-        actor: new URL(activitypub_core_utilities_2.SERVER_ACTOR_ID),
+        actor: botActor,
         object: userActor,
         to: [new URL(activitypub_core_utilities_1.PUBLIC_ACTOR)],
         published: publishedDate,
@@ -236,10 +239,6 @@ async function createUserActor(user) {
         this.adapters.db.saveString('privateKey', user.uid, privateKey),
         this.adapters.db.saveString('username', user.uid, user.preferredUsername),
     ]);
-    const botActor = await this.adapters.db.findOne('entity', {
-        preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
-    });
-    (0, activitypub_core_types_1.assertIsApActor)(botActor);
     if (createActorActivity.id && userInbox.id) {
         await Promise.all([
             this.adapters.db.insertOrderedItem(new URL(`${botActor.id}/outbox`), createActorActivity.id),

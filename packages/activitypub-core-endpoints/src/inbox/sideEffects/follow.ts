@@ -109,45 +109,6 @@ export async function handleFollow(
   )}`;
   const publishedDate = new Date();
 
-  const acceptActivityRepliesId = new URL(`${acceptActivityId}/replies`);
-  const acceptActivityReplies: AP.Collection = {
-    '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-    id: acceptActivityRepliesId,
-    url: acceptActivityRepliesId,
-    name: 'Replies',
-    type: AP.CollectionTypes.COLLECTION,
-    attributedTo: followeeId,
-    totalItems: 0,
-    items: [],
-    published: publishedDate,
-  };
-
-  const acceptActivityLikesId = new URL(`${acceptActivityId}/likes`);
-  const acceptActivityLikes = {
-    '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-    id: acceptActivityLikesId,
-    url: acceptActivityLikesId,
-    name: 'Likes',
-    type: AP.CollectionTypes.ORDERED_COLLECTION,
-    attributedTo: followeeId,
-    totalItems: 0,
-    orderedItems: [],
-    published: publishedDate,
-  };
-
-  const acceptActivitySharesId = new URL(`${acceptActivityId}/shares`);
-  const acceptActivityShares = {
-    '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
-    id: acceptActivitySharesId,
-    url: acceptActivitySharesId,
-    name: 'Likes',
-    type: AP.CollectionTypes.ORDERED_COLLECTION,
-    attributedTo: followeeId,
-    totalItems: 0,
-    orderedItems: [],
-    published: publishedDate,
-  };
-
   const acceptActivity: AP.Accept = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
     id: new URL(acceptActivityId),
@@ -156,9 +117,6 @@ export async function handleFollow(
     to: [new URL(PUBLIC_ACTOR), followerId],
     actor: followeeId,
     object: activityId,
-    replies: acceptActivityRepliesId,
-    likes: acceptActivityLikesId,
-    shares: acceptActivitySharesId,
     published: publishedDate,
   };
 
@@ -168,9 +126,6 @@ export async function handleFollow(
 
   await Promise.all([
     this.adapters.db.saveEntity(acceptActivity),
-    this.adapters.db.saveEntity(acceptActivityReplies),
-    this.adapters.db.saveEntity(acceptActivityLikes),
-    this.adapters.db.saveEntity(acceptActivityShares),
     this.adapters.db.insertOrderedItem(
       followeeOutboxId,
       new URL(acceptActivityId),

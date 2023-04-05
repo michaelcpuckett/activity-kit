@@ -1,4 +1,9 @@
 export declare type Routes = {
+    serverActor: string;
+    serverInbox: string;
+    serverOutbox: string;
+    serverFollowers: string;
+    serverFollowing: string;
     person: string;
     group: string;
     application: string;

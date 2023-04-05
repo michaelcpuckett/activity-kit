@@ -12,7 +12,6 @@ export declare const CHANGESET_CONTEXT = "http://purl.org/vocab/changeset/schema
 export declare const PUBLIC_ACTOR: string;
 export declare const LINKED_DATA_CONTENT_TYPE = "application/ld+json";
 export declare const SERVER_ACTOR_USERNAME = "bot";
-export declare const SERVER_ACTOR_ID: string;
 export declare const SHARED_INBOX_ID: string;
 export declare const ACCEPT_HEADER = "Accept";
 export declare const CONTENT_TYPE_HEADER = "Content-Type";
