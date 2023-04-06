@@ -20,7 +20,7 @@ Canonical example using Express, MongoDB, custom Crypto Auth:
 import * as express from "express";
 import { MongoClient } from "mongodb";
 
-import { AP } from "activitypub-core-types";
+import { AP, Adapters } from "activitypub-core-types";
 import { activityPub } from "activitypub-core-server-express";
 import { MongoDbAdapter } from "activitypub-core-db-mongo";
 import { CryptoAuthAdapter } from "activitypub-core-auth-crypto";
