@@ -6,8 +6,6 @@ import type {
 import { broadcast } from './broadcast';
 import { getRecipientInboxUrls } from './getRecipientInboxUrls';
 import { getRecipientsList } from './getRecipientsList';
-import { isPublic } from './isPublic';
-import { getPeerInboxUrls } from './getPeerInboxUrls';
 import { signAndSendToForeignActorInbox } from './signAndSendToForeignActorInbox';
 import fetch from 'isomorphic-fetch';
 
@@ -35,6 +33,4 @@ export class DeliveryAdapter {
   public broadcast = broadcast;
   public getRecipientInboxUrls = getRecipientInboxUrls;
   public getRecipientsList = getRecipientsList;
-  public isPublic = isPublic;
-  public getPeerInboxUrls = getPeerInboxUrls;
 }

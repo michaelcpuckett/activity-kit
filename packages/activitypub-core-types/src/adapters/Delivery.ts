@@ -29,6 +29,4 @@ export type DeliveryAdapter = {
     this: DeliveryAdapter,
     to: AP.EntityReference | AP.EntityReference[],
   ) => Promise<URL[]>;
-  isPublic: (this: DeliveryAdapter, activity: AP.Activity) => Promise<boolean>;
-  getPeerInboxUrls: (this: DeliveryAdapter) => Promise<Array<URL>>;
 };
