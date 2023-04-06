@@ -3,16 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FtpStorageAdapter = void 0;
 const upload_1 = require("./upload");
 class FtpStorageAdapter {
-    host;
-    user;
-    password;
-    path;
+    params;
     upload = upload_1.upload;
-    constructor(config, path) {
-        this.host = config.host;
-        this.user = config.user;
-        this.password = config.password;
-        this.path = path;
+    constructor(params) {
+        this.params = {
+            host: params.host,
+            user: params.user,
+            password: params.password,
+            path: params.path,
+        };
     }
 }
 exports.FtpStorageAdapter = FtpStorageAdapter;
