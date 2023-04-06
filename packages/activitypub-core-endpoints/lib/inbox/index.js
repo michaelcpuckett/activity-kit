@@ -5,7 +5,6 @@ const getActors_1 = require("./getActors");
 const parseBody_1 = require("./parseBody");
 const respond_1 = require("./respond");
 const isBlocked_1 = require("./isBlocked");
-const savePeer_1 = require("./savePeer");
 const runSideEffects_1 = require("./runSideEffects");
 const accept_1 = require("./sideEffects/accept");
 const announce_1 = require("./sideEffects/announce");
@@ -39,7 +38,6 @@ class InboxPostEndpoint {
     handleFollow = follow_1.handleFollow;
     handleLike = like_1.handleLike;
     isBlocked = isBlocked_1.isBlocked;
-    savePeer = savePeer_1.savePeer;
     respond = respond_1.respond;
 }
 exports.InboxPostEndpoint = InboxPostEndpoint;

@@ -31,6 +31,10 @@ async function handleCreate(activity, recipient) {
         const attributedToId = (0, activitypub_core_utilities_1.getId)(repliesCollection.attributedTo);
         (0, activitypub_core_types_1.assertExists)(attributedToId);
         console.log(attributedToId.toString(), (0, activitypub_core_utilities_1.getId)(recipient)?.toString());
+        if (attributedToId.toString() !== (0, activitypub_core_utilities_1.getId)(recipient)?.toString()) {
+            console.log('Not applicable to this Actor.');
+            return;
+        }
         await this.adapters.db.insertOrderedItem(repliesCollectionId, objectId);
     }
     catch (error) {

@@ -67,10 +67,10 @@ export async function handleCreate(
 
     console.log(attributedToId.toString(), getId(recipient)?.toString());
 
-    /*if (attributedToId.toString() !== getId(recipient)?.toString()) {
-      // Not applicable to this Actor.
+    if (attributedToId.toString() !== getId(recipient)?.toString()) {
+      console.log('Not applicable to this Actor.');
       return;
-    }*/
+    }
 
     await this.adapters.db.insertOrderedItem(repliesCollectionId, objectId);
   } catch (error) {

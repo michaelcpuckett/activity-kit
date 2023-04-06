@@ -16,7 +16,6 @@ async function respond() {
             return;
         }
     }
-    await this.savePeer();
     for (const actor of await this.getActors()) {
         const isBlocked = await this.isBlocked(actor);
         if (isBlocked) {

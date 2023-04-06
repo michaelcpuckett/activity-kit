@@ -22,8 +22,6 @@ export async function respond(this: InboxPostEndpoint) {
     }
   }
 
-  await this.savePeer();
-
   for (const actor of await this.getActors()) {
     const isBlocked = await this.isBlocked(actor);
 
