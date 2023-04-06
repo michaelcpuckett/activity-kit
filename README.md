@@ -14,10 +14,129 @@ This project is still incomplete at the moment. Much of the core functionality i
 
 ## Running in a Project
 
-Canonical example using Express, MongoDB, Firebase Auth, JSX:
+Canonical example using Express, MongoDB, custom Crypto Auth:
 
 ```ts
-// TODO
+import * as express from "express";
+import { MongoClient } from "mongodb";
+
+import { AP } from "activitypub-core-types";
+import { activityPub } from "activitypub-core-server-express";
+import { MongoDbAdapter } from "activitypub-core-db-mongo";
+import { CryptoAuthAdapter } from "activitypub-core-auth-crypto";
+import { NodeCryptoAdapter } from "activitypub-core-crypto-node";
+import { FtpStorageAdapter } from "activitypub-core-storage-ftp";
+import { DeliveryAdapter } from "activitypub-core-delivery";
+import { streamToString } from "activitypub-core-utilities";
+
+// Use Express for all routes.
+const app = express.default();
+
+(async () => {
+  const ftpStorageAdapterOptions = {
+    user: process.env.AP_FTP_USER,
+    password: process.env.AP_FTP_PASSWORD,
+    host: process.env.AP_FTP_HOST,
+    path: process.env.AP_FTP_PATH,
+  };
+
+  // Use the FTP adapter for handling uploaded media.
+  const ftpStorageAdapter: Adapters["storage"] = new FtpStorageAdapter(
+    ftpStorageAdapterOptions
+  );
+
+  // Use Node's Crypto library for cryptography.
+  const nodeCryptoAdapter: Adapters["crypto"] = new NodeCryptoAdapter();
+
+  const mongoClient = new MongoClient(process.env.AP_MONGO_CLIENT_URL);
+  await mongoClient.connect();
+  const mongoDb = mongoClient.db("activitypub");
+
+  // Use MongoDB to store data.
+  const mongoDbAdapter: Adapters["db"] = new MongoDbAdapter(mongoDb, {
+    crypto: nodeCryptoAdapter,
+  });
+
+  // Use Node's Crypto library for authentication.
+  const cryptoAuthAdapter: Adapters["auth"] = new CryptoAuthAdapter({
+    db: mongoDbAdapter,
+    crypto: nodeCryptoAdapter,
+  });
+
+  // Use the default Delivery adapter for Server-to-Server federation.
+  const defaultDeliveryAdapter: Adapters["delivery"] = new DeliveryAdapter({
+    adapters: {
+      db: mongoDbAdapter,
+      crypto: nodeCryptoAdapter,
+    },
+  });
+
+  // Use the activitypub-core Express plugin.
+  app.use(
+    activityPub({
+      adapters: {
+        crypto: nodeCryptoAdapter,
+        auth: cryptoAuthAdapter,
+        db: mongoDbAdapter,
+        delivery: defaultDeliveryAdapter,
+        storage: ftpStorageAdapter,
+      },
+
+      plugins: [],
+
+      pages: {
+        // Login/Signup via Auth adapter.
+        login: async (): Promise<string> => {
+          // Use a rendering engine to generate and return a string here.
+          return `
+            <html>
+              <!-- Signup form POSTs to /user endpoint to create new user. -->
+              <form>...</form>
+              <!-- Login form POSTs to /login endpoint to get cookie token. -->
+              <form>...</form>
+            </html>
+          `;
+        },
+
+        // Logged-in users can edit their profile, create new posts, etc.
+        home: async (homePageProps: {
+          actor: AP.Actor;
+          shared: AP.Announce[];
+          requests: AP.Follow[];
+          members: AP.Actor[];
+          blocks: AP.Block[];
+        }): Promise<string> => {
+          // Use a rendering engine to generate and return a string here.
+          return `
+            <html>
+              <title>@${actor.preferredUsername}</title>
+              <!-- Forms POST to user's outbox URL using AP protocol. -->
+              <form>...</form>
+            </html>
+          `;
+        },
+
+        // All ActivityPub objects have an HTML view.
+        entity: async (entityPageProps: {
+          entity: AP.Entity;
+          actor?: AP.Actor;
+        }): Promise<string> => {
+          // Use a rendering engine to generate and return a string here.
+          return `
+            <html>
+              <h1>${entity.type}</h1>
+              <p>${entity.summary}</p>
+            </html>
+          `;
+        },
+      },
+    })
+  );
+
+  app.listen(process.env.PORT ?? 3000, () => {
+    console.log("Running...");
+  });
+})();
 ```
 
 ## General Philosophy
