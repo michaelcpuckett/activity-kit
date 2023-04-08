@@ -4,16 +4,6 @@ exports.runSideEffects = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function runSideEffects() {
-    for (const plugin of this.plugins) {
-        if (plugin.handleOutboxSideEffect) {
-            try {
-                await plugin.handleOutboxSideEffect.call(this);
-            }
-            catch (error) {
-                console.log(error);
-            }
-        }
-    }
     try {
         if ((0, activitypub_core_utilities_1.isType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.CREATE)) {
             await this.handleCreate(this.activity);
@@ -48,6 +38,16 @@ async function runSideEffects() {
     }
     catch (error) {
         console.log(error);
+    }
+    for (const plugin of this.plugins) {
+        if (plugin.handleOutboxSideEffect) {
+            try {
+                await plugin.handleOutboxSideEffect.call(this);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
     }
 }
 exports.runSideEffects = runSideEffects;
