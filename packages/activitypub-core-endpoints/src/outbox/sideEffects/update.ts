@@ -116,6 +116,17 @@ export async function handleUpdate(
           }
         }
 
+        const tagIds = tags.map(({ id }) => id.toString());
+
+        for (const existingTag of existingTags) {
+          if (!tagIds.includes(existingTag)) {
+            await this.adapters.db.removeOrderedItem(
+              new URL(existingTag),
+              objectId,
+            );
+          }
+        }
+
         if (tags.length) {
           activity.object.tag = tags;
         }
