@@ -21,7 +21,8 @@ async function handleUpdate(activity) {
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
     const object = await this.adapters.db.findEntityById(objectId);
     (0, activitypub_core_types_1.assertIsApEntity)(object);
-    if ((0, activitypub_core_utilities_1.isTypeOf)(activity.object, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
+    if ((0, activitypub_core_utilities_1.isTypeOf)(object, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
+        (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
         (0, activitypub_core_types_1.assertIsApExtendedObject)(activity.object);
         if ('tag' in activity.object && Array.isArray(activity.object.tag)) {
             const existingTags = activity.object.tag

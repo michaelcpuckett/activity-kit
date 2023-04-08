@@ -46,7 +46,8 @@ export async function handleUpdate(
 
   assertIsApEntity(object);
 
-  if (isTypeOf(activity.object, AP.ExtendedObjectTypes)) {
+  if (isTypeOf(object, AP.ExtendedObjectTypes)) {
+    assertIsApExtendedObject(object);
     assertIsApExtendedObject(activity.object);
 
     if ('tag' in activity.object && Array.isArray(activity.object.tag)) {
