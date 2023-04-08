@@ -1,9 +1,10 @@
 import type { IncomingMessage, ServerResponse } from 'http';
 import {
   CONTENT_TYPE_HEADER,
-  ACTIVITYSTREAMS_CONTENT_TYPE
+  ACTIVITYSTREAMS_CONTENT_TYPE,
+  LOCAL_HOSTNAME,
 } from 'activitypub-core-utilities';
-import type { DbAdapter, Plugin } from 'activitypub-core-types';
+import type { DbAdapter } from 'activitypub-core-types';
 
 export class ProxyGetEndpoint {
   req: IncomingMessage;
@@ -18,7 +19,6 @@ export class ProxyGetEndpoint {
     adapters: {
       db: DbAdapter;
     },
-    plugins: Plugin[]
   ) {
     this.req = req;
     this.res = res;
@@ -27,14 +27,28 @@ export class ProxyGetEndpoint {
 
   public async respond() {
     try {
-      const proxiedUrl = this.req.url?.split('?resource=')[1];
+      const urlObject = new URL(this.req.url, LOCAL_HOSTNAME);
+      const proxiedUrl = new URL(
+        decodeURI(urlObject.searchParams.get('resource')),
+      );
+      const acceptHeader =
+        this.req.headers.accept || ACTIVITYSTREAMS_CONTENT_TYPE;
 
       if (proxiedUrl) {
-        const fetchedResult = await this.adapters.db.queryById(new URL(proxiedUrl));
-        
+        const fetchedResult =
+          acceptHeader !== ACTIVITYSTREAMS_CONTENT_TYPE
+            ? await this.adapters.db.adapters
+                .fetch(proxiedUrl.toString(), {
+                  headers: {
+                    Accept: acceptHeader,
+                  },
+                })
+                .then((response) => response.json())
+            : await this.adapters.db.queryById(proxiedUrl);
+
         if (fetchedResult) {
           this.res.statusCode = 200;
-          this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE)
+          this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
           this.res.write(JSON.stringify(fetchedResult));
           this.res.end();
           return;

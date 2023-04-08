@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import type { IncomingMessage, ServerResponse } from 'http';
-import type { DbAdapter, Plugin } from 'activitypub-core-types';
+import type { DbAdapter } from 'activitypub-core-types';
 export declare class ProxyGetEndpoint {
     req: IncomingMessage;
     res: ServerResponse;
@@ -9,6 +9,6 @@ export declare class ProxyGetEndpoint {
     };
     constructor(req: IncomingMessage, res: ServerResponse, adapters: {
         db: DbAdapter;
-    }, plugins: Plugin[]);
+    });
     respond(): Promise<void>;
 }

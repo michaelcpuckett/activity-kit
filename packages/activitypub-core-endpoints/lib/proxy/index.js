@@ -6,16 +6,26 @@ class ProxyGetEndpoint {
     req;
     res;
     adapters;
-    constructor(req, res, adapters, plugins) {
+    constructor(req, res, adapters) {
         this.req = req;
         this.res = res;
         this.adapters = adapters;
     }
     async respond() {
         try {
-            const proxiedUrl = this.req.url?.split('?resource=')[1];
+            const urlObject = new URL(this.req.url, activitypub_core_utilities_1.LOCAL_HOSTNAME);
+            const proxiedUrl = new URL(decodeURI(urlObject.searchParams.get('resource')));
+            const acceptHeader = this.req.headers.accept || activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE;
             if (proxiedUrl) {
-                const fetchedResult = await this.adapters.db.queryById(new URL(proxiedUrl));
+                const fetchedResult = acceptHeader !== activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE
+                    ? await this.adapters.db.adapters
+                        .fetch(proxiedUrl.toString(), {
+                        headers: {
+                            Accept: acceptHeader,
+                        },
+                    })
+                        .then((response) => response.json())
+                    : await this.adapters.db.queryById(proxiedUrl);
                 if (fetchedResult) {
                     this.res.statusCode = 200;
                     this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);
