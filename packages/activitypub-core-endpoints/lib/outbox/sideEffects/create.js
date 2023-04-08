@@ -154,9 +154,9 @@ async function handleCreate(activity) {
                             name: tag.name,
                             type: [
                                 activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG,
-                                activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
+                                activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
                             ],
-                            items: [],
+                            orderedItems: [],
                         };
                         await this.adapters.db.saveEntity(hashtagEntity);
                     }

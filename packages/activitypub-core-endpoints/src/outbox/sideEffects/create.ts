@@ -198,9 +198,9 @@ export async function handleCreate(
               name: tag.name,
               type: [
                 AP.ExtendedObjectTypes.HASHTAG,
-                AP.CollectionTypes.COLLECTION,
+                AP.CollectionTypes.ORDERED_COLLECTION,
               ],
-              items: [],
+              orderedItems: [],
             };
 
             await this.adapters.db.saveEntity(hashtagEntity);
