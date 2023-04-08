@@ -6,7 +6,12 @@ import {
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { Plugin, Routes, Adapters } from 'activitypub-core-types';
+import {
+  Plugin,
+  Routes,
+  Adapters,
+  assertHasApType,
+} from 'activitypub-core-types';
 
 export class UserPostEndpoint {
   routes: Routes;

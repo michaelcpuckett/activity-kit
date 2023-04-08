@@ -50,9 +50,5 @@ export type Plugin = {
     entity: AP.Entity,
   ) => Promise<object>;
   getIsEntityGetRequest?: (url: string) => boolean;
-  declareUserActorStreams?: (userActor: AP.Actor) => Array<{
-    id: URL;
-    url: URL;
-    name: string;
-  }>;
+  declareUserActorStreams?: () => string[];
 };

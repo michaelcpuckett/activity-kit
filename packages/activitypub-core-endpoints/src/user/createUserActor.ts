@@ -20,13 +20,7 @@ export async function createUserActor(
     preferredUsername: string;
   },
 ) {
-  if (
-    !Object.values(AP.ActorTypes).includes(
-      user.type as typeof AP.ActorTypes[keyof typeof AP.ActorTypes],
-    )
-  ) {
-    throw new Error('Bad request: Provided type is not an Actor type.');
-  }
+  assertIsApActor(user);
 
   const { publicKey, privateKey } =
     await this.adapters.crypto.generateKeyPair();
@@ -218,7 +212,7 @@ export async function createUserActor(
     slug: 'upload-media',
   });
 
-  const userActor = {
+  let userActor = {
     '@context': [
       ACTIVITYSTREAMS_CONTEXT,
       W3ID_SECURITY_CONTEXT,
@@ -229,7 +223,10 @@ export async function createUserActor(
     ],
     id: new URL(userId),
     url: new URL(userId),
-    type: user.type,
+    type:
+      user.type === AP.ActorTypes.GROUP
+        ? AP.ActorTypes.GROUP
+        : AP.ActorTypes.PERSON,
     name: user.name,
     preferredUsername: user.preferredUsername,
     inbox: userInbox.id,
@@ -268,7 +265,7 @@ export async function createUserActor(
     guid: await this.adapters.crypto.randomBytes(16),
   });
 
-  const createActorActivity: AP.Create = {
+  const createActorActivity = {
     '@context': ACTIVITYSTREAMS_CONTEXT,
     id: createActorActivityId,
     url: createActorActivityId,
@@ -279,24 +276,19 @@ export async function createUserActor(
     published: publishedDate,
   };
 
-  /*
   if (this.plugins) {
     for (const plugin of this.plugins) {
       if ('handleCreateUserActor' in plugin) {
-        createActorActivity = await plugin.handleCreateUserActor.call({
+        const pluginActivity = await plugin.handleCreateUserActor.call({
           activity: createActorActivity,
         });
-        userActor = createActorActivity.object as AP.Actor;
-      }
 
-      if ('declareUserActorStreams' in plugin) {
-        userActor.streams = userActor.streams.concat(
-          plugin.declareUserActorStreams(userActor).map((entity) => entity.id),
-        );
+        assertIsApActor(pluginActivity.object);
+
+        userActor = pluginActivity.object;
       }
     }
   }
-  */
 
   await Promise.all([
     this.adapters.db.saveEntity(createActorActivity),
@@ -314,40 +306,43 @@ export async function createUserActor(
     this.adapters.db.saveString('account', user.uid, user.email),
     this.adapters.db.saveString('privateKey', user.uid, privateKey),
     this.adapters.db.saveString('username', user.uid, user.preferredUsername),
-    /*...((): Array<Promise<unknown>> => {
-      if (!this.plugins) {
-        return [];
-      }
-
-      const entitiesToSave: Array<Promise<void>> = [];
-      for (const plugin of this.plugins) {
-        if ('declareUserActorStreams' in plugin) {
-          const streams: Array<{
-            id: URL;
-            url: URL;
-            name: string;
-          }> = plugin.declareUserActorStreams(userActor) ?? [];
-
-          streams
-            .map((stream) =>
-              this.adapters.db.saveEntity({
-                '@context': ACTIVITYSTREAMS_CONTEXT,
-                type: AP.CollectionTypes.ORDERED_COLLECTION,
-                totalItems: 0,
-                attributedTo: userId,
-                orderedItems: [],
-                published: publishedDate,
-                ...stream,
-              }),
-            )
-            .forEach((stream) => {
-              entitiesToSave.push(stream);
-            });
-        }
-      }
-      return entitiesToSave;
-    })(),*/
   ]);
+
+  const declaredStreams = [];
+
+  for (const plugin of this.plugins) {
+    if ('declareUserActorStreams' in plugin) {
+      const streamsNames: string[] = plugin.declareUserActorStreams() ?? [];
+
+      await Promise.all(
+        streamsNames.map(async (streamName) => {
+          const streamId = getRouteUrl(this.routes.stream, {
+            slug: streamName
+              .toLowerCase()
+              .trim()
+              .replace(/[^a-z0-9]+/g, '-')
+              .replace(/^-+|-+$/g, ''),
+          });
+
+          declaredStreams.push(
+            this.adapters.db.saveEntity({
+              '@context': ACTIVITYSTREAMS_CONTEXT,
+              type: AP.CollectionTypes.ORDERED_COLLECTION,
+              totalItems: 0,
+              attributedTo: userId,
+              orderedItems: [],
+              published: publishedDate,
+              name: streamName,
+              id: streamId,
+              url: streamId,
+            }),
+          );
+        }),
+      );
+    }
+  }
+
+  await Promise.all(declaredStreams);
 
   if (createActorActivity.id && userInbox.id) {
     await Promise.all([

@@ -5,9 +5,7 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_types_1 = require("activitypub-core-types");
 const path_to_regexp_1 = require("path-to-regexp");
 async function createUserActor(user) {
-    if (!Object.values(activitypub_core_types_1.AP.ActorTypes).includes(user.type)) {
-        throw new Error('Bad request: Provided type is not an Actor type.');
-    }
+    (0, activitypub_core_types_1.assertIsApActor)(user);
     const { publicKey, privateKey } = await this.adapters.crypto.generateKeyPair();
     const publishedDate = new Date();
     const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
@@ -167,7 +165,7 @@ async function createUserActor(user) {
         entityRoute,
         slug: 'upload-media',
     });
-    const userActor = {
+    let userActor = {
         '@context': [
             activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
             activitypub_core_utilities_1.W3ID_SECURITY_CONTEXT,
@@ -178,7 +176,9 @@ async function createUserActor(user) {
         ],
         id: new URL(userId),
         url: new URL(userId),
-        type: user.type,
+        type: user.type === activitypub_core_types_1.AP.ActorTypes.GROUP
+            ? activitypub_core_types_1.AP.ActorTypes.GROUP
+            : activitypub_core_types_1.AP.ActorTypes.PERSON,
         name: user.name,
         preferredUsername: user.preferredUsername,
         inbox: userInbox.id,
@@ -222,6 +222,17 @@ async function createUserActor(user) {
         to: [new URL(activitypub_core_utilities_1.PUBLIC_ACTOR)],
         published: publishedDate,
     };
+    if (this.plugins) {
+        for (const plugin of this.plugins) {
+            if ('handleCreateUserActor' in plugin) {
+                const pluginActivity = await plugin.handleCreateUserActor.call({
+                    activity: createActorActivity,
+                });
+                (0, activitypub_core_types_1.assertIsApActor)(pluginActivity.object);
+                userActor = pluginActivity.object;
+            }
+        }
+    }
     await Promise.all([
         this.adapters.db.saveEntity(createActorActivity),
         this.adapters.db.saveEntity(userActor),
@@ -239,6 +250,33 @@ async function createUserActor(user) {
         this.adapters.db.saveString('privateKey', user.uid, privateKey),
         this.adapters.db.saveString('username', user.uid, user.preferredUsername),
     ]);
+    const declaredStreams = [];
+    for (const plugin of this.plugins) {
+        if ('declareUserActorStreams' in plugin) {
+            const streamsNames = plugin.declareUserActorStreams() ?? [];
+            await Promise.all(streamsNames.map(async (streamName) => {
+                const streamId = getRouteUrl(this.routes.stream, {
+                    slug: streamName
+                        .toLowerCase()
+                        .trim()
+                        .replace(/[^a-z0-9]+/g, '-')
+                        .replace(/^-+|-+$/g, ''),
+                });
+                declaredStreams.push(this.adapters.db.saveEntity({
+                    '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+                    type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+                    totalItems: 0,
+                    attributedTo: userId,
+                    orderedItems: [],
+                    published: publishedDate,
+                    name: streamName,
+                    id: streamId,
+                    url: streamId,
+                }));
+            }));
+        }
+    }
+    await Promise.all(declaredStreams);
     if (createActorActivity.id && userInbox.id) {
         await Promise.all([
             this.adapters.db.insertOrderedItem(new URL(`${botActor.id}/outbox`), createActorActivity.id),
