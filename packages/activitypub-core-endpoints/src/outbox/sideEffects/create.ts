@@ -148,13 +148,6 @@ export async function handleCreate(
     object.shares = objectSharesId;
     object.published = publishedDate;
 
-    await Promise.all([
-      this.adapters.db.saveEntity(object),
-      this.adapters.db.saveEntity(objectReplies),
-      this.adapters.db.saveEntity(objectLikes),
-      this.adapters.db.saveEntity(objectShares),
-    ]);
-
     if (object.inReplyTo) {
       const objectInReplyTo = await this.adapters.db.findEntityById(
         getId(object.inReplyTo),
@@ -224,6 +217,13 @@ export async function handleCreate(
         object.tag = tags;
       }
     }
+
+    await Promise.all([
+      this.adapters.db.saveEntity(object),
+      this.adapters.db.saveEntity(objectReplies),
+      this.adapters.db.saveEntity(objectLikes),
+      this.adapters.db.saveEntity(objectShares),
+    ]);
   } else {
     await this.adapters.db.saveEntity(object);
   }

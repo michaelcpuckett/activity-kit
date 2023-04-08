@@ -123,12 +123,6 @@ async function handleCreate(activity) {
         object.likes = objectLikesId;
         object.shares = objectSharesId;
         object.published = publishedDate;
-        await Promise.all([
-            this.adapters.db.saveEntity(object),
-            this.adapters.db.saveEntity(objectReplies),
-            this.adapters.db.saveEntity(objectLikes),
-            this.adapters.db.saveEntity(objectShares),
-        ]);
         if (object.inReplyTo) {
             const objectInReplyTo = await this.adapters.db.findEntityById((0, activitypub_core_utilities_3.getId)(object.inReplyTo));
             if (objectInReplyTo && 'replies' in objectInReplyTo) {
@@ -175,6 +169,12 @@ async function handleCreate(activity) {
                 object.tag = tags;
             }
         }
+        await Promise.all([
+            this.adapters.db.saveEntity(object),
+            this.adapters.db.saveEntity(objectReplies),
+            this.adapters.db.saveEntity(objectLikes),
+            this.adapters.db.saveEntity(objectShares),
+        ]);
     }
     else {
         await this.adapters.db.saveEntity(object);
