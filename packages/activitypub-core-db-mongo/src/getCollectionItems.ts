@@ -19,8 +19,8 @@ export async function getCollectionItems(
   }
 
   if (
-    collection.type !== AP.CollectionTypes.COLLECTION &&
-    collection.type !== AP.CollectionTypes.ORDERED_COLLECTION
+    !isType(collection, AP.CollectionTypes.COLLECTION) &&
+    !isType(collection, AP.CollectionTypes.ORDERED_COLLECTION)
   ) {
     return [];
   }

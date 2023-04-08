@@ -12,8 +12,8 @@ async function getCollectionItems(entity) {
     if (!collection) {
         return [];
     }
-    if (collection.type !== activitypub_core_types_1.AP.CollectionTypes.COLLECTION &&
-        collection.type !== activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
+    if (!(0, activitypub_core_utilities_1.isType)(collection, activitypub_core_types_1.AP.CollectionTypes.COLLECTION) &&
+        !(0, activitypub_core_utilities_1.isType)(collection, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
         return [];
     }
     if (!(('items' in collection && Array.isArray(collection.items)) ||
