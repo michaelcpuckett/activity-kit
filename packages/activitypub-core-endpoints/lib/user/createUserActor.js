@@ -222,6 +222,7 @@ async function createUserActor(user) {
         to: [new URL(activitypub_core_utilities_1.PUBLIC_ACTOR)],
         published: publishedDate,
     };
+    const declaredStreams = [];
     if (this.plugins) {
         for (const plugin of this.plugins) {
             if ('handleCreateUserActor' in plugin) {
@@ -230,6 +231,30 @@ async function createUserActor(user) {
                 });
                 (0, activitypub_core_types_1.assertIsApActor)(pluginActivity.object);
                 userActor = pluginActivity.object;
+            }
+            if ('declareUserActorStreams' in plugin) {
+                const streamsNames = plugin.declareUserActorStreams() ?? [];
+                await Promise.all(streamsNames.map(async (streamName) => {
+                    const streamId = getRouteUrl(this.routes.stream, {
+                        slug: streamName
+                            .toLowerCase()
+                            .trim()
+                            .replace(/[^a-z0-9]+/g, '-')
+                            .replace(/^-+|-+$/g, ''),
+                    });
+                    userActor.streams.push(streamId);
+                    declaredStreams.push(this.adapters.db.saveEntity({
+                        '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
+                        type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+                        totalItems: 0,
+                        attributedTo: userId,
+                        orderedItems: [],
+                        published: publishedDate,
+                        name: streamName,
+                        id: streamId,
+                        url: streamId,
+                    }));
+                }));
             }
         }
     }
@@ -250,32 +275,6 @@ async function createUserActor(user) {
         this.adapters.db.saveString('privateKey', user.uid, privateKey),
         this.adapters.db.saveString('username', user.uid, user.preferredUsername),
     ]);
-    const declaredStreams = [];
-    for (const plugin of this.plugins) {
-        if ('declareUserActorStreams' in plugin) {
-            const streamsNames = plugin.declareUserActorStreams() ?? [];
-            await Promise.all(streamsNames.map(async (streamName) => {
-                const streamId = getRouteUrl(this.routes.stream, {
-                    slug: streamName
-                        .toLowerCase()
-                        .trim()
-                        .replace(/[^a-z0-9]+/g, '-')
-                        .replace(/^-+|-+$/g, ''),
-                });
-                declaredStreams.push(this.adapters.db.saveEntity({
-                    '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
-                    type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-                    totalItems: 0,
-                    attributedTo: userId,
-                    orderedItems: [],
-                    published: publishedDate,
-                    name: streamName,
-                    id: streamId,
-                    url: streamId,
-                }));
-            }));
-        }
-    }
     await Promise.all(declaredStreams);
     if (createActorActivity.id && userInbox.id) {
         await Promise.all([
