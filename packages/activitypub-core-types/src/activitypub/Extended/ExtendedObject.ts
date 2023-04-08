@@ -71,6 +71,11 @@ export type Profile = BaseExtendedObject & {
   describes?: CoreObjectReference;
 };
 
+// Extension
+export type Hashtag = BaseCoreObject & {
+  type: TypeOrArrayWithType<typeof ExtendedObjectTypes.HASHTAG>;
+};
+
 export type ExtendedObject =
   | Article
   | Event
@@ -83,6 +88,7 @@ export type ExtendedObject =
   | Video
   | Document
   | Audio
-  | Image;
+  | Image
+  | Hashtag;
 export type ExtendedObjectReference = URL | ExtendedObject;
 export type ImageReference = URL | Image;

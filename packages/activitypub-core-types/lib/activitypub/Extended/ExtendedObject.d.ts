@@ -53,7 +53,10 @@ export declare type Profile = BaseExtendedObject & {
     type: TypeOrArrayWithType<typeof ExtendedObjectTypes.PROFILE>;
     describes?: CoreObjectReference;
 };
-export declare type ExtendedObject = Article | Event | Note | Page | Place | Relationship | Tombstone | Profile | Video | Document | Audio | Image;
+export declare type Hashtag = BaseCoreObject & {
+    type: TypeOrArrayWithType<typeof ExtendedObjectTypes.HASHTAG>;
+};
+export declare type ExtendedObject = Article | Event | Note | Page | Place | Relationship | Tombstone | Profile | Video | Document | Audio | Image | Hashtag;
 export declare type ExtendedObjectReference = URL | ExtendedObject;
 export declare type ImageReference = URL | Image;
 export {};

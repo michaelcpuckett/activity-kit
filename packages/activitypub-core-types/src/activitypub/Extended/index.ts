@@ -71,9 +71,3 @@ export type { EitherCollection } from './Collection';
 export type { EitherCollectionReference } from './Collection';
 export type { EitherCollectionPage } from './Collection';
 export type { EitherCollectionPageReference } from './Collection';
-
-/**
- * ActivityPub uses ActivityStreams for its vocabulary. This is pretty great
- * because ActivityStreams includes all the common terms you need to represent all
- * the activities and content flowing around a social network.
- **/

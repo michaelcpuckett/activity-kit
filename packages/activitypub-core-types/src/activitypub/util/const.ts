@@ -11,6 +11,7 @@ export const ExtendedObjectTypes = {
   RELATIONSHIP: 'Relationship',
   TOMBSTONE: 'Tombstone',
   VIDEO: 'Video',
+  HASHTAG: 'Hashtag', // Extension
 } as const;
 
 export const LinkTypes = {

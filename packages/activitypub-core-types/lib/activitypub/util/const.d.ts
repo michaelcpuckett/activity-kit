@@ -11,6 +11,7 @@ export declare const ExtendedObjectTypes: {
     readonly RELATIONSHIP: "Relationship";
     readonly TOMBSTONE: "Tombstone";
     readonly VIDEO: "Video";
+    readonly HASHTAG: "Hashtag";
 };
 export declare const LinkTypes: {
     readonly LINK: "Link";
@@ -143,6 +144,7 @@ export declare const CoreObjectTypes: {
     readonly RELATIONSHIP: "Relationship";
     readonly TOMBSTONE: "Tombstone";
     readonly VIDEO: "Video";
+    readonly HASHTAG: "Hashtag";
 };
 export declare const AllTypes: {
     readonly LINK: "Link";
@@ -196,4 +198,5 @@ export declare const AllTypes: {
     readonly RELATIONSHIP: "Relationship";
     readonly TOMBSTONE: "Tombstone";
     readonly VIDEO: "Video";
+    readonly HASHTAG: "Hashtag";
 };

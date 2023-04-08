@@ -14,6 +14,7 @@ exports.ExtendedObjectTypes = {
     RELATIONSHIP: 'Relationship',
     TOMBSTONE: 'Tombstone',
     VIDEO: 'Video',
+    HASHTAG: 'Hashtag',
 };
 exports.LinkTypes = {
     LINK: 'Link',
