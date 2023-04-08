@@ -2,7 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'http';
 import {
   CONTENT_TYPE_HEADER,
   ACTIVITYSTREAMS_CONTENT_TYPE,
-  LOCAL_HOSTNAME,
+  LOCAL_DOMAIN,
 } from 'activitypub-core-utilities';
 import type { DbAdapter } from 'activitypub-core-types';
 
@@ -27,7 +27,7 @@ export class ProxyGetEndpoint {
 
   public async respond() {
     try {
-      const urlObject = new URL(this.req.url, LOCAL_HOSTNAME);
+      const urlObject = new URL(this.req.url, LOCAL_DOMAIN);
       const proxiedUrl = new URL(
         decodeURI(urlObject.searchParams.get('resource')),
       );
