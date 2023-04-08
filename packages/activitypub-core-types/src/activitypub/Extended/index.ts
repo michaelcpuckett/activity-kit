@@ -56,6 +56,7 @@ export type {
   Document,
   Audio,
   Image,
+  Hashtag,
 } from './ExtendedObject';
 export type { Collection, CollectionReference } from './Collection';
 export type {

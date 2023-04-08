@@ -51,6 +51,7 @@ export type {
   Flag,
   Dislike,
   Question,
+  Hashtag,
 } from './Extended';
 export type {
   Actor,
@@ -89,3 +90,4 @@ export type { EitherCollectionReference } from './Extended';
 export type { EitherCollectionPage } from './Extended';
 export type { EitherCollectionPageReference } from './Extended';
 export type { StringReferenceMap } from './util/values';
+export type { TypeOrArrayWithType } from './Core/Entity';

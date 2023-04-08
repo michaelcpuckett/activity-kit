@@ -6,7 +6,11 @@ import {
   assertIsApExtendedObject,
   assertIsApType,
 } from 'activitypub-core-types';
-import { ACTIVITYSTREAMS_CONTEXT, isTypeOf } from 'activitypub-core-utilities';
+import {
+  ACTIVITYSTREAMS_CONTEXT,
+  isType,
+  isTypeOf,
+} from 'activitypub-core-utilities';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { getId } from 'activitypub-core-utilities';
 import { compile } from 'path-to-regexp';
@@ -165,6 +169,59 @@ export async function handleCreate(
             objectId,
           );
         }
+      }
+    }
+
+    if (object.tag) {
+      const tags = Array.isArray(object.tag) ? object.tag : [object.tag];
+
+      for (const tag of tags) {
+        if (
+          !(tag instanceof URL) &&
+          isType(tag, AP.ExtendedObjectTypes.HASHTAG)
+        ) {
+          assertIsApType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG);
+
+          const hashtagCollectionUrl = new URL(
+            `${LOCAL_DOMAIN}${compile(this.routes.hashtag)({
+              slug: tag.name
+                .replace('#', '')
+                .toLowerCase()
+                .trim() // Remove whitespace from both ends of the string
+                .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
+                .replace(/^-+|-+$/g, ''),
+            })}`,
+          );
+
+          const hashtagCollection = await this.adapters.db.findEntityById(
+            hashtagCollectionUrl,
+          );
+
+          if (!hashtagCollection) {
+            // TODO: Should type be `AP.Hashtag & AP.Collection`?
+            const hashtagEntity: AP.CoreObject = {
+              id: hashtagCollectionUrl,
+              url: hashtagCollectionUrl,
+              name: tag.name,
+              type: [
+                AP.ExtendedObjectTypes.HASHTAG,
+                AP.CollectionTypes.COLLECTION,
+              ],
+              items: [],
+            };
+
+            await this.adapters.db.saveEntity(hashtagEntity);
+          }
+
+          await this.adapters.db.insertItem(hashtagCollectionUrl, objectId);
+
+          tag.id = hashtagCollectionUrl;
+          tag.url = hashtagCollectionUrl;
+        }
+      }
+
+      if (tags.length) {
+        object.tag = tags;
       }
     }
   } else {

@@ -1,7 +1,7 @@
 import { BaseCoreObject } from '../Core/CoreObject';
 import { ActivityTypes } from '../util/const';
 import { EntityReference } from '../Core';
-import { AnyType, TypeOrArrayWithType } from '../Core/Entity';
+import { TypeOrArrayWithType } from '../Core/Entity';
 
 /**
  * Per the ActivityStreams Vocabulary spec:

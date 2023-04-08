@@ -1,13 +1,13 @@
-import { AllTypes, ExtendedObjectTypes } from '../util/const';
+import { ExtendedObjectTypes } from '../util/const';
 import { BaseCoreObject } from '../Core/CoreObject';
 import { EntityReference, CoreObjectReference } from '../Core';
-import { TypeOrArrayWithType } from '../Core/Entity';
+import { AnyType, TypeOrArrayWithType } from '../Core/Entity';
 declare type BaseExtendedObject = BaseCoreObject & {
     type: TypeOrArrayWithType<typeof ExtendedObjectTypes[keyof typeof ExtendedObjectTypes]>;
 };
 export declare type Tombstone = BaseExtendedObject & {
     type: TypeOrArrayWithType<typeof ExtendedObjectTypes.TOMBSTONE>;
-    formerType?: typeof AllTypes[keyof typeof AllTypes] | Array<typeof AllTypes[keyof typeof AllTypes]>;
+    formerType?: TypeOrArrayWithType<AnyType>;
     deleted?: Date;
 };
 export declare type Relationship = BaseExtendedObject & {

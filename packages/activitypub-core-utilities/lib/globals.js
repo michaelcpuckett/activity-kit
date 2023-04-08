@@ -46,6 +46,7 @@ exports.DEFAULT_ROUTES = {
     document: '/document/:guid',
     audio: '/audio/:guid',
     image: '/image/:guid',
+    hashtag: '/tag/:slug',
     accept: '/accept/:guid',
     follow: '/follow/:guid',
     delete: '/delete/:guid',

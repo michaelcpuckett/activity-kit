@@ -20,6 +20,7 @@ export declare type Routes = {
     document: string;
     audio: string;
     image: string;
+    hashtag: string;
     accept: string;
     follow: string;
     delete: string;

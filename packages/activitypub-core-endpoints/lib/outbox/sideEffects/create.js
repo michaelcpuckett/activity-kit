@@ -138,6 +138,43 @@ async function handleCreate(activity) {
                 }
             }
         }
+        if (object.tag) {
+            const tags = Array.isArray(object.tag) ? object.tag : [object.tag];
+            for (const tag of tags) {
+                if (!(tag instanceof URL) &&
+                    (0, activitypub_core_utilities_1.isType)(tag, activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG)) {
+                    (0, activitypub_core_types_1.assertIsApType)(tag, activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG);
+                    const hashtagCollectionUrl = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.hashtag)({
+                        slug: tag.name
+                            .replace('#', '')
+                            .toLowerCase()
+                            .trim()
+                            .replace(/[^a-z0-9]+/g, '-')
+                            .replace(/^-+|-+$/g, ''),
+                    })}`);
+                    const hashtagCollection = await this.adapters.db.findEntityById(hashtagCollectionUrl);
+                    if (!hashtagCollection) {
+                        const hashtagEntity = {
+                            id: hashtagCollectionUrl,
+                            url: hashtagCollectionUrl,
+                            name: tag.name,
+                            type: [
+                                activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG,
+                                activitypub_core_types_1.AP.CollectionTypes.COLLECTION,
+                            ],
+                            items: [],
+                        };
+                        await this.adapters.db.saveEntity(hashtagEntity);
+                    }
+                    await this.adapters.db.insertItem(hashtagCollectionUrl, objectId);
+                    tag.id = hashtagCollectionUrl;
+                    tag.url = hashtagCollectionUrl;
+                }
+            }
+            if (tags.length) {
+                object.tag = tags;
+            }
+        }
     }
     else {
         await this.adapters.db.saveEntity(object);

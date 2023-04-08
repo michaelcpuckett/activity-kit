@@ -52,6 +52,7 @@ export const DEFAULT_ROUTES: Routes = {
   document: '/document/:guid',
   audio: '/audio/:guid',
   image: '/image/:guid',
+  hashtag: '/tag/:slug',
 
   // Activity Types
   accept: '/accept/:guid',

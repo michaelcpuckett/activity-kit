@@ -24,6 +24,7 @@ export type Routes = {
   document: string;
   audio: string;
   image: string;
+  hashtag: string;
 
   // Activity Types
   accept: string;
