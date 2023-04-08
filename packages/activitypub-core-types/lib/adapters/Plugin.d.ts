@@ -6,9 +6,9 @@ export declare type Plugin = {
         activity: AP.Activity & {
             object: AP.Actor;
         };
-    }) => AP.Activity & {
+    }) => Promise<AP.Activity & {
         object: AP.Actor;
-    };
+    }>;
     handleOutboxSideEffect?: (this: {
         activity: AP.Activity;
         actor: AP.Actor;

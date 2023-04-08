@@ -5,7 +5,7 @@ export type Plugin = {
   handleCreateUserActor?: (this: {
     adapters: Adapters;
     activity: AP.Activity & { object: AP.Actor };
-  }) => AP.Activity & { object: AP.Actor };
+  }) => Promise<AP.Activity & { object: AP.Actor }>;
   handleOutboxSideEffect?: (this: {
     activity: AP.Activity;
     actor: AP.Actor;
