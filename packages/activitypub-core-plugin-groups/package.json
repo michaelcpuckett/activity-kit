@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-plugin-groups",
-  "version": "0.2.88",
+  "version": "0.2.89",
   "description": "> TODO: description",
   "author": "Michael Puckett <michael@puckett.contact>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -24,7 +24,7 @@
     "test": "ts-node ../../node_modules/jasmine/bin/jasmine tests/**/*.ts"
   },
   "dependencies": {
-    "activitypub-core-endpoints": "^0.2.88",
+    "activitypub-core-endpoints": "^0.2.89",
     "activitypub-core-types": "^0.2.86",
     "activitypub-core-utilities": "^0.2.86",
     "cheerio": "^1.0.0-rc.12",
