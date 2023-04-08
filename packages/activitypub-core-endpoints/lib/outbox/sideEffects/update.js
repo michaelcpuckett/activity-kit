@@ -70,7 +70,14 @@ async function handleUpdate(activity) {
                         }
                     }
                 }
-                const tagIds = tags.map(({ id }) => id.toString());
+                const tagIds = tags.map((tag) => {
+                    if (tag instanceof URL) {
+                        return tag.toString();
+                    }
+                    else {
+                        return (0, activitypub_core_utilities_1.getId)(tag).toString();
+                    }
+                });
                 for (const existingTag of existingTags) {
                     if (!tagIds.includes(existingTag)) {
                         await this.adapters.db.removeOrderedItem(new URL(existingTag), objectId);

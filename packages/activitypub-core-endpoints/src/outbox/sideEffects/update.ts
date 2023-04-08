@@ -116,7 +116,13 @@ export async function handleUpdate(
           }
         }
 
-        const tagIds = tags.map(({ id }) => id.toString());
+        const tagIds = tags.map((tag) => {
+          if (tag instanceof URL) {
+            return tag.toString();
+          } else {
+            return getId(tag).toString();
+          }
+        });
 
         for (const existingTag of existingTags) {
           if (!tagIds.includes(existingTag)) {
