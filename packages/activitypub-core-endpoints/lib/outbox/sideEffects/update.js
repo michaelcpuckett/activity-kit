@@ -82,9 +82,7 @@ async function handleUpdate(activity) {
                         await this.adapters.db.removeOrderedItem(new URL(existingTag), objectId);
                     }
                 }
-                if (tags.length) {
-                    activity.object.tag = tags;
-                }
+                activity.object.tag = tags;
             }
         }
     }

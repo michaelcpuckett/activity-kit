@@ -132,9 +132,7 @@ export async function handleUpdate(
           }
         }
 
-        if (tags.length) {
-          activity.object.tag = tags;
-        }
+        activity.object.tag = tags;
       }
     }
   }
