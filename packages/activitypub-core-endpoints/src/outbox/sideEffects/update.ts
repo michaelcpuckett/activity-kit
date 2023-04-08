@@ -48,7 +48,6 @@ export async function handleUpdate(
 
   if (isTypeOf(object, AP.ExtendedObjectTypes)) {
     assertIsApExtendedObject(object);
-    assertIsApExtendedObject(activity.object);
 
     if ('tag' in activity.object && Array.isArray(activity.object.tag)) {
       const existingTags = activity.object.tag

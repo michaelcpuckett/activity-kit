@@ -23,7 +23,6 @@ async function handleUpdate(activity) {
     (0, activitypub_core_types_1.assertIsApEntity)(object);
     if ((0, activitypub_core_utilities_1.isTypeOf)(object, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
         (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
-        (0, activitypub_core_types_1.assertIsApExtendedObject)(activity.object);
         if ('tag' in activity.object && Array.isArray(activity.object.tag)) {
             const existingTags = activity.object.tag
                 .map((tag) => {
