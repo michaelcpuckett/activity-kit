@@ -206,7 +206,10 @@ export async function handleCreate(
             await this.adapters.db.saveEntity(hashtagEntity);
           }
 
-          await this.adapters.db.insertItem(hashtagCollectionUrl, objectId);
+          await this.adapters.db.insertOrderedItem(
+            hashtagCollectionUrl,
+            objectId,
+          );
 
           tag.id = hashtagCollectionUrl;
           tag.url = hashtagCollectionUrl;
