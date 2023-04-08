@@ -2,9 +2,16 @@ import {
   AP,
   assertIsApActor,
   assertIsApEntity,
+  assertIsApExtendedObject,
   assertIsApType,
 } from 'activitypub-core-types';
-import { getId } from 'activitypub-core-utilities';
+import {
+  LOCAL_DOMAIN,
+  getId,
+  isType,
+  isTypeOf,
+} from 'activitypub-core-utilities';
+import { compile } from 'path-to-regexp';
 import { OutboxPostEndpoint } from '..';
 
 export async function handleUpdate(
@@ -38,6 +45,82 @@ export async function handleUpdate(
   const object = await this.adapters.db.findEntityById(objectId);
 
   assertIsApEntity(object);
+
+  if (isTypeOf(activity.object, AP.ExtendedObjectTypes)) {
+    assertIsApExtendedObject(activity.object);
+
+    if ('tag' in activity.object && Array.isArray(activity.object.tag)) {
+      const existingTags = activity.object.tag
+        .map((tag) => {
+          if (tag instanceof URL) {
+            return null;
+          }
+
+          return getId(tag)?.toString() ?? null;
+        })
+        .filter((_) => !!_);
+
+      if (activity.object.tag) {
+        const tags = Array.isArray(activity.object.tag)
+          ? activity.object.tag
+          : [activity.object.tag];
+
+        for (const tag of tags) {
+          if (
+            !(tag instanceof URL) &&
+            isType(tag, AP.ExtendedObjectTypes.HASHTAG)
+          ) {
+            assertIsApType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG);
+
+            const hashtagCollectionUrl = new URL(
+              `${LOCAL_DOMAIN}${compile(this.routes.hashtag)({
+                slug: tag.name
+                  .replace('#', '')
+                  .toLowerCase()
+                  .trim() // Remove whitespace from both ends of the string
+                  .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
+                  .replace(/^-+|-+$/g, ''),
+              })}`,
+            );
+
+            const hashtagCollection = await this.adapters.db.findEntityById(
+              hashtagCollectionUrl,
+            );
+
+            if (!hashtagCollection) {
+              // TODO: Should type be `AP.Hashtag & AP.Collection`?
+              const hashtagEntity: AP.CoreObject = {
+                id: hashtagCollectionUrl,
+                url: hashtagCollectionUrl,
+                name: tag.name,
+                type: [
+                  AP.ExtendedObjectTypes.HASHTAG,
+                  AP.CollectionTypes.ORDERED_COLLECTION,
+                ],
+                orderedItems: [],
+              };
+
+              await this.adapters.db.saveEntity(hashtagEntity);
+            }
+
+            if (!existingTags.includes(hashtagCollectionUrl.toString())) {
+              await this.adapters.db.insertOrderedItem(
+                hashtagCollectionUrl,
+                objectId,
+              );
+
+              tag.id = hashtagCollectionUrl;
+              tag.url = hashtagCollectionUrl;
+            }
+          }
+        }
+
+        if (tags.length) {
+          activity.object.tag = tags;
+        }
+      }
+    }
+  }
 
   activity.object = {
     ...object,

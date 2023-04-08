@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUpdate = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
+const path_to_regexp_1 = require("path-to-regexp");
 async function handleUpdate(activity) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.UPDATE);
     const actorId = (0, activitypub_core_utilities_1.getId)(activity.actor);
@@ -20,6 +21,60 @@ async function handleUpdate(activity) {
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
     const object = await this.adapters.db.findEntityById(objectId);
     (0, activitypub_core_types_1.assertIsApEntity)(object);
+    if ((0, activitypub_core_utilities_1.isTypeOf)(activity.object, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
+        (0, activitypub_core_types_1.assertIsApExtendedObject)(activity.object);
+        if ('tag' in activity.object && Array.isArray(activity.object.tag)) {
+            const existingTags = activity.object.tag
+                .map((tag) => {
+                if (tag instanceof URL) {
+                    return null;
+                }
+                return (0, activitypub_core_utilities_1.getId)(tag)?.toString() ?? null;
+            })
+                .filter((_) => !!_);
+            if (activity.object.tag) {
+                const tags = Array.isArray(activity.object.tag)
+                    ? activity.object.tag
+                    : [activity.object.tag];
+                for (const tag of tags) {
+                    if (!(tag instanceof URL) &&
+                        (0, activitypub_core_utilities_1.isType)(tag, activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG)) {
+                        (0, activitypub_core_types_1.assertIsApType)(tag, activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG);
+                        const hashtagCollectionUrl = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.hashtag)({
+                            slug: tag.name
+                                .replace('#', '')
+                                .toLowerCase()
+                                .trim()
+                                .replace(/[^a-z0-9]+/g, '-')
+                                .replace(/^-+|-+$/g, ''),
+                        })}`);
+                        const hashtagCollection = await this.adapters.db.findEntityById(hashtagCollectionUrl);
+                        if (!hashtagCollection) {
+                            const hashtagEntity = {
+                                id: hashtagCollectionUrl,
+                                url: hashtagCollectionUrl,
+                                name: tag.name,
+                                type: [
+                                    activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG,
+                                    activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+                                ],
+                                orderedItems: [],
+                            };
+                            await this.adapters.db.saveEntity(hashtagEntity);
+                        }
+                        if (!existingTags.includes(hashtagCollectionUrl.toString())) {
+                            await this.adapters.db.insertOrderedItem(hashtagCollectionUrl, objectId);
+                            tag.id = hashtagCollectionUrl;
+                            tag.url = hashtagCollectionUrl;
+                        }
+                    }
+                }
+                if (tags.length) {
+                    activity.object.tag = tags;
+                }
+            }
+        }
+    }
     activity.object = {
         ...object,
         ...activity.object,
