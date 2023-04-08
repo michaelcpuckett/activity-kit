@@ -2,6 +2,7 @@ import * as AP from '../activitypub';
 import { Adapters } from './';
 export declare type Plugin = {
     handleCreateUserActor?: (this: {
+        adapters: Adapters;
         activity: AP.Activity & {
             object: AP.Actor;
         };

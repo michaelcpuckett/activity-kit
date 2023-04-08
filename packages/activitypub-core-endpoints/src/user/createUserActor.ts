@@ -283,6 +283,7 @@ export async function createUserActor(
       if ('handleCreateUserActor' in plugin) {
         const pluginActivity = await plugin.handleCreateUserActor.call({
           activity: createActorActivity,
+          adapters: this.adapters,
         });
 
         assertIsApActor(pluginActivity.object);

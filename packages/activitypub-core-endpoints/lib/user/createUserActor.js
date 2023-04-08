@@ -228,6 +228,7 @@ async function createUserActor(user) {
             if ('handleCreateUserActor' in plugin) {
                 const pluginActivity = await plugin.handleCreateUserActor.call({
                     activity: createActorActivity,
+                    adapters: this.adapters,
                 });
                 (0, activitypub_core_types_1.assertIsApActor)(pluginActivity.object);
                 userActor = pluginActivity.object;
