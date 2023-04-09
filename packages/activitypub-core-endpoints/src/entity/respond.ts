@@ -85,7 +85,10 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
   baseUrl.search = searchParams.toString();
 
   const getPageUrl = (page: number) => {
-    const url = new URL(`${pathname}/page/${page}`, new URL(LOCAL_DOMAIN));
+    const url = new URL(
+      `${pathname === '/' ? '' : pathname}/page/${page}`,
+      new URL(LOCAL_DOMAIN),
+    );
     url.search = searchParams.toString();
     return url;
   };

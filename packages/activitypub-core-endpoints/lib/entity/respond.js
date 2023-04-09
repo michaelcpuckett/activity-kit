@@ -58,7 +58,7 @@ async function respond(render) {
     const baseUrl = new URL(pathname, new URL(activitypub_core_utilities_1.LOCAL_DOMAIN));
     baseUrl.search = searchParams.toString();
     const getPageUrl = (page) => {
-        const url = new URL(`${pathname}/page/${page}`, new URL(activitypub_core_utilities_1.LOCAL_DOMAIN));
+        const url = new URL(`${pathname === '/' ? '' : pathname}/page/${page}`, new URL(activitypub_core_utilities_1.LOCAL_DOMAIN));
         url.search = searchParams.toString();
         return url;
     };
