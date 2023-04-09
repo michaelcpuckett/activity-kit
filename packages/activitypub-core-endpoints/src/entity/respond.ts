@@ -10,10 +10,10 @@ import {
   assertIsString,
 } from 'activitypub-core-types';
 import {
-  getId,
   isType,
   isTypeOf,
   LOCAL_DOMAIN,
+  LOCAL_HOSTNAME,
 } from 'activitypub-core-utilities';
 import cookie from 'cookie';
 
@@ -47,70 +47,73 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
     return await this.handleFoundEntity(render, entity, authorizedActor);
   }
 
-  assertIsApCollectionOrCollectionPage(entity);
+  assertIsApCollection(entity);
 
   const isOrderedCollection = isType(
     entity,
     AP.CollectionTypes.ORDERED_COLLECTION,
   );
+  const urlParts = this.url.pathname.split('/');
+  const pageParam = urlParts.pop();
+  const hasPage = String(Number(pageParam)) === pageParam;
+  const pathname = hasPage ? urlParts.join('/') : this.url.pathname;
+
   const query = this.url.searchParams;
-  const page = query.get('page');
-  const current = query.has('current');
-  const sort = query.get('sort');
   const limit = query.has('limit')
     ? Number(query.get('limit'))
     : ITEMS_PER_COLLECTION_PAGE;
-  const entityItems = isOrderedCollection
-    ? (entity as AP.OrderedCollection).orderedItems
-    : (entity as AP.Collection).items;
-
-  assertIsArray(entityItems);
-
-  const lastPageIndex = Math.max(1, Math.ceil(entityItems.length / limit));
-  const currentPage = Number(page) || 1;
+  const hasLimit = limit !== ITEMS_PER_COLLECTION_PAGE;
+  const totalItems = Number(entity.totalItems);
+  const lastPageIndex = Math.max(1, Math.ceil(totalItems / limit));
+  const currentPage = Number(pageParam) || 1;
   const firstItemIndex = (currentPage - 1) * limit;
   const startIndex = firstItemIndex + 1;
+  const sort = query.get('sort');
+  const searchParams = new URLSearchParams({
+    ...(sort
+      ? {
+          sort,
+        }
+      : null),
+    ...(hasLimit
+      ? {
+          limit: `${limit}`,
+        }
+      : null),
+  });
+  const baseUrl = new URL(pathname, new URL(LOCAL_HOSTNAME));
+  baseUrl.search = searchParams.toString();
 
-  if (!page) {
+  const getPageUrl = (page: number) => {
+    const url = new URL(`${pathname}/${page}`, new URL(LOCAL_HOSTNAME));
+    url.search = searchParams.toString();
+    return url;
+  };
+
+  // Treat as a Collection.
+
+  if (!hasPage) {
     assertIsApCollection(entity);
 
-    const baseCollection: AP.Collection | AP.OrderedCollection = {
-      ...entity,
-    };
-
-    // Treat as a Collection.
-    try {
+    if (isType(entity, AP.CollectionTypes.ORDERED_COLLECTION)) {
       assertIsApType<AP.OrderedCollection>(
-        baseCollection,
+        entity,
         AP.CollectionTypes.ORDERED_COLLECTION,
       );
-      delete baseCollection.orderedItems;
-    } catch (error) {
-      assertIsApType<AP.Collection>(
-        baseCollection,
-        AP.CollectionTypes.COLLECTION,
-      );
-      delete baseCollection.items;
+
+      delete entity.orderedItems;
+    }
+
+    if (isType(entity, AP.CollectionTypes.COLLECTION)) {
+      assertIsApType<AP.Collection>(entity, AP.CollectionTypes.COLLECTION);
+
+      delete entity.items;
     }
 
     const collectionEntity = {
-      ...baseCollection,
-      first: new URL(
-        `${LOCAL_DOMAIN}${this.url.pathname}?page=1${
-          current ? '&current' : ''
-        }${sort ? `&sort=${sort}` : ''}${
-          query.has('limit') ? `&limit=${limit}` : ''
-        }`,
-      ),
-      last: new URL(
-        `${LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${
-          current ? '&current' : ''
-        }${sort ? `&sort=${sort}` : ''}${
-          query.has('limit') ? `&limit=${limit}` : ''
-        }`,
-      ),
-      current: new URL(`${LOCAL_DOMAIN}${this.url.pathname}?current`),
-      totalItems: entityItems.length,
+      ...entity,
+      first: getPageUrl(1),
+      last: getPageUrl(lastPageIndex),
     };
 
     return await this.handleFoundEntity(
@@ -122,12 +125,27 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
 
   // Treat as CollectionPage.
 
-  const expandedItems = await Promise.all(
-    entityItems.map(async (entity: AP.EntityReference) => {
-      const id = getId(entity);
-      return await this.adapters.db.findEntityById(id);
-    }),
-  );
+  const expandedCollection = await this.adapters.db.expandCollection(entity);
+
+  const expandedItems = (() => {
+    if (isType(expandedCollection, AP.CollectionTypes.ORDERED_COLLECTION)) {
+      assertIsApType<AP.OrderedCollection>(
+        expandedCollection,
+        AP.CollectionTypes.ORDERED_COLLECTION,
+      );
+      return expandedCollection.orderedItems;
+    }
+
+    if (isType(expandedCollection, AP.CollectionTypes.COLLECTION)) {
+      assertIsApType<AP.Collection>(
+        expandedCollection,
+        AP.CollectionTypes.COLLECTION,
+      );
+      return expandedCollection.items;
+    }
+  })();
+
+  assertIsArray(expandedItems);
 
   const sortedItems = sort
     ? expandedItems.sort((a: AP.Entity | null, b: AP.Entity | null) => {
@@ -141,9 +159,9 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
           assertIsString(bField);
 
           if (aField.toLowerCase() > bField.toLowerCase()) {
-            return current ? -1 : 1;
+            return 1;
           } else {
-            return current ? 1 : -1;
+            return -1;
           }
         } catch (error) {
           try {
@@ -151,9 +169,9 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
             assertIsDate(bField);
 
             if (aField.valueOf() > bField.valueOf()) {
-              return current ? -1 : 1;
+              return 1;
             } else {
-              return current ? 1 : -1;
+              return -1;
             }
           } catch (error) {
             try {
@@ -161,12 +179,12 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
               assertIsNumber(bField);
 
               if (aField > bField) {
-                return current ? -1 : 1;
+                return 1;
               } else {
-                return current ? 1 : -1;
+                return -1;
               }
             } catch (error) {
-              return current ? 1 : -1;
+              return 0;
             }
           }
         }
@@ -181,7 +199,7 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
   const items: AP.Entity[] = [];
 
   for (const item of limitedItems) {
-    if (item) {
+    if (item && !(item instanceof URL)) {
       if (
         isTypeOf(item, AP.ActivityTypes) &&
         'object' in item &&
@@ -198,39 +216,44 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
     }
   }
 
-  const baseUrl = `${LOCAL_DOMAIN}${this.url.pathname}`;
-  const urlEnding = `${current ? '&current' : ''}${
-    query.has('limit') ? `&limit=${limit}` : ''
-  }${sort ? `&sort=${sort}` : ''}`;
-
-  const collectionPageEntity = {
+  const collectionPage = {
     ...entity,
-    type: isOrderedCollection
-      ? AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE
-      : AP.CollectionPageTypes.COLLECTION_PAGE,
-    id: new URL(`${baseUrl}?page=${currentPage}${urlEnding}`),
-    url: new URL(`${baseUrl}?page=${currentPage}${urlEnding}`),
-    partOf: new URL(`${baseUrl}${current ? '?current' : ''}`),
-    first: new URL(`${baseUrl}?page=1${urlEnding}`),
-    last: new URL(`${baseUrl}?page=${lastPageIndex}${urlEnding}`),
-    current: new URL(`${baseUrl}?current`),
+    id: getPageUrl(currentPage),
+    url: getPageUrl(currentPage),
+    partOf: baseUrl,
+    first: getPageUrl(1),
+    last: getPageUrl(lastPageIndex),
     ...(currentPage > 1
       ? {
-          prev: new URL(`${baseUrl}?page=${currentPage - 1}${urlEnding}`),
+          prev: getPageUrl(currentPage - 1),
         }
       : null),
     ...(currentPage < lastPageIndex
       ? {
-          next: new URL(`${baseUrl}?page=${currentPage + 1}${urlEnding}`),
+          next: getPageUrl(currentPage + 1),
         }
       : null),
-    [isOrderedCollection ? 'orderedItems' : 'items']: items,
-    ...(isOrderedCollection
-      ? {
-          startIndex,
-        }
-      : null),
-    totalItems: entityItems.length,
+  };
+
+  if (isOrderedCollection) {
+    const orderedCollectionPageEntity: AP.OrderedCollectionPage = {
+      ...collectionPage,
+      type: AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE,
+      orderedItems: items,
+      startIndex,
+    };
+
+    return await this.handleFoundEntity(
+      render,
+      orderedCollectionPageEntity,
+      authorizedActor,
+    );
+  }
+
+  const collectionPageEntity: AP.CollectionPage = {
+    ...collectionPage,
+    type: AP.CollectionPageTypes.COLLECTION_PAGE,
+    items: items,
   };
 
   return await this.handleFoundEntity(

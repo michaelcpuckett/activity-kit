@@ -23,49 +23,71 @@ async function respond(render) {
         !(0, activitypub_core_utilities_1.isTypeOf)(entity, activitypub_core_types_1.AP.CollectionPageTypes)) {
         return await this.handleFoundEntity(render, entity, authorizedActor);
     }
-    assertIsApCollectionOrCollectionPage(entity);
+    (0, activitypub_core_types_1.assertIsApCollection)(entity);
     const isOrderedCollection = (0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
+    const urlParts = this.url.pathname.split('/');
+    const pageParam = urlParts.pop();
+    const hasPage = String(Number(pageParam)) === pageParam;
+    const pathname = hasPage ? urlParts.join('/') : this.url.pathname;
     const query = this.url.searchParams;
-    const page = query.get('page');
-    const current = query.has('current');
-    const sort = query.get('sort');
     const limit = query.has('limit')
         ? Number(query.get('limit'))
         : ITEMS_PER_COLLECTION_PAGE;
-    const entityItems = isOrderedCollection
-        ? entity.orderedItems
-        : entity.items;
-    (0, activitypub_core_types_1.assertIsArray)(entityItems);
-    const lastPageIndex = Math.max(1, Math.ceil(entityItems.length / limit));
-    const currentPage = Number(page) || 1;
+    const hasLimit = limit !== ITEMS_PER_COLLECTION_PAGE;
+    const totalItems = Number(entity.totalItems);
+    const lastPageIndex = Math.max(1, Math.ceil(totalItems / limit));
+    const currentPage = Number(pageParam) || 1;
     const firstItemIndex = (currentPage - 1) * limit;
     const startIndex = firstItemIndex + 1;
-    if (!page) {
+    const sort = query.get('sort');
+    const searchParams = new URLSearchParams({
+        ...(sort
+            ? {
+                sort,
+            }
+            : null),
+        ...(hasLimit
+            ? {
+                limit: `${limit}`,
+            }
+            : null),
+    });
+    const baseUrl = new URL(pathname, new URL(activitypub_core_utilities_1.LOCAL_HOSTNAME));
+    baseUrl.search = searchParams.toString();
+    const getPageUrl = (page) => {
+        const url = new URL(`${pathname}/${page}`, new URL(activitypub_core_utilities_1.LOCAL_HOSTNAME));
+        url.search = searchParams.toString();
+        return url;
+    };
+    if (!hasPage) {
         (0, activitypub_core_types_1.assertIsApCollection)(entity);
-        const baseCollection = {
-            ...entity,
-        };
-        try {
-            (0, activitypub_core_types_1.assertIsApType)(baseCollection, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
-            delete baseCollection.orderedItems;
+        if ((0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
+            (0, activitypub_core_types_1.assertIsApType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
+            delete entity.orderedItems;
         }
-        catch (error) {
-            (0, activitypub_core_types_1.assertIsApType)(baseCollection, activitypub_core_types_1.AP.CollectionTypes.COLLECTION);
-            delete baseCollection.items;
+        if ((0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
+            (0, activitypub_core_types_1.assertIsApType)(entity, activitypub_core_types_1.AP.CollectionTypes.COLLECTION);
+            delete entity.items;
         }
         const collectionEntity = {
-            ...baseCollection,
-            first: new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=1${current ? '&current' : ''}${sort ? `&sort=${sort}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`),
-            last: new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?page=${lastPageIndex}${current ? '&current' : ''}${sort ? `&sort=${sort}` : ''}${query.has('limit') ? `&limit=${limit}` : ''}`),
-            current: new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}?current`),
-            totalItems: entityItems.length,
+            ...entity,
+            first: getPageUrl(1),
+            last: getPageUrl(lastPageIndex),
         };
         return await this.handleFoundEntity(render, collectionEntity, authorizedActor);
     }
-    const expandedItems = await Promise.all(entityItems.map(async (entity) => {
-        const id = (0, activitypub_core_utilities_1.getId)(entity);
-        return await this.adapters.db.findEntityById(id);
-    }));
+    const expandedCollection = await this.adapters.db.expandCollection(entity);
+    const expandedItems = (() => {
+        if ((0, activitypub_core_utilities_1.isType)(expandedCollection, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
+            (0, activitypub_core_types_1.assertIsApType)(expandedCollection, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
+            return expandedCollection.orderedItems;
+        }
+        if ((0, activitypub_core_utilities_1.isType)(expandedCollection, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
+            (0, activitypub_core_types_1.assertIsApType)(expandedCollection, activitypub_core_types_1.AP.CollectionTypes.COLLECTION);
+            return expandedCollection.items;
+        }
+    })();
+    (0, activitypub_core_types_1.assertIsArray)(expandedItems);
     const sortedItems = sort
         ? expandedItems.sort((a, b) => {
             const aField = a && sort in a && a[sort];
@@ -74,10 +96,10 @@ async function respond(render) {
                 (0, activitypub_core_types_1.assertIsString)(aField);
                 (0, activitypub_core_types_1.assertIsString)(bField);
                 if (aField.toLowerCase() > bField.toLowerCase()) {
-                    return current ? -1 : 1;
+                    return 1;
                 }
                 else {
-                    return current ? 1 : -1;
+                    return -1;
                 }
             }
             catch (error) {
@@ -85,10 +107,10 @@ async function respond(render) {
                     (0, activitypub_core_types_1.assertIsDate)(aField);
                     (0, activitypub_core_types_1.assertIsDate)(bField);
                     if (aField.valueOf() > bField.valueOf()) {
-                        return current ? -1 : 1;
+                        return 1;
                     }
                     else {
-                        return current ? 1 : -1;
+                        return -1;
                     }
                 }
                 catch (error) {
@@ -96,14 +118,14 @@ async function respond(render) {
                         (0, activitypub_core_types_1.assertIsNumber)(aField);
                         (0, activitypub_core_types_1.assertIsNumber)(bField);
                         if (aField > bField) {
-                            return current ? -1 : 1;
+                            return 1;
                         }
                         else {
-                            return current ? 1 : -1;
+                            return -1;
                         }
                     }
                     catch (error) {
-                        return current ? 1 : -1;
+                        return 0;
                     }
                 }
             }
@@ -112,7 +134,7 @@ async function respond(render) {
     const limitedItems = sortedItems.slice(firstItemIndex, firstItemIndex + limit);
     const items = [];
     for (const item of limitedItems) {
-        if (item) {
+        if (item && !(item instanceof URL)) {
             if ((0, activitypub_core_utilities_1.isTypeOf)(item, activitypub_core_types_1.AP.ActivityTypes) &&
                 'object' in item &&
                 item.object instanceof URL) {
@@ -124,36 +146,37 @@ async function respond(render) {
             items.push(item);
         }
     }
-    const baseUrl = `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}`;
-    const urlEnding = `${current ? '&current' : ''}${query.has('limit') ? `&limit=${limit}` : ''}${sort ? `&sort=${sort}` : ''}`;
-    const collectionPageEntity = {
+    const collectionPage = {
         ...entity,
-        type: isOrderedCollection
-            ? activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE
-            : activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE,
-        id: new URL(`${baseUrl}?page=${currentPage}${urlEnding}`),
-        url: new URL(`${baseUrl}?page=${currentPage}${urlEnding}`),
-        partOf: new URL(`${baseUrl}${current ? '?current' : ''}`),
-        first: new URL(`${baseUrl}?page=1${urlEnding}`),
-        last: new URL(`${baseUrl}?page=${lastPageIndex}${urlEnding}`),
-        current: new URL(`${baseUrl}?current`),
+        id: getPageUrl(currentPage),
+        url: getPageUrl(currentPage),
+        partOf: baseUrl,
+        first: getPageUrl(1),
+        last: getPageUrl(lastPageIndex),
         ...(currentPage > 1
             ? {
-                prev: new URL(`${baseUrl}?page=${currentPage - 1}${urlEnding}`),
+                prev: getPageUrl(currentPage - 1),
             }
             : null),
         ...(currentPage < lastPageIndex
             ? {
-                next: new URL(`${baseUrl}?page=${currentPage + 1}${urlEnding}`),
+                next: getPageUrl(currentPage + 1),
             }
             : null),
-        [isOrderedCollection ? 'orderedItems' : 'items']: items,
-        ...(isOrderedCollection
-            ? {
-                startIndex,
-            }
-            : null),
-        totalItems: entityItems.length,
+    };
+    if (isOrderedCollection) {
+        const orderedCollectionPageEntity = {
+            ...collectionPage,
+            type: activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE,
+            orderedItems: items,
+            startIndex,
+        };
+        return await this.handleFoundEntity(render, orderedCollectionPageEntity, authorizedActor);
+    }
+    const collectionPageEntity = {
+        ...collectionPage,
+        type: activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE,
+        items: items,
     };
     return await this.handleFoundEntity(render, collectionPageEntity, authorizedActor);
 }
