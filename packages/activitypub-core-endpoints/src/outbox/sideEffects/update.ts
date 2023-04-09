@@ -46,9 +46,11 @@ export async function handleUpdate(
 
   assertIsApEntity(existingObject);
 
-  if (isTypeOf(existingObject, AP.ExtendedObjectTypes)) {
+  const getTags = async () => {
+    if (!isTypeOf(existingObject, AP.ExtendedObjectTypes)) {
+      return null;
+    }
     assertIsApExtendedObject(existingObject);
-
     const newObject = {
       type: existingObject.type,
       ...activity.object,
@@ -151,11 +153,11 @@ export async function handleUpdate(
         }
       }
 
-      if ('tag' in activity.object) {
-        activity.object.tag = newTags;
-      }
+      return newTags;
     }
-  }
+  };
+
+  const tags = await getTags();
 
   activity.object = {
     ...existingObject,
@@ -163,6 +165,11 @@ export async function handleUpdate(
     ...(existingObject.type !== 'Link' && existingObject.type !== 'Mention'
       ? {
           updated: new Date(),
+          ...(tags
+            ? {
+                tag: tags,
+              }
+            : null),
         }
       : null),
   };

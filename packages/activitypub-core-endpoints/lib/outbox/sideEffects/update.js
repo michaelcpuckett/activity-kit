@@ -21,7 +21,10 @@ async function handleUpdate(activity) {
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
     const existingObject = await this.adapters.db.findEntityById(objectId);
     (0, activitypub_core_types_1.assertIsApEntity)(existingObject);
-    if ((0, activitypub_core_utilities_1.isTypeOf)(existingObject, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
+    const getTags = async () => {
+        if (!(0, activitypub_core_utilities_1.isTypeOf)(existingObject, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
+            return null;
+        }
         (0, activitypub_core_types_1.assertIsApExtendedObject)(existingObject);
         const newObject = {
             type: existingObject.type,
@@ -95,17 +98,21 @@ async function handleUpdate(activity) {
                     await this.adapters.db.removeOrderedItem(new URL(existingTagId), objectId);
                 }
             }
-            if ('tag' in activity.object) {
-                activity.object.tag = newTags;
-            }
+            return newTags;
         }
-    }
+    };
+    const tags = await getTags();
     activity.object = {
         ...existingObject,
         ...activity.object,
         ...(existingObject.type !== 'Link' && existingObject.type !== 'Mention'
             ? {
                 updated: new Date(),
+                ...(tags
+                    ? {
+                        tag: tags,
+                    }
+                    : null),
             }
             : null),
     };
