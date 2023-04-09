@@ -5,9 +5,6 @@ import {
   assertIsApEntity,
   assertIsApType,
   assertIsArray,
-  assertIsDate,
-  assertIsNumber,
-  assertIsString,
 } from 'activitypub-core-types';
 import { isType, isTypeOf, LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import cookie from 'cookie';
@@ -58,40 +55,21 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
     AP.CollectionTypes.ORDERED_COLLECTION,
   );
 
-  const query = this.url.searchParams;
-  const limit = query.has('limit')
-    ? Number(query.get('limit'))
-    : ITEMS_PER_COLLECTION_PAGE;
-  const hasLimit = limit !== ITEMS_PER_COLLECTION_PAGE;
   const totalItems = Number(entity.totalItems);
-  const lastPageIndex = Math.max(1, Math.ceil(totalItems / limit));
+  const lastPageIndex = Math.max(
+    1,
+    Math.ceil(totalItems / ITEMS_PER_COLLECTION_PAGE),
+  );
   const currentPage = Number(pageParam) || 1;
-  const firstItemIndex = (currentPage - 1) * limit;
+  const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE;
   const startIndex = firstItemIndex + 1;
-  const sort = query.get('sort');
-  const searchParams = new URLSearchParams({
-    ...(sort
-      ? {
-          sort,
-        }
-      : null),
-    ...(hasLimit
-      ? {
-          limit: `${limit}`,
-        }
-      : null),
-  });
   const baseUrl = new URL(pathname, new URL(LOCAL_DOMAIN));
-  baseUrl.search = searchParams.toString();
 
-  const getPageUrl = (page: number) => {
-    const url = new URL(
+  const getPageUrl = (page: number) =>
+    new URL(
       `${pathname === '/' ? '' : pathname}/page/${page}`,
       new URL(LOCAL_DOMAIN),
     );
-    url.search = searchParams.toString();
-    return url;
-  };
 
   // Treat as a Collection.
 
@@ -150,51 +128,7 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
 
   assertIsArray(expandedItems);
 
-  const sortedItems = sort
-    ? expandedItems.sort((a: AP.Entity | null, b: AP.Entity | null) => {
-        const aField =
-          a && sort in a && (a as unknown as { [key: string]: unknown })[sort];
-        const bField =
-          b && sort in b && (b as unknown as { [key: string]: unknown })[sort];
-
-        try {
-          assertIsString(aField);
-          assertIsString(bField);
-
-          if (aField.toLowerCase() > bField.toLowerCase()) {
-            return 1;
-          } else {
-            return -1;
-          }
-        } catch (error) {
-          try {
-            assertIsDate(aField);
-            assertIsDate(bField);
-
-            if (aField.valueOf() > bField.valueOf()) {
-              return 1;
-            } else {
-              return -1;
-            }
-          } catch (error) {
-            try {
-              assertIsNumber(aField);
-              assertIsNumber(bField);
-
-              if (aField > bField) {
-                return 1;
-              } else {
-                return -1;
-              }
-            } catch (error) {
-              return 0;
-            }
-          }
-        }
-      })
-    : expandedItems;
-
-  const limitedItems = sortedItems.slice(
+  const limitedItems = expandedItems.slice(
     firstItemIndex,
     firstItemIndex + limit,
   );
@@ -264,21 +198,4 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
     collectionPageEntity,
     authorizedActor,
   );
-}
-
-function assertIsApCollectionOrCollectionPage(
-  value: unknown,
-): asserts value is
-  | AP.Collection
-  | AP.OrderedCollection
-  | AP.CollectionPage
-  | AP.OrderedCollectionPage {
-  assertIsApEntity(value);
-
-  if (
-    !isTypeOf(value, AP.CollectionTypes) &&
-    !isTypeOf(value, AP.CollectionPageTypes)
-  ) {
-    throw new Error(`\`${value}\` is not a Collection or CollectionPage.`);
-  }
 }

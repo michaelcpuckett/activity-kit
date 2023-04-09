@@ -32,36 +32,13 @@ async function respond(render) {
     }
     (0, activitypub_core_types_1.assertIsApCollection)(entity);
     const isOrderedCollection = (0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
-    const query = this.url.searchParams;
-    const limit = query.has('limit')
-        ? Number(query.get('limit'))
-        : ITEMS_PER_COLLECTION_PAGE;
-    const hasLimit = limit !== ITEMS_PER_COLLECTION_PAGE;
     const totalItems = Number(entity.totalItems);
-    const lastPageIndex = Math.max(1, Math.ceil(totalItems / limit));
+    const lastPageIndex = Math.max(1, Math.ceil(totalItems / ITEMS_PER_COLLECTION_PAGE));
     const currentPage = Number(pageParam) || 1;
-    const firstItemIndex = (currentPage - 1) * limit;
+    const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE;
     const startIndex = firstItemIndex + 1;
-    const sort = query.get('sort');
-    const searchParams = new URLSearchParams({
-        ...(sort
-            ? {
-                sort,
-            }
-            : null),
-        ...(hasLimit
-            ? {
-                limit: `${limit}`,
-            }
-            : null),
-    });
     const baseUrl = new URL(pathname, new URL(activitypub_core_utilities_1.LOCAL_DOMAIN));
-    baseUrl.search = searchParams.toString();
-    const getPageUrl = (page) => {
-        const url = new URL(`${pathname === '/' ? '' : pathname}/page/${page}`, new URL(activitypub_core_utilities_1.LOCAL_DOMAIN));
-        url.search = searchParams.toString();
-        return url;
-    };
+    const getPageUrl = (page) => new URL(`${pathname === '/' ? '' : pathname}/page/${page}`, new URL(activitypub_core_utilities_1.LOCAL_DOMAIN));
     if (!hasPage) {
         (0, activitypub_core_types_1.assertIsApCollection)(entity);
         if ((0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
@@ -91,50 +68,7 @@ async function respond(render) {
         }
     })();
     (0, activitypub_core_types_1.assertIsArray)(expandedItems);
-    const sortedItems = sort
-        ? expandedItems.sort((a, b) => {
-            const aField = a && sort in a && a[sort];
-            const bField = b && sort in b && b[sort];
-            try {
-                (0, activitypub_core_types_1.assertIsString)(aField);
-                (0, activitypub_core_types_1.assertIsString)(bField);
-                if (aField.toLowerCase() > bField.toLowerCase()) {
-                    return 1;
-                }
-                else {
-                    return -1;
-                }
-            }
-            catch (error) {
-                try {
-                    (0, activitypub_core_types_1.assertIsDate)(aField);
-                    (0, activitypub_core_types_1.assertIsDate)(bField);
-                    if (aField.valueOf() > bField.valueOf()) {
-                        return 1;
-                    }
-                    else {
-                        return -1;
-                    }
-                }
-                catch (error) {
-                    try {
-                        (0, activitypub_core_types_1.assertIsNumber)(aField);
-                        (0, activitypub_core_types_1.assertIsNumber)(bField);
-                        if (aField > bField) {
-                            return 1;
-                        }
-                        else {
-                            return -1;
-                        }
-                    }
-                    catch (error) {
-                        return 0;
-                    }
-                }
-            }
-        })
-        : expandedItems;
-    const limitedItems = sortedItems.slice(firstItemIndex, firstItemIndex + limit);
+    const limitedItems = expandedItems.slice(firstItemIndex, firstItemIndex + limit);
     const items = [];
     for (const item of limitedItems) {
         if (item && !(item instanceof URL)) {
@@ -184,11 +118,4 @@ async function respond(render) {
     return await this.handleFoundEntity(render, collectionPageEntity, authorizedActor);
 }
 exports.respond = respond;
-function assertIsApCollectionOrCollectionPage(value) {
-    (0, activitypub_core_types_1.assertIsApEntity)(value);
-    if (!(0, activitypub_core_utilities_1.isTypeOf)(value, activitypub_core_types_1.AP.CollectionTypes) &&
-        !(0, activitypub_core_utilities_1.isTypeOf)(value, activitypub_core_types_1.AP.CollectionPageTypes)) {
-        throw new Error(`\`${value}\` is not a Collection or CollectionPage.`);
-    }
-}
 //# sourceMappingURL=respond.js.map
