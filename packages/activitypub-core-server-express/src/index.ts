@@ -89,7 +89,8 @@ export const activityPub =
         routes.shares,
         routes.replies,
       ]) {
-        const collectionPageRoute = collectionRoute + '/page/:page';
+        const collectionPageRoute =
+          (collectionRoute === '/' ? '' : collectionRoute) + '/page/:page';
 
         if (matchesRoute(collectionPageRoute)) {
           const matches = matchRegExpPath(collectionPageRoute)(req.url);
