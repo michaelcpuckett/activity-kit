@@ -11,10 +11,13 @@ const activityPub = (config) => async (req, res, next) => {
         ...config.routes,
     };
     const matchesRoute = (path) => new URL(req.url, activitypub_core_utilities_1.LOCAL_DOMAIN).pathname.match((0, path_to_regexp_1.pathToRegexp)(path));
-    const matchesEntityRoute = () => {
+    const getEntityRouteParams = () => {
         for (const route of Object.values(routes)) {
             if (matchesRoute(route)) {
-                return true;
+                const matches = (0, path_to_regexp_1.match)(route)(req.url);
+                if (matches) {
+                    return matches.params;
+                }
             }
         }
         for (const collectionRoute of [
@@ -35,7 +38,10 @@ const activityPub = (config) => async (req, res, next) => {
             routes.replies,
         ]) {
             if (matchesRoute(collectionRoute + '/page/:page')) {
-                return true;
+                const matches = (0, path_to_regexp_1.match)(collectionRoute)(req.url);
+                if (matches) {
+                    return matches.params;
+                }
             }
         }
         return false;
@@ -103,7 +109,9 @@ const activityPub = (config) => async (req, res, next) => {
                 next();
                 return;
             }
-            if (matchesEntityRoute()) {
+            const entityParams = getEntityRouteParams();
+            if (entityParams) {
+                req.params = entityParams;
                 await new activitypub_core_endpoints_1.EntityGetEndpoint(req, res, config.adapters, config.plugins).respond(config.pages.entity);
                 next();
                 return;

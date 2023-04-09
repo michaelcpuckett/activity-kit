@@ -1,6 +1,6 @@
 import type { NextFunction } from 'express';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { pathToRegexp } from 'path-to-regexp';
+import { pathToRegexp, match as matchRegExpPath } from 'path-to-regexp';
 import {
   UserPostEndpoint,
   HomeGetEndpoint,
@@ -61,10 +61,14 @@ export const activityPub =
     const matchesRoute = (path: string) =>
       new URL(req.url, LOCAL_DOMAIN).pathname.match(pathToRegexp(path));
 
-    const matchesEntityRoute = () => {
+    const getEntityRouteParams = () => {
       for (const route of Object.values(routes)) {
         if (matchesRoute(route)) {
-          return true;
+          const matches = matchRegExpPath(route)(req.url);
+
+          if (matches) {
+            return matches.params;
+          }
         }
       }
 
@@ -86,7 +90,11 @@ export const activityPub =
         routes.replies,
       ]) {
         if (matchesRoute(collectionRoute + '/page/:page')) {
-          return true;
+          const matches = matchRegExpPath(collectionRoute)(req.url);
+
+          if (matches) {
+            return matches.params;
+          }
         }
       }
 
@@ -225,7 +233,11 @@ export const activityPub =
           return;
         }
 
-        if (matchesEntityRoute()) {
+        const entityParams = getEntityRouteParams();
+
+        if (entityParams) {
+          req.params = entityParams as { [key: string]: string };
+
           await new EntityGetEndpoint(
             req,
             res,
