@@ -236,9 +236,7 @@ export async function handleCreate(
         }
       }
 
-      if (tags.length) {
-        object.tag = tags;
-      }
+      object.tag = tags;
     }
 
     await Promise.all([

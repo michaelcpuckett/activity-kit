@@ -172,9 +172,7 @@ async function handleCreate(activity) {
                     await this.adapters.db.insertOrderedItem(hashtagCollectionUrl, objectId);
                 }
             }
-            if (tags.length) {
-                object.tag = tags;
-            }
+            object.tag = tags;
         }
         await Promise.all([
             this.adapters.db.saveEntity(object),
