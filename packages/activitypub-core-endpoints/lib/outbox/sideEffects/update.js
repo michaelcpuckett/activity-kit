@@ -72,6 +72,8 @@ async function handleUpdate(activity) {
                     (0, activitypub_core_types_1.assertIsApType)(tag, activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG);
                     const index = newTags.indexOf(tag);
                     const hashtagCollectionUrl = new URL(newTagIds[index]);
+                    tag.id = hashtagCollectionUrl;
+                    tag.url = hashtagCollectionUrl;
                     const hashtagCollection = await this.adapters.db.findEntityById(hashtagCollectionUrl);
                     if (!hashtagCollection) {
                         const hashtagEntity = {
@@ -88,8 +90,6 @@ async function handleUpdate(activity) {
                     }
                     if (!existingTagIds.includes(hashtagCollectionUrl.toString())) {
                         await this.adapters.db.insertOrderedItem(hashtagCollectionUrl, objectId);
-                        tag.id = hashtagCollectionUrl;
-                        tag.url = hashtagCollectionUrl;
                     }
                 }
             }

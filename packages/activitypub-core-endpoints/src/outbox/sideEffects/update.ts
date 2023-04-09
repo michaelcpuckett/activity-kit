@@ -112,6 +112,9 @@ export async function handleUpdate(
 
           const hashtagCollectionUrl = new URL(newTagIds[index]);
 
+          tag.id = hashtagCollectionUrl;
+          tag.url = hashtagCollectionUrl;
+
           const hashtagCollection = await this.adapters.db.findEntityById(
             hashtagCollectionUrl,
           );
@@ -137,9 +140,6 @@ export async function handleUpdate(
               hashtagCollectionUrl,
               objectId,
             );
-
-            tag.id = hashtagCollectionUrl;
-            tag.url = hashtagCollectionUrl;
           }
         }
       }
