@@ -2,12 +2,14 @@ import { OutboxPostEndpoint } from '..';
 import {
   AP,
   assertExists,
+  assertIsApActor,
   assertIsApEntity,
   assertIsApExtendedObject,
   assertIsApType,
 } from 'activitypub-core-types';
 import {
   ACTIVITYSTREAMS_CONTEXT,
+  SERVER_ACTOR_USERNAME,
   isType,
   isTypeOf,
 } from 'activitypub-core-utilities';
@@ -186,6 +188,9 @@ export async function handleCreate(
             })}`,
           );
 
+          tag.id = hashtagCollectionUrl;
+          tag.url = hashtagCollectionUrl;
+
           const hashtagCollection = await this.adapters.db.findEntityById(
             hashtagCollectionUrl,
           );
@@ -204,15 +209,30 @@ export async function handleCreate(
             };
 
             await this.adapters.db.saveEntity(hashtagEntity);
+
+            const serverActor = await this.adapters.db.findOne('entity', {
+              preferredUsername: SERVER_ACTOR_USERNAME,
+            });
+
+            assertIsApActor(serverActor);
+
+            const serverHashtags = await this.adapters.db.getStreamByName(
+              serverActor,
+              'Hashtags',
+            );
+
+            const serverHashtagsUrl = serverHashtags.id;
+
+            await this.adapters.db.insertItem(
+              serverHashtagsUrl,
+              hashtagCollectionUrl,
+            );
           }
 
           await this.adapters.db.insertOrderedItem(
             hashtagCollectionUrl,
             objectId,
           );
-
-          tag.id = hashtagCollectionUrl;
-          tag.url = hashtagCollectionUrl;
         }
       }
 

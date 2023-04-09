@@ -29,10 +29,12 @@ export class ProxyGetEndpoint {
     try {
       const urlObject = new URL(this.req.url, LOCAL_DOMAIN);
       const proxiedUrl = new URL(urlObject.searchParams.get('resource'));
-      const acceptHeader =
-        this.req.headers.accept || ACTIVITYSTREAMS_CONTENT_TYPE;
 
       if (proxiedUrl) {
+        const acceptHeader = this.req.headers.accept.includes('*/*')
+          ? ACTIVITYSTREAMS_CONTENT_TYPE
+          : this.req.headers.accept;
+
         const fetchedResult =
           acceptHeader !== ACTIVITYSTREAMS_CONTENT_TYPE
             ? await this.adapters.db.adapters

@@ -1,4 +1,5 @@
-import { AP } from 'activitypub-core-types';
+import { AP, assertIsApActor } from 'activitypub-core-types';
+import { SERVER_ACTOR_USERNAME } from 'activitypub-core-utilities';
 import { InboxPostEndpoint } from '.';
 
 export async function broadcastActivity(this: InboxPostEndpoint) {
@@ -6,13 +7,11 @@ export async function broadcastActivity(this: InboxPostEndpoint) {
     throw new Error('No activity.');
   }
 
-  const botActor = (await this.adapters.db.findOne('entity', {
-    preferredUsername: 'bot',
-  })) as AP.Actor;
+  const botActor = await this.adapters.db.findOne('entity', {
+    preferredUsername: SERVER_ACTOR_USERNAME,
+  });
 
-  if (!botActor) {
-    throw new Error('Bot actor not set up.');
-  }
+  assertIsApActor(botActor);
 
   if (await this.shouldForwardActivity()) {
     await this.adapters.delivery.broadcast(

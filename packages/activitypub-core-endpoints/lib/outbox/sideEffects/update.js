@@ -88,7 +88,7 @@ async function handleUpdate(activity) {
                         };
                         await this.adapters.db.saveEntity(hashtagEntity);
                         const serverHashtagsUrl = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.serverHashtags)({})}`);
-                        await this.adapters.db.insertOrderedItem(serverHashtagsUrl, hashtagCollectionUrl);
+                        await this.adapters.db.insertItem(serverHashtagsUrl, hashtagCollectionUrl);
                     }
                     if (!existingTagIds.includes(hashtagCollectionUrl.toString())) {
                         await this.adapters.db.insertOrderedItem(hashtagCollectionUrl, objectId);

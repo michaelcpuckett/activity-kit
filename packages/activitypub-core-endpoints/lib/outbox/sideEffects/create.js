@@ -146,6 +146,8 @@ async function handleCreate(activity) {
                             .replace(/[^a-z0-9]+/g, '-')
                             .replace(/^-+|-+$/g, ''),
                     })}`);
+                    tag.id = hashtagCollectionUrl;
+                    tag.url = hashtagCollectionUrl;
                     const hashtagCollection = await this.adapters.db.findEntityById(hashtagCollectionUrl);
                     if (!hashtagCollection) {
                         const hashtagEntity = {
@@ -159,10 +161,15 @@ async function handleCreate(activity) {
                             orderedItems: [],
                         };
                         await this.adapters.db.saveEntity(hashtagEntity);
+                        const serverActor = await this.adapters.db.findOne('entity', {
+                            preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
+                        });
+                        (0, activitypub_core_types_1.assertIsApActor)(serverActor);
+                        const serverHashtags = await this.adapters.db.getStreamByName(serverActor, 'Hashtags');
+                        const serverHashtagsUrl = serverHashtags.id;
+                        await this.adapters.db.insertItem(serverHashtagsUrl, hashtagCollectionUrl);
                     }
                     await this.adapters.db.insertOrderedItem(hashtagCollectionUrl, objectId);
-                    tag.id = hashtagCollectionUrl;
-                    tag.url = hashtagCollectionUrl;
                 }
             }
             if (tags.length) {

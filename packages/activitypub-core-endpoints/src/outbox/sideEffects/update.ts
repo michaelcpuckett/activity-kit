@@ -138,7 +138,7 @@ export async function handleUpdate(
               `${LOCAL_DOMAIN}${compile(this.routes.serverHashtags)({})}`,
             );
 
-            await this.adapters.db.insertOrderedItem(
+            await this.adapters.db.insertItem(
               serverHashtagsUrl,
               hashtagCollectionUrl,
             );
