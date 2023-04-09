@@ -5,7 +5,11 @@ import { respond } from './respond';
 import type { DbAdapter, AuthAdapter, Routes } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 export declare class EntityGetEndpoint {
-    req: IncomingMessage;
+    req: IncomingMessage & {
+        params: {
+            [key: string]: string;
+        };
+    };
     res: ServerResponse;
     adapters: {
         auth: AuthAdapter;
@@ -14,7 +18,11 @@ export declare class EntityGetEndpoint {
     plugins?: Plugin[];
     routes?: Routes;
     url: URL;
-    constructor(req: IncomingMessage, res: ServerResponse, adapters: {
+    constructor(req: IncomingMessage & {
+        params: {
+            [key: string]: string;
+        };
+    }, res: ServerResponse, adapters: {
         auth: AuthAdapter;
         db: DbAdapter;
     }, plugins?: Plugin[], url?: URL);

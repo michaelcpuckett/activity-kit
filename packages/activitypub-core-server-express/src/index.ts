@@ -14,14 +14,7 @@ import {
   NodeinfoGetEndpoint,
   ProxyGetEndpoint,
 } from 'activitypub-core-endpoints';
-import { Adapters, AP, Plugin } from 'activitypub-core-types';
-import { DeliveryAdapter } from 'activitypub-core-delivery';
-import type {
-  DbAdapter,
-  AuthAdapter,
-  StorageAdapter,
-  Routes,
-} from 'activitypub-core-types';
+import { Adapters, AP, Plugin, Routes } from 'activitypub-core-types';
 import {
   CONTENT_TYPE_HEADER,
   DEFAULT_ROUTES,
@@ -52,7 +45,9 @@ export const activityPub =
     plugins?: Plugin[];
   }) =>
   async (
-    req: IncomingMessage & { hostname: string },
+    req: IncomingMessage & {
+      params: { [key: string]: string };
+    },
     res: ServerResponse,
     next: NextFunction,
   ) => {

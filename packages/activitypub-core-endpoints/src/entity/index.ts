@@ -6,7 +6,9 @@ import type { DbAdapter, AuthAdapter, Routes } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 
 export class EntityGetEndpoint {
-  req: IncomingMessage;
+  req: IncomingMessage & {
+    params: { [key: string]: string };
+  };
   res: ServerResponse;
   adapters: {
     auth: AuthAdapter;
@@ -17,7 +19,9 @@ export class EntityGetEndpoint {
   url: URL;
 
   constructor(
-    req: IncomingMessage,
+    req: IncomingMessage & {
+      params: { [key: string]: string };
+    },
     res: ServerResponse,
     adapters: {
       auth: AuthAdapter;

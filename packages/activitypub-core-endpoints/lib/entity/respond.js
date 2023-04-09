@@ -11,7 +11,11 @@ const ITEMS_PER_COLLECTION_PAGE = 50;
 async function respond(render) {
     const cookies = cookie_1.default.parse(this.req.headers.cookie ?? '');
     const authorizedActor = await this.adapters.db.getActorByUserId(await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''));
-    const entity = await this.adapters.db.findEntityById(new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.url.pathname}`));
+    const urlParts = this.url.pathname.split('/');
+    const pageParam = urlParts.pop();
+    const hasPage = this.req.params['page'] === pageParam;
+    const pathname = hasPage ? urlParts.join('/') : this.url.pathname;
+    const entity = await this.adapters.db.findEntityById(new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${pathname}`));
     try {
         (0, activitypub_core_types_1.assertIsApEntity)(entity);
     }
@@ -25,10 +29,6 @@ async function respond(render) {
     }
     (0, activitypub_core_types_1.assertIsApCollection)(entity);
     const isOrderedCollection = (0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
-    const urlParts = this.url.pathname.split('/');
-    const pageParam = urlParts.pop();
-    const hasPage = String(Number(pageParam)) === pageParam;
-    const pathname = hasPage ? urlParts.join('/') : this.url.pathname;
     const query = this.url.searchParams;
     const limit = query.has('limit')
         ? Number(query.get('limit'))
@@ -52,10 +52,10 @@ async function respond(render) {
             }
             : null),
     });
-    const baseUrl = new URL(pathname, new URL(activitypub_core_utilities_1.LOCAL_HOSTNAME));
+    const baseUrl = new URL(pathname, new URL(activitypub_core_utilities_1.LOCAL_DOMAIN));
     baseUrl.search = searchParams.toString();
     const getPageUrl = (page) => {
-        const url = new URL(`${pathname}/${page}`, new URL(activitypub_core_utilities_1.LOCAL_HOSTNAME));
+        const url = new URL(`${pathname}/${page}`, new URL(activitypub_core_utilities_1.LOCAL_DOMAIN));
         url.search = searchParams.toString();
         return url;
     };

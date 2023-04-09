@@ -9,12 +9,7 @@ import {
   assertIsNumber,
   assertIsString,
 } from 'activitypub-core-types';
-import {
-  isType,
-  isTypeOf,
-  LOCAL_DOMAIN,
-  LOCAL_HOSTNAME,
-} from 'activitypub-core-utilities';
+import { isType, isTypeOf, LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import cookie from 'cookie';
 
 const ITEMS_PER_COLLECTION_PAGE = 50;
@@ -28,8 +23,14 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
 
   // TODO authorize entity posts by actor.
 
+  // Remove CollectionPage URL /:page param
+  const urlParts = this.url.pathname.split('/');
+  const pageParam = urlParts.pop();
+  const hasPage = this.req.params['page'] === pageParam;
+  const pathname = hasPage ? urlParts.join('/') : this.url.pathname;
+
   const entity = await this.adapters.db.findEntityById(
-    new URL(`${LOCAL_DOMAIN}${this.url.pathname}`),
+    new URL(`${LOCAL_DOMAIN}${pathname}`),
   );
 
   try {
@@ -53,10 +54,6 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
     entity,
     AP.CollectionTypes.ORDERED_COLLECTION,
   );
-  const urlParts = this.url.pathname.split('/');
-  const pageParam = urlParts.pop();
-  const hasPage = String(Number(pageParam)) === pageParam;
-  const pathname = hasPage ? urlParts.join('/') : this.url.pathname;
 
   const query = this.url.searchParams;
   const limit = query.has('limit')
@@ -81,11 +78,11 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
         }
       : null),
   });
-  const baseUrl = new URL(pathname, new URL(LOCAL_HOSTNAME));
+  const baseUrl = new URL(pathname, new URL(LOCAL_DOMAIN));
   baseUrl.search = searchParams.toString();
 
   const getPageUrl = (page: number) => {
-    const url = new URL(`${pathname}/${page}`, new URL(LOCAL_HOSTNAME));
+    const url = new URL(`${pathname}/${page}`, new URL(LOCAL_DOMAIN));
     url.search = searchParams.toString();
     return url;
   };
