@@ -90,11 +90,9 @@ export async function createServerActor(this: UserPostEndpoint) {
     published: publishedDate,
   };
 
-  const hashtagsId = new URL(
-    `${LOCAL_DOMAIN}${compile(this.routes.serverHashtags, {
-      validate: false,
-    })({})}`,
-  );
+  const hashtagsId = getRouteUrl(this.routes.serverFollowers, {
+    entityRoute,
+  });
 
   const botHashtags: AP.Collection = {
     '@context': ACTIVITYSTREAMS_CONTEXT,

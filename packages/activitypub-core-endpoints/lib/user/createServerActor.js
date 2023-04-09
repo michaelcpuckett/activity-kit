@@ -68,9 +68,9 @@ async function createServerActor() {
         items: [],
         published: publishedDate,
     };
-    const hashtagsId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.serverHashtags, {
-        validate: false,
-    })({})}`);
+    const hashtagsId = getRouteUrl(this.routes.serverFollowers, {
+        entityRoute,
+    });
     const botHashtags = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
         id: hashtagsId,
