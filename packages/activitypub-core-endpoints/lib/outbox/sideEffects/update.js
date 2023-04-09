@@ -74,7 +74,14 @@ async function handleUpdate(activity) {
                         return tag.toString();
                     }
                     else {
-                        return (0, activitypub_core_utilities_1.getId)(tag).toString();
+                        return new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.hashtag)({
+                            slug: tag.name
+                                .replace('#', '')
+                                .toLowerCase()
+                                .trim()
+                                .replace(/[^a-z0-9]+/g, '-')
+                                .replace(/^-+|-+$/g, ''),
+                        })}`).toString();
                     }
                 });
                 for (const existingTag of existingTags) {

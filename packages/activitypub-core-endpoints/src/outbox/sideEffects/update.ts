@@ -119,7 +119,16 @@ export async function handleUpdate(
           if (tag instanceof URL) {
             return tag.toString();
           } else {
-            return getId(tag).toString();
+            return new URL(
+              `${LOCAL_DOMAIN}${compile(this.routes.hashtag)({
+                slug: tag.name
+                  .replace('#', '')
+                  .toLowerCase()
+                  .trim() // Remove whitespace from both ends of the string
+                  .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
+                  .replace(/^-+|-+$/g, ''),
+              })}`,
+            ).toString();
           }
         });
 
