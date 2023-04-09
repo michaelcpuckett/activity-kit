@@ -90,6 +90,20 @@ export async function createServerActor(this: UserPostEndpoint) {
     published: publishedDate,
   };
 
+  const hashtagsId = getRouteUrl(this.routes.serverFollowers, {});
+
+  const botHashtags: AP.Collection = {
+    '@context': ACTIVITYSTREAMS_CONTEXT,
+    id: hashtagsId,
+    url: hashtagsId,
+    name: 'Hashtags',
+    type: AP.CollectionTypes.COLLECTION,
+    totalItems: 0,
+    attributedTo: userId,
+    items: [],
+    published: publishedDate,
+  };
+
   const botActor: AP.Actor = {
     '@context': [ACTIVITYSTREAMS_CONTEXT, W3ID_SECURITY_CONTEXT],
     id: userId,
@@ -101,6 +115,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     outbox: botOutbox.id,
     following: botFollowing.id,
     followers: botFollowers.id,
+    streams: [botHashtags.id],
     endpoints: {
       sharedInbox: new URL(SHARED_INBOX_ID),
     },
@@ -118,6 +133,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     this.adapters.db.saveEntity(botOutbox),
     this.adapters.db.saveEntity(botFollowing),
     this.adapters.db.saveEntity(botFollowers),
+    this.adapters.db.saveEntity(botHashtags),
     this.adapters.db.saveString('username', 'bot', 'bot'),
     this.adapters.db.saveString('privateKey', 'bot', botPrivateKey),
   ]);

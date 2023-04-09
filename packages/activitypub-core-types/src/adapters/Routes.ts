@@ -4,6 +4,7 @@ export type Routes = {
   serverOutbox: string;
   serverFollowers: string;
   serverFollowing: string;
+  serverHashtags: string;
 
   // Actor Types.
   person: string;

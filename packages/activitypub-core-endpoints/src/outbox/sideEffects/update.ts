@@ -133,6 +133,15 @@ export async function handleUpdate(
             };
 
             await this.adapters.db.saveEntity(hashtagEntity);
+
+            const serverHashtagsUrl = new URL(
+              `${LOCAL_DOMAIN}${compile(this.routes.serverHashtags)({})}`,
+            );
+
+            await this.adapters.db.insertOrderedItem(
+              serverHashtagsUrl,
+              hashtagCollectionUrl,
+            );
           }
 
           if (!existingTagIds.includes(hashtagCollectionUrl.toString())) {

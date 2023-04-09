@@ -4,6 +4,7 @@ export declare type Routes = {
     serverOutbox: string;
     serverFollowers: string;
     serverFollowing: string;
+    serverHashtags: string;
     person: string;
     group: string;
     application: string;

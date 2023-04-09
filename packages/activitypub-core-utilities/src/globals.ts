@@ -32,6 +32,7 @@ export const DEFAULT_ROUTES: Routes = {
   serverOutbox: '(.+)?:entityRoute/outbox',
   serverFollowers: '(.+)?:entityRoute/followers',
   serverFollowing: '(.+)?:entityRoute/following',
+  severHashtags: '/tag',
 
   // Actor Types.
   person: '/@:username',

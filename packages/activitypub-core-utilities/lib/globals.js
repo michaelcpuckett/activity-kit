@@ -30,6 +30,7 @@ exports.DEFAULT_ROUTES = {
     serverOutbox: '(.+)?:entityRoute/outbox',
     serverFollowers: '(.+)?:entityRoute/followers',
     serverFollowing: '(.+)?:entityRoute/following',
+    severHashtags: '/tag',
     person: '/@:username',
     group: '/group/:username',
     application: '/application/:username',
