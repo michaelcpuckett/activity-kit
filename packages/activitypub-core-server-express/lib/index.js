@@ -37,7 +37,8 @@ const activityPub = (config) => async (req, res, next) => {
             routes.shares,
             routes.replies,
         ]) {
-            if (matchesRoute(collectionRoute + '/page/:page')) {
+            const collectionPageRoute = collectionRoute + '/page/:page';
+            if (matchesRoute(collectionPageRoute)) {
                 const matches = (0, path_to_regexp_1.match)(collectionRoute)(req.url);
                 if (matches) {
                     return matches.params;
