@@ -130,7 +130,7 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
 
   const limitedItems = expandedItems.slice(
     firstItemIndex,
-    firstItemIndex + limit,
+    firstItemIndex + ITEMS_PER_COLLECTION_PAGE,
   );
 
   const items: AP.Entity[] = [];

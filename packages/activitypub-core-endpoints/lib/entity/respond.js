@@ -68,7 +68,7 @@ async function respond(render) {
         }
     })();
     (0, activitypub_core_types_1.assertIsArray)(expandedItems);
-    const limitedItems = expandedItems.slice(firstItemIndex, firstItemIndex + limit);
+    const limitedItems = expandedItems.slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE);
     const items = [];
     for (const item of limitedItems) {
         if (item && !(item instanceof URL)) {
