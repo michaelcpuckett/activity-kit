@@ -45,7 +45,7 @@ export const DEFAULT_ROUTES: Routes = {
   article: '/article/:guid',
   event: '/event/:guid',
   note: '/note/:guid', // :slug
-  page: '/page/:guid',
+  page: '/webpage/:guid', // avoid clashing with /page/:page
   place: '/place/:guid',
   relationship: '/relationship/:guid',
   profile: '/profile/:guid',

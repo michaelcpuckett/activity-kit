@@ -39,7 +39,7 @@ exports.DEFAULT_ROUTES = {
     article: '/article/:guid',
     event: '/event/:guid',
     note: '/note/:guid',
-    page: '/page/:guid',
+    page: '/webpage/:guid',
     place: '/place/:guid',
     relationship: '/relationship/:guid',
     profile: '/profile/:guid',
