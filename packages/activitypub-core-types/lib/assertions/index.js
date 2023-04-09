@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.assertIsApType = exports.assertIsApTransitiveActivity = exports.assertIsApCollection = exports.assertIsApActor = exports.assertIsApExtendedObject = exports.assertIsApActivity = exports.assertIsApEntity = exports.assertHasApType = exports.assertHasType = exports.assertIsArray = exports.assertIsDate = exports.assertIsNumber = exports.assertIsString = exports.assertIsObject = exports.assertExists = exports.isType = exports.isTypeOf = void 0;
+exports.assertIsApType = exports.assertIsApTransitiveActivity = exports.assertIsApCollection = exports.assertIsApActor = exports.assertIsApExtendedObject = exports.assertIsApCoreObject = exports.assertIsApActivity = exports.assertIsApEntity = exports.assertHasApType = exports.assertHasType = exports.assertIsArray = exports.assertIsDate = exports.assertIsNumber = exports.assertIsString = exports.assertIsObject = exports.assertExists = exports.isType = exports.isTypeOf = void 0;
 const AP = __importStar(require("../activitypub"));
 function isTypeOf(entity, values) {
     for (const type of Object.values(values)) {
@@ -104,6 +104,13 @@ function assertIsApActivity(value) {
     }
 }
 exports.assertIsApActivity = assertIsApActivity;
+function assertIsApCoreObject(value) {
+    assertIsApEntity(value);
+    if (!isTypeOf(value, AP.CoreObjectTypes)) {
+        throw new Error(`\`${value}\` is not a Core Object`);
+    }
+}
+exports.assertIsApCoreObject = assertIsApCoreObject;
 function assertIsApExtendedObject(value) {
     assertIsApEntity(value);
     if (!isTypeOf(value, AP.ExtendedObjectTypes)) {

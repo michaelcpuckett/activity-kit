@@ -22,15 +22,15 @@ async function handleUpdate(activity) {
     const existingObject = await this.adapters.db.findEntityById(objectId);
     (0, activitypub_core_types_1.assertIsApEntity)(existingObject);
     const getTags = async () => {
-        if (!(0, activitypub_core_utilities_1.isTypeOf)(existingObject, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
+        if (!(0, activitypub_core_utilities_1.isTypeOf)(existingObject, activitypub_core_types_1.AP.CoreObjectTypes)) {
             return null;
         }
-        (0, activitypub_core_types_1.assertIsApExtendedObject)(existingObject);
+        (0, activitypub_core_types_1.assertIsApCoreObject)(existingObject);
         const newObject = {
             type: existingObject.type,
             ...activity.object,
         };
-        (0, activitypub_core_types_1.assertIsApExtendedObject)(newObject);
+        (0, activitypub_core_types_1.assertIsApCoreObject)(newObject);
         if (existingObject.tag || newObject.tag) {
             const existingTags = existingObject.tag
                 ? Array.isArray(existingObject.tag)

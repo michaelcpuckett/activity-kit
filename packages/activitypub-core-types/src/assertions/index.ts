@@ -69,7 +69,9 @@ export function assertIsArray(value: unknown): asserts value is Array<unknown> {
   }
 }
 
-export function assertHasType(value: unknown): asserts value is { type: string | string[] } {
+export function assertHasType(
+  value: unknown,
+): asserts value is { type: string | string[] } {
   assertIsObject(value);
 
   if (!('type' in value)) {
@@ -77,7 +79,9 @@ export function assertHasType(value: unknown): asserts value is { type: string |
   }
 }
 
-export function assertHasApType(value: unknown): asserts value is { type: AnyType | Array<AnyType | string>; } {
+export function assertHasApType(
+  value: unknown,
+): asserts value is { type: AnyType | Array<AnyType | string> } {
   assertHasType(value);
 
   if (!isTypeOf(value, AP.AllTypes)) {
@@ -89,7 +93,9 @@ export function assertIsApEntity(value: unknown): asserts value is AP.Entity {
   assertHasApType(value);
 }
 
-export function assertIsApActivity(value: unknown): asserts value is AP.Activity {
+export function assertIsApActivity(
+  value: unknown,
+): asserts value is AP.Activity {
   assertIsApEntity(value);
 
   if (!isTypeOf(value, AP.ActivityTypes)) {
@@ -97,7 +103,19 @@ export function assertIsApActivity(value: unknown): asserts value is AP.Activity
   }
 }
 
-export function assertIsApExtendedObject(value: unknown): asserts value is AP.ExtendedObject {
+export function assertIsApCoreObject(
+  value: unknown,
+): asserts value is AP.CoreObject {
+  assertIsApEntity(value);
+
+  if (!isTypeOf(value, AP.CoreObjectTypes)) {
+    throw new Error(`\`${value}\` is not a Core Object`);
+  }
+}
+
+export function assertIsApExtendedObject(
+  value: unknown,
+): asserts value is AP.ExtendedObject {
   assertIsApEntity(value);
 
   if (!isTypeOf(value, AP.ExtendedObjectTypes)) {
@@ -113,7 +131,9 @@ export function assertIsApActor(value: unknown): asserts value is AP.Actor {
   }
 }
 
-export function assertIsApCollection(value: unknown): asserts value is AP.Collection|AP.OrderedCollection {
+export function assertIsApCollection(
+  value: unknown,
+): asserts value is AP.Collection | AP.OrderedCollection {
   assertIsApEntity(value);
 
   if (!isTypeOf(value, AP.CollectionTypes)) {
@@ -121,7 +141,9 @@ export function assertIsApCollection(value: unknown): asserts value is AP.Collec
   }
 }
 
-export function assertIsApTransitiveActivity(value: unknown): asserts value is AP.TransitiveActivity {
+export function assertIsApTransitiveActivity(
+  value: unknown,
+): asserts value is AP.TransitiveActivity {
   assertIsApActivity(value);
 
   if (!('object' in value)) {
@@ -129,7 +151,10 @@ export function assertIsApTransitiveActivity(value: unknown): asserts value is A
   }
 }
 
-export function assertIsApType<comparison>(value: unknown, comparison: string): asserts value is comparison {
+export function assertIsApType<comparison>(
+  value: unknown,
+  comparison: string,
+): asserts value is comparison {
   assertIsApEntity(value);
 
   if (!isType(value, comparison)) {

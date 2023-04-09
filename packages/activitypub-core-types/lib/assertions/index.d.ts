@@ -20,6 +20,7 @@ export declare function assertHasApType(value: unknown): asserts value is {
 };
 export declare function assertIsApEntity(value: unknown): asserts value is AP.Entity;
 export declare function assertIsApActivity(value: unknown): asserts value is AP.Activity;
+export declare function assertIsApCoreObject(value: unknown): asserts value is AP.CoreObject;
 export declare function assertIsApExtendedObject(value: unknown): asserts value is AP.ExtendedObject;
 export declare function assertIsApActor(value: unknown): asserts value is AP.Actor;
 export declare function assertIsApCollection(value: unknown): asserts value is AP.Collection | AP.OrderedCollection;

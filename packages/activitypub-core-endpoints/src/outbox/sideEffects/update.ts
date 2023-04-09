@@ -2,7 +2,7 @@ import {
   AP,
   assertIsApActor,
   assertIsApEntity,
-  assertIsApExtendedObject,
+  assertIsApCoreObject,
   assertIsApType,
 } from 'activitypub-core-types';
 import {
@@ -47,16 +47,18 @@ export async function handleUpdate(
   assertIsApEntity(existingObject);
 
   const getTags = async () => {
-    if (!isTypeOf(existingObject, AP.ExtendedObjectTypes)) {
+    if (!isTypeOf(existingObject, AP.CoreObjectTypes)) {
       return null;
     }
-    assertIsApExtendedObject(existingObject);
+
+    assertIsApCoreObject(existingObject);
+
     const newObject = {
       type: existingObject.type,
       ...activity.object,
     };
 
-    assertIsApExtendedObject(newObject);
+    assertIsApCoreObject(newObject);
 
     if (existingObject.tag || newObject.tag) {
       const existingTags = existingObject.tag
