@@ -39,7 +39,7 @@ const activityPub = (config) => async (req, res, next) => {
         ]) {
             const collectionPageRoute = collectionRoute + '/page/:page';
             if (matchesRoute(collectionPageRoute)) {
-                const matches = (0, path_to_regexp_1.match)(collectionRoute)(req.url);
+                const matches = (0, path_to_regexp_1.match)(collectionPageRoute)(req.url);
                 if (matches) {
                     return matches.params;
                 }

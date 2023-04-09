@@ -92,7 +92,7 @@ export const activityPub =
         const collectionPageRoute = collectionRoute + '/page/:page';
 
         if (matchesRoute(collectionPageRoute)) {
-          const matches = matchRegExpPath(collectionRoute)(req.url);
+          const matches = matchRegExpPath(collectionPageRoute)(req.url);
 
           if (matches) {
             return matches.params;
