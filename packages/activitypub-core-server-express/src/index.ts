@@ -73,6 +73,28 @@ export const activityPub =
         }
       }
 
+      for (const collectionRoute of [
+        routes.serverInbox,
+        routes.serverOutbox,
+        routes.serverFollowers,
+        routes.serverFollowing,
+        routes.serverHashtags,
+        routes.inbox,
+        routes.outbox,
+        routes.followers,
+        routes.following,
+        routes.liked,
+        routes.stream,
+        routes.hashtag,
+        routes.likes,
+        routes.shares,
+        routes.replies,
+      ]) {
+        if (matchesRoute(collectionRoute + '/:page')) {
+          return true;
+        }
+      }
+
       return false;
     };
 
@@ -166,7 +188,7 @@ export const activityPub =
             req,
             res,
             config.adapters,
-            config.plugins,
+            // config.plugins,
           ).respond();
           next();
           return;

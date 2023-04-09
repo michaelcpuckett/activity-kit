@@ -17,6 +17,27 @@ const activityPub = (config) => async (req, res, next) => {
                 return true;
             }
         }
+        for (const collectionRoute of [
+            routes.serverInbox,
+            routes.serverOutbox,
+            routes.serverFollowers,
+            routes.serverFollowing,
+            routes.serverHashtags,
+            routes.inbox,
+            routes.outbox,
+            routes.followers,
+            routes.following,
+            routes.liked,
+            routes.stream,
+            routes.hashtag,
+            routes.likes,
+            routes.shares,
+            routes.replies,
+        ]) {
+            if (matchesRoute(collectionRoute + '/:page')) {
+                return true;
+            }
+        }
         return false;
     };
     try {
@@ -62,7 +83,7 @@ const activityPub = (config) => async (req, res, next) => {
                 return;
             }
             if (req.url.startsWith('/proxy')) {
-                await new activitypub_core_endpoints_1.ProxyGetEndpoint(req, res, config.adapters, config.plugins).respond();
+                await new activitypub_core_endpoints_1.ProxyGetEndpoint(req, res, config.adapters).respond();
                 next();
                 return;
             }
