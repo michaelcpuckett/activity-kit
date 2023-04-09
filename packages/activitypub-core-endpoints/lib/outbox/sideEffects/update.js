@@ -19,84 +19,91 @@ async function handleUpdate(activity) {
         throw new Error('Not authorized to modify object!');
     }
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
-    const object = await this.adapters.db.findEntityById(objectId);
-    (0, activitypub_core_types_1.assertIsApEntity)(object);
-    if ((0, activitypub_core_utilities_1.isTypeOf)(object, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
-        (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
-        if ('tag' in activity.object && Array.isArray(activity.object.tag)) {
-            const existingTags = activity.object.tag
+    const existingObject = await this.adapters.db.findEntityById(objectId);
+    (0, activitypub_core_types_1.assertIsApEntity)(existingObject);
+    if ((0, activitypub_core_utilities_1.isTypeOf)(existingObject, activitypub_core_types_1.AP.ExtendedObjectTypes)) {
+        (0, activitypub_core_types_1.assertIsApExtendedObject)(existingObject);
+        const newObject = {
+            type: existingObject.type,
+            ...activity.object,
+        };
+        (0, activitypub_core_types_1.assertIsApExtendedObject)(newObject);
+        if (existingObject.tag || newObject.tag) {
+            const existingTags = existingObject.tag
+                ? Array.isArray(existingObject.tag)
+                    ? existingObject.tag
+                    : [existingObject.tag]
+                : [];
+            const existingTagIds = existingTags
                 .map((tag) => {
                 if (tag instanceof URL) {
-                    return null;
+                    return tag.toString();
                 }
                 return (0, activitypub_core_utilities_1.getId)(tag)?.toString() ?? null;
             })
                 .filter((_) => !!_);
-            if (activity.object.tag) {
-                const tags = Array.isArray(activity.object.tag)
-                    ? activity.object.tag
-                    : [activity.object.tag];
-                for (const tag of tags) {
-                    if (!(tag instanceof URL) &&
-                        (0, activitypub_core_utilities_1.isType)(tag, activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG)) {
-                        (0, activitypub_core_types_1.assertIsApType)(tag, activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG);
-                        const hashtagCollectionUrl = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.hashtag)({
-                            slug: tag.name
-                                .replace('#', '')
-                                .toLowerCase()
-                                .trim()
-                                .replace(/[^a-z0-9]+/g, '-')
-                                .replace(/^-+|-+$/g, ''),
-                        })}`);
-                        const hashtagCollection = await this.adapters.db.findEntityById(hashtagCollectionUrl);
-                        if (!hashtagCollection) {
-                            const hashtagEntity = {
-                                id: hashtagCollectionUrl,
-                                url: hashtagCollectionUrl,
-                                name: tag.name,
-                                type: [
-                                    activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG,
-                                    activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
-                                ],
-                                orderedItems: [],
-                            };
-                            await this.adapters.db.saveEntity(hashtagEntity);
-                        }
-                        if (!existingTags.includes(hashtagCollectionUrl.toString())) {
-                            await this.adapters.db.insertOrderedItem(hashtagCollectionUrl, objectId);
-                            tag.id = hashtagCollectionUrl;
-                            tag.url = hashtagCollectionUrl;
-                        }
+            const newTags = newObject.tag
+                ? Array.isArray(newObject.tag)
+                    ? newObject.tag
+                    : [newObject.tag]
+                : [];
+            const getHashtagId = (hashtag) => new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.hashtag)({
+                slug: hashtag
+                    .replace('#', '')
+                    .toLowerCase()
+                    .trim()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, ''),
+            })}`);
+            const newTagIds = newTags.map((tag) => {
+                if (tag instanceof URL) {
+                    return tag.toString();
+                }
+                else {
+                    return getHashtagId(tag.name).toString();
+                }
+            });
+            for (const tag of newTags) {
+                if (!(tag instanceof URL) &&
+                    (0, activitypub_core_utilities_1.isType)(tag, activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG)) {
+                    (0, activitypub_core_types_1.assertIsApType)(tag, activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG);
+                    const index = newTags.indexOf(tag);
+                    const hashtagCollectionUrl = new URL(newTagIds[index]);
+                    const hashtagCollection = await this.adapters.db.findEntityById(hashtagCollectionUrl);
+                    if (!hashtagCollection) {
+                        const hashtagEntity = {
+                            id: hashtagCollectionUrl,
+                            url: hashtagCollectionUrl,
+                            name: tag.name,
+                            type: [
+                                activitypub_core_types_1.AP.ExtendedObjectTypes.HASHTAG,
+                                activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+                            ],
+                            orderedItems: [],
+                        };
+                        await this.adapters.db.saveEntity(hashtagEntity);
+                    }
+                    if (!existingTagIds.includes(hashtagCollectionUrl.toString())) {
+                        await this.adapters.db.insertOrderedItem(hashtagCollectionUrl, objectId);
+                        tag.id = hashtagCollectionUrl;
+                        tag.url = hashtagCollectionUrl;
                     }
                 }
-                const tagIds = tags.map((tag) => {
-                    if (tag instanceof URL) {
-                        return tag.toString();
-                    }
-                    else {
-                        return new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.hashtag)({
-                            slug: tag.name
-                                .replace('#', '')
-                                .toLowerCase()
-                                .trim()
-                                .replace(/[^a-z0-9]+/g, '-')
-                                .replace(/^-+|-+$/g, ''),
-                        })}`).toString();
-                    }
-                });
-                for (const existingTag of existingTags) {
-                    if (!tagIds.includes(existingTag)) {
-                        await this.adapters.db.removeOrderedItem(new URL(existingTag), objectId);
-                    }
+            }
+            for (const existingTagId of existingTagIds) {
+                if (!newTagIds.includes(existingTagId)) {
+                    await this.adapters.db.removeOrderedItem(new URL(existingTagId), objectId);
                 }
-                activity.object.tag = tags;
+            }
+            if ('tag' in activity.object) {
+                activity.object.tag = newTags;
             }
         }
     }
     activity.object = {
-        ...object,
+        ...existingObject,
         ...activity.object,
-        ...(object.type !== 'Link' && object.type !== 'Mention'
+        ...(existingObject.type !== 'Link' && existingObject.type !== 'Mention'
             ? {
                 updated: new Date(),
             }

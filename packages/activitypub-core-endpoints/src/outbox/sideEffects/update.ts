@@ -42,114 +42,125 @@ export async function handleUpdate(
   }
 
   const objectId = getId(activity.object);
-  const object = await this.adapters.db.findEntityById(objectId);
+  const existingObject = await this.adapters.db.findEntityById(objectId);
 
-  assertIsApEntity(object);
+  assertIsApEntity(existingObject);
 
-  if (isTypeOf(object, AP.ExtendedObjectTypes)) {
-    assertIsApExtendedObject(object);
+  if (isTypeOf(existingObject, AP.ExtendedObjectTypes)) {
+    assertIsApExtendedObject(existingObject);
 
-    if ('tag' in activity.object && Array.isArray(activity.object.tag)) {
-      const existingTags = activity.object.tag
+    const newObject = {
+      type: existingObject.type,
+      ...activity.object,
+    };
+
+    assertIsApExtendedObject(newObject);
+
+    if (existingObject.tag || newObject.tag) {
+      const existingTags = existingObject.tag
+        ? Array.isArray(existingObject.tag)
+          ? existingObject.tag
+          : [existingObject.tag]
+        : [];
+
+      const existingTagIds = existingTags
         .map((tag) => {
           if (tag instanceof URL) {
-            return null;
+            return tag.toString();
           }
 
           return getId(tag)?.toString() ?? null;
         })
         .filter((_) => !!_);
 
-      if (activity.object.tag) {
-        const tags = Array.isArray(activity.object.tag)
-          ? activity.object.tag
-          : [activity.object.tag];
+      const newTags = newObject.tag
+        ? Array.isArray(newObject.tag)
+          ? newObject.tag
+          : [newObject.tag]
+        : [];
 
-        for (const tag of tags) {
-          if (
-            !(tag instanceof URL) &&
-            isType(tag, AP.ExtendedObjectTypes.HASHTAG)
-          ) {
-            assertIsApType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG);
+      const getHashtagId = (hashtag: string) =>
+        new URL(
+          `${LOCAL_DOMAIN}${compile(this.routes.hashtag)({
+            slug: hashtag
+              .replace('#', '')
+              .toLowerCase()
+              .trim() // Remove whitespace from both ends of the string
+              .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
+              .replace(/^-+|-+$/g, ''),
+          })}`,
+        );
 
-            const hashtagCollectionUrl = new URL(
-              `${LOCAL_DOMAIN}${compile(this.routes.hashtag)({
-                slug: tag.name
-                  .replace('#', '')
-                  .toLowerCase()
-                  .trim() // Remove whitespace from both ends of the string
-                  .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
-                  .replace(/^-+|-+$/g, ''),
-              })}`,
-            );
-
-            const hashtagCollection = await this.adapters.db.findEntityById(
-              hashtagCollectionUrl,
-            );
-
-            if (!hashtagCollection) {
-              // TODO: Should type be `AP.Hashtag & AP.Collection`?
-              const hashtagEntity: AP.CoreObject = {
-                id: hashtagCollectionUrl,
-                url: hashtagCollectionUrl,
-                name: tag.name,
-                type: [
-                  AP.ExtendedObjectTypes.HASHTAG,
-                  AP.CollectionTypes.ORDERED_COLLECTION,
-                ],
-                orderedItems: [],
-              };
-
-              await this.adapters.db.saveEntity(hashtagEntity);
-            }
-
-            if (!existingTags.includes(hashtagCollectionUrl.toString())) {
-              await this.adapters.db.insertOrderedItem(
-                hashtagCollectionUrl,
-                objectId,
-              );
-
-              tag.id = hashtagCollectionUrl;
-              tag.url = hashtagCollectionUrl;
-            }
-          }
+      const newTagIds = newTags.map((tag) => {
+        if (tag instanceof URL) {
+          return tag.toString();
+        } else {
+          return getHashtagId(tag.name).toString();
         }
+      });
 
-        const tagIds = tags.map((tag) => {
-          if (tag instanceof URL) {
-            return tag.toString();
-          } else {
-            return new URL(
-              `${LOCAL_DOMAIN}${compile(this.routes.hashtag)({
-                slug: tag.name
-                  .replace('#', '')
-                  .toLowerCase()
-                  .trim() // Remove whitespace from both ends of the string
-                  .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
-                  .replace(/^-+|-+$/g, ''),
-              })}`,
-            ).toString();
+      for (const tag of newTags) {
+        if (
+          !(tag instanceof URL) &&
+          isType(tag, AP.ExtendedObjectTypes.HASHTAG)
+        ) {
+          assertIsApType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG);
+
+          const index = newTags.indexOf(tag);
+
+          const hashtagCollectionUrl = new URL(newTagIds[index]);
+
+          const hashtagCollection = await this.adapters.db.findEntityById(
+            hashtagCollectionUrl,
+          );
+
+          if (!hashtagCollection) {
+            // TODO: Should type be `AP.Hashtag & AP.Collection`?
+            const hashtagEntity: AP.CoreObject = {
+              id: hashtagCollectionUrl,
+              url: hashtagCollectionUrl,
+              name: tag.name,
+              type: [
+                AP.ExtendedObjectTypes.HASHTAG,
+                AP.CollectionTypes.ORDERED_COLLECTION,
+              ],
+              orderedItems: [],
+            };
+
+            await this.adapters.db.saveEntity(hashtagEntity);
           }
-        });
 
-        for (const existingTag of existingTags) {
-          if (!tagIds.includes(existingTag)) {
-            await this.adapters.db.removeOrderedItem(
-              new URL(existingTag),
+          if (!existingTagIds.includes(hashtagCollectionUrl.toString())) {
+            await this.adapters.db.insertOrderedItem(
+              hashtagCollectionUrl,
               objectId,
             );
+
+            tag.id = hashtagCollectionUrl;
+            tag.url = hashtagCollectionUrl;
           }
         }
+      }
 
-        activity.object.tag = tags;
+      for (const existingTagId of existingTagIds) {
+        if (!newTagIds.includes(existingTagId)) {
+          await this.adapters.db.removeOrderedItem(
+            new URL(existingTagId),
+            objectId,
+          );
+        }
+      }
+
+      if ('tag' in activity.object) {
+        activity.object.tag = newTags;
       }
     }
   }
 
   activity.object = {
-    ...object,
+    ...existingObject,
     ...activity.object,
-    ...(object.type !== 'Link' && object.type !== 'Mention'
+    ...(existingObject.type !== 'Link' && existingObject.type !== 'Mention'
       ? {
           updated: new Date(),
         }
