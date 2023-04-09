@@ -68,7 +68,7 @@ async function createServerActor() {
         items: [],
         published: publishedDate,
     };
-    const hashtagsId = getRouteUrl(this.routes.serverFollowers, {
+    const hashtagsId = getRouteUrl(this.routes.serverHashtags, {
         entityRoute,
     });
     const botHashtags = {

@@ -90,7 +90,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     published: publishedDate,
   };
 
-  const hashtagsId = getRouteUrl(this.routes.serverFollowers, {
+  const hashtagsId = getRouteUrl(this.routes.serverHashtags, {
     entityRoute,
   });
 
