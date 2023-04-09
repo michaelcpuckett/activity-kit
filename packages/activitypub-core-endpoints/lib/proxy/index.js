@@ -14,7 +14,7 @@ class ProxyGetEndpoint {
     async respond() {
         try {
             const urlObject = new URL(this.req.url, activitypub_core_utilities_1.LOCAL_DOMAIN);
-            const proxiedUrl = new URL(decodeURI(urlObject.searchParams.get('resource')));
+            const proxiedUrl = new URL(urlObject.searchParams.get('resource'));
             const acceptHeader = this.req.headers.accept || activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE;
             if (proxiedUrl) {
                 const fetchedResult = acceptHeader !== activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE

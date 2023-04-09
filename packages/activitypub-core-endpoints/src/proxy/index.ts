@@ -28,9 +28,7 @@ export class ProxyGetEndpoint {
   public async respond() {
     try {
       const urlObject = new URL(this.req.url, LOCAL_DOMAIN);
-      const proxiedUrl = new URL(
-        decodeURI(urlObject.searchParams.get('resource')),
-      );
+      const proxiedUrl = new URL(urlObject.searchParams.get('resource'));
       const acceptHeader =
         this.req.headers.accept || ACTIVITYSTREAMS_CONTENT_TYPE;
 
