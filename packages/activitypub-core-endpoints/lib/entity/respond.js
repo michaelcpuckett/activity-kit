@@ -14,6 +14,9 @@ async function respond(render) {
     const urlParts = this.url.pathname.split('/');
     const pageParam = urlParts.pop();
     const hasPage = this.req.params['page'] === pageParam;
+    if (hasPage) {
+        urlParts.pop();
+    }
     const pathname = hasPage ? urlParts.join('/') : this.url.pathname;
     const entity = await this.adapters.db.findEntityById(new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${pathname}`));
     try {
@@ -55,7 +58,7 @@ async function respond(render) {
     const baseUrl = new URL(pathname, new URL(activitypub_core_utilities_1.LOCAL_DOMAIN));
     baseUrl.search = searchParams.toString();
     const getPageUrl = (page) => {
-        const url = new URL(`${pathname}/${page}`, new URL(activitypub_core_utilities_1.LOCAL_DOMAIN));
+        const url = new URL(`${pathname}/page/${page}`, new URL(activitypub_core_utilities_1.LOCAL_DOMAIN));
         url.search = searchParams.toString();
         return url;
     };

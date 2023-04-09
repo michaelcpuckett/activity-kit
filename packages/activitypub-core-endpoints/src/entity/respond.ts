@@ -23,10 +23,13 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
 
   // TODO authorize entity posts by actor.
 
-  // Remove CollectionPage URL /:page param
+  // Remove CollectionPage URL /page/:page param
   const urlParts = this.url.pathname.split('/');
   const pageParam = urlParts.pop();
   const hasPage = this.req.params['page'] === pageParam;
+  if (hasPage) {
+    urlParts.pop();
+  }
   const pathname = hasPage ? urlParts.join('/') : this.url.pathname;
 
   const entity = await this.adapters.db.findEntityById(
@@ -82,7 +85,7 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
   baseUrl.search = searchParams.toString();
 
   const getPageUrl = (page: number) => {
-    const url = new URL(`${pathname}/${page}`, new URL(LOCAL_DOMAIN));
+    const url = new URL(`${pathname}/page/${page}`, new URL(LOCAL_DOMAIN));
     url.search = searchParams.toString();
     return url;
   };

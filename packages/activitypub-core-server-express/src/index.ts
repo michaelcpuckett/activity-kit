@@ -85,7 +85,7 @@ export const activityPub =
         routes.shares,
         routes.replies,
       ]) {
-        if (matchesRoute(collectionRoute + '/:page')) {
+        if (matchesRoute(collectionRoute + '/page/:page')) {
           return true;
         }
       }
