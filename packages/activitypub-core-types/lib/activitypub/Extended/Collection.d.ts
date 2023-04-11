@@ -7,6 +7,7 @@ declare type BaseCollection = BaseCoreObject & {
     type: TypeOrArrayWithType<typeof CollectionTypes[keyof typeof CollectionTypes] | typeof CollectionPageTypes[keyof typeof CollectionPageTypes]>;
     totalItems?: number;
     items?: EntityReference | EntityReference[];
+    orderedItems?: EntityReference | EntityReference[];
     current?: URL | CollectionPage | Link;
     first?: URL | CollectionPage | Link;
     last?: URL | CollectionPage | Link;
@@ -16,13 +17,12 @@ export declare type Collection = BaseCollection & {
 };
 export declare type OrderedCollection = BaseCollection & {
     type: TypeOrArrayWithType<typeof CollectionTypes.ORDERED_COLLECTION>;
-    orderedItems?: EntityReference | EntityReference[];
 };
 declare type BaseCollectionPage = BaseCollection & {
     type: TypeOrArrayWithType<typeof CollectionPageTypes[keyof typeof CollectionPageTypes]>;
-    current?: URL | CollectionPage | Link;
-    first?: URL | CollectionPage | Link;
-    last?: URL | CollectionPage | Link;
+    partOf?: URL | EitherCollection | Link;
+    next?: URL | CollectionPage | Link;
+    prev?: URL | CollectionPage | Link;
 };
 export declare type CollectionPage = BaseCollectionPage & {
     type: TypeOrArrayWithType<typeof CollectionPageTypes.COLLECTION_PAGE>;

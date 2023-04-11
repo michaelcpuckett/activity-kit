@@ -26,3 +26,4 @@ export declare function assertIsApActor(value: unknown): asserts value is AP.Act
 export declare function assertIsApCollection(value: unknown): asserts value is AP.Collection | AP.OrderedCollection;
 export declare function assertIsApTransitiveActivity(value: unknown): asserts value is AP.TransitiveActivity;
 export declare function assertIsApType<comparison>(value: unknown, comparison: string): asserts value is comparison;
+export declare function assertIsApTypeOf<types>(value: unknown, comparison: string[]): asserts value is types;

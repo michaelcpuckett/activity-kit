@@ -8,30 +8,33 @@ async function expandCollection(collection) {
     if (!id) {
         return null;
     }
-    const foundThing = await this.queryById(id);
-    if (!foundThing) {
+    const foundEntity = await this.queryById(id);
+    if (!foundEntity) {
         return null;
     }
-    const foundCollection = (0, activitypub_core_utilities_1.getTypedEntity)(foundThing);
-    const items = await this.getCollectionItems(foundCollection);
-    if (!items) {
-        return foundCollection;
+    try {
+        (0, activitypub_core_types_1.assertIsApCollection)(foundEntity);
+        const items = await this.getCollectionItems(foundEntity);
+        if (!items) {
+            return foundEntity;
+        }
+        if ((0, activitypub_core_utilities_1.isType)(foundEntity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
+            return {
+                ...foundEntity,
+                orderedItems: items,
+            };
+        }
+        if ((0, activitypub_core_utilities_1.isType)(foundEntity, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
+            return {
+                ...foundEntity,
+                items,
+            };
+        }
+        return null;
     }
-    if ((0, activitypub_core_utilities_1.isType)(foundCollection, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
-        const orderedCollection = (0, activitypub_core_utilities_1.getTypedEntity)(foundCollection);
-        return {
-            ...orderedCollection,
-            orderedItems: items,
-        };
+    catch (error) {
+        return null;
     }
-    if ((0, activitypub_core_utilities_1.isType)(foundCollection, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
-        const collection = (0, activitypub_core_utilities_1.getTypedEntity)(foundCollection);
-        return {
-            ...collection,
-            items,
-        };
-    }
-    return null;
 }
 exports.expandCollection = expandCollection;
 //# sourceMappingURL=expandCollection.js.map

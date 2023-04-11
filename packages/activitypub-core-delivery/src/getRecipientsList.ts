@@ -1,5 +1,15 @@
-import { AP } from 'activitypub-core-types';
-import { isType, PUBLIC_ACTOR } from 'activitypub-core-utilities';
+import {
+  AP,
+  assertIsApCollection,
+  assertIsApEntity,
+  assertIsApTypeOf,
+} from 'activitypub-core-types';
+import {
+  getId,
+  isType,
+  isTypeOf,
+  PUBLIC_ACTOR,
+} from 'activitypub-core-utilities';
 import { DeliveryAdapter } from '.';
 
 export async function getRecipientsList(
@@ -11,76 +21,86 @@ export async function getRecipientsList(
     (recipient) => recipient.toString() !== PUBLIC_ACTOR,
   );
 
-  const unfilteredInboxArray = (
+  /**
+   * Get the IDs of all recipients.
+   */
+  const unfilteredRecipientsArray = (
     await Promise.all(
       filteredToArray.map(async (reference) => {
         if (reference instanceof URL) {
-          const foundThing = await this.adapters.db.queryById(reference);
+          const foundEntity = await this.adapters.db.queryById(reference);
 
-          if (!foundThing) {
+          if (!foundEntity) {
             return null;
           }
 
-          if (
-            typeof foundThing === 'object' &&
-            'inbox' in foundThing &&
-            foundThing.inbox
-          ) {
-            return foundThing.id;
+          assertIsApEntity(foundEntity);
+
+          if (isTypeOf(foundEntity, AP.ActorTypes)) {
+            return foundEntity.id;
           }
 
           if (
-            typeof foundThing === 'object' &&
-            isType(foundThing, AP.CollectionTypes.ORDERED_COLLECTION)
+            isType(foundEntity, AP.CollectionTypes.COLLECTION) ||
+            isType(foundEntity, AP.CollectionTypes.ORDERED_COLLECTION)
           ) {
-            if ('orderedItems' in foundThing && foundThing.orderedItems) {
-              return foundThing.orderedItems;
-            }
-          }
+            assertIsApCollection(foundEntity);
 
-          if (
-            typeof foundThing === 'object' &&
-            isType(foundThing, AP.CollectionTypes.COLLECTION)
-          ) {
-            if ('items' in foundThing && foundThing.items) {
-              return foundThing.items;
-            }
-          }
+            const collectionItems = [];
 
-          if (
-            typeof foundThing === 'object' &&
-            (isType(foundThing, AP.CollectionTypes.COLLECTION) ||
-              isType(foundThing, AP.CollectionTypes.ORDERED_COLLECTION))
-          ) {
-            if ('first' in foundThing && foundThing.first instanceof URL) {
+            if (!foundEntity.first) {
+              if (foundEntity.orderedItems) {
+                collectionItems.push(foundEntity.orderedItems);
+              } else if (foundEntity.items) {
+                collectionItems.push(foundEntity.items);
+              }
+            } else {
               const foundCollectionPage = await this.adapters.db.queryById(
-                foundThing.first,
+                getId(foundEntity.first),
               );
 
-              if (
-                typeof foundCollectionPage === 'object' &&
-                isType(
-                  foundCollectionPage,
-                  AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE,
-                ) &&
-                'orderedItems' in foundCollectionPage &&
-                foundCollectionPage.orderedItems
-              ) {
-                return foundCollectionPage.orderedItems;
-              }
+              assertIsApTypeOf<AP.CollectionPage | AP.OrderedCollectionPage>(
+                foundCollectionPage,
+                Object.values(AP.CollectionPageTypes),
+              );
 
-              if (
-                typeof foundCollectionPage === 'object' &&
-                isType(
-                  foundCollectionPage,
-                  AP.CollectionPageTypes.COLLECTION_PAGE,
-                ) &&
-                'items' in foundCollectionPage &&
-                foundCollectionPage.items
-              ) {
-                return foundCollectionPage.items;
+              let nextCollectionPage = foundCollectionPage;
+
+              while (nextCollectionPage) {
+                assertIsApTypeOf<AP.CollectionPage | AP.OrderedCollectionPage>(
+                  nextCollectionPage,
+                  Object.values(AP.CollectionPageTypes),
+                );
+
+                const collectionPageItems =
+                  foundCollectionPage.orderedItems || foundCollectionPage.items;
+
+                collectionItems.push(collectionPageItems);
+
+                const nextCollectionPageId = getId(nextCollectionPage.next);
+
+                if (
+                  nextCollectionPageId.toString() ===
+                  getId(nextCollectionPage).toString()
+                ) {
+                  // This is potentially setting up an infinite loop, so bail
+                  // if the `next` is referencing the same object.
+                  break;
+                }
+
+                let foundNextCollectionPage = null;
+
+                if (nextCollectionPageId) {
+                  foundNextCollectionPage = await this.adapters.db.queryById(
+                    nextCollectionPageId,
+                  );
+                }
+
+                nextCollectionPage = foundNextCollectionPage;
               }
             }
+
+            return collectionItems.flat();
           }
 
           return null;
@@ -99,7 +119,7 @@ export async function getRecipientsList(
 
   const result: URL[] = [];
 
-  for (const item of unfilteredInboxArray) {
+  for (const item of unfilteredRecipientsArray) {
     if (item instanceof URL) {
       result.push(item);
     }

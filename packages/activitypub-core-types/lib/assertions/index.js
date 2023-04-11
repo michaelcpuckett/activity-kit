@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.assertIsApType = exports.assertIsApTransitiveActivity = exports.assertIsApCollection = exports.assertIsApActor = exports.assertIsApExtendedObject = exports.assertIsApCoreObject = exports.assertIsApActivity = exports.assertIsApEntity = exports.assertHasApType = exports.assertHasType = exports.assertIsArray = exports.assertIsDate = exports.assertIsNumber = exports.assertIsString = exports.assertIsObject = exports.assertExists = exports.isType = exports.isTypeOf = void 0;
+exports.assertIsApTypeOf = exports.assertIsApType = exports.assertIsApTransitiveActivity = exports.assertIsApCollection = exports.assertIsApActor = exports.assertIsApExtendedObject = exports.assertIsApCoreObject = exports.assertIsApActivity = exports.assertIsApEntity = exports.assertHasApType = exports.assertHasType = exports.assertIsArray = exports.assertIsDate = exports.assertIsNumber = exports.assertIsString = exports.assertIsObject = exports.assertExists = exports.isType = exports.isTypeOf = void 0;
 const AP = __importStar(require("../activitypub"));
 function isTypeOf(entity, values) {
     for (const type of Object.values(values)) {
@@ -146,4 +146,14 @@ function assertIsApType(value, comparison) {
     }
 }
 exports.assertIsApType = assertIsApType;
+function assertIsApTypeOf(value, comparison) {
+    assertIsApEntity(value);
+    for (const type of comparison) {
+        if (isType(value, type)) {
+            return;
+        }
+    }
+    throw new Error(`\`${value}\` does not match any provided type.`);
+}
+exports.assertIsApTypeOf = assertIsApTypeOf;
 //# sourceMappingURL=index.js.map

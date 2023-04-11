@@ -1,5 +1,5 @@
 import { MongoDbAdapter } from '.';
-import { AP } from 'activitypub-core-types';
+import { AP, assertIsApCollection } from 'activitypub-core-types';
 import { getId, getTypedEntity, isType } from 'activitypub-core-utilities';
 
 export async function expandCollection(
@@ -12,41 +12,37 @@ export async function expandCollection(
     return null;
   }
 
-  const foundThing = await this.queryById(id);
+  const foundEntity = await this.queryById(id);
 
-  if (!foundThing) {
+  if (!foundEntity) {
     return null;
   }
 
-  const foundCollection = getTypedEntity(foundThing) as
-    | AP.Collection
-    | AP.OrderedCollection;
+  try {
+    assertIsApCollection(foundEntity);
 
-  const items = await this.getCollectionItems(foundCollection);
+    const items = await this.getCollectionItems(foundEntity);
 
-  if (!items) {
-    return foundCollection;
+    if (!items) {
+      return foundEntity;
+    }
+
+    if (isType(foundEntity, AP.CollectionTypes.ORDERED_COLLECTION)) {
+      return {
+        ...foundEntity,
+        orderedItems: items,
+      };
+    }
+
+    if (isType(foundEntity, AP.CollectionTypes.COLLECTION)) {
+      return {
+        ...foundEntity,
+        items,
+      };
+    }
+
+    return null;
+  } catch (error) {
+    return null;
   }
-
-  if (isType(foundCollection, AP.CollectionTypes.ORDERED_COLLECTION)) {
-    const orderedCollection = getTypedEntity(
-      foundCollection,
-    ) as AP.OrderedCollection;
-
-    return {
-      ...orderedCollection,
-      orderedItems: items,
-    };
-  }
-
-  if (isType(foundCollection, AP.CollectionTypes.COLLECTION)) {
-    const collection = getTypedEntity(foundCollection) as AP.Collection;
-
-    return {
-      ...collection,
-      items,
-    };
-  }
-
-  return null;
 }

@@ -1,70 +1,43 @@
 import { MongoDbAdapter } from '.';
-import { AP } from 'activitypub-core-types';
-import { getId, isType } from 'activitypub-core-utilities';
+import { AP, assertIsApCollection } from 'activitypub-core-types';
+import { getId } from 'activitypub-core-utilities';
 
 export async function getCollectionItems(
   this: MongoDbAdapter,
-  entity: URL | AP.Collection | AP.OrderedCollection,
+  entity: AP.Collection | AP.OrderedCollection,
 ): Promise<AP.EntityReference[]> {
-  const id = getId(entity);
+  try {
+    assertIsApCollection(entity);
 
-  if (!id) {
-    return [];
-  }
+    const collectionItems = entity.orderedItems || entity.items;
 
-  const collection = await this.queryById(id);
-
-  if (!collection) {
-    return [];
-  }
-
-  if (
-    !isType(collection, AP.CollectionTypes.COLLECTION) &&
-    !isType(collection, AP.CollectionTypes.ORDERED_COLLECTION)
-  ) {
-    return [];
-  }
-
-  if (
-    !(
-      ('items' in collection && Array.isArray(collection.items)) ||
-      ('orderedItems' in collection && Array.isArray(collection.orderedItems))
-    )
-  ) {
-    return [];
-  }
-
-  const collectionItems = isType(
-    collection,
-    AP.CollectionTypes.ORDERED_COLLECTION,
-  )
-    ? (collection as AP.OrderedCollection).orderedItems
-    : collection.items;
-
-  if (!Array.isArray(collectionItems)) {
-    return [];
-  }
-
-  const result: AP.EntityReference[] = [];
-
-  for (const item of collectionItems) {
-    if (item instanceof URL) {
-      const foundEntity = await this.queryById(item);
-
-      result.push(
-        foundEntity
-          ? await this.expandEntity(foundEntity)
-          : {
-              type: AP.CoreObjectTypes.TOMBSTONE,
-              content: 'Not found',
-            },
-      );
-    } else if (!Array.isArray(item) && item.id instanceof URL) {
-      const foundEntity = await this.queryById(item.id);
-
-      result.push(foundEntity ?? item);
+    if (!Array.isArray(collectionItems)) {
+      return [];
     }
-  }
 
-  return result;
+    const result: AP.EntityReference[] = [];
+
+    for (const item of collectionItems) {
+      if (item instanceof URL) {
+        const foundItem = await this.queryById(item);
+
+        result.push(
+          foundItem
+            ? await this.expandEntity(foundItem)
+            : {
+                type: AP.CoreObjectTypes.TOMBSTONE,
+                content: 'Not found',
+              },
+        );
+      } else if (!Array.isArray(item)) {
+        const foundItem = await this.queryById(getId(item));
+
+        result.push(foundItem ?? item);
+      }
+    }
+
+    return result;
+  } catch (error) {
+    return [];
+  }
 }

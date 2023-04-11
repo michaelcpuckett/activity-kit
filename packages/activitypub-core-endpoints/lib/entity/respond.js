@@ -41,14 +41,8 @@ async function respond(render) {
     const getPageUrl = (page) => new URL(`${pathname === '/' ? '' : pathname}/page/${page}`, new URL(activitypub_core_utilities_1.LOCAL_DOMAIN));
     if (!hasPage) {
         (0, activitypub_core_types_1.assertIsApCollection)(entity);
-        if ((0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
-            (0, activitypub_core_types_1.assertIsApType)(entity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
-            delete entity.orderedItems;
-        }
-        if ((0, activitypub_core_utilities_1.isType)(entity, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
-            (0, activitypub_core_types_1.assertIsApType)(entity, activitypub_core_types_1.AP.CollectionTypes.COLLECTION);
-            delete entity.items;
-        }
+        delete entity.orderedItems;
+        delete entity.items;
         const collectionEntity = {
             ...entity,
             first: getPageUrl(1),

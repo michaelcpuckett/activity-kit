@@ -161,3 +161,18 @@ export function assertIsApType<comparison>(
     throw new Error(`\`${value}\` is not of type ${comparison}`);
   }
 }
+
+export function assertIsApTypeOf<types>(
+  value: unknown,
+  comparison: string[],
+): asserts value is types {
+  assertIsApEntity(value);
+
+  for (const type of comparison) {
+    if (isType(value, type)) {
+      return;
+    }
+  }
+
+  throw new Error(`\`${value}\` does not match any provided type.`);
+}

@@ -58,7 +58,7 @@ export type DbAdapter = {
   ) => Promise<AP.Collection | AP.OrderedCollection | null>;
   getCollectionItems: (
     this: DbAdapter,
-    entity: URL | AP.Collection | AP.OrderedCollection,
+    entity: AP.Collection | AP.OrderedCollection,
   ) => Promise<AP.EntityReference[]>;
   insertItem: (this: DbAdapter, path: URL, url: URL) => Promise<void>;
   removeItem: (this: DbAdapter, path: URL, url: URL) => Promise<void>;

@@ -76,20 +76,8 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
   if (!hasPage) {
     assertIsApCollection(entity);
 
-    if (isType(entity, AP.CollectionTypes.ORDERED_COLLECTION)) {
-      assertIsApType<AP.OrderedCollection>(
-        entity,
-        AP.CollectionTypes.ORDERED_COLLECTION,
-      );
-
-      delete entity.orderedItems;
-    }
-
-    if (isType(entity, AP.CollectionTypes.COLLECTION)) {
-      assertIsApType<AP.Collection>(entity, AP.CollectionTypes.COLLECTION);
-
-      delete entity.items;
-    }
+    delete entity.orderedItems;
+    delete entity.items;
 
     const collectionEntity = {
       ...entity,

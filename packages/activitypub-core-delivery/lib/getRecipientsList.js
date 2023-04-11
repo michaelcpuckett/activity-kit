@@ -6,47 +6,49 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function getRecipientsList(to) {
     const toArray = Array.isArray(to) ? to : [to];
     const filteredToArray = toArray.filter((recipient) => recipient.toString() !== activitypub_core_utilities_1.PUBLIC_ACTOR);
-    const unfilteredInboxArray = (await Promise.all(filteredToArray.map(async (reference) => {
+    const unfilteredRecipientsArray = (await Promise.all(filteredToArray.map(async (reference) => {
         if (reference instanceof URL) {
-            const foundThing = await this.adapters.db.queryById(reference);
-            if (!foundThing) {
+            const foundEntity = await this.adapters.db.queryById(reference);
+            if (!foundEntity) {
                 return null;
             }
-            if (typeof foundThing === 'object' &&
-                'inbox' in foundThing &&
-                foundThing.inbox) {
-                return foundThing.id;
+            (0, activitypub_core_types_1.assertIsApEntity)(foundEntity);
+            if ((0, activitypub_core_utilities_1.isTypeOf)(foundEntity, activitypub_core_types_1.AP.ActorTypes)) {
+                return foundEntity.id;
             }
-            if (typeof foundThing === 'object' &&
-                (0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
-                if ('orderedItems' in foundThing && foundThing.orderedItems) {
-                    return foundThing.orderedItems;
-                }
-            }
-            if (typeof foundThing === 'object' &&
-                (0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
-                if ('items' in foundThing && foundThing.items) {
-                    return foundThing.items;
-                }
-            }
-            if (typeof foundThing === 'object' &&
-                ((0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
-                    (0, activitypub_core_utilities_1.isType)(foundThing, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION))) {
-                if ('first' in foundThing && foundThing.first instanceof URL) {
-                    const foundCollectionPage = await this.adapters.db.queryById(foundThing.first);
-                    if (typeof foundCollectionPage === 'object' &&
-                        (0, activitypub_core_utilities_1.isType)(foundCollectionPage, activitypub_core_types_1.AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE) &&
-                        'orderedItems' in foundCollectionPage &&
-                        foundCollectionPage.orderedItems) {
-                        return foundCollectionPage.orderedItems;
+            if ((0, activitypub_core_utilities_1.isType)(foundEntity, activitypub_core_types_1.AP.CollectionTypes.COLLECTION) ||
+                (0, activitypub_core_utilities_1.isType)(foundEntity, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
+                (0, activitypub_core_types_1.assertIsApCollection)(foundEntity);
+                const collectionItems = [];
+                if (!foundEntity.first) {
+                    if (foundEntity.orderedItems) {
+                        collectionItems.push(foundEntity.orderedItems);
                     }
-                    if (typeof foundCollectionPage === 'object' &&
-                        (0, activitypub_core_utilities_1.isType)(foundCollectionPage, activitypub_core_types_1.AP.CollectionPageTypes.COLLECTION_PAGE) &&
-                        'items' in foundCollectionPage &&
-                        foundCollectionPage.items) {
-                        return foundCollectionPage.items;
+                    else if (foundEntity.items) {
+                        collectionItems.push(foundEntity.items);
                     }
                 }
+                else {
+                    const foundCollectionPage = await this.adapters.db.queryById((0, activitypub_core_utilities_1.getId)(foundEntity.first));
+                    (0, activitypub_core_types_1.assertIsApTypeOf)(foundCollectionPage, Object.values(activitypub_core_types_1.AP.CollectionPageTypes));
+                    let nextCollectionPage = foundCollectionPage;
+                    while (nextCollectionPage) {
+                        (0, activitypub_core_types_1.assertIsApTypeOf)(nextCollectionPage, Object.values(activitypub_core_types_1.AP.CollectionPageTypes));
+                        const collectionPageItems = foundCollectionPage.orderedItems || foundCollectionPage.items;
+                        collectionItems.push(collectionPageItems);
+                        const nextCollectionPageId = (0, activitypub_core_utilities_1.getId)(nextCollectionPage.next);
+                        if (nextCollectionPageId.toString() ===
+                            (0, activitypub_core_utilities_1.getId)(nextCollectionPage).toString()) {
+                            break;
+                        }
+                        let foundNextCollectionPage = null;
+                        if (nextCollectionPageId) {
+                            foundNextCollectionPage = await this.adapters.db.queryById(nextCollectionPageId);
+                        }
+                        nextCollectionPage = foundNextCollectionPage;
+                    }
+                }
+                return collectionItems.flat();
             }
             return null;
         }
@@ -58,7 +60,7 @@ async function getRecipientsList(to) {
         }
     }))).flat();
     const result = [];
-    for (const item of unfilteredInboxArray) {
+    for (const item of unfilteredRecipientsArray) {
         if (item instanceof URL) {
             result.push(item);
         }
