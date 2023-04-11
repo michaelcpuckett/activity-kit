@@ -79,15 +79,6 @@ export async function getRecipientsList(
 
                 const nextCollectionPageId = getId(nextCollectionPage.next);
 
-                if (
-                  nextCollectionPageId.toString() ===
-                  getId(nextCollectionPage).toString()
-                ) {
-                  // This is potentially setting up an infinite loop, so bail
-                  // if the `next` is referencing the same object.
-                  break;
-                }
-
                 let foundNextCollectionPage = null;
 
                 if (nextCollectionPageId) {

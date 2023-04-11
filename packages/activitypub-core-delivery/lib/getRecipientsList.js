@@ -37,10 +37,6 @@ async function getRecipientsList(to) {
                         const collectionPageItems = foundCollectionPage.orderedItems || foundCollectionPage.items;
                         collectionItems.push(collectionPageItems);
                         const nextCollectionPageId = (0, activitypub_core_utilities_1.getId)(nextCollectionPage.next);
-                        if (nextCollectionPageId.toString() ===
-                            (0, activitypub_core_utilities_1.getId)(nextCollectionPage).toString()) {
-                            break;
-                        }
                         let foundNextCollectionPage = null;
                         if (nextCollectionPageId) {
                             foundNextCollectionPage = await this.adapters.db.queryById(nextCollectionPageId);

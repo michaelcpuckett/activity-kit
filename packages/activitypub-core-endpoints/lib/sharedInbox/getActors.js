@@ -4,29 +4,27 @@ exports.getActors = void 0;
 const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function getActors() {
-    if (!(0, activitypub_core_utilities_1.isTypeOf)(this.activity, activitypub_core_types_1.AP.ActivityTypes)) {
-        throw new Error('Not an activity.');
-    }
-    const activity = this.activity;
+    (0, activitypub_core_types_1.assertIsApActivity)(this.activity);
     const recipientIds = [
-        ...(activity.to
-            ? await this.adapters.delivery.getRecipientsList(activity.to)
+        ...(this.activity.to
+            ? await this.adapters.delivery.getRecipientsList(this.activity.to)
             : []),
-        ...(activity.cc
-            ? await this.adapters.delivery.getRecipientsList(activity.cc)
+        ...(this.activity.cc
+            ? await this.adapters.delivery.getRecipientsList(this.activity.cc)
             : []),
-        ...(activity.bto
-            ? await this.adapters.delivery.getRecipientsList(activity.bto)
+        ...(this.activity.bto
+            ? await this.adapters.delivery.getRecipientsList(this.activity.bto)
             : []),
-        ...(activity.bcc
-            ? await this.adapters.delivery.getRecipientsList(activity.bcc)
+        ...(this.activity.bcc
+            ? await this.adapters.delivery.getRecipientsList(this.activity.bcc)
             : []),
-        ...(activity.audience
-            ? await this.adapters.delivery.getRecipientsList(activity.audience)
+        ...(this.activity.audience
+            ? await this.adapters.delivery.getRecipientsList(this.activity.audience)
             : []),
     ];
     const recipients = await Promise.all(recipientIds.map(async (recipientId) => {
-        if (recipientId.toString() === (0, activitypub_core_utilities_1.getId)(activity.actor).toString()) {
+        (0, activitypub_core_types_1.assertIsApActivity)(this.activity);
+        if (recipientId.toString() === (0, activitypub_core_utilities_1.getId)(this.activity.actor).toString()) {
             return null;
         }
         const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(recipientId) === 'entity';
@@ -37,10 +35,13 @@ async function getActors() {
         if (!recipient) {
             return null;
         }
-        if ((0, activitypub_core_utilities_1.isTypeOf)(recipient, activitypub_core_types_1.AP.ActorTypes)) {
+        try {
+            (0, activitypub_core_types_1.assertIsApActor)(recipient);
             return recipient;
         }
-        return null;
+        catch (error) {
+            return null;
+        }
     }));
     const actors = [];
     for (const recipient of recipients) {
