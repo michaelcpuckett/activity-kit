@@ -25,5 +25,9 @@ export async function getActors(
     } catch (error) {}
   }
 
+  console.log(`\\\\\\\\\\\\`);
+  console.log(actors);
+  console.log(`///////////`);
+
   return actors;
 }
