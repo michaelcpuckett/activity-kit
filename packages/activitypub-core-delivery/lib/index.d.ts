@@ -1,7 +1,7 @@
 import type { CryptoAdapter, DbAdapter, FetchPolyfill } from 'activitypub-core-types';
 import { broadcast } from './broadcast';
+import { getRecipientUrls } from './getRecipientUrls';
 import { getRecipientInboxUrls } from './getRecipientInboxUrls';
-import { getRecipientsList } from './getRecipientsList';
 import { signAndSendToForeignActorInbox } from './signAndSendToForeignActorInbox';
 export declare class DeliveryAdapter {
     adapters: {
@@ -19,5 +19,5 @@ export declare class DeliveryAdapter {
     signAndSendToForeignActorInbox: typeof signAndSendToForeignActorInbox;
     broadcast: typeof broadcast;
     getRecipientInboxUrls: typeof getRecipientInboxUrls;
-    getRecipientsList: typeof getRecipientsList;
+    getRecipientUrls: typeof getRecipientUrls;
 }

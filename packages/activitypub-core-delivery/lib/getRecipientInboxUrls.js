@@ -1,45 +1,37 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRecipientInboxUrls = void 0;
-async function getRecipientInboxUrls(activity, actor) {
-    const recipients = [
-        ...(activity.to ? await this.getRecipientsList(activity.to) : []),
-        ...(activity.cc ? await this.getRecipientsList(activity.cc) : []),
-        ...(activity.bto ? await this.getRecipientsList(activity.bto) : []),
-        ...(activity.bcc ? await this.getRecipientsList(activity.bcc) : []),
-        ...(activity.audience
-            ? await this.getRecipientsList(activity.audience)
-            : []),
-    ];
-    const recipientInboxes = await Promise.all(recipients.map(async (recipient) => {
-        if (recipient.toString() === actor.id?.toString()) {
-            return null;
-        }
-        const foundThing = await this.adapters.db.queryById(recipient);
-        if (!foundThing) {
-            return null;
-        }
-        if (typeof foundThing === 'object' &&
-            'inbox' in foundThing &&
-            foundThing.inbox) {
-            if (foundThing.endpoints) {
-                if (foundThing.endpoints.sharedInbox instanceof URL) {
-                    return foundThing.endpoints.sharedInbox;
+const activitypub_core_types_1 = require("activitypub-core-types");
+const activitypub_core_utilities_1 = require("activitypub-core-utilities");
+async function getRecipientInboxUrls(activity, actor, inboxesOnly) {
+    const recipientUrls = await this.getRecipientUrls(activity);
+    const unfilteredRecipientInboxUrls = await Promise.all(recipientUrls.map(async (recipient) => {
+        try {
+            if (recipient.toString() === (0, activitypub_core_utilities_1.getId)(actor).toString()) {
+                return null;
+            }
+            const foundEntity = await this.adapters.db.queryById(recipient);
+            (0, activitypub_core_types_1.assertIsApActor)(foundEntity);
+            if (!inboxesOnly) {
+                if (foundEntity.endpoints) {
+                    if (foundEntity.endpoints.sharedInbox instanceof URL) {
+                        return foundEntity.endpoints.sharedInbox;
+                    }
                 }
             }
-            if (foundThing.inbox instanceof URL) {
-                return foundThing.inbox;
-            }
-            return foundThing.inbox.id;
+            return (0, activitypub_core_utilities_1.getId)(foundEntity.inbox);
+        }
+        catch (error) {
+            return null;
         }
     }));
     const recipientInboxUrls = [];
-    for (const recipientInbox of recipientInboxes) {
+    for (const recipientInbox of unfilteredRecipientInboxUrls) {
         if (recipientInbox instanceof URL) {
             recipientInboxUrls.push(recipientInbox);
         }
     }
-    return [...new Set(recipientInboxUrls.map((url) => url.toString()))].map((url) => new URL(url));
+    return (0, activitypub_core_utilities_1.deduplicateUrls)(recipientInboxUrls);
 }
 exports.getRecipientInboxUrls = getRecipientInboxUrls;
 //# sourceMappingURL=getRecipientInboxUrls.js.map

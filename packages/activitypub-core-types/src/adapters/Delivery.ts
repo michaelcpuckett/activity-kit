@@ -24,9 +24,10 @@ export type DeliveryAdapter = {
     this: DeliveryAdapter,
     activity: AP.Activity,
     actor: AP.Actor,
+    inboxesOnly?: boolean,
   ) => Promise<URL[]>;
-  getRecipientsList: (
+  getRecipientUrls: (
     this: DeliveryAdapter,
-    to: AP.EntityReference | AP.EntityReference[],
+    activity: AP.Activity,
   ) => Promise<URL[]>;
 };

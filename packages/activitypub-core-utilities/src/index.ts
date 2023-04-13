@@ -14,3 +14,4 @@ export { streamToString } from './streamToString';
 export { stringify } from './stringify';
 export { isTypeOf, isType } from './isType';
 export { getTypedEntity } from './getTypedEntity';
+export { deduplicateUrls } from './deduplicateUrls';

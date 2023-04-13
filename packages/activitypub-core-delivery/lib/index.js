@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeliveryAdapter = void 0;
 const broadcast_1 = require("./broadcast");
+const getRecipientUrls_1 = require("./getRecipientUrls");
 const getRecipientInboxUrls_1 = require("./getRecipientInboxUrls");
-const getRecipientsList_1 = require("./getRecipientsList");
 const signAndSendToForeignActorInbox_1 = require("./signAndSendToForeignActorInbox");
 const isomorphic_fetch_1 = __importDefault(require("isomorphic-fetch"));
 class DeliveryAdapter {
@@ -20,7 +20,7 @@ class DeliveryAdapter {
     signAndSendToForeignActorInbox = signAndSendToForeignActorInbox_1.signAndSendToForeignActorInbox;
     broadcast = broadcast_1.broadcast;
     getRecipientInboxUrls = getRecipientInboxUrls_1.getRecipientInboxUrls;
-    getRecipientsList = getRecipientsList_1.getRecipientsList;
+    getRecipientUrls = getRecipientUrls_1.getRecipientUrls;
 }
 exports.DeliveryAdapter = DeliveryAdapter;
 //# sourceMappingURL=index.js.map

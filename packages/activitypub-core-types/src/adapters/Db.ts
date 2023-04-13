@@ -60,6 +60,10 @@ export type DbAdapter = {
     this: DbAdapter,
     entity: AP.Collection | AP.OrderedCollection,
   ) => Promise<AP.EntityReference[]>;
+  getCollectionItemsByPagination: (
+    this: DbAdapter,
+    collection: AP.Collection | AP.OrderedCollection,
+  ) => Promise<AP.EntityReference[]>;
   insertItem: (this: DbAdapter, path: URL, url: URL) => Promise<void>;
   removeItem: (this: DbAdapter, path: URL, url: URL) => Promise<void>;
   insertOrderedItem: (this: DbAdapter, path: URL, url: URL) => Promise<void>;

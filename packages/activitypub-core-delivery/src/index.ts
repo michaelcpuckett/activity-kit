@@ -4,8 +4,8 @@ import type {
   FetchPolyfill,
 } from 'activitypub-core-types';
 import { broadcast } from './broadcast';
+import { getRecipientUrls } from './getRecipientUrls';
 import { getRecipientInboxUrls } from './getRecipientInboxUrls';
-import { getRecipientsList } from './getRecipientsList';
 import { signAndSendToForeignActorInbox } from './signAndSendToForeignActorInbox';
 import fetch from 'isomorphic-fetch';
 
@@ -32,5 +32,5 @@ export class DeliveryAdapter {
   public signAndSendToForeignActorInbox = signAndSendToForeignActorInbox;
   public broadcast = broadcast;
   public getRecipientInboxUrls = getRecipientInboxUrls;
-  public getRecipientsList = getRecipientsList;
+  public getRecipientUrls = getRecipientUrls;
 }

@@ -17,6 +17,7 @@ const queryById_1 = require("./queryById");
 const expandEntity_1 = require("./expandEntity");
 const getPrivateKey_1 = require("./getPrivateKey");
 const getCollectionItems_1 = require("./getCollectionItems");
+const getCollectionItemsByPagination_1 = require("./getCollectionItemsByPagination");
 const expandCollection_1 = require("./expandCollection");
 const findAll_1 = require("./findAll");
 const getActorByUserId_1 = require("./getActorByUserId");
@@ -49,6 +50,7 @@ class MongoDbAdapter {
     queryById = queryById_1.queryById;
     expandEntity = expandEntity_1.expandEntity;
     getCollectionItems = getCollectionItems_1.getCollectionItems;
+    getCollectionItemsByPagination = getCollectionItemsByPagination_1.getCollectionItemsByPagination;
     expandCollection = expandCollection_1.expandCollection;
 }
 exports.MongoDbAdapter = MongoDbAdapter;

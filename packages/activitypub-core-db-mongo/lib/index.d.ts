@@ -11,6 +11,7 @@ import { queryById } from './queryById';
 import { expandEntity } from './expandEntity';
 import { getPrivateKey } from './getPrivateKey';
 import { getCollectionItems } from './getCollectionItems';
+import { getCollectionItemsByPagination } from './getCollectionItemsByPagination';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
@@ -43,5 +44,6 @@ export declare class MongoDbAdapter implements DbAdapter {
     queryById: typeof queryById;
     expandEntity: typeof expandEntity;
     getCollectionItems: typeof getCollectionItems;
+    getCollectionItemsByPagination: typeof getCollectionItemsByPagination;
     expandCollection: typeof expandCollection;
 }

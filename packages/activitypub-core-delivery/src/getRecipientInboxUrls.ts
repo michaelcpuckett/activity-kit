@@ -1,60 +1,48 @@
 import { DeliveryAdapter } from '.';
-import { AP } from 'activitypub-core-types';
+import { AP, assertIsApActor } from 'activitypub-core-types';
+import { deduplicateUrls, getId } from 'activitypub-core-utilities';
 
 export async function getRecipientInboxUrls(
   this: DeliveryAdapter,
   activity: AP.Activity,
   actor: AP.Actor,
+  inboxesOnly?: boolean,
 ): Promise<URL[]> {
-  const recipients: URL[] = [
-    ...(activity.to ? await this.getRecipientsList(activity.to) : []),
-    ...(activity.cc ? await this.getRecipientsList(activity.cc) : []),
-    ...(activity.bto ? await this.getRecipientsList(activity.bto) : []),
-    ...(activity.bcc ? await this.getRecipientsList(activity.bcc) : []),
-    ...(activity.audience
-      ? await this.getRecipientsList(activity.audience)
-      : []),
-  ];
+  const recipientUrls = await this.getRecipientUrls(activity);
 
-  // get inbox for each recipient
-  const recipientInboxes = await Promise.all(
-    recipients.map(async (recipient) => {
-      if (recipient.toString() === actor.id?.toString()) {
-        return null;
-      }
+  const unfilteredRecipientInboxUrls = await Promise.all(
+    recipientUrls.map(async (recipient) => {
+      try {
+        if (recipient.toString() === getId(actor).toString()) {
+          return null;
+        }
 
-      const foundThing = await this.adapters.db.queryById(recipient);
+        const foundEntity = await this.adapters.db.queryById(recipient);
 
-      if (!foundThing) {
-        return null;
-      }
+        assertIsApActor(foundEntity);
 
-      if (
-        typeof foundThing === 'object' &&
-        'inbox' in foundThing &&
-        foundThing.inbox
-      ) {
-        if (foundThing.endpoints) {
-          if (foundThing.endpoints.sharedInbox instanceof URL) {
-            return foundThing.endpoints.sharedInbox;
+        if (!inboxesOnly) {
+          if (foundEntity.endpoints) {
+            if (foundEntity.endpoints.sharedInbox instanceof URL) {
+              return foundEntity.endpoints.sharedInbox;
+            }
           }
         }
-        if (foundThing.inbox instanceof URL) {
-          return foundThing.inbox;
-        }
-        return foundThing.inbox.id;
+
+        return getId(foundEntity.inbox);
+      } catch (error) {
+        return null;
       }
     }),
   );
 
   const recipientInboxUrls: URL[] = [];
 
-  for (const recipientInbox of recipientInboxes) {
+  for (const recipientInbox of unfilteredRecipientInboxUrls) {
     if (recipientInbox instanceof URL) {
       recipientInboxUrls.push(recipientInbox);
     }
   }
 
-  // Deduplicate reciplients list.
-  return [...new Set(recipientInboxUrls.map((url: URL) => url.toString()))].map((url: string) => new URL(url));
+  return deduplicateUrls(recipientInboxUrls);
 }
