@@ -12,6 +12,11 @@ export async function getActors(
   const actorUrls = await this.adapters.delivery.getRecipientUrls(
     this.activity,
   );
+
+  console.log(`\\\\\\\\\\\\`);
+  console.log(actorUrls);
+  console.log(`///////////`);
+
   const actors: AP.Actor[] = [];
 
   const foundEntities = await Promise.all(
@@ -24,10 +29,6 @@ export async function getActors(
       actors.push(foundEntity);
     } catch (error) {}
   }
-
-  console.log(`\\\\\\\\\\\\`);
-  console.log(actors);
-  console.log(`///////////`);
 
   return actors;
 }
