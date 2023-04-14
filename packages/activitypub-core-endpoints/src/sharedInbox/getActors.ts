@@ -14,7 +14,7 @@ export async function getActors(
   );
 
   console.log(`\\\\\\\\\\\\`);
-  console.log(actorUrls);
+  console.log(actorUrls.map((url) => url.toString()));
   console.log(`///////////`);
 
   const actors: AP.Actor[] = [];
