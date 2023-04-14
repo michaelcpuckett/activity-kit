@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getActors = void 0;
+const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_types_1 = require("activitypub-core-types");
 async function getActors() {
     (0, activitypub_core_types_1.assertIsApActivity)(this.activity);
@@ -9,7 +10,12 @@ async function getActors() {
     console.log(actorUrls.map((url) => url.toString()));
     console.log(`///////////`);
     const actors = [];
-    const foundEntities = await Promise.all(actorUrls.map((actorUrl) => this.adapters.db.queryById(actorUrl)));
+    const foundEntities = await Promise.all(actorUrls.map(async (actorUrl) => {
+        const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(actorUrl) !== 'foreignEntity';
+        if (isLocal) {
+            return await this.adapters.db.findEntityById(actorUrl);
+        }
+    }));
     for (const foundEntity of foundEntities) {
         try {
             (0, activitypub_core_types_1.assertIsApActor)(foundEntity);

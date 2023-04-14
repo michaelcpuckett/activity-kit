@@ -14,6 +14,7 @@ async function getPaginatedCollectionItems(collection) {
                 (0, activitypub_core_types_1.assertIsApTypeOf)(firstCollectionPage, Object.values(activitypub_core_types_1.AP.CollectionPageTypes));
                 let nextCollectionPage = firstCollectionPage;
                 while (nextCollectionPage) {
+                    console.log('nextCollectionPage', nextCollectionPage?.id.toString());
                     try {
                         (0, activitypub_core_types_1.assertIsApTypeOf)(nextCollectionPage, Object.values(activitypub_core_types_1.AP.CollectionPageTypes));
                         const collectionPageItems = nextCollectionPage.orderedItems || nextCollectionPage.items;
