@@ -63,8 +63,6 @@ export async function getRecipientUrls(
           const collectionItems =
             await this.adapters.db.getPaginatedCollectionItems(foundRecipient);
 
-          console.log(collectionItems);
-
           const actorsInCollection = [];
 
           for (const collectionItem of collectionItems) {

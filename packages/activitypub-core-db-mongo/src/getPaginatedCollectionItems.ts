@@ -32,8 +32,6 @@ export async function getPaginatedCollectionItems(
           firstCollectionPage;
 
         while (nextCollectionPage) {
-          console.log('nextCollectionPage', nextCollectionPage?.id.toString());
-
           try {
             assertIsApTypeOf<AP.EitherCollectionPage>(
               nextCollectionPage,

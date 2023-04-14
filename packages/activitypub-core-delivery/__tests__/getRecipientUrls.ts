@@ -52,7 +52,6 @@ describe('DeliveryAdapter', () => {
                 return await getPaginatedCollectionItems.call(
                   {
                     queryById(id: URL) {
-                      console.log(id.toString(), '...');
                       if (
                         id.toString() === aliceFollowersFirstPageUrl.toString()
                       ) {
