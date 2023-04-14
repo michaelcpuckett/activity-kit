@@ -8,15 +8,7 @@ async function getCollectionItemsByPagination(collection) {
     try {
         (0, activitypub_core_types_1.assertIsApCollection)(collection);
         const firstCollectionPageId = (0, activitypub_core_utilities_1.getId)(collection.first);
-        if (!firstCollectionPageId) {
-            if (Array.isArray(collection.orderedItems)) {
-                collectionItems.push(collection.orderedItems);
-            }
-            else if (Array.isArray(collection.items)) {
-                collectionItems.push(collection.items);
-            }
-        }
-        else {
+        if (firstCollectionPageId) {
             const firstCollectionPage = await this.queryById(firstCollectionPageId);
             try {
                 (0, activitypub_core_types_1.assertIsApTypeOf)(firstCollectionPage, Object.values(activitypub_core_types_1.AP.CollectionPageTypes));
@@ -24,7 +16,7 @@ async function getCollectionItemsByPagination(collection) {
                 while (nextCollectionPage) {
                     try {
                         (0, activitypub_core_types_1.assertIsApTypeOf)(nextCollectionPage, Object.values(activitypub_core_types_1.AP.CollectionPageTypes));
-                        const collectionPageItems = firstCollectionPage.orderedItems || firstCollectionPage.items;
+                        const collectionPageItems = nextCollectionPage.orderedItems || nextCollectionPage.items;
                         (0, activitypub_core_types_1.assertIsArray)(collectionPageItems);
                         collectionItems.push(collectionPageItems);
                         const nextCollectionPageId = (0, activitypub_core_utilities_1.getId)(nextCollectionPage.next);
@@ -39,6 +31,14 @@ async function getCollectionItemsByPagination(collection) {
                 }
             }
             catch (error) { }
+        }
+        else {
+            if (Array.isArray(collection.orderedItems)) {
+                collectionItems.push(collection.orderedItems);
+            }
+            else if (Array.isArray(collection.items)) {
+                collectionItems.push(collection.items);
+            }
         }
         return collectionItems.flat();
     }

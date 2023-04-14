@@ -19,13 +19,7 @@ export async function getCollectionItemsByPagination(
 
     const firstCollectionPageId = getId(collection.first);
 
-    if (!firstCollectionPageId) {
-      if (Array.isArray(collection.orderedItems)) {
-        collectionItems.push(collection.orderedItems);
-      } else if (Array.isArray(collection.items)) {
-        collectionItems.push(collection.items);
-      }
-    } else {
+    if (firstCollectionPageId) {
       const firstCollectionPage = await this.queryById(firstCollectionPageId);
 
       try {
@@ -45,7 +39,7 @@ export async function getCollectionItemsByPagination(
             );
 
             const collectionPageItems =
-              firstCollectionPage.orderedItems || firstCollectionPage.items;
+              nextCollectionPage.orderedItems || nextCollectionPage.items;
 
             assertIsArray(collectionPageItems);
 
@@ -70,6 +64,12 @@ export async function getCollectionItemsByPagination(
           }
         }
       } catch (error) {}
+    } else {
+      if (Array.isArray(collection.orderedItems)) {
+        collectionItems.push(collection.orderedItems);
+      } else if (Array.isArray(collection.items)) {
+        collectionItems.push(collection.items);
+      }
     }
 
     return collectionItems.flat();
