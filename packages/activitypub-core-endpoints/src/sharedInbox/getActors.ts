@@ -13,6 +13,8 @@ export async function getActors(
     this.activity,
   );
 
+  console.log(actorUrls.map((url) => url.toString()));
+
   const actors: AP.Actor[] = [];
 
   const foundEntities = await Promise.all(

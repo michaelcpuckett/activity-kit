@@ -6,7 +6,9 @@ export async function queryById(
   this: MongoDbAdapter,
   id: URL,
 ): Promise<AP.Entity | null> {
-  return getCollectionNameByUrl(id) !== 'foreignEntity'
-    ? await this.findEntityById(id)
-    : await this.fetchEntityById(id);
+  if (getCollectionNameByUrl(id) !== 'foreignEntity') {
+    return await this.findEntityById(id);
+  } else {
+    return (await this.fetchEntityById(id)) ?? (await this.findEntityById(id));
+  }
 }
