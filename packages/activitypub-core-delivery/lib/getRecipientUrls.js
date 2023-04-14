@@ -20,7 +20,7 @@ async function getRecipientUrls(activity) {
         .map((recipient) => (0, activitypub_core_utilities_1.getId)(recipient))
         .filter((recipientUrl) => `${recipientUrl}` !== activitypub_core_utilities_1.PUBLIC_ACTOR);
     const actorUrls = (await Promise.all(recipientIds.map(async (recipientId) => {
-        const foundRecipient = await this.adapters.db.queryById(recipientId);
+        const foundRecipient = await this.adapters.db.fetchEntityById(recipientId);
         if (!foundRecipient) {
             return [];
         }
@@ -41,7 +41,7 @@ async function getRecipientUrls(activity) {
                 try {
                     const collectionItemId = (0, activitypub_core_utilities_1.getId)(collectionItem);
                     (0, activitypub_core_types_1.assertExists)(collectionItemId);
-                    const expandedCollectionItem = await this.adapters.db.queryById(collectionItemId);
+                    const expandedCollectionItem = await this.adapters.db.fetchEntityById(collectionItemId);
                     (0, activitypub_core_types_1.assertIsApActor)(expandedCollectionItem);
                     const actorUrl = expandedCollectionItem.url || expandedCollectionItem.id;
                     if (actorUrl instanceof URL) {

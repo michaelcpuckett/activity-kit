@@ -19,7 +19,7 @@ describe('DeliveryAdapter', () => {
         {
           adapters: {
             db: {
-              queryById(id: URL) {
+              fetchEntityById(id: URL) {
                 if (id.toString() === aliceFollowersUrl.toString()) {
                   return {
                     id: aliceFollowersUrl,
@@ -46,12 +46,12 @@ describe('DeliveryAdapter', () => {
                   };
                 }
               },
-              getCollectionItemsByPagination: async (
+              getPaginatedCollectionItems: async (
                 collection: AP.EitherCollection,
               ) => {
                 return await getPaginatedCollectionItems.call(
                   {
-                    queryById(id: URL) {
+                    fetchEntityById(id: URL) {
                       if (
                         id.toString() === aliceFollowersFirstPageUrl.toString()
                       ) {

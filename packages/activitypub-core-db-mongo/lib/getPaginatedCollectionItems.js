@@ -9,7 +9,7 @@ async function getPaginatedCollectionItems(collection) {
         (0, activitypub_core_types_1.assertIsApCollection)(collection);
         const firstCollectionPageId = (0, activitypub_core_utilities_1.getId)(collection.first);
         if (firstCollectionPageId) {
-            const firstCollectionPage = await this.queryById(firstCollectionPageId);
+            const firstCollectionPage = await this.fetchEntityById(firstCollectionPageId);
             try {
                 (0, activitypub_core_types_1.assertIsApTypeOf)(firstCollectionPage, Object.values(activitypub_core_types_1.AP.CollectionPageTypes));
                 let nextCollectionPage = firstCollectionPage;
@@ -21,7 +21,7 @@ async function getPaginatedCollectionItems(collection) {
                         collectionItems.push(collectionPageItems);
                         const nextCollectionPageId = (0, activitypub_core_utilities_1.getId)(nextCollectionPage.next);
                         (0, activitypub_core_types_1.assertExists)(nextCollectionPageId);
-                        const potentialNextCollectionPage = await this.queryById(nextCollectionPageId);
+                        const potentialNextCollectionPage = await this.fetchEntityById(nextCollectionPageId);
                         (0, activitypub_core_types_1.assertIsApTypeOf)(potentialNextCollectionPage, Object.values(activitypub_core_types_1.AP.CollectionPageTypes));
                         nextCollectionPage = potentialNextCollectionPage;
                     }

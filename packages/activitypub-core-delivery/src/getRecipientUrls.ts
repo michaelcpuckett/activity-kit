@@ -39,7 +39,9 @@ export async function getRecipientUrls(
   const actorUrls = (
     await Promise.all(
       recipientIds.map(async (recipientId) => {
-        const foundRecipient = await this.adapters.db.queryById(recipientId);
+        const foundRecipient = await this.adapters.db.fetchEntityById(
+          recipientId,
+        );
 
         if (!foundRecipient) {
           return [];
@@ -71,9 +73,8 @@ export async function getRecipientUrls(
 
               assertExists(collectionItemId);
 
-              const expandedCollectionItem = await this.adapters.db.queryById(
-                collectionItemId,
-              );
+              const expandedCollectionItem =
+                await this.adapters.db.fetchEntityById(collectionItemId);
 
               assertIsApActor(expandedCollectionItem);
 

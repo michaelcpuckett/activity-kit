@@ -20,7 +20,9 @@ export async function getPaginatedCollectionItems(
     const firstCollectionPageId = getId(collection.first);
 
     if (firstCollectionPageId) {
-      const firstCollectionPage = await this.queryById(firstCollectionPageId);
+      const firstCollectionPage = await this.fetchEntityById(
+        firstCollectionPageId,
+      );
 
       try {
         assertIsApTypeOf<AP.EitherCollectionPage>(
@@ -49,7 +51,7 @@ export async function getPaginatedCollectionItems(
 
             assertExists(nextCollectionPageId);
 
-            const potentialNextCollectionPage = await this.queryById(
+            const potentialNextCollectionPage = await this.fetchEntityById(
               nextCollectionPageId,
             );
 
