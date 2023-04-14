@@ -14,7 +14,19 @@ This project is still incomplete at the moment. Much of the core functionality i
 
 ## Running in a Project
 
-Canonical example using Express, MongoDB, custom Crypto Auth:
+### Prerequesities
+
+In addition to being able to host the Node server, you will also need:
+
+- Database: A compatable database that the server can access.
+- Storage: A way to store files such as profile pics.
+- HTML Templating: A way to render pages with provided JSON data.
+
+There may be additional work needed in order to set up custom/remote authentication (Firebase, for example).
+
+### Example
+
+Canonical example using Express + MongoDB + FTP:
 
 ```ts
 import * as express from "express";
@@ -27,7 +39,6 @@ import { CryptoAuthAdapter } from "activitypub-core-auth-crypto";
 import { NodeCryptoAdapter } from "activitypub-core-crypto-node";
 import { FtpStorageAdapter } from "activitypub-core-storage-ftp";
 import { DeliveryAdapter } from "activitypub-core-delivery";
-import { streamToString } from "activitypub-core-utilities";
 
 // Use Express for all routes.
 const app = express.default();

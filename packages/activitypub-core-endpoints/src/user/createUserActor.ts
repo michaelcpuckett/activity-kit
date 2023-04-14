@@ -297,6 +297,7 @@ export async function createUserActor(
         await Promise.all(
           streamsNames.map(async (streamName) => {
             const streamId = getRouteUrl(this.routes.stream, {
+              entityRoute,
               slug: streamName
                 .toLowerCase()
                 .trim()

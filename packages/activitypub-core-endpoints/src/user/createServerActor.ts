@@ -15,11 +15,11 @@ export async function createServerActor(this: UserPostEndpoint) {
 
   const publishedDate = new Date();
 
-  const getRouteUrl = (route: string, data: Record<string, string>) =>
+  const getRouteUrl = (route: string, routeData: Record<string, string>) =>
     new URL(
       `${LOCAL_DOMAIN}${compile(route, {
         validate: false,
-      })(data)}`,
+      })(routeData)}`,
     );
 
   const userId = getRouteUrl(this.routes.serverActor, {
