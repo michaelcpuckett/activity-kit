@@ -10,39 +10,39 @@ export async function getRecipientInboxUrls(
 ): Promise<URL[]> {
   const recipientUrls = await this.getRecipientUrls(activity);
 
-  const unfilteredRecipientInboxUrls = await Promise.all(
-    recipientUrls.map(async (recipient) => {
-      try {
-        if (recipient.toString() === getId(actor).toString()) {
-          return null;
-        }
+  const recipientInboxUrls = (
+    await Promise.all(
+      recipientUrls.map(async (recipientUrl) => {
+        try {
+          if (recipientUrl.toString() === getId(actor).toString()) {
+            return [];
+          }
 
-        const foundEntity = await this.adapters.db.queryById(recipient);
+          const foundEntity = await this.adapters.db.fetchEntityById(
+            recipientUrl,
+          );
 
-        assertIsApActor(foundEntity);
+          assertIsApActor(foundEntity);
 
-        if (!inboxesOnly) {
-          if (foundEntity.endpoints) {
-            if (foundEntity.endpoints.sharedInbox instanceof URL) {
-              return foundEntity.endpoints.sharedInbox;
+          if (!inboxesOnly) {
+            if (foundEntity.endpoints) {
+              if (foundEntity.endpoints.sharedInbox instanceof URL) {
+                return [foundEntity.endpoints.sharedInbox];
+              }
             }
           }
+
+          const inboxId = getId(foundEntity.inbox);
+
+          if (inboxId instanceof URL) {
+            return [inboxId];
+          }
+        } catch (error) {
+          return [];
         }
-
-        return getId(foundEntity.inbox);
-      } catch (error) {
-        return null;
-      }
-    }),
-  );
-
-  const recipientInboxUrls: URL[] = [];
-
-  for (const recipientInbox of unfilteredRecipientInboxUrls) {
-    if (recipientInbox instanceof URL) {
-      recipientInboxUrls.push(recipientInbox);
-    }
-  }
+      }),
+    )
+  ).flat();
 
   return deduplicateUrls(recipientInboxUrls);
 }

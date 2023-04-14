@@ -21,6 +21,10 @@ export async function broadcast(
 
   const recipients = await this.getRecipientInboxUrls(activity, actor);
 
+  console.log({
+    recipients,
+  });
+
   const results = await Promise.all(
     recipients.map(async (recipient) => {
       return await this.signAndSendToForeignActorInbox(

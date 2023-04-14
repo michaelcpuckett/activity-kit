@@ -9,6 +9,9 @@ async function broadcast(activity, actor) {
         throw new Error('Not an activity?');
     }
     const recipients = await this.getRecipientInboxUrls(activity, actor);
+    console.log({
+        recipients,
+    });
     const results = await Promise.all(recipients.map(async (recipient) => {
         return await this.signAndSendToForeignActorInbox(recipient, actor, publicActivity);
     }));

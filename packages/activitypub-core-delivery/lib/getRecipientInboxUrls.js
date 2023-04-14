@@ -5,32 +5,29 @@ const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function getRecipientInboxUrls(activity, actor, inboxesOnly) {
     const recipientUrls = await this.getRecipientUrls(activity);
-    const unfilteredRecipientInboxUrls = await Promise.all(recipientUrls.map(async (recipient) => {
+    const recipientInboxUrls = (await Promise.all(recipientUrls.map(async (recipientUrl) => {
         try {
-            if (recipient.toString() === (0, activitypub_core_utilities_1.getId)(actor).toString()) {
-                return null;
+            if (recipientUrl.toString() === (0, activitypub_core_utilities_1.getId)(actor).toString()) {
+                return [];
             }
-            const foundEntity = await this.adapters.db.queryById(recipient);
+            const foundEntity = await this.adapters.db.fetchEntityById(recipientUrl);
             (0, activitypub_core_types_1.assertIsApActor)(foundEntity);
             if (!inboxesOnly) {
                 if (foundEntity.endpoints) {
                     if (foundEntity.endpoints.sharedInbox instanceof URL) {
-                        return foundEntity.endpoints.sharedInbox;
+                        return [foundEntity.endpoints.sharedInbox];
                     }
                 }
             }
-            return (0, activitypub_core_utilities_1.getId)(foundEntity.inbox);
+            const inboxId = (0, activitypub_core_utilities_1.getId)(foundEntity.inbox);
+            if (inboxId instanceof URL) {
+                return [inboxId];
+            }
         }
         catch (error) {
-            return null;
+            return [];
         }
-    }));
-    const recipientInboxUrls = [];
-    for (const recipientInbox of unfilteredRecipientInboxUrls) {
-        if (recipientInbox instanceof URL) {
-            recipientInboxUrls.push(recipientInbox);
-        }
-    }
+    }))).flat();
     return (0, activitypub_core_utilities_1.deduplicateUrls)(recipientInboxUrls);
 }
 exports.getRecipientInboxUrls = getRecipientInboxUrls;
