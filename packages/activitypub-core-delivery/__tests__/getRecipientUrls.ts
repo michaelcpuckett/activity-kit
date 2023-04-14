@@ -1,6 +1,6 @@
 import { AP } from 'activitypub-core-types';
 import { getRecipientUrls } from '../src/getRecipientUrls';
-import { getCollectionItemsByPagination } from '../../activitypub-core-db-mongo/src/getCollectionItemsByPagination';
+import { getPaginatedCollectionItems } from '../../activitypub-core-db-mongo/src/getPaginatedCollectionItems';
 
 describe('DeliveryAdapter', () => {
   describe('getRecipientUrls', () => {
@@ -49,7 +49,7 @@ describe('DeliveryAdapter', () => {
               getCollectionItemsByPagination: async (
                 collection: AP.EitherCollection,
               ) => {
-                return await getCollectionItemsByPagination.call(
+                return await getPaginatedCollectionItems.call(
                   {
                     queryById(id: URL) {
                       console.log(id.toString(), '...');

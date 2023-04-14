@@ -35,7 +35,7 @@ async function getRecipientUrls(activity) {
         }
         try {
             (0, activitypub_core_types_1.assertIsApCollection)(foundRecipient);
-            const collectionItems = await this.adapters.db.getCollectionItemsByPagination(foundRecipient);
+            const collectionItems = await this.adapters.db.getPaginatedCollectionItems(foundRecipient);
             const actorsInCollection = [];
             for (const collectionItem of collectionItems) {
                 try {

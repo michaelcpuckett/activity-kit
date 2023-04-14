@@ -60,7 +60,7 @@ export type DbAdapter = {
     this: DbAdapter,
     entity: AP.Collection | AP.OrderedCollection,
   ) => Promise<AP.EntityReference[]>;
-  getCollectionItemsByPagination: (
+  getPaginatedCollectionItems: (
     this: DbAdapter,
     collection: AP.Collection | AP.OrderedCollection,
   ) => Promise<AP.EntityReference[]>;

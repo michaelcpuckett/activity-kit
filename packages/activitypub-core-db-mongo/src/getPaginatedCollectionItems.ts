@@ -8,7 +8,7 @@ import {
 } from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
 
-export async function getCollectionItemsByPagination(
+export async function getPaginatedCollectionItems(
   this: MongoDbAdapter,
   collection: AP.Collection | AP.OrderedCollection,
 ): Promise<AP.EntityReference[]> {

@@ -61,9 +61,7 @@ export async function getRecipientUrls(
           assertIsApCollection(foundRecipient);
 
           const collectionItems =
-            await this.adapters.db.getCollectionItemsByPagination(
-              foundRecipient,
-            );
+            await this.adapters.db.getPaginatedCollectionItems(foundRecipient);
 
           const actorsInCollection = [];
 

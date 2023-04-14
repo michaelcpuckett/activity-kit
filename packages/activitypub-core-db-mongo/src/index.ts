@@ -18,7 +18,7 @@ import { queryById } from './queryById';
 import { expandEntity } from './expandEntity';
 import { getPrivateKey } from './getPrivateKey';
 import { getCollectionItems } from './getCollectionItems';
-import { getCollectionItemsByPagination } from './getCollectionItemsByPagination';
+import { getPaginatedCollectionItems } from './getPaginatedCollectionItems';
 import { expandCollection } from './expandCollection';
 import { findAll } from './findAll';
 import { getActorByUserId } from './getActorByUserId';
@@ -85,6 +85,6 @@ export class MongoDbAdapter implements DbAdapter {
 
   public expandEntity = expandEntity;
   public getCollectionItems = getCollectionItems;
-  public getCollectionItemsByPagination = getCollectionItemsByPagination;
+  public getPaginatedCollectionItems = getPaginatedCollectionItems;
   public expandCollection = expandCollection;
 }

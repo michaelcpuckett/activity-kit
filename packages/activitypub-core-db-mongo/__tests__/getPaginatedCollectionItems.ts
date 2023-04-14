@@ -1,8 +1,8 @@
 import { AP } from 'activitypub-core-types';
-import { getCollectionItemsByPagination } from '../src/getCollectionItemsByPagination';
+import { getPaginatedCollectionItems } from '../src/getPaginatedCollectionItems';
 
 describe('MongoDbAdapter', () => {
-  describe('getCollectionItemsByPagination', () => {
+  describe('getPaginatedCollectionItems', () => {
     afterEach(async () => null); // TODO: Jest hack.
 
     it('works', async () => {
@@ -13,7 +13,7 @@ describe('MongoDbAdapter', () => {
       const aliceFollowersFirstPageUrl = new URL(`${aliceFollowersUrl}/page/1`);
       const aliceFollowersLastPageUrl = new URL(`${aliceFollowersUrl}/page/2`);
 
-      const collectionItems = await getCollectionItemsByPagination.call(
+      const collectionItems = await getPaginatedCollectionItems.call(
         {
           queryById(id: URL) {
             if (id.toString() === aliceFollowersFirstPageUrl.toString()) {
