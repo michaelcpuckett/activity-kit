@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-endpoints",
-  "version": "0.2.131",
+  "version": "0.2.132",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -20,7 +20,7 @@
     "test": "ts-node ../../node_modules/jasmine/bin/jasmine tests/**/*.ts"
   },
   "dependencies": {
-    "activitypub-core-delivery": "^0.2.129",
+    "activitypub-core-delivery": "^0.2.132",
     "activitypub-core-types": "^0.2.123",
     "activitypub-core-utilities": "^0.2.123",
     "cheerio": "^1.0.0-rc.12",
