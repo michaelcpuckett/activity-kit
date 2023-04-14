@@ -7,9 +7,9 @@ const path_to_regexp_1 = require("path-to-regexp");
 async function createServerActor() {
     const { publicKey: botPublicKey, privateKey: botPrivateKey } = await this.adapters.crypto.generateKeyPair();
     const publishedDate = new Date();
-    const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
+    const getRouteUrl = (route, routeData) => new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
         validate: false,
-    })(data)}`);
+    })(routeData)}`);
     const userId = getRouteUrl(this.routes.serverActor, {
         username: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
     });
