@@ -68,7 +68,7 @@ class CoreLibrary {
             password,
             preferredUsername,
         });
-        this.getUserIdByToken = async (token) => await adapters.auth.getTokenByUserId(token);
+        this.getUserIdByToken = async (token) => await adapters.auth.getUserIdByToken(token);
         this.authenticatePassword = async (email, password) => await adapters.auth.authenticatePassword(email, password);
         this.upload = async (file) => await adapters.storage.upload(file);
     }

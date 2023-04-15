@@ -148,7 +148,7 @@ export class CoreLibrary implements Library {
       });
 
     this.getUserIdByToken = async (token) =>
-      await adapters.auth.getTokenByUserId(token);
+      await adapters.auth.getUserIdByToken(token);
 
     this.authenticatePassword = async (email: string, password: string) =>
       await adapters.auth.authenticatePassword(email, password);
