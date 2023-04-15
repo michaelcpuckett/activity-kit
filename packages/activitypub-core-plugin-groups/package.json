@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-plugin-groups",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "> TODO: description",
   "author": "Michael Puckett <michael@puckett.contact>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -30,9 +30,9 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "activitypub-core-endpoints": "^0.3.0",
-    "activitypub-core-types": "^0.3.0",
-    "activitypub-core-utilities": "^0.3.0",
+    "activitypub-core-endpoints": "^0.3.1",
+    "activitypub-core-types": "^0.3.1",
+    "activitypub-core-utilities": "^0.3.1",
     "cheerio": "^1.0.0-rc.12",
     "jsdom": "^21.1.0",
     "path-to-regexp": "^6.2.1"
