@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-library",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "activitypub-core-types": "^0.3.2",
-    "activitypub-core-utilities": "^0.3.2",
+    "activitypub-core-utilities": "^0.3.5",
     "isomorphic-fetch": "^3.0.0"
   },
   "devDependencies": {
