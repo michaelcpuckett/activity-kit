@@ -13,8 +13,7 @@ async function handleAnnounce(activity) {
     await this.lib.insertOrderedItem(shared.id, activity.id);
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
     (0, activitypub_core_types_1.assertExists)(objectId);
-    const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectId) !== 'foreignEntity';
-    if (isLocal) {
+    if ((0, activitypub_core_utilities_1.isLocal)(objectId)) {
         const object = await this.lib.queryById(objectId);
         (0, activitypub_core_types_1.assertIsApEntity)(object);
         if (!('shares' in object)) {

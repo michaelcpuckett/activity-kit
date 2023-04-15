@@ -1,20 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchEntityById = void 0;
+const activitypub_core_types_1 = require("activitypub-core-types");
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function fetchEntityById(id) {
-    const foundEntity = (await this.findOne('foreignEntity', {
-        _id: id.toString(),
-    }));
-    if (foundEntity) {
-        return (0, activitypub_core_utilities_1.compressEntity)((0, activitypub_core_utilities_1.convertStringsToUrls)(foundEntity));
-    }
-    const actor = (await this.findOne('entity', {
+    const actor = await this.findOne('entity', {
         preferredUsername: 'bot',
-    }));
-    if (!actor) {
-        throw new Error('Bot actor not set up.');
-    }
+    });
+    (0, activitypub_core_types_1.assertIsApActor)(actor);
     const { dateHeader, signatureHeader } = await this.getHttpSignature(id, actor.id, await this.getPrivateKey(actor));
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 1250);

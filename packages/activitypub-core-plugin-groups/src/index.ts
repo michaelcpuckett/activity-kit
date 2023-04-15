@@ -1,4 +1,3 @@
-import { InboxPostEndpoint } from 'activitypub-core-endpoints';
 import {
   AP,
   Plugin,
@@ -12,7 +11,7 @@ import {
 } from 'activitypub-core-types';
 import {
   getId,
-  getCollectionNameByUrl,
+  isLocal,
   LOCAL_DOMAIN,
   isType,
   PUBLIC_ACTOR,
@@ -162,8 +161,8 @@ export function GroupsPlugin() {
       assertExists(sharedId);
 
       const announceActivity: AP.Announce = {
-        id: new URL(announceActivityId),
-        url: new URL(announceActivityId),
+        id: announceActivityId,
+        url: announceActivityId,
         type: AP.ActivityTypes.ANNOUNCE,
         actor: recipientId,
         to: [new URL(PUBLIC_ACTOR), followersId],
@@ -171,12 +170,9 @@ export function GroupsPlugin() {
         published: publishedDate,
       };
 
-      await this.lib.insertOrderedItem(sharedId, new URL(announceActivityId));
+      await this.lib.insertOrderedItem(sharedId, announceActivityId);
 
-      const isLocal =
-        getCollectionNameByUrl(objectToBeSharedId) !== 'foreignEntity';
-
-      if (isLocal) {
+      if (isLocal(objectToBeSharedId)) {
         const object = await this.lib.findEntityById(objectId);
 
         assertIsApExtendedObject(object);
@@ -185,7 +181,7 @@ export function GroupsPlugin() {
 
         assertExists(sharesId);
 
-        await this.lib.insertOrderedItem(sharesId, new URL(announceActivityId));
+        await this.lib.insertOrderedItem(sharesId, announceActivityId);
       }
 
       const outboxId = getId(recipient.outbox);
@@ -194,7 +190,7 @@ export function GroupsPlugin() {
 
       await Promise.all([
         this.lib.saveEntity(announceActivity),
-        this.lib.insertOrderedItem(outboxId, new URL(announceActivityId)),
+        this.lib.insertOrderedItem(outboxId, announceActivityId),
       ]);
 
       await this.lib.broadcast(announceActivity, recipient);

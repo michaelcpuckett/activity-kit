@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deduplicateUrls = exports.getTypedEntity = exports.isType = exports.isTypeOf = exports.stringify = exports.streamToString = exports.removeContext = exports.parseStream = exports.getId = exports.getCollectionNameByUrl = exports.convertUrlsToStrings = exports.convertStringsToUrls = exports.convertFromJsonLd = exports.compressEntity = exports.combineAddresses = exports.cleanProps = exports.applyContext = void 0;
+exports.isLocal = exports.deduplicateUrls = exports.getTypedEntity = exports.isType = exports.isTypeOf = exports.stringify = exports.streamToString = exports.removeContext = exports.parseStream = exports.getId = exports.getCollectionNameByUrl = exports.convertUrlsToStrings = exports.convertStringsToUrls = exports.convertFromJsonLd = exports.compressEntity = exports.combineAddresses = exports.cleanProps = exports.applyContext = void 0;
 __exportStar(require("./globals"), exports);
 var applyContext_1 = require("./applyContext");
 Object.defineProperty(exports, "applyContext", { enumerable: true, get: function () { return applyContext_1.applyContext; } });
@@ -49,4 +49,6 @@ var getTypedEntity_1 = require("./getTypedEntity");
 Object.defineProperty(exports, "getTypedEntity", { enumerable: true, get: function () { return getTypedEntity_1.getTypedEntity; } });
 var deduplicateUrls_1 = require("./deduplicateUrls");
 Object.defineProperty(exports, "deduplicateUrls", { enumerable: true, get: function () { return deduplicateUrls_1.deduplicateUrls; } });
+var isLocal_1 = require("./isLocal");
+Object.defineProperty(exports, "isLocal", { enumerable: true, get: function () { return isLocal_1.isLocal; } });
 //# sourceMappingURL=index.js.map

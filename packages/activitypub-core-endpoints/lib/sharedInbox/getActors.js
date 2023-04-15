@@ -8,7 +8,7 @@ async function getActors() {
     const actorUrls = await this.lib.getRecipientUrls(this.activity);
     console.log(actorUrls.map((url) => url.toString()));
     return (await Promise.all(actorUrls.map(async (actorUrl) => {
-        if ((0, activitypub_core_utilities_1.getCollectionNameByUrl)(actorUrl) === 'foreignEntity') {
+        if (!(0, activitypub_core_utilities_1.isLocal)(actorUrl)) {
             return [];
         }
         try {

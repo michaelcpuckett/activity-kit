@@ -6,7 +6,7 @@ import {
   assertIsApEntity,
   assertIsApType,
 } from 'activitypub-core-types';
-import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
+import { isLocal, getId } from 'activitypub-core-utilities';
 
 export async function handleAnnounce(
   this: OutboxPostEndpoint,
@@ -32,9 +32,7 @@ export async function handleAnnounce(
 
   assertExists(objectId);
 
-  const isLocal = getCollectionNameByUrl(objectId) !== 'foreignEntity';
-
-  if (isLocal) {
+  if (isLocal(objectId)) {
     const object = await this.lib.queryById(objectId);
 
     assertIsApEntity(object);

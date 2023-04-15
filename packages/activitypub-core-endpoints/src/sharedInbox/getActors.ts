@@ -1,4 +1,4 @@
-import { getCollectionNameByUrl, isTypeOf } from 'activitypub-core-utilities';
+import { isLocal } from 'activitypub-core-utilities';
 import { SharedInboxPostEndpoint } from '.';
 import { InboxPostEndpoint } from '../inbox';
 import { assertIsApActivity, assertIsApActor } from 'activitypub-core-types';
@@ -16,7 +16,7 @@ export async function getActors(
   return (
     await Promise.all(
       actorUrls.map(async (actorUrl) => {
-        if (getCollectionNameByUrl(actorUrl) === 'foreignEntity') {
+        if (!isLocal(actorUrl)) {
           return [];
         }
 

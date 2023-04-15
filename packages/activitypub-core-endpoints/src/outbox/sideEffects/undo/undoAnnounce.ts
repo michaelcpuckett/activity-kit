@@ -1,4 +1,4 @@
-import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
+import { isLocal, getId } from 'activitypub-core-utilities';
 import {
   AP,
   assertExists,
@@ -32,9 +32,7 @@ export async function handleUndoAnnounce(
 
   assertExists(objectId);
 
-  const isLocal = getCollectionNameByUrl(objectId) !== 'foreignEntity';
-
-  if (isLocal) {
+  if (isLocal(objectId)) {
     const object = await this.lib.queryById(objectId);
 
     assertIsApEntity(object);

@@ -1,5 +1,5 @@
 import { CoreLibrary } from '.';
-import { AP } from 'activitypub-core-types';
+import { AP, assertIsApActor } from 'activitypub-core-types';
 import {
   ACCEPT_HEADER,
   ACTIVITYSTREAMS_CONTENT_TYPE,
@@ -11,23 +11,12 @@ export async function fetchEntityById(
   this: CoreLibrary,
   id: URL,
 ): Promise<AP.Entity | null> {
-  // Check cache
-  const foundEntity = (await this.findOne('foreignEntity', {
-    _id: id.toString(),
-  })) as unknown as { [key: string]: string };
-
-  if (foundEntity) {
-    return compressEntity(convertStringsToUrls(foundEntity));
-  }
-
   // Send HTTP Signature for Mastodon in secure mode.
-  const actor = (await this.findOne('entity', {
+  const actor = await this.findOne('entity', {
     preferredUsername: 'bot',
-  })) as AP.Actor;
+  });
 
-  if (!actor) {
-    throw new Error('Bot actor not set up.');
-  }
+  assertIsApActor(actor);
 
   const { dateHeader, signatureHeader } = await this.getHttpSignature(
     id,
@@ -48,7 +37,7 @@ export async function fetchEntityById(
       signature: signatureHeader,
     },
   })
-    .then(async (response) => {
+    .then(async (response: { status: number; json: () => Promise<JSON> }) => {
       clearTimeout(timeout);
       if (response.status === 200) {
         return await response.json();

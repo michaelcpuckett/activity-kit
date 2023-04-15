@@ -5,7 +5,7 @@ import {
   assertIsApExtendedObject,
   assertIsApType,
 } from 'activitypub-core-types';
-import { getCollectionNameByUrl, getId } from 'activitypub-core-utilities';
+import { isLocal, getId } from 'activitypub-core-utilities';
 import { OutboxPostEndpoint } from '../..';
 
 export async function handleUndoLike(
@@ -38,9 +38,7 @@ export async function handleUndoLike(
 
     assertExists(likesId);
 
-    const isLocal = getCollectionNameByUrl(objectId) !== 'foreignEntity';
-
-    if (!isLocal) {
+    if (!isLocal(objectId)) {
       throw new Error('Cannot add to remote collection.');
     }
 

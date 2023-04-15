@@ -108,28 +108,27 @@ function GroupsPlugin() {
             const sharedId = (0, activitypub_core_utilities_1.getId)(shared);
             (0, activitypub_core_types_1.assertExists)(sharedId);
             const announceActivity = {
-                id: new URL(announceActivityId),
-                url: new URL(announceActivityId),
+                id: announceActivityId,
+                url: announceActivityId,
                 type: activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE,
                 actor: recipientId,
                 to: [new URL(activitypub_core_utilities_1.PUBLIC_ACTOR), followersId],
                 object: objectToBeSharedId,
                 published: publishedDate,
             };
-            await this.lib.insertOrderedItem(sharedId, new URL(announceActivityId));
-            const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectToBeSharedId) !== 'foreignEntity';
-            if (isLocal) {
+            await this.lib.insertOrderedItem(sharedId, announceActivityId);
+            if ((0, activitypub_core_utilities_1.isLocal)(objectToBeSharedId)) {
                 const object = await this.lib.findEntityById(objectId);
                 (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
                 const sharesId = (0, activitypub_core_utilities_1.getId)(object.shares);
                 (0, activitypub_core_types_1.assertExists)(sharesId);
-                await this.lib.insertOrderedItem(sharesId, new URL(announceActivityId));
+                await this.lib.insertOrderedItem(sharesId, announceActivityId);
             }
             const outboxId = (0, activitypub_core_utilities_1.getId)(recipient.outbox);
             (0, activitypub_core_types_1.assertExists)(outboxId);
             await Promise.all([
                 this.lib.saveEntity(announceActivity),
-                this.lib.insertOrderedItem(outboxId, new URL(announceActivityId)),
+                this.lib.insertOrderedItem(outboxId, announceActivityId),
             ]);
             await this.lib.broadcast(announceActivity, recipient);
         },
