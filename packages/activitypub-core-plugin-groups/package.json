@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-plugin-groups",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "> TODO: description",
   "author": "Michael Puckett <michael@puckett.contact>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -30,7 +30,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "activitypub-core-endpoints": "^0.3.2",
+    "activitypub-core-endpoints": "^0.3.3",
     "activitypub-core-types": "^0.3.2",
     "activitypub-core-utilities": "^0.3.2",
     "cheerio": "^1.0.0-rc.12",
