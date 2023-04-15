@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import * as AP from '../activitypub';
 export declare const DbOptions: {
     readonly CASE_INSENSITIVE: "CASE_INSENSITIVE";

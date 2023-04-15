@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { AP } from '..';
 import { AuthAdapter } from './Auth';
 import { CryptoAdapter } from './Crypto';

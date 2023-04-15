@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { BaseEntity, TypeOrArrayWithType } from './Entity';
 import { LinkTypes } from '../util/const';
 import { StringReferenceMap } from '../util/values';

@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import { Plugin, Routes, Library } from 'activitypub-core-types';
 import { handleFoundEntity } from './handleFoundEntity';
 import { respond } from './respond';

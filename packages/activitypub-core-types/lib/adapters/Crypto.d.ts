@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { AP } from '../';
 export type CryptoAdapter = {
     params?: {

@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { ExtendedObjectTypes } from '../util/const';
 import { BaseCoreObject } from '../Core/CoreObject';
 import { EntityReference, CoreObjectReference } from '../Core';

@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import type { File } from 'formidable';
 export type StorageAdapter = {
     params?: {

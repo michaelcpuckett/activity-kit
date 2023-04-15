@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { BaseCoreObject } from '../Core/CoreObject';
 import { ActorTypes } from '../util/const';
 import { CollectionReference, EitherCollectionReference, OrderedCollectionReference } from './Collection';
