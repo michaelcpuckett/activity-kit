@@ -1,4 +1,4 @@
-import { isLocal } from 'activitypub-core-utilities';
+import { isLocal, isType } from 'activitypub-core-utilities';
 import { CoreLibrary } from '.';
 import { AP } from 'activitypub-core-types';
 
@@ -10,5 +10,14 @@ export async function queryById(
     return await this.findEntityById(id);
   }
 
-  return await this.fetchEntityById(id);
+  const fetchedEntity = await this.fetchEntityById(id);
+
+  if (
+    !fetchedEntity ||
+    isType(fetchedEntity, AP.ExtendedObjectTypes.TOMBSTONE)
+  ) {
+    return this.findEntityById(id);
+  }
+
+  return null;
 }
