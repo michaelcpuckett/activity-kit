@@ -2,6 +2,7 @@
 import * as AP from '../activitypub';
 export declare const DbOptions: {
     readonly CASE_INSENSITIVE: "CASE_INSENSITIVE";
+    readonly CASE_SENSITIVE: "CASE_SENSITIVE";
 };
 export type DbAdapter = {
     db?: unknown;
