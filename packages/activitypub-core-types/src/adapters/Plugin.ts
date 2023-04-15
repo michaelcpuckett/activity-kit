@@ -1,52 +1,60 @@
 import * as AP from '../activitypub';
-import { Adapters } from './';
+import { Library, Routes } from './';
 
 export type Plugin = {
   handleCreateUserActor?: (this: {
-    adapters: Adapters;
+    lib: Library;
+    routes: Routes;
     activity: AP.Activity & { object: AP.Actor };
   }) => Promise<AP.Activity & { object: AP.Actor }>;
   handleOutboxSideEffect?: (this: {
     activity: AP.Activity;
     actor: AP.Actor;
-    adapters: Adapters;
+    lib: Library;
+    routes: Routes;
   }) => Promise<void>;
   handleInboxSideEffect?: (
     this: {
-      adapters: Adapters;
+      lib: Library;
+      routes: Routes;
     },
     activity: AP.Activity,
     recipient: AP.Actor,
   ) => Promise<void>;
   generateActorId?: (
     this: {
-      adapters: Adapters;
+      lib: Library;
+      routes: Routes;
     },
     preferredUsername: string,
   ) => string;
   generateActorBaseId?: (
     this: {
-      adapters: Adapters;
+      lib: Library;
+      routes: Routes;
     },
     preferredUsername: string,
   ) => string;
   generateActorOutboxId?: (
     this: {
-      adapters: Adapters;
+      lib: Library;
+      routes: Routes;
     },
     preferredUsername: string,
   ) => string;
   generateObjectId?: (object: AP.ExtendedObject) => string;
   getHomePageProps?: (
     this: {
-      adapters: Adapters;
+      lib: Library;
+      routes: Routes;
     },
     actor: AP.Actor,
     rawUrl: string,
   ) => Promise<object>;
   getEntityPageProps?: (
     this: {
-      adapters: Adapters;
+      lib: Library;
+      routes: Routes;
     },
     entity: AP.Entity,
   ) => Promise<object>;

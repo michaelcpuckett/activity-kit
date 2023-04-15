@@ -7,7 +7,7 @@ async function handleAccept(activity, recipient) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.ACCEPT);
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
     (0, activitypub_core_types_1.assertExists)(objectId);
-    const object = await this.layers.data.findEntityById(objectId);
+    const object = await this.lib.findEntityById(objectId);
     (0, activitypub_core_types_1.assertIsApEntity)(object);
     if (!(0, activitypub_core_utilities_1.isType)(object, activitypub_core_types_1.AP.ActivityTypes.FOLLOW)) {
         return;
@@ -19,15 +19,15 @@ async function handleAccept(activity, recipient) {
     if (followerId.toString() !== (0, activitypub_core_utilities_1.getId)(recipient)?.toString()) {
         return;
     }
-    const follower = await this.layers.data.queryById(followerId);
+    const follower = await this.lib.queryById(followerId);
     (0, activitypub_core_types_1.assertIsApActor)(follower);
     const followeeId = (0, activitypub_core_utilities_1.getId)(followActivity.object);
     (0, activitypub_core_types_1.assertExists)(followeeId);
-    const followee = await this.layers.data.queryById(followeeId);
+    const followee = await this.lib.queryById(followeeId);
     (0, activitypub_core_types_1.assertIsApActor)(followee);
     const followingId = (0, activitypub_core_utilities_1.getId)(follower.following);
     (0, activitypub_core_types_1.assertExists)(followingId);
-    const following = await this.layers.data.queryById(followingId);
+    const following = await this.lib.queryById(followingId);
     (0, activitypub_core_types_1.assertIsApType)(following, activitypub_core_types_1.AP.CollectionTypes.COLLECTION);
     (0, activitypub_core_types_1.assertIsArray)(following.items);
     if (following.items
@@ -36,7 +36,7 @@ async function handleAccept(activity, recipient) {
         console.log('Already following.');
         return;
     }
-    await this.layers.data.insertItem(followingId, followeeId);
+    await this.lib.insertItem(followingId, followeeId);
 }
 exports.handleAccept = handleAccept;
 //# sourceMappingURL=accept.js.map

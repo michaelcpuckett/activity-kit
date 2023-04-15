@@ -1,5 +1,8 @@
+import { InboxPostEndpoint } from 'activitypub-core-endpoints';
 import {
   AP,
+  Plugin,
+  Library,
   Routes,
   assertExists,
   assertIsApCollection,
@@ -7,7 +10,6 @@ import {
   assertIsApType,
   assertIsArray,
 } from 'activitypub-core-types';
-import type { Adapters, Plugin } from 'activitypub-core-types';
 import {
   getId,
   getCollectionNameByUrl,
@@ -24,7 +26,7 @@ export function GroupsPlugin() {
   const groupsPlugin: Plugin = {
     async handleInboxSideEffect(
       this: {
-        adapters: Adapters;
+        lib: Library;
         routes: Routes;
       },
       activity: AP.Activity,
@@ -44,7 +46,7 @@ export function GroupsPlugin() {
 
       assertExists(objectId);
 
-      const object = await this.adapters.db.queryById(objectId);
+      const object = await this.lib.queryById(objectId);
 
       assertIsApExtendedObject(object);
 
@@ -68,10 +70,7 @@ export function GroupsPlugin() {
       })();
 
       const hasAlreadyBeenShared = await (async (): Promise<boolean> => {
-        const shared = await this.adapters.db.getStreamByName(
-          recipient,
-          'Shared',
-        );
+        const shared = await this.lib.getStreamByName(recipient, 'Shared');
 
         assertIsApType<AP.OrderedCollection>(
           shared,
@@ -88,9 +87,7 @@ export function GroupsPlugin() {
 
             assertExists(sharedItemId);
 
-            const foundSharedItem = await this.adapters.db.findEntityById(
-              sharedItemId,
-            );
+            const foundSharedItem = await this.lib.findEntityById(sharedItemId);
 
             assertIsApType<AP.Announce>(
               foundSharedItem,
@@ -126,9 +123,7 @@ export function GroupsPlugin() {
 
       assertExists(followersId);
 
-      const followersCollection = await this.adapters.db.findEntityById(
-        followersId,
-      );
+      const followersCollection = await this.lib.findEntityById(followersId);
 
       assertIsApCollection(followersCollection);
       assertIsArray(followersCollection.items);
@@ -154,14 +149,11 @@ export function GroupsPlugin() {
         `${LOCAL_DOMAIN}${compile(this.routes.announce, {
           validate: false,
         })({
-          guid: await this.adapters.crypto.randomBytes(16),
+          guid: await this.lib.getGuid(),
         })}`,
       );
 
-      const shared = await this.adapters.db.getStreamByName(
-        recipient,
-        'Shared',
-      );
+      const shared = await this.lib.getStreamByName(recipient, 'Shared');
 
       assertIsApCollection(shared);
 
@@ -179,16 +171,13 @@ export function GroupsPlugin() {
         published: publishedDate,
       };
 
-      await this.adapters.db.insertOrderedItem(
-        sharedId,
-        new URL(announceActivityId),
-      );
+      await this.lib.insertOrderedItem(sharedId, new URL(announceActivityId));
 
       const isLocal =
         getCollectionNameByUrl(objectToBeSharedId) !== 'foreignEntity';
 
       if (isLocal) {
-        const object = await this.adapters.db.findEntityById(objectId);
+        const object = await this.lib.findEntityById(objectId);
 
         assertIsApExtendedObject(object);
 
@@ -196,10 +185,7 @@ export function GroupsPlugin() {
 
         assertExists(sharesId);
 
-        await this.adapters.db.insertOrderedItem(
-          sharesId,
-          new URL(announceActivityId),
-        );
+        await this.lib.insertOrderedItem(sharesId, new URL(announceActivityId));
       }
 
       const outboxId = getId(recipient.outbox);
@@ -207,14 +193,11 @@ export function GroupsPlugin() {
       assertExists(outboxId);
 
       await Promise.all([
-        this.adapters.db.saveEntity(announceActivity),
-        this.adapters.db.insertOrderedItem(
-          outboxId,
-          new URL(announceActivityId),
-        ),
+        this.lib.saveEntity(announceActivity),
+        this.lib.insertOrderedItem(outboxId, new URL(announceActivityId)),
       ]);
 
-      await this.adapters.delivery.broadcast(announceActivity, recipient);
+      await this.lib.broadcast(announceActivity, recipient);
     },
   };
 

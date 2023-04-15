@@ -94,10 +94,10 @@ export async function saveActivity(this: OutboxPostEndpoint) {
   assertExists(outboxId);
 
   await Promise.all([
-    this.layers.data.saveEntity(this.activity),
-    this.layers.data.saveEntity(replies),
-    this.layers.data.saveEntity(likes),
-    this.layers.data.saveEntity(shares),
-    this.layers.data.insertOrderedItem(outboxId, activityId),
+    this.lib.saveEntity(this.activity),
+    this.lib.saveEntity(replies),
+    this.lib.saveEntity(likes),
+    this.lib.saveEntity(shares),
+    this.lib.insertOrderedItem(outboxId, activityId),
   ]);
 }

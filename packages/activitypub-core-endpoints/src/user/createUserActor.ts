@@ -22,7 +22,7 @@ export async function createUserActor(
 ) {
   assertIsApActor(user);
 
-  const { publicKey, privateKey } = await this.layers.auth.generateKeyPair();
+  const { publicKey, privateKey } = await this.lib.generateKeyPair();
 
   const publishedDate = new Date();
 
@@ -254,14 +254,14 @@ export async function createUserActor(
 
   assertIsApActor(userActor);
 
-  const botActor = await this.layers.data.findOne('entity', {
+  const botActor = await this.lib.findOne('entity', {
     preferredUsername: SERVER_ACTOR_USERNAME,
   });
 
   assertIsApActor(botActor);
 
   const createActorActivityId = getRouteUrl(this.routes.create, {
-    guid: await this.layers.data.getGuid(),
+    guid: await this.lib.getGuid(),
   });
 
   const createActorActivity = {
@@ -282,7 +282,7 @@ export async function createUserActor(
       if ('handleCreateUserActor' in plugin) {
         const pluginActivity = await plugin.handleCreateUserActor.call({
           activity: createActorActivity,
-          layers: this.layers,
+          lib: this.lib,
         });
 
         assertIsApActor(pluginActivity.object);
@@ -307,7 +307,7 @@ export async function createUserActor(
             userActor.streams.push(streamId);
 
             declaredStreams.push(
-              this.layers.data.saveEntity({
+              this.lib.saveEntity({
                 '@context': ACTIVITYSTREAMS_CONTEXT,
                 type: AP.CollectionTypes.ORDERED_COLLECTION,
                 totalItems: 0,
@@ -326,35 +326,35 @@ export async function createUserActor(
   }
 
   await Promise.all([
-    this.layers.data.saveEntity(createActorActivity),
-    this.layers.data.saveEntity(userActor),
-    this.layers.data.saveEntity(userInbox),
-    this.layers.data.saveEntity(userOutbox),
-    this.layers.data.saveEntity(userLiked),
-    this.layers.data.saveEntity(userFollowers),
-    this.layers.data.saveEntity(userFollowing),
-    this.layers.data.saveEntity(userShared),
-    this.layers.data.saveEntity(userRequests),
-    this.layers.data.saveEntity(userBlocks),
-    this.layers.data.saveEntity(userLists),
-    this.layers.data.saveEntity(userBookmarks),
-    this.layers.data.saveString('account', user.uid, user.email),
-    this.layers.data.saveString('privateKey', user.uid, privateKey),
-    this.layers.data.saveString('username', user.uid, user.preferredUsername),
+    this.lib.saveEntity(createActorActivity),
+    this.lib.saveEntity(userActor),
+    this.lib.saveEntity(userInbox),
+    this.lib.saveEntity(userOutbox),
+    this.lib.saveEntity(userLiked),
+    this.lib.saveEntity(userFollowers),
+    this.lib.saveEntity(userFollowing),
+    this.lib.saveEntity(userShared),
+    this.lib.saveEntity(userRequests),
+    this.lib.saveEntity(userBlocks),
+    this.lib.saveEntity(userLists),
+    this.lib.saveEntity(userBookmarks),
+    this.lib.saveString('account', user.uid, user.email),
+    this.lib.saveString('privateKey', user.uid, privateKey),
+    this.lib.saveString('username', user.uid, user.preferredUsername),
   ]);
 
   await Promise.all(declaredStreams);
 
   if (createActorActivity.id && userInbox.id) {
     await Promise.all([
-      this.layers.data.insertOrderedItem(
+      this.lib.insertOrderedItem(
         new URL(`${botActor.id}/outbox`),
         createActorActivity.id,
       ),
-      this.layers.data.insertOrderedItem(userInbox.id, createActorActivity.id),
+      this.lib.insertOrderedItem(userInbox.id, createActorActivity.id),
     ]);
   }
 
   // Broadcast to Fediverse.
-  this.layers.data.broadcast(createActorActivity, botActor);
+  this.lib.broadcast(createActorActivity, botActor);
 }

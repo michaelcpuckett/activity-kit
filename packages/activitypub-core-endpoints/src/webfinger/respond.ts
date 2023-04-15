@@ -40,7 +40,7 @@ export const respond = async function (this: WebfingerGetEndpoint) {
       throw new Error('Not found.');
     }
 
-    const actor = await this.layers.data.findOne(
+    const actor = await this.lib.findOne(
       'entity',
       {
         preferredUsername: username,

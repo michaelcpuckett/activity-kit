@@ -1,9 +1,9 @@
 import { DbAdapter } from './Db';
 export type AuthAdapter = {
-    adapters: {
+    adapters?: {
         db: DbAdapter;
     };
-    params: {
+    params?: {
         [key: string]: unknown;
     };
     getTokenByUserId: (userId: string) => Promise<string>;

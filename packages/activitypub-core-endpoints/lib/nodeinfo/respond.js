@@ -32,10 +32,10 @@ async function respond() {
     const url = this.req.url ?? '';
     const version = parseFloat(url.split('nodeinfo/')[1]);
     const getTotalUsers = async () => {
-        const persons = await this.layers.data.findAll('entity', {
+        const persons = await this.lib.findAll('entity', {
             type: activitypub_core_types_1.AP.ActorTypes.PERSON,
         });
-        const groups = await this.layers.data.findAll('entity', {
+        const groups = await this.lib.findAll('entity', {
             type: activitypub_core_types_1.AP.ActorTypes.GROUP,
         });
         return persons.length + groups.length;

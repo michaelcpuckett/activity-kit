@@ -8,15 +8,15 @@ async function isBlocked(actor) {
         (0, activitypub_core_types_1.assertIsApActivity)(this.activity);
         const activityActorId = (0, activitypub_core_utilities_1.getId)(this.activity.actor);
         (0, activitypub_core_types_1.assertExists)(activityActorId);
-        const activityActor = await this.layers.data.queryById(activityActorId);
+        const activityActor = await this.lib.queryById(activityActorId);
         (0, activitypub_core_types_1.assertIsApActor)(activityActor);
-        const blocks = await this.layers.data.getStreamByName(actor, 'Blocks');
+        const blocks = await this.lib.getStreamByName(actor, 'Blocks');
         (0, activitypub_core_types_1.assertIsApCollection)(blocks);
         (0, activitypub_core_types_1.assertIsArray)(blocks.items);
         const blockedActorIds = await Promise.all(blocks.items
             .map(async (item) => {
             const id = (0, activitypub_core_utilities_1.getId)(item);
-            const foundActivity = await this.layers.data.findEntityById(id);
+            const foundActivity = await this.lib.findEntityById(id);
             if (!('object' in foundActivity)) {
                 return null;
             }

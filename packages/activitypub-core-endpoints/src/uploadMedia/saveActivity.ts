@@ -113,17 +113,14 @@ export async function saveActivity(this: UploadMediaPostEndpoint) {
   this.activity.published = publishedDate;
 
   await Promise.all([
-    this.layers.data.saveEntity(objectReplies),
-    this.layers.data.saveEntity(objectLikes),
-    this.layers.data.saveEntity(objectShares),
-    this.layers.data.saveEntity(this.activity.object as AP.Entity),
-    this.layers.data.saveEntity(activityReplies),
-    this.layers.data.saveEntity(activityLikes),
-    this.layers.data.saveEntity(activityShares),
-    this.layers.data.saveEntity(this.activity as AP.Entity),
-    this.layers.data.insertOrderedItem(
-      getId(this.actor?.outbox),
-      this.activity.id,
-    ),
+    this.lib.saveEntity(objectReplies),
+    this.lib.saveEntity(objectLikes),
+    this.lib.saveEntity(objectShares),
+    this.lib.saveEntity(this.activity.object as AP.Entity),
+    this.lib.saveEntity(activityReplies),
+    this.lib.saveEntity(activityLikes),
+    this.lib.saveEntity(activityShares),
+    this.lib.saveEntity(this.activity as AP.Entity),
+    this.lib.insertOrderedItem(getId(this.actor?.outbox), this.activity.id),
   ]);
 }

@@ -10,7 +10,7 @@ const cookie_1 = __importDefault(require("cookie"));
 const ITEMS_PER_COLLECTION_PAGE = 50;
 async function respond(render) {
     const cookies = cookie_1.default.parse(this.req.headers.cookie ?? '');
-    const authorizedActor = await this.layers.data.getActorByUserId(await this.layers.auth.getUserIdByToken(cookies.__session ?? ''));
+    const authorizedActor = await this.lib.getActorByUserId(await this.lib.getUserIdByToken(cookies.__session ?? ''));
     const urlParts = this.url.pathname.split('/');
     const pageParam = urlParts.pop();
     const hasPage = this.req.params['page'] === pageParam;
@@ -18,7 +18,7 @@ async function respond(render) {
         urlParts.pop();
     }
     const pathname = hasPage ? urlParts.join('/') : this.url.pathname;
-    const entity = await this.layers.data.findEntityById(new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${pathname}`));
+    const entity = await this.lib.findEntityById(new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${pathname}`));
     try {
         (0, activitypub_core_types_1.assertIsApEntity)(entity);
     }
@@ -50,7 +50,7 @@ async function respond(render) {
         };
         return await this.handleFoundEntity(render, collectionEntity, authorizedActor);
     }
-    const expandedCollection = await this.layers.data.expandCollection(entity);
+    const expandedCollection = await this.lib.expandCollection(entity);
     const expandedItems = (() => {
         if ((0, activitypub_core_utilities_1.isType)(expandedCollection, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
             (0, activitypub_core_types_1.assertIsApType)(expandedCollection, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
@@ -69,7 +69,7 @@ async function respond(render) {
             if ((0, activitypub_core_utilities_1.isTypeOf)(item, activitypub_core_types_1.AP.ActivityTypes) &&
                 'object' in item &&
                 item.object instanceof URL) {
-                const object = await this.layers.data.findEntityById(item.object);
+                const object = await this.lib.findEntityById(item.object);
                 if (object) {
                     item.object = object;
                 }

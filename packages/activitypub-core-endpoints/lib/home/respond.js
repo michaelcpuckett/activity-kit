@@ -10,7 +10,7 @@ const cookie_1 = __importDefault(require("cookie"));
 const activitypub_core_utilities_2 = require("activitypub-core-utilities");
 const respond = async function (render) {
     const cookies = cookie_1.default.parse(this.req.headers.cookie ?? '');
-    const actor = await this.layers.data.getActorByUserId(await this.layers.auth.getUserIdByToken(cookies.__session ?? ''));
+    const actor = await this.lib.getActorByUserId(await this.lib.getUserIdByToken(cookies.__session ?? ''));
     if (!actor) {
         this.res.statusCode = 302;
         this.res.setHeader('Location', '/login');
@@ -18,8 +18,8 @@ const respond = async function (render) {
         return;
     }
     (0, activitypub_core_types_1.assertIsApActor)(actor);
-    const actorInbox = await this.layers.data.findEntityById((0, activitypub_core_utilities_1.getId)(actor.inbox));
-    const actorOutbox = await this.layers.data.findEntityById((0, activitypub_core_utilities_1.getId)(actor.outbox));
+    const actorInbox = await this.lib.findEntityById((0, activitypub_core_utilities_1.getId)(actor.inbox));
+    const actorOutbox = await this.lib.findEntityById((0, activitypub_core_utilities_1.getId)(actor.outbox));
     (0, activitypub_core_types_1.assertIsApType)(actorInbox, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
     (0, activitypub_core_types_1.assertIsApType)(actorOutbox, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
     actor.inbox = actorInbox;

@@ -4,31 +4,24 @@ import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   LOCAL_DOMAIN,
 } from 'activitypub-core-utilities';
-import { AuthLayer } from 'activitypub-core-auth-layer';
-import { DataLayer } from 'activitypub-core-data-layer';
-import { StorageLayer } from 'activitypub-core-storage-layer';
+import { Library, Plugin } from 'activitypub-core-types';
 
 export class ProxyGetEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
-  layers: {
-    auth: AuthLayer;
-    data: DataLayer;
-    storage: StorageLayer;
-  };
+  lib: Library;
+  plugins?: Plugin[];
 
   constructor(
     req: IncomingMessage,
     res: ServerResponse,
-    layers: {
-      auth: AuthLayer;
-      data: DataLayer;
-      storage: StorageLayer;
-    },
+    lib: Library,
+    plugins?: Plugin[],
   ) {
     this.req = req;
     this.res = res;
-    this.layers = layers;
+    this.lib = lib;
+    this.plugins = plugins;
   }
 
   public async respond() {
@@ -43,14 +36,14 @@ export class ProxyGetEndpoint {
 
         const fetchedResult =
           acceptHeader !== ACTIVITYSTREAMS_CONTENT_TYPE
-            ? await this.layers.data
+            ? await this.lib
                 .fetch(proxiedUrl.toString(), {
                   headers: {
                     Accept: acceptHeader,
                   },
                 })
                 .then((response) => response.json())
-            : await this.layers.data.queryById(proxiedUrl);
+            : await this.lib.queryById(proxiedUrl);
 
         if (fetchedResult) {
           this.res.statusCode = 200;

@@ -1,23 +1,15 @@
-import { Plugin } from 'activitypub-core-types';
+import { Plugin, Routes, Library } from 'activitypub-core-types';
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { handleFoundEntity } from './handleFoundEntity';
 import { respond } from './respond';
-import type { Routes } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { DataLayer } from 'activitypub-core-data-layer';
-import { StorageLayer } from 'activitypub-core-storage-layer';
-import { AuthLayer } from 'activitypub-core-auth-layer';
 
 export class EntityGetEndpoint {
   req: IncomingMessage & {
     params: { [key: string]: string };
   };
   res: ServerResponse;
-  layers: {
-    auth: AuthLayer;
-    data: DataLayer;
-    storage: StorageLayer;
-  };
+  lib: Library;
   plugins?: Plugin[];
   routes?: Routes;
   url: URL;
@@ -27,17 +19,13 @@ export class EntityGetEndpoint {
       params: { [key: string]: string };
     },
     res: ServerResponse,
-    layers: {
-      auth: AuthLayer;
-      data: DataLayer;
-      storage: StorageLayer;
-    },
+    lib: Library,
     plugins?: Plugin[],
     url?: URL,
   ) {
     this.req = req;
     this.res = res;
-    this.layers = layers;
+    this.lib = lib;
     this.plugins = plugins;
     this.url = url ?? new URL(req.url, LOCAL_DOMAIN);
   }

@@ -21,19 +21,19 @@ export async function handleCreate(
 
   assertExists(objectId);
 
-  const existingObject = await this.layers.data.findEntityById(objectId);
+  const existingObject = await this.lib.findEntityById(objectId);
 
   if (existingObject) {
     console.log('We have already received this object.');
     return;
   }
 
-  const object = await this.layers.data.queryById(objectId);
+  const object = await this.lib.queryById(objectId);
 
   assertIsApEntity(object);
 
   // Cache the object for comparison later.
-  await this.layers.data.saveEntity(object);
+  await this.lib.saveEntity(object);
 
   try {
     assertIsApExtendedObject(object);
@@ -47,7 +47,7 @@ export async function handleCreate(
 
     assertExists(inReplyToId);
 
-    const inReplyTo = await this.layers.data.findEntityById(inReplyToId);
+    const inReplyTo = await this.lib.findEntityById(inReplyToId);
 
     assertIsApExtendedObject(inReplyTo);
 
@@ -55,7 +55,7 @@ export async function handleCreate(
 
     assertExists(repliesCollectionId);
 
-    const repliesCollection = await this.layers.data.findEntityById(
+    const repliesCollection = await this.lib.findEntityById(
       repliesCollectionId,
     );
 
@@ -72,7 +72,7 @@ export async function handleCreate(
       return;
     }
 
-    await this.layers.data.insertOrderedItem(repliesCollectionId, objectId);
+    await this.lib.insertOrderedItem(repliesCollectionId, objectId);
   } catch (error) {
     console.log(error);
   }

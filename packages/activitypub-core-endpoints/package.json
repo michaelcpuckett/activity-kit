@@ -18,9 +18,7 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "activitypub-core-auth-layer": "^0.2.132",
-    "activitypub-core-data-layer": "^0.2.132",
-    "activitypub-core-storage-layer": "^0.2.132",
+    "activitypub-core-library": "^0.2.132",
     "activitypub-core-types": "^0.2.123",
     "activitypub-core-utilities": "^0.2.123",
     "cheerio": "^1.0.0-rc.12",
@@ -31,6 +29,7 @@
   "devDependencies": {
     "@types/cookie": "^0.5.1",
     "@types/formidable": "^2.0.5",
+    "@types/path-to-regexp": "^1.7.0",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0",

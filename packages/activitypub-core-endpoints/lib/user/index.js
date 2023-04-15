@@ -8,13 +8,13 @@ class UserPostEndpoint {
     routes;
     req;
     res;
-    layers;
+    lib;
     plugins;
-    constructor(routes, req, res, layers, plugins) {
+    constructor(routes, req, res, lib, plugins) {
         this.routes = routes;
         this.req = req;
         this.res = res;
-        this.layers = layers;
+        this.lib = lib;
         this.plugins = plugins;
     }
     createServerActor = createServerActor_1.createServerActor;
@@ -49,7 +49,7 @@ class UserPostEndpoint {
             this.res.end();
             return;
         }
-        const isUsernameTaken = !!(await this.layers.data.findOne('entity', {
+        const isUsernameTaken = !!(await this.lib.findOne('entity', {
             preferredUsername,
         }));
         if (isUsernameTaken || activitypub_core_utilities_1.RESERVED_USERNAMES.includes(preferredUsername)) {
@@ -62,12 +62,12 @@ class UserPostEndpoint {
             return;
         }
         try {
-            const { uid, token } = await this.layers.auth.createUser({
+            const { uid, token } = await this.lib.createUser({
                 email,
                 password,
                 preferredUsername,
             });
-            const isBotCreated = !!(await this.layers.data.findOne('entity', {
+            const isBotCreated = !!(await this.lib.findOne('entity', {
                 preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
             }));
             if (!isBotCreated) {

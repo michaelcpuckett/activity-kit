@@ -5,12 +5,12 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 class HostMetaGetEndpoint {
     req;
     res;
-    layers;
+    lib;
     plugins;
-    constructor(req, res, layers, plugins) {
+    constructor(req, res, lib, plugins) {
         this.req = req;
         this.res = res;
-        this.layers = layers;
+        this.lib = lib;
         this.plugins = plugins;
     }
     async respond() {

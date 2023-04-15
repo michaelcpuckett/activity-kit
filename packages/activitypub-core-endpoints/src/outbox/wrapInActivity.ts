@@ -21,7 +21,7 @@ export async function wrapInActivity(this: OutboxPostEndpoint) {
       this.routes[type.toLowerCase()],
       compileOptions,
     )({
-      guid: await this.layers.data.getGuid(),
+      guid: await this.lib.getGuid(),
     })}`,
   );
 

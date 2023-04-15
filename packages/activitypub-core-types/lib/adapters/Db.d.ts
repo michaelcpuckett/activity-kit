@@ -3,7 +3,7 @@ export declare const DbOptions: {
     readonly CASE_INSENSITIVE: "CASE_INSENSITIVE";
 };
 export type DbAdapter = {
-    db: unknown;
+    db?: unknown;
     initializeDb?: (this: DbAdapter) => Promise<void>;
     findAll: (this: DbAdapter, collection: string, matchingObject: {
         [key: string]: unknown;

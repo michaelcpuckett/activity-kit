@@ -94,15 +94,15 @@ async function saveActivity() {
     }
     this.activity.published = publishedDate;
     await Promise.all([
-        this.layers.data.saveEntity(objectReplies),
-        this.layers.data.saveEntity(objectLikes),
-        this.layers.data.saveEntity(objectShares),
-        this.layers.data.saveEntity(this.activity.object),
-        this.layers.data.saveEntity(activityReplies),
-        this.layers.data.saveEntity(activityLikes),
-        this.layers.data.saveEntity(activityShares),
-        this.layers.data.saveEntity(this.activity),
-        this.layers.data.insertOrderedItem((0, activitypub_core_utilities_1.getId)(this.actor?.outbox), this.activity.id),
+        this.lib.saveEntity(objectReplies),
+        this.lib.saveEntity(objectLikes),
+        this.lib.saveEntity(objectShares),
+        this.lib.saveEntity(this.activity.object),
+        this.lib.saveEntity(activityReplies),
+        this.lib.saveEntity(activityLikes),
+        this.lib.saveEntity(activityShares),
+        this.lib.saveEntity(this.activity),
+        this.lib.insertOrderedItem((0, activitypub_core_utilities_1.getId)(this.actor?.outbox), this.activity.id),
     ]);
 }
 exports.saveActivity = saveActivity;

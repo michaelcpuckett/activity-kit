@@ -14,7 +14,7 @@ export async function handleUndoAccept(
   assertIsApType<AP.Accept>(activity, AP.ActivityTypes.ACCEPT);
 
   const actorId = getId(activity.actor);
-  const actor = await this.layers.data.findEntityById(actorId);
+  const actor = await this.lib.findEntityById(actorId);
 
   assertIsApActor(actor);
 
@@ -23,7 +23,7 @@ export async function handleUndoAccept(
   assertExists(followersId);
 
   const followId = getId(activity.object);
-  const follow = await this.layers.data.queryById(followId);
+  const follow = await this.lib.queryById(followId);
 
   assertIsApType<AP.Follow>(follow, AP.ActivityTypes.FOLLOW);
 
@@ -31,5 +31,5 @@ export async function handleUndoAccept(
 
   assertExists(followerId);
 
-  await this.layers.data.removeItem(followersId, followerId);
+  await this.lib.removeItem(followersId, followerId);
 }

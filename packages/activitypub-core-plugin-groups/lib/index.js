@@ -40,7 +40,7 @@ function GroupsPlugin() {
             }
             const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
             (0, activitypub_core_types_1.assertExists)(objectId);
-            const object = await this.adapters.db.queryById(objectId);
+            const object = await this.lib.queryById(objectId);
             (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
             const objectToBeSharedId = await (async () => {
                 if (object.inReplyTo) {
@@ -58,7 +58,7 @@ function GroupsPlugin() {
                 return objectId;
             })();
             const hasAlreadyBeenShared = await (async () => {
-                const shared = await this.adapters.db.getStreamByName(recipient, 'Shared');
+                const shared = await this.lib.getStreamByName(recipient, 'Shared');
                 (0, activitypub_core_types_1.assertIsApType)(shared, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION);
                 const sharedItems = shared.orderedItems;
                 (0, activitypub_core_types_1.assertIsArray)(sharedItems);
@@ -66,7 +66,7 @@ function GroupsPlugin() {
                     try {
                         const sharedItemId = (0, activitypub_core_utilities_1.getId)(sharedItem);
                         (0, activitypub_core_types_1.assertExists)(sharedItemId);
-                        const foundSharedItem = await this.adapters.db.findEntityById(sharedItemId);
+                        const foundSharedItem = await this.lib.findEntityById(sharedItemId);
                         (0, activitypub_core_types_1.assertIsApType)(foundSharedItem, activitypub_core_types_1.AP.ActivityTypes.ANNOUNCE);
                         const sharedItemObjectId = (0, activitypub_core_utilities_1.getId)(foundSharedItem.object);
                         (0, activitypub_core_types_1.assertExists)(sharedItemObjectId);
@@ -87,7 +87,7 @@ function GroupsPlugin() {
             (0, activitypub_core_types_1.assertExists)(recipientId);
             const followersId = (0, activitypub_core_utilities_1.getId)(recipient.followers);
             (0, activitypub_core_types_1.assertExists)(followersId);
-            const followersCollection = await this.adapters.db.findEntityById(followersId);
+            const followersCollection = await this.lib.findEntityById(followersId);
             (0, activitypub_core_types_1.assertIsApCollection)(followersCollection);
             (0, activitypub_core_types_1.assertIsArray)(followersCollection.items);
             const actorId = (0, activitypub_core_utilities_1.getId)(activity.actor);
@@ -101,9 +101,9 @@ function GroupsPlugin() {
             const announceActivityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.announce, {
                 validate: false,
             })({
-                guid: await this.adapters.crypto.randomBytes(16),
+                guid: await this.lib.getGuid(),
             })}`);
-            const shared = await this.adapters.db.getStreamByName(recipient, 'Shared');
+            const shared = await this.lib.getStreamByName(recipient, 'Shared');
             (0, activitypub_core_types_1.assertIsApCollection)(shared);
             const sharedId = (0, activitypub_core_utilities_1.getId)(shared);
             (0, activitypub_core_types_1.assertExists)(sharedId);
@@ -116,22 +116,22 @@ function GroupsPlugin() {
                 object: objectToBeSharedId,
                 published: publishedDate,
             };
-            await this.adapters.db.insertOrderedItem(sharedId, new URL(announceActivityId));
+            await this.lib.insertOrderedItem(sharedId, new URL(announceActivityId));
             const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(objectToBeSharedId) !== 'foreignEntity';
             if (isLocal) {
-                const object = await this.adapters.db.findEntityById(objectId);
+                const object = await this.lib.findEntityById(objectId);
                 (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
                 const sharesId = (0, activitypub_core_utilities_1.getId)(object.shares);
                 (0, activitypub_core_types_1.assertExists)(sharesId);
-                await this.adapters.db.insertOrderedItem(sharesId, new URL(announceActivityId));
+                await this.lib.insertOrderedItem(sharesId, new URL(announceActivityId));
             }
             const outboxId = (0, activitypub_core_utilities_1.getId)(recipient.outbox);
             (0, activitypub_core_types_1.assertExists)(outboxId);
             await Promise.all([
-                this.adapters.db.saveEntity(announceActivity),
-                this.adapters.db.insertOrderedItem(outboxId, new URL(announceActivityId)),
+                this.lib.saveEntity(announceActivity),
+                this.lib.insertOrderedItem(outboxId, new URL(announceActivityId)),
             ]);
-            await this.adapters.delivery.broadcast(announceActivity, recipient);
+            await this.lib.broadcast(announceActivity, recipient);
         },
     };
     return groupsPlugin;

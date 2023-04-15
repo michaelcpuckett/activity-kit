@@ -9,13 +9,13 @@ export async function handleUndoBlock(
   assertIsApType<AP.Block>(activity, AP.ActivityTypes.BLOCK);
 
   const actorId = getId((activity as AP.Activity).actor);
-  const actor = await this.layers.data.queryById(actorId);
+  const actor = await this.lib.queryById(actorId);
 
   assertIsApActor(actor);
 
-  const blocks = await this.layers.data.getStreamByName(actor, 'Blocks');
+  const blocks = await this.lib.getStreamByName(actor, 'Blocks');
 
   assertIsApType<AP.Collection>(blocks, AP.CollectionTypes.COLLECTION);
 
-  await this.layers.data.removeItem(blocks.id, activity.id);
+  await this.lib.removeItem(blocks.id, activity.id);
 }

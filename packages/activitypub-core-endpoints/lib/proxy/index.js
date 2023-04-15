@@ -5,11 +5,13 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 class ProxyGetEndpoint {
     req;
     res;
-    layers;
-    constructor(req, res, layers) {
+    lib;
+    plugins;
+    constructor(req, res, lib, plugins) {
         this.req = req;
         this.res = res;
-        this.layers = layers;
+        this.lib = lib;
+        this.plugins = plugins;
     }
     async respond() {
         try {
@@ -20,14 +22,14 @@ class ProxyGetEndpoint {
                     ? activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE
                     : this.req.headers.accept;
                 const fetchedResult = acceptHeader !== activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE
-                    ? await this.layers.data
+                    ? await this.lib
                         .fetch(proxiedUrl.toString(), {
                         headers: {
                             Accept: acceptHeader,
                         },
                     })
                         .then((response) => response.json())
-                    : await this.layers.data.queryById(proxiedUrl);
+                    : await this.lib.queryById(proxiedUrl);
                 if (fetchedResult) {
                     this.res.statusCode = 200;
                     this.res.setHeader(activitypub_core_utilities_1.CONTENT_TYPE_HEADER, activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);

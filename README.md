@@ -16,13 +16,11 @@ This project is still incomplete at the moment. Much of the core functionality i
 
 ### Prerequesities
 
-In addition to being able to host the Node server, you will also need:
+In addition to hosting the Node server, you will also need (at least):
 
-- Database: A compatable database that the server can access.
-- Storage: A way to store files such as profile pics.
-- HTML Templating: A way to render pages with provided JSON data.
-
-There may be additional work needed in order to set up custom/remote authentication (Firebase, for example).
+- **Database**: A compatable database that the server can access.
+- **Storage**: A way to store files such as profile pics.
+- **HTML Templating**: A way to render pages with provided JSON data.
 
 ### Example
 
@@ -38,7 +36,6 @@ import { MongoDbAdapter } from "activitypub-core-db-mongo";
 import { CryptoAuthAdapter } from "activitypub-core-auth-crypto";
 import { NodeCryptoAdapter } from "activitypub-core-crypto-node";
 import { FtpStorageAdapter } from "activitypub-core-storage-ftp";
-import { DeliveryAdapter } from "activitypub-core-delivery";
 
 // Use Express for all routes.
 const app = express.default();
@@ -52,44 +49,33 @@ const app = express.default();
   };
 
   // Use the FTP adapter for handling uploaded media.
-  const ftpStorageAdapter: Adapters["storage"] = new FtpStorageAdapter(
-    ftpStorageAdapterOptions
-  );
+  const ftpStorageAdapter = new FtpStorageAdapter(ftpStorageAdapterOptions);
 
   // Use Node's Crypto library for cryptography.
-  const nodeCryptoAdapter: Adapters["crypto"] = new NodeCryptoAdapter();
+  const nodeCryptoAdapter = new NodeCryptoAdapter();
 
   const mongoClient = new MongoClient(process.env.AP_MONGO_CLIENT_URL);
   await mongoClient.connect();
   const mongoDb = mongoClient.db("activitypub");
 
   // Use MongoDB to store data.
-  const mongoDbAdapter: Adapters["db"] = new MongoDbAdapter(mongoDb, {
+  const mongoDbAdapter = new MongoDbAdapter(mongoDb, {
     crypto: nodeCryptoAdapter,
   });
 
-  // Use Node's Crypto library for authentication.
-  const cryptoAuthAdapter: Adapters["auth"] = new CryptoAuthAdapter({
+  // Use Mongo + Node's Crypto library for authentication.
+  const cryptoAuthAdapter = new CryptoAuthAdapter({
     db: mongoDbAdapter,
     crypto: nodeCryptoAdapter,
-  });
-
-  // Use the default Delivery adapter for Server-to-Server federation.
-  const defaultDeliveryAdapter: Adapters["delivery"] = new DeliveryAdapter({
-    adapters: {
-      db: mongoDbAdapter,
-      crypto: nodeCryptoAdapter,
-    },
   });
 
   // Use the activitypub-core Express plugin.
   app.use(
     activityPub({
       adapters: {
-        crypto: nodeCryptoAdapter,
         auth: cryptoAuthAdapter,
+        crypto: nodeCryptoAdapter,
         db: mongoDbAdapter,
-        delivery: defaultDeliveryAdapter,
         storage: ftpStorageAdapter,
       },
 
@@ -127,7 +113,7 @@ const app = express.default();
           `;
         },
 
-        // All ActivityPub objects have an HTML view.
+        // All ActivityPub entities have an HTML view.
         entity: async (entityPageProps: {
           entity: AP.Entity;
           actor?: AP.Actor;
@@ -212,8 +198,6 @@ The logic layer that get included in all projects include these packages:
   - The Activity vocabularies converted to TypeScript types.
 - `activitypub-core-endpoints`
   - The logic for carrying out the bulk of the ActivityPub protocol.
-- `activitypub-core-delivery`
-  - The logic specific to the Server-to-Server delivery (federation).
 - `activitypub-core-utilities`
   - Common functions with no dependencies on packages from upper layers.
 
@@ -228,11 +212,11 @@ Currently this project comes with:
 - `activitypub-core-db-mongo`
 - `activitypub-core-db-sqlite`
 
-* TODO: PostreSQL
+* TODO: PostreSQL, Cloudflare's d1
 
 #### Authentication Adapters
 
-Users can sign up and log in to their account.
+Users need to be able to sign up and log in to their account.
 
 Current this project comes with:
 
@@ -241,13 +225,13 @@ Current this project comes with:
 
 #### Storage Adapters
 
-Allows for users to upload media, such as profile pictures or attachments.
+Users must be able to upload media, such as profile pictures or attachments.
 
 Currently this project comes with:
 
 - `activitypub-core-storage-ftp`
 
-* TODO: AWS S3, Firebase Storage
+* TODO: AWS S3
 
 #### Server Adapters
 
@@ -261,9 +245,7 @@ Currently this project comes with:
 
 ### Plugins
 
-In progress.
-
-Injectables that can modify core functionality.
+Injectable lifecycle hooks that can modify core functionality.
 
 Currently this project comes with:
 
@@ -271,4 +253,8 @@ Currently this project comes with:
 
 ### Client/Rendering Layer
 
-TBD.
+This project does not aim to provide any HTML code for client rendering.
+
+The `pages` configuration properties expect a callback function that renders an HTML string, leaving the front-end mostly to the host app.
+
+The front-end should utilize ActivityPub's Client-to-Server protocol to post Activities on behalf of users.

@@ -7,12 +7,12 @@ async function broadcastActivity() {
     if (!this.activity) {
         throw new Error('No activity.');
     }
-    const botActor = await this.layers.data.findOne('entity', {
+    const botActor = await this.lib.findOne('entity', {
         preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
     });
     (0, activitypub_core_types_1.assertIsApActor)(botActor);
     if (await this.shouldForwardActivity()) {
-        await this.layers.data.broadcast(this.activity, botActor);
+        await this.lib.broadcast(this.activity, botActor);
     }
 }
 exports.broadcastActivity = broadcastActivity;

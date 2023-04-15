@@ -15,18 +15,18 @@ export async function handleAnnounce(
   assertIsApType<AP.Announce>(activity, AP.ActivityTypes.ANNOUNCE);
 
   const actorId = getId(activity.actor);
-  const actor = await this.layers.data.queryById(actorId);
+  const actor = await this.lib.queryById(actorId);
 
   assertIsApActor(actor);
 
-  const shared = await this.layers.data.getStreamByName(actor, 'Shared');
+  const shared = await this.lib.getStreamByName(actor, 'Shared');
 
   assertIsApType<AP.OrderedCollection>(
     shared,
     AP.CollectionTypes.ORDERED_COLLECTION,
   );
 
-  await this.layers.data.insertOrderedItem(shared.id, activity.id);
+  await this.lib.insertOrderedItem(shared.id, activity.id);
 
   const objectId = getId(activity.object);
 
@@ -35,7 +35,7 @@ export async function handleAnnounce(
   const isLocal = getCollectionNameByUrl(objectId) !== 'foreignEntity';
 
   if (isLocal) {
-    const object = await this.layers.data.queryById(objectId);
+    const object = await this.lib.queryById(objectId);
 
     assertIsApEntity(object);
 
@@ -49,6 +49,6 @@ export async function handleAnnounce(
       throw new Error('Bad shares collection: no ID.');
     }
 
-    await this.layers.data.insertOrderedItem(sharesId, activity.id);
+    await this.lib.insertOrderedItem(sharesId, activity.id);
   }
 }

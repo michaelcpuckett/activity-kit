@@ -18,8 +18,8 @@ export const respond = async function (
 ) {
   const cookies = cookie.parse(this.req.headers.cookie ?? '');
 
-  const actor = await this.layers.data.getActorByUserId(
-    await this.layers.auth.getUserIdByToken(cookies.__session ?? ''),
+  const actor = await this.lib.getActorByUserId(
+    await this.lib.getUserIdByToken(cookies.__session ?? ''),
   );
 
   if (!actor) {
@@ -31,10 +31,8 @@ export const respond = async function (
 
   assertIsApActor(actor);
 
-  const actorInbox = await this.layers.data.findEntityById(getId(actor.inbox));
-  const actorOutbox = await this.layers.data.findEntityById(
-    getId(actor.outbox),
-  );
+  const actorInbox = await this.lib.findEntityById(getId(actor.inbox));
+  const actorOutbox = await this.lib.findEntityById(getId(actor.outbox));
 
   assertIsApType<AP.OrderedCollection>(
     actorInbox,

@@ -14,16 +14,16 @@ export async function handleBlock(
   assertIsApType<AP.Block>(activity, AP.ActivityTypes.BLOCK);
 
   const actorId = getId(activity.actor);
-  const actor = await this.layers.data.queryById(actorId);
+  const actor = await this.lib.queryById(actorId);
 
   assertIsApActor(actor);
 
   const blockedActorId = getId(activity.object);
-  const blockedActor = await this.layers.data.queryById(blockedActorId);
+  const blockedActor = await this.lib.queryById(blockedActorId);
 
   assertIsApActor(blockedActor);
 
-  const blocks = await this.layers.data.getStreamByName(actor, 'Blocks');
+  const blocks = await this.lib.getStreamByName(actor, 'Blocks');
 
   assertIsApType<AP.Collection>(blocks, AP.CollectionTypes.COLLECTION);
 
@@ -31,7 +31,7 @@ export async function handleBlock(
 
   assertExists(blocksId);
 
-  await this.layers.data.insertItem(blocksId, activity.id);
+  await this.lib.insertItem(blocksId, activity.id);
 
   const followingId = getId(actor.following);
 
@@ -42,7 +42,7 @@ export async function handleBlock(
   assertExists(followersId);
 
   await Promise.all([
-    this.layers.data.removeItem(followingId, blockedActorId),
-    this.layers.data.removeItem(followersId, blockedActorId),
+    this.lib.removeItem(followingId, blockedActorId),
+    this.lib.removeItem(followersId, blockedActorId),
   ]);
 }

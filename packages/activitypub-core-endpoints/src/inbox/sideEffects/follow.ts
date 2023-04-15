@@ -32,7 +32,7 @@ export async function handleFollow(
 
   assertExists(objectId);
 
-  const object = await this.layers.data.queryById(objectId);
+  const object = await this.lib.queryById(objectId);
 
   assertIsApEntity(object);
 
@@ -47,7 +47,7 @@ export async function handleFollow(
 
   assertExists(actorId);
 
-  const actor = await this.layers.data.queryById(actorId);
+  const actor = await this.lib.queryById(actorId);
 
   assertIsApActor(actor);
 
@@ -70,7 +70,7 @@ export async function handleFollow(
 
   assertExists(followersId);
 
-  const followers = await this.layers.data.findEntityById(followersId);
+  const followers = await this.lib.findEntityById(followersId);
 
   assertIsApType<AP.Collection>(followers, AP.CollectionTypes.COLLECTION);
   assertIsArray(followers.items);
@@ -86,16 +86,13 @@ export async function handleFollow(
   }
 
   if (followee.manuallyApprovesFollowers) {
-    const requests = await this.layers.data.getStreamByName(
-      followee,
-      'Requests',
-    );
+    const requests = await this.lib.getStreamByName(followee, 'Requests');
 
     assertIsApType<AP.Collection>(requests, AP.CollectionTypes.COLLECTION);
 
     const requestsId = getId(requests);
 
-    await this.layers.data.insertItem(requestsId, activityId);
+    await this.lib.insertItem(requestsId, activityId);
 
     return;
   }
@@ -104,7 +101,7 @@ export async function handleFollow(
 
   const acceptActivityId = `${new URL(
     `${LOCAL_DOMAIN}${compile(this.routes.accept)({
-      guid: await this.layers.data.getGuid(),
+      guid: await this.lib.getGuid(),
     })}`,
   )}`;
   const publishedDate = new Date();
@@ -125,13 +122,10 @@ export async function handleFollow(
   assertExists(followeeOutboxId);
 
   await Promise.all([
-    this.layers.data.saveEntity(acceptActivity),
-    this.layers.data.insertOrderedItem(
-      followeeOutboxId,
-      new URL(acceptActivityId),
-    ),
-    this.layers.data.insertItem(followersId, followerId),
+    this.lib.saveEntity(acceptActivity),
+    this.lib.insertOrderedItem(followeeOutboxId, new URL(acceptActivityId)),
+    this.lib.insertItem(followersId, followerId),
   ]);
 
-  await this.layers.data.broadcast(acceptActivity, followee);
+  await this.lib.broadcast(acceptActivity, followee);
 }

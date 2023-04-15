@@ -1,7 +1,7 @@
 import { AP } from '../';
 
 export type CryptoAdapter = {
-  params: {
+  params?: {
     [key: string]: unknown;
   };
 

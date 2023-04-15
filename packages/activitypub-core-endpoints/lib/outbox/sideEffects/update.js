@@ -7,7 +7,7 @@ const path_to_regexp_1 = require("path-to-regexp");
 async function handleUpdate(activity) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.UPDATE);
     const actorId = (0, activitypub_core_utilities_1.getId)(activity.actor);
-    const actor = await this.layers.data.findEntityById(actorId);
+    const actor = await this.lib.findEntityById(actorId);
     (0, activitypub_core_types_1.assertIsApActor)(actor);
     if (activity.object instanceof URL) {
         throw new Error('Bad activity: Providing a URL for the object is not sufficient for Update.');
@@ -19,7 +19,7 @@ async function handleUpdate(activity) {
         throw new Error('Not authorized to modify object!');
     }
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
-    const existingObject = await this.layers.data.findEntityById(objectId);
+    const existingObject = await this.lib.findEntityById(objectId);
     (0, activitypub_core_types_1.assertIsApEntity)(existingObject);
     const getTags = async () => {
         if (!(0, activitypub_core_utilities_1.isTypeOf)(existingObject, activitypub_core_types_1.AP.CoreObjectTypes)) {
@@ -74,7 +74,7 @@ async function handleUpdate(activity) {
                     const hashtagCollectionUrl = new URL(newTagIds[index]);
                     tag.id = hashtagCollectionUrl;
                     tag.url = hashtagCollectionUrl;
-                    const hashtagCollection = await this.layers.data.findEntityById(hashtagCollectionUrl);
+                    const hashtagCollection = await this.lib.findEntityById(hashtagCollectionUrl);
                     if (!hashtagCollection) {
                         const hashtagEntity = {
                             id: hashtagCollectionUrl,
@@ -86,18 +86,18 @@ async function handleUpdate(activity) {
                             ],
                             orderedItems: [],
                         };
-                        await this.layers.data.saveEntity(hashtagEntity);
+                        await this.lib.saveEntity(hashtagEntity);
                         const serverHashtagsUrl = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.serverHashtags)({})}`);
-                        await this.layers.data.insertItem(serverHashtagsUrl, hashtagCollectionUrl);
+                        await this.lib.insertItem(serverHashtagsUrl, hashtagCollectionUrl);
                     }
                     if (!existingTagIds.includes(hashtagCollectionUrl.toString())) {
-                        await this.layers.data.insertOrderedItem(hashtagCollectionUrl, objectId);
+                        await this.lib.insertOrderedItem(hashtagCollectionUrl, objectId);
                     }
                 }
             }
             for (const existingTagId of existingTagIds) {
                 if (!newTagIds.includes(existingTagId)) {
-                    await this.layers.data.removeOrderedItem(new URL(existingTagId), objectId);
+                    await this.lib.removeOrderedItem(new URL(existingTagId), objectId);
                 }
             }
             return newTags;
@@ -118,7 +118,7 @@ async function handleUpdate(activity) {
             }
             : null),
     };
-    await this.layers.data.saveEntity(activity.object);
+    await this.lib.saveEntity(activity.object);
 }
 exports.handleUpdate = handleUpdate;
 function isActorAuthorizedToModifyObject(initiator, activity) {

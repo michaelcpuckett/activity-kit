@@ -5,7 +5,7 @@ import { assertIsApActor } from 'activitypub-core-types';
 export async function getActor(this: UploadMediaPostEndpoint) {
   const url = new URL(this.req.url, LOCAL_DOMAIN);
 
-  const actor = await this.layers.data.findOne('entity', {
+  const actor = await this.lib.findOne('entity', {
     'endpoints.uploadMedia': url.toString(),
   });
 

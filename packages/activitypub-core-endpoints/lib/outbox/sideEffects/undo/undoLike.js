@@ -6,15 +6,15 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function handleUndoLike(activity) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.LIKE);
     const actorId = (0, activitypub_core_utilities_1.getId)(activity.actor);
-    const actor = await this.layers.data.queryById(actorId);
+    const actor = await this.lib.queryById(actorId);
     (0, activitypub_core_types_1.assertIsApActor)(actor);
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
     (0, activitypub_core_types_1.assertExists)(objectId);
     const likedId = (0, activitypub_core_utilities_1.getId)(actor.liked);
     (0, activitypub_core_types_1.assertExists)(likedId);
-    await this.layers.data.removeOrderedItem(likedId, objectId);
+    await this.lib.removeOrderedItem(likedId, objectId);
     try {
-        const object = await this.layers.data.queryById(objectId);
+        const object = await this.lib.queryById(objectId);
         (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
         const likesId = (0, activitypub_core_utilities_1.getId)(object.likes);
         (0, activitypub_core_types_1.assertExists)(likesId);
@@ -22,7 +22,7 @@ async function handleUndoLike(activity) {
         if (!isLocal) {
             throw new Error('Cannot add to remote collection.');
         }
-        await this.layers.data.removeOrderedItem(likesId, activity.id);
+        await this.lib.removeOrderedItem(likesId, activity.id);
     }
     catch (error) {
         console.log(error);

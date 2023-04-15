@@ -5,12 +5,12 @@ const respond_1 = require("./respond");
 class NodeinfoGetEndpoint {
     req;
     res;
-    layers;
+    lib;
     plugins;
-    constructor(req, res, layers, plugins) {
+    constructor(req, res, lib, plugins) {
         this.req = req;
         this.res = res;
-        this.layers = layers;
+        this.lib = lib;
         this.plugins = plugins;
     }
     respond = respond_1.respond;

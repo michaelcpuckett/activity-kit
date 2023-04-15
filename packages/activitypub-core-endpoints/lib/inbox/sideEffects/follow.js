@@ -12,7 +12,7 @@ async function handleFollow(activity, recipient) {
     (0, activitypub_core_types_1.assertExists)(activityId);
     const objectId = (0, activitypub_core_utilities_3.getId)(activity.object);
     (0, activitypub_core_types_1.assertExists)(objectId);
-    const object = await this.layers.data.queryById(objectId);
+    const object = await this.lib.queryById(objectId);
     (0, activitypub_core_types_1.assertIsApEntity)(object);
     if (!(0, activitypub_core_utilities_1.isTypeOf)(object, activitypub_core_types_1.AP.ActorTypes)) {
         return;
@@ -20,7 +20,7 @@ async function handleFollow(activity, recipient) {
     (0, activitypub_core_types_1.assertIsApActor)(object);
     const actorId = (0, activitypub_core_utilities_3.getId)(activity.actor);
     (0, activitypub_core_types_1.assertExists)(actorId);
-    const actor = await this.layers.data.queryById(actorId);
+    const actor = await this.lib.queryById(actorId);
     (0, activitypub_core_types_1.assertIsApActor)(actor);
     const follower = actor;
     const followerId = (0, activitypub_core_utilities_3.getId)(follower);
@@ -33,7 +33,7 @@ async function handleFollow(activity, recipient) {
     }
     const followersId = (0, activitypub_core_utilities_3.getId)(followee.followers);
     (0, activitypub_core_types_1.assertExists)(followersId);
-    const followers = await this.layers.data.findEntityById(followersId);
+    const followers = await this.lib.findEntityById(followersId);
     (0, activitypub_core_types_1.assertIsApType)(followers, activitypub_core_types_1.AP.CollectionTypes.COLLECTION);
     (0, activitypub_core_types_1.assertIsArray)(followers.items);
     if (followers.items
@@ -43,14 +43,14 @@ async function handleFollow(activity, recipient) {
         return;
     }
     if (followee.manuallyApprovesFollowers) {
-        const requests = await this.layers.data.getStreamByName(followee, 'Requests');
+        const requests = await this.lib.getStreamByName(followee, 'Requests');
         (0, activitypub_core_types_1.assertIsApType)(requests, activitypub_core_types_1.AP.CollectionTypes.COLLECTION);
         const requestsId = (0, activitypub_core_utilities_3.getId)(requests);
-        await this.layers.data.insertItem(requestsId, activityId);
+        await this.lib.insertItem(requestsId, activityId);
         return;
     }
     const acceptActivityId = `${new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.accept)({
-        guid: await this.layers.data.getGuid(),
+        guid: await this.lib.getGuid(),
     })}`)}`;
     const publishedDate = new Date();
     const acceptActivity = {
@@ -66,11 +66,11 @@ async function handleFollow(activity, recipient) {
     const followeeOutboxId = (0, activitypub_core_utilities_3.getId)(followee.outbox);
     (0, activitypub_core_types_1.assertExists)(followeeOutboxId);
     await Promise.all([
-        this.layers.data.saveEntity(acceptActivity),
-        this.layers.data.insertOrderedItem(followeeOutboxId, new URL(acceptActivityId)),
-        this.layers.data.insertItem(followersId, followerId),
+        this.lib.saveEntity(acceptActivity),
+        this.lib.insertOrderedItem(followeeOutboxId, new URL(acceptActivityId)),
+        this.lib.insertItem(followersId, followerId),
     ]);
-    await this.layers.data.broadcast(acceptActivity, followee);
+    await this.lib.broadcast(acceptActivity, followee);
 }
 exports.handleFollow = handleFollow;
 //# sourceMappingURL=follow.js.map

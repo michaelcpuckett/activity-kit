@@ -5,7 +5,7 @@ export const DbOptions = {
 } as const;
 
 export type DbAdapter = {
-  db: unknown;
+  db?: unknown;
 
   initializeDb?: (this: DbAdapter) => Promise<void>;
   findAll: (

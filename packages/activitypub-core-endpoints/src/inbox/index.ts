@@ -1,4 +1,4 @@
-import { Adapters, AP, Plugin, Routes } from 'activitypub-core-types';
+import { AP, Library, Plugin, Routes } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { getActors } from './getActors';
 import { parseBody } from './parseBody';
@@ -12,19 +12,12 @@ import { handleLike } from './sideEffects/like';
 import { handleCreate } from './sideEffects/create';
 import { shouldForwardActivity } from './shouldForwardActivity';
 import { broadcastActivity } from './broadcastActivity';
-import { AuthLayer } from 'activitypub-core-auth-layer';
-import { DataLayer } from 'activitypub-core-data-layer';
-import { StorageLayer } from 'activitypub-core-storage-layer';
 
 export class InboxPostEndpoint {
   routes: Routes;
   req: IncomingMessage;
   res: ServerResponse;
-  layers: {
-    auth: AuthLayer;
-    data: DataLayer;
-    storage: StorageLayer;
-  };
+  lib: Library;
   plugins?: Plugin[];
   activity: AP.Entity | null = null;
 
@@ -32,17 +25,13 @@ export class InboxPostEndpoint {
     routes: Routes,
     req: IncomingMessage,
     res: ServerResponse,
-    layers: {
-      auth: AuthLayer;
-      data: DataLayer;
-      storage: StorageLayer;
-    },
+    lib: Library,
     plugins?: Plugin[],
   ) {
     this.routes = routes;
     this.req = req;
     this.res = res;
-    this.layers = layers;
+    this.lib = lib;
     this.plugins = plugins;
   }
 

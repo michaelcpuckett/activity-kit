@@ -10,7 +10,7 @@ class UploadMediaPostEndpoint {
     routes;
     req;
     res;
-    layers;
+    lib;
     plugins;
     actor = null;
     activity = null;
@@ -20,11 +20,11 @@ class UploadMediaPostEndpoint {
     parseBody = parseBody_1.parseBody;
     cleanup = cleanup_1.cleanup;
     saveActivity = saveActivity_1.saveActivity;
-    constructor(routes, req, res, layers, plugins) {
+    constructor(routes, req, res, lib, plugins) {
         this.routes = routes;
         this.req = req;
         this.res = res;
-        this.layers = layers;
+        this.lib = lib;
         this.plugins = plugins;
     }
     async respond() {
@@ -32,7 +32,7 @@ class UploadMediaPostEndpoint {
             await this.getActor();
             await this.authenticateActor();
             await this.parseBody();
-            const url = await this.layers.storage.upload(this.file);
+            const url = await this.lib.upload(this.file);
             this.activity.object.url = url;
             await this.cleanup();
             await this.saveActivity();

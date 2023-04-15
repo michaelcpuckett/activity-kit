@@ -5,7 +5,7 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_types_1 = require("activitypub-core-types");
 const path_to_regexp_1 = require("path-to-regexp");
 async function createServerActor() {
-    const { publicKey: botPublicKey, privateKey: botPrivateKey } = await this.layers.auth.generateKeyPair();
+    const { publicKey: botPublicKey, privateKey: botPrivateKey } = await this.lib.generateKeyPair();
     const publishedDate = new Date();
     const getRouteUrl = (route, routeData) => new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
         validate: false,
@@ -105,14 +105,14 @@ async function createServerActor() {
         published: publishedDate,
     };
     await Promise.all([
-        this.layers.data.saveEntity(botActor),
-        this.layers.data.saveEntity(botInbox),
-        this.layers.data.saveEntity(botOutbox),
-        this.layers.data.saveEntity(botFollowing),
-        this.layers.data.saveEntity(botFollowers),
-        this.layers.data.saveEntity(botHashtags),
-        this.layers.data.saveString('username', 'bot', 'bot'),
-        this.layers.data.saveString('privateKey', 'bot', botPrivateKey),
+        this.lib.saveEntity(botActor),
+        this.lib.saveEntity(botInbox),
+        this.lib.saveEntity(botOutbox),
+        this.lib.saveEntity(botFollowing),
+        this.lib.saveEntity(botFollowers),
+        this.lib.saveEntity(botHashtags),
+        this.lib.saveString('username', 'bot', 'bot'),
+        this.lib.saveString('privateKey', 'bot', botPrivateKey),
     ]);
 }
 exports.createServerActor = createServerActor;

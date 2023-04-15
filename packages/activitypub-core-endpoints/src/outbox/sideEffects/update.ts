@@ -21,7 +21,7 @@ export async function handleUpdate(
   assertIsApType<AP.Update>(activity, AP.ActivityTypes.UPDATE);
 
   const actorId = getId(activity.actor);
-  const actor = await this.layers.data.findEntityById(actorId);
+  const actor = await this.lib.findEntityById(actorId);
 
   assertIsApActor(actor);
 
@@ -42,7 +42,7 @@ export async function handleUpdate(
   }
 
   const objectId = getId(activity.object);
-  const existingObject = await this.layers.data.findEntityById(objectId);
+  const existingObject = await this.lib.findEntityById(objectId);
 
   assertIsApEntity(existingObject);
 
@@ -117,7 +117,7 @@ export async function handleUpdate(
           tag.id = hashtagCollectionUrl;
           tag.url = hashtagCollectionUrl;
 
-          const hashtagCollection = await this.layers.data.findEntityById(
+          const hashtagCollection = await this.lib.findEntityById(
             hashtagCollectionUrl,
           );
 
@@ -134,33 +134,24 @@ export async function handleUpdate(
               orderedItems: [],
             };
 
-            await this.layers.data.saveEntity(hashtagEntity);
+            await this.lib.saveEntity(hashtagEntity);
 
             const serverHashtagsUrl = new URL(
               `${LOCAL_DOMAIN}${compile(this.routes.serverHashtags)({})}`,
             );
 
-            await this.layers.data.insertItem(
-              serverHashtagsUrl,
-              hashtagCollectionUrl,
-            );
+            await this.lib.insertItem(serverHashtagsUrl, hashtagCollectionUrl);
           }
 
           if (!existingTagIds.includes(hashtagCollectionUrl.toString())) {
-            await this.layers.data.insertOrderedItem(
-              hashtagCollectionUrl,
-              objectId,
-            );
+            await this.lib.insertOrderedItem(hashtagCollectionUrl, objectId);
           }
         }
       }
 
       for (const existingTagId of existingTagIds) {
         if (!newTagIds.includes(existingTagId)) {
-          await this.layers.data.removeOrderedItem(
-            new URL(existingTagId),
-            objectId,
-          );
+          await this.lib.removeOrderedItem(new URL(existingTagId), objectId);
         }
       }
 
@@ -185,7 +176,7 @@ export async function handleUpdate(
       : null),
   };
 
-  await this.layers.data.saveEntity(activity.object);
+  await this.lib.saveEntity(activity.object);
 }
 
 function isActorAuthorizedToModifyObject(

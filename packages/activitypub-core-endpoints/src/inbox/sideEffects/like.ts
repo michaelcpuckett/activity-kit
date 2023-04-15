@@ -21,7 +21,7 @@ export async function handleLike(
 
   assertExists(objectId);
 
-  const object = await this.layers.data.findEntityById(objectId);
+  const object = await this.lib.findEntityById(objectId);
 
   assertIsApEntity(object);
 
@@ -32,7 +32,7 @@ export async function handleLike(
 
     assertExists(likesId);
 
-    const likes = await this.layers.data.findEntityById(likesId);
+    const likes = await this.lib.findEntityById(likesId);
 
     assertIsApCollection(likes);
 
@@ -46,9 +46,9 @@ export async function handleLike(
     }
 
     if (isType(likes, AP.CollectionTypes.COLLECTION)) {
-      await this.layers.data.insertItem(likesId, activity.id);
+      await this.lib.insertItem(likesId, activity.id);
     } else if (isType(likes, AP.CollectionTypes.ORDERED_COLLECTION)) {
-      await this.layers.data.insertOrderedItem(likesId, activity.id);
+      await this.lib.insertOrderedItem(likesId, activity.id);
     }
   } catch (error) {
     console.log(error);

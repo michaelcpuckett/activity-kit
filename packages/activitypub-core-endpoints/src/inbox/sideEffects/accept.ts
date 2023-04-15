@@ -21,7 +21,7 @@ export async function handleAccept(
 
   assertExists(objectId);
 
-  const object = await this.layers.data.findEntityById(objectId);
+  const object = await this.lib.findEntityById(objectId);
 
   assertIsApEntity(object);
 
@@ -42,7 +42,7 @@ export async function handleAccept(
     return;
   }
 
-  const follower = await this.layers.data.queryById(followerId);
+  const follower = await this.lib.queryById(followerId);
 
   assertIsApActor(follower);
 
@@ -50,7 +50,7 @@ export async function handleAccept(
 
   assertExists(followeeId);
 
-  const followee = await this.layers.data.queryById(followeeId);
+  const followee = await this.lib.queryById(followeeId);
 
   assertIsApActor(followee);
 
@@ -58,7 +58,7 @@ export async function handleAccept(
 
   assertExists(followingId);
 
-  const following = await this.layers.data.queryById(followingId);
+  const following = await this.lib.queryById(followingId);
 
   assertIsApType<AP.Collection>(following, AP.CollectionTypes.COLLECTION);
   assertIsArray(following.items);
@@ -73,5 +73,5 @@ export async function handleAccept(
     return;
   }
 
-  await this.layers.data.insertItem(followingId, followeeId);
+  await this.lib.insertItem(followingId, followeeId);
 }

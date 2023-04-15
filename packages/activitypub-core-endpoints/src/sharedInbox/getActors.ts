@@ -9,7 +9,7 @@ export async function getActors(
 ): Promise<AP.Actor[]> {
   assertIsApActivity(this.activity);
 
-  const actorUrls = await this.layers.data.getRecipientUrls(this.activity);
+  const actorUrls = await this.lib.getRecipientUrls(this.activity);
 
   console.log(actorUrls.map((url) => url.toString()));
 
@@ -21,7 +21,7 @@ export async function getActors(
         }
 
         try {
-          const foundEntity = await this.layers.data.findEntityById(actorUrl);
+          const foundEntity = await this.lib.findEntityById(actorUrl);
 
           assertIsApActor(foundEntity);
 

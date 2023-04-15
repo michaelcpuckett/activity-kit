@@ -67,7 +67,7 @@ export async function handleCreate(
 
   const objectId = new URL(
     `${LOCAL_DOMAIN}${compile(this.routes[type.toLowerCase()])({
-      guid: await this.layers.data.getGuid(),
+      guid: await this.lib.getGuid(),
       year,
       month,
       day,
@@ -151,7 +151,7 @@ export async function handleCreate(
     object.published = publishedDate;
 
     if (object.inReplyTo) {
-      const objectInReplyTo = await this.layers.data.findEntityById(
+      const objectInReplyTo = await this.lib.findEntityById(
         getId(object.inReplyTo),
       );
 
@@ -159,10 +159,7 @@ export async function handleCreate(
         const repliesCollectionId = getId(objectInReplyTo.replies);
 
         if (repliesCollectionId) {
-          await this.layers.data.insertOrderedItem(
-            repliesCollectionId,
-            objectId,
-          );
+          await this.lib.insertOrderedItem(repliesCollectionId, objectId);
         }
       }
     }
@@ -191,7 +188,7 @@ export async function handleCreate(
           tag.id = hashtagCollectionUrl;
           tag.url = hashtagCollectionUrl;
 
-          const hashtagCollection = await this.layers.data.findEntityById(
+          const hashtagCollection = await this.lib.findEntityById(
             hashtagCollectionUrl,
           );
 
@@ -208,31 +205,25 @@ export async function handleCreate(
               orderedItems: [],
             };
 
-            await this.layers.data.saveEntity(hashtagEntity);
+            await this.lib.saveEntity(hashtagEntity);
 
-            const serverActor = await this.layers.data.findOne('entity', {
+            const serverActor = await this.lib.findOne('entity', {
               preferredUsername: SERVER_ACTOR_USERNAME,
             });
 
             assertIsApActor(serverActor);
 
-            const serverHashtags = await this.layers.data.getStreamByName(
+            const serverHashtags = await this.lib.getStreamByName(
               serverActor,
               'Hashtags',
             );
 
             const serverHashtagsUrl = serverHashtags.id;
 
-            await this.layers.data.insertItem(
-              serverHashtagsUrl,
-              hashtagCollectionUrl,
-            );
+            await this.lib.insertItem(serverHashtagsUrl, hashtagCollectionUrl);
           }
 
-          await this.layers.data.insertOrderedItem(
-            hashtagCollectionUrl,
-            objectId,
-          );
+          await this.lib.insertOrderedItem(hashtagCollectionUrl, objectId);
         }
       }
 
@@ -240,13 +231,13 @@ export async function handleCreate(
     }
 
     await Promise.all([
-      this.layers.data.saveEntity(object),
-      this.layers.data.saveEntity(objectReplies),
-      this.layers.data.saveEntity(objectLikes),
-      this.layers.data.saveEntity(objectShares),
+      this.lib.saveEntity(object),
+      this.lib.saveEntity(objectReplies),
+      this.lib.saveEntity(objectLikes),
+      this.lib.saveEntity(objectShares),
     ]);
   } else {
-    await this.layers.data.saveEntity(object);
+    await this.lib.saveEntity(object);
   }
 
   assertIsApType<AP.Create>(this.activity, AP.ActivityTypes.CREATE);

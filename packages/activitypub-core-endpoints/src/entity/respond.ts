@@ -17,8 +17,8 @@ export async function respond(
 ) {
   const cookies = cookie.parse(this.req.headers.cookie ?? '');
 
-  const authorizedActor = await this.layers.data.getActorByUserId(
-    await this.layers.auth.getUserIdByToken(cookies.__session ?? ''),
+  const authorizedActor = await this.lib.getActorByUserId(
+    await this.lib.getUserIdByToken(cookies.__session ?? ''),
   );
 
   // TODO authorize entity posts by actor.
@@ -32,7 +32,7 @@ export async function respond(
   }
   const pathname = hasPage ? urlParts.join('/') : this.url.pathname;
 
-  const entity = await this.layers.data.findEntityById(
+  const entity = await this.lib.findEntityById(
     new URL(`${LOCAL_DOMAIN}${pathname}`),
   );
 
@@ -97,7 +97,7 @@ export async function respond(
 
   // Treat as CollectionPage.
 
-  const expandedCollection = await this.layers.data.expandCollection(entity);
+  const expandedCollection = await this.lib.expandCollection(entity);
 
   const expandedItems = (() => {
     if (isType(expandedCollection, AP.CollectionTypes.ORDERED_COLLECTION)) {
@@ -133,7 +133,7 @@ export async function respond(
         'object' in item &&
         item.object instanceof URL
       ) {
-        const object = await this.layers.data.findEntityById(item.object);
+        const object = await this.lib.findEntityById(item.object);
 
         if (object) {
           item.object = object;

@@ -14,7 +14,7 @@ export async function handleUndoFollow(
   assertIsApType<AP.Follow>(activity, AP.ActivityTypes.FOLLOW);
 
   const actorId = getId(activity.actor);
-  const actor = await this.layers.data.queryById(actorId);
+  const actor = await this.lib.queryById(actorId);
 
   assertIsApActor(actor);
 
@@ -23,9 +23,9 @@ export async function handleUndoFollow(
   assertExists(followingId);
 
   const objectId = getId(activity.object);
-  const object = await this.layers.data.queryById(objectId);
+  const object = await this.lib.queryById(objectId);
 
   assertIsApActor(object);
 
-  await this.layers.data.removeItem(followingId, objectId);
+  await this.lib.removeItem(followingId, objectId);
 }

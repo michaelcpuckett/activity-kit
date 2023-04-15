@@ -1,33 +1,22 @@
 import type { IncomingMessage, ServerResponse } from 'http';
 import { respond } from './respond';
-import type { Plugin } from 'activitypub-core-types';
-import { AuthLayer } from 'activitypub-core-auth-layer';
-import { DataLayer } from 'activitypub-core-data-layer';
-import { StorageLayer } from 'activitypub-core-storage-layer';
+import { Library, Plugin } from 'activitypub-core-types';
 
 export class NodeinfoGetEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
-  layers: {
-    auth: AuthLayer;
-    data: DataLayer;
-    storage: StorageLayer;
-  };
+  lib: Library;
   plugins?: Plugin[];
 
   constructor(
     req: IncomingMessage,
     res: ServerResponse,
-    layers: {
-      auth: AuthLayer;
-      data: DataLayer;
-      storage: StorageLayer;
-    },
+    lib: Library,
     plugins: Plugin[],
   ) {
     this.req = req;
     this.res = res;
-    this.layers = layers;
+    this.lib = lib;
     this.plugins = plugins;
   }
 

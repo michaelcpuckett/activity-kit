@@ -19,7 +19,7 @@ const respond = async function () {
         if (hostname !== activitypub_core_utilities_1.LOCAL_HOSTNAME) {
             throw new Error('Not found.');
         }
-        const actor = await this.layers.data.findOne('entity', {
+        const actor = await this.lib.findOne('entity', {
             preferredUsername: username,
         }, [activitypub_core_types_1.DbOptions.CASE_INSENSITIVE]);
         (0, activitypub_core_types_1.assertIsApActor)(actor);

@@ -21,9 +21,7 @@ import {
   HTML_CONTENT_TYPE,
   LOCAL_DOMAIN,
 } from 'activitypub-core-utilities';
-import { AuthLayer } from 'activitypub-core-auth-layer';
-import { DataLayer } from 'activitypub-core-data-layer';
-import { StorageLayer } from 'activitypub-core-storage-layer';
+import { CoreLibrary } from 'activitypub-core-library';
 
 export const activityPub =
   (config: {
@@ -56,21 +54,12 @@ export const activityPub =
   ) => {
     console.log('INCOMING:', req.url);
 
-    const layers = {
-      data: new DataLayer({
-        db: config.adapters.db,
-        crypto: config.adapters.crypto,
-      }),
-
-      storage: new StorageLayer({
-        store: config.adapters.storage,
-      }),
-
-      auth: new AuthLayer({
-        auth: config.adapters.auth,
-        crypto: config.adapters.crypto,
-      }),
-    };
+    const library = new CoreLibrary({
+      auth: config.adapters.auth,
+      crypto: config.adapters.crypto,
+      db: config.adapters.db,
+      storage: config.adapters.storage,
+    });
 
     const routes: Routes = {
       ...DEFAULT_ROUTES,
@@ -130,7 +119,7 @@ export const activityPub =
             routes,
             req,
             res,
-            layers,
+            library,
             config.plugins,
           ).respond();
           next();
@@ -142,7 +131,7 @@ export const activityPub =
             routes,
             req,
             res,
-            layers,
+            library,
             config.plugins,
           ).respond();
           next();
@@ -154,7 +143,7 @@ export const activityPub =
             routes,
             req,
             res,
-            layers,
+            library,
             config.plugins,
           ).respond();
           next();
@@ -162,12 +151,12 @@ export const activityPub =
         }
 
         if (matchesRoute(routes.endpoint)) {
-          // TODO
+          // TODO route endpoint
           await new UploadMediaPostEndpoint(
             routes,
             req,
             res,
-            layers,
+            library,
             config.plugins,
           ).respond();
           next();
@@ -179,7 +168,7 @@ export const activityPub =
             routes,
             req,
             res,
-            layers,
+            library,
             config.plugins,
           ).respond();
           next();
@@ -198,7 +187,7 @@ export const activityPub =
         }
 
         if (req.url.startsWith('/home')) {
-          await new HomeGetEndpoint(req, res, layers, config.plugins).respond(
+          await new HomeGetEndpoint(req, res, library, config.plugins).respond(
             config.pages.home,
           );
           next();
@@ -209,8 +198,8 @@ export const activityPub =
           await new ProxyGetEndpoint(
             req,
             res,
-            layers,
-            // config.plugins,
+            library,
+            config.plugins,
           ).respond();
           next();
           return;
@@ -220,7 +209,7 @@ export const activityPub =
           await new WebfingerGetEndpoint(
             req,
             res,
-            layers,
+            library,
             config.plugins,
           ).respond();
           next();
@@ -231,7 +220,7 @@ export const activityPub =
           await new HostMetaGetEndpoint(
             req,
             res,
-            layers,
+            library,
             config.plugins,
           ).respond();
           next();
@@ -245,7 +234,7 @@ export const activityPub =
           await new NodeinfoGetEndpoint(
             req,
             res,
-            layers,
+            library,
             config.plugins,
           ).respond();
           next();
@@ -257,9 +246,12 @@ export const activityPub =
         if (entityParams) {
           req.params = entityParams as { [key: string]: string };
 
-          await new EntityGetEndpoint(req, res, layers, config.plugins).respond(
-            config.pages.entity,
-          );
+          await new EntityGetEndpoint(
+            req,
+            res,
+            library,
+            config.plugins,
+          ).respond(config.pages.entity);
           next();
           return;
         }

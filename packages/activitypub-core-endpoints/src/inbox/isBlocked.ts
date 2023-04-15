@@ -20,11 +20,11 @@ export async function isBlocked(
 
     assertExists(activityActorId);
 
-    const activityActor = await this.layers.data.queryById(activityActorId);
+    const activityActor = await this.lib.queryById(activityActorId);
 
     assertIsApActor(activityActor);
 
-    const blocks = await this.layers.data.getStreamByName(actor, 'Blocks');
+    const blocks = await this.lib.getStreamByName(actor, 'Blocks');
 
     assertIsApCollection(blocks);
     assertIsArray(blocks.items);
@@ -33,7 +33,7 @@ export async function isBlocked(
       blocks.items
         .map(async (item: AP.EntityReference) => {
           const id = getId(item);
-          const foundActivity = await this.layers.data.findEntityById(id);
+          const foundActivity = await this.lib.findEntityById(id);
           if (!('object' in foundActivity)) {
             return null;
           }

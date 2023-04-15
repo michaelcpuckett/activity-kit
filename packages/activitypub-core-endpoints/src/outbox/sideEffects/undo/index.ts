@@ -9,7 +9,7 @@ export async function handleUndo(
   assertIsApType<AP.Undo>(activity, AP.ActivityTypes.UNDO);
 
   const objectId = getId(activity.object);
-  const object = await this.layers.data.findEntityById(objectId);
+  const object = await this.lib.findEntityById(objectId);
 
   assertIsApActivity(object);
 

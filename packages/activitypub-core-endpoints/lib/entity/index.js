@@ -7,14 +7,14 @@ const respond_1 = require("./respond");
 class EntityGetEndpoint {
     req;
     res;
-    layers;
+    lib;
     plugins;
     routes;
     url;
-    constructor(req, res, layers, plugins, url) {
+    constructor(req, res, lib, plugins, url) {
         this.req = req;
         this.res = res;
-        this.layers = layers;
+        this.lib = lib;
         this.plugins = plugins;
         this.url = url ?? new URL(req.url, activitypub_core_utilities_1.LOCAL_DOMAIN);
     }

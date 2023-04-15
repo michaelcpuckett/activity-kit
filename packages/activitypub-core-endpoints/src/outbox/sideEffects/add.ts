@@ -11,7 +11,7 @@ export async function handleAdd(this: OutboxPostEndpoint, activity: AP.Entity) {
 
   const objectId = getId(activity.object);
   const targetId = getId(activity.target);
-  const target = await this.layers.data.findEntityById(targetId);
+  const target = await this.lib.findEntityById(targetId);
 
   assertIsApCollection(target);
 
@@ -25,9 +25,9 @@ export async function handleAdd(this: OutboxPostEndpoint, activity: AP.Entity) {
   }
 
   if (isType(target, AP.CollectionTypes.ORDERED_COLLECTION)) {
-    await this.layers.data.insertOrderedItem(targetId, objectId);
+    await this.lib.insertOrderedItem(targetId, objectId);
   } else if (isType(target, AP.CollectionTypes.COLLECTION)) {
-    await this.layers.data.insertItem(targetId, objectId);
+    await this.lib.insertItem(targetId, objectId);
   } else {
     throw new Error('Bad target: Not a collection.');
   }

@@ -13,11 +13,11 @@ export async function respond(this: NodeinfoGetEndpoint) {
   const version = parseFloat(url.split('nodeinfo/')[1]);
 
   const getTotalUsers = async () => {
-    const persons = await this.layers.data.findAll('entity', {
+    const persons = await this.lib.findAll('entity', {
       type: AP.ActorTypes.PERSON,
     });
 
-    const groups = await this.layers.data.findAll('entity', {
+    const groups = await this.lib.findAll('entity', {
       type: AP.ActorTypes.GROUP,
     });
 

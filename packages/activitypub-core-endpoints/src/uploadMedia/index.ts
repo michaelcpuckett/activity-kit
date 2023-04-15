@@ -1,24 +1,17 @@
-import { Adapters, AP, Plugin, Routes } from 'activitypub-core-types';
+import { Library, AP, Plugin, Routes } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
-import formidable from 'formidable';
+import type { File } from 'formidable';
 import { getActor } from './getActor';
 import { authenticateActor } from './authenticateActor';
 import { parseBody } from './parseBody';
 import { cleanup } from './cleanup';
 import { saveActivity } from './saveActivity';
-import { AuthLayer } from 'activitypub-core-auth-layer';
-import { DataLayer } from 'activitypub-core-data-layer';
-import { StorageLayer } from 'activitypub-core-storage-layer';
 
 export class UploadMediaPostEndpoint {
   routes: Routes;
   req: IncomingMessage;
   res: ServerResponse;
-  layers: {
-    auth: AuthLayer;
-    data: DataLayer;
-    storage: StorageLayer;
-  };
+  lib: Library;
   plugins?: Plugin[];
 
   actor: AP.Actor | null = null;
@@ -27,7 +20,7 @@ export class UploadMediaPostEndpoint {
         object: AP.Image | AP.Document | AP.Video | AP.Audio;
       })
     | null = null;
-  file: formidable.File | null = null;
+  file: File | null = null;
 
   protected getActor = getActor;
   protected authenticateActor = authenticateActor;
@@ -39,17 +32,13 @@ export class UploadMediaPostEndpoint {
     routes: Routes,
     req: IncomingMessage,
     res: ServerResponse,
-    layers: {
-      auth: AuthLayer;
-      data: DataLayer;
-      storage: StorageLayer;
-    },
+    lib: Library,
     plugins?: Plugin[],
   ) {
     this.routes = routes;
     this.req = req;
     this.res = res;
-    this.layers = layers;
+    this.lib = lib;
     this.plugins = plugins;
   }
 
@@ -58,7 +47,7 @@ export class UploadMediaPostEndpoint {
       await this.getActor();
       await this.authenticateActor();
       await this.parseBody();
-      const url = await this.layers.storage.upload(this.file);
+      const url = await this.lib.upload(this.file);
       this.activity.object.url = url;
       await this.cleanup();
       await this.saveActivity();

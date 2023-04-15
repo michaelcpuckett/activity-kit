@@ -20,13 +20,13 @@ export async function handleAnnounce(
 
   assertExists(objectId);
 
-  const object = await this.layers.data.findEntityById(objectId);
+  const object = await this.lib.findEntityById(objectId);
 
   try {
     assertIsApExtendedObject(object);
 
     const sharesId = getId(object.shares);
-    const shares = await this.layers.data.findEntityById(sharesId);
+    const shares = await this.lib.findEntityById(sharesId);
 
     assertIsApCollection(shares);
 
@@ -40,9 +40,9 @@ export async function handleAnnounce(
     }
 
     if (isType(shares, AP.CollectionTypes.COLLECTION)) {
-      await this.layers.data.insertItem(sharesId, activity.id);
+      await this.lib.insertItem(sharesId, activity.id);
     } else if (isType(shares, AP.CollectionTypes.ORDERED_COLLECTION)) {
-      await this.layers.data.insertOrderedItem(sharesId, activity.id);
+      await this.lib.insertOrderedItem(sharesId, activity.id);
     }
   } catch (error) {
     console.log(error);

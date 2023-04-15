@@ -4,7 +4,7 @@ exports.getActors = void 0;
 const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function getActors() {
     const url = `${activitypub_core_utilities_1.LOCAL_DOMAIN}${this.req.url}`;
-    const actor = await this.layers.data.findOne('entity', {
+    const actor = await this.lib.findOne('entity', {
         inbox: url,
     });
     if (!actor || !actor.id || !('inbox' in actor)) {

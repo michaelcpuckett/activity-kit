@@ -17,14 +17,14 @@ class InboxPostEndpoint {
     routes;
     req;
     res;
-    layers;
+    lib;
     plugins;
     activity = null;
-    constructor(routes, req, res, layers, plugins) {
+    constructor(routes, req, res, lib, plugins) {
         this.routes = routes;
         this.req = req;
         this.res = res;
-        this.layers = layers;
+        this.lib = lib;
         this.plugins = plugins;
     }
     getActors = getActors_1.getActors;

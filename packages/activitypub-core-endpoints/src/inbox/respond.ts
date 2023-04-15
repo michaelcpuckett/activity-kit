@@ -10,7 +10,7 @@ export async function respond(this: InboxPostEndpoint) {
   const activityId = getId(this.activity);
 
   if (activityId) {
-    const existingActivity = await this.layers.data.findEntityById(activityId);
+    const existingActivity = await this.lib.findEntityById(activityId);
 
     if (existingActivity) {
       console.log(
@@ -30,12 +30,12 @@ export async function respond(this: InboxPostEndpoint) {
       continue;
     }
 
-    await this.layers.data.insertOrderedItem(getId(actor.inbox), activityId);
+    await this.lib.insertOrderedItem(getId(actor.inbox), activityId);
 
     await this.runSideEffects(actor);
   }
 
-  await this.layers.data.saveEntity(this.activity);
+  await this.lib.saveEntity(this.activity);
   await this.broadcastActivity();
 
   this.res.statusCode = 200;

@@ -1,4 +1,4 @@
-import { AP, Routes, Plugin } from 'activitypub-core-types';
+import { AP, Routes, Plugin, Library } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { runSideEffects } from './runSideEffects';
 import { authenticateActor } from './authenticateActor';
@@ -22,19 +22,12 @@ import { handleUndoFollow } from './sideEffects/undo/undoFollow';
 import { handleUndoAccept } from './sideEffects/undo/undoAccept';
 import { handleUndoLike } from './sideEffects/undo/undoLike';
 import { handleUndoAnnounce } from './sideEffects/undo/undoAnnounce';
-import { AuthLayer } from 'activitypub-core-auth-layer';
-import { DataLayer } from 'activitypub-core-data-layer';
-import { StorageLayer } from 'activitypub-core-storage-layer';
 
 export class OutboxPostEndpoint {
   routes: Routes;
   req: IncomingMessage;
   res: ServerResponse;
-  layers: {
-    auth: AuthLayer;
-    data: DataLayer;
-    storage: StorageLayer;
-  };
+  lib: Library;
   plugins?: Plugin[];
 
   actor: AP.Actor | null = null;
@@ -44,17 +37,13 @@ export class OutboxPostEndpoint {
     routes: Routes,
     req: IncomingMessage,
     res: ServerResponse,
-    layers: {
-      auth: AuthLayer;
-      data: DataLayer;
-      storage: StorageLayer;
-    },
+    lib: Library,
     plugins?: Plugin[],
   ) {
     this.routes = routes;
     this.req = req;
     this.res = res;
-    this.layers = layers;
+    this.lib = lib;
     this.plugins = plugins;
   }
 
