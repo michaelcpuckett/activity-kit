@@ -27,7 +27,8 @@
   },
   "dependencies": {
     "activitypub-core-types": "^0.3.2",
-    "activitypub-core-utilities": "^0.3.2"
+    "activitypub-core-utilities": "^0.3.2",
+    "isomorphic-fetch": "^3.0.0"
   },
   "devDependencies": {
     "@types/formidable": "^2.0.5",
