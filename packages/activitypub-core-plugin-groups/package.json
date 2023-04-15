@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-plugin-groups",
-  "version": "0.2.132",
+  "version": "0.3.0",
   "description": "> TODO: description",
   "author": "Michael Puckett <michael@puckett.contact>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -22,17 +22,17 @@
     "lint": "eslint src/**/*.ts"
   },
   "devDependencies": {
+    "@types/path-to-regexp": "^1.7.0",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
-    "@types/path-to-regexp": "^1.7.0",
     "eslint": "^8.25.0",
     "prettier": "^2.7.1",
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "activitypub-core-endpoints": "^0.2.132",
-    "activitypub-core-types": "^0.2.123",
-    "activitypub-core-utilities": "^0.2.123",
+    "activitypub-core-endpoints": "^0.3.0",
+    "activitypub-core-types": "^0.3.0",
+    "activitypub-core-utilities": "^0.3.0",
     "cheerio": "^1.0.0-rc.12",
     "jsdom": "^21.1.0",
     "path-to-regexp": "^6.2.1"

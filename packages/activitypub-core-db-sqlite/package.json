@@ -1,6 +1,6 @@
 {
   "name": "activitypub-core-db-sqlite",
-  "version": "0.2.132",
+  "version": "0.3.0",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -25,16 +25,16 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "activitypub-core-types": "^0.2.123",
-    "activitypub-core-utilities": "^0.2.123"
+    "activitypub-core-types": "^0.3.0",
+    "activitypub-core-utilities": "^0.3.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0",
     "prettier": "^2.7.1",
-    "typescript": "^5.0.4",
-    "sqlite": "^4.1.2"
+    "sqlite": "^4.1.2",
+    "typescript": "^5.0.4"
   },
   "gitHead": "b032f2efada568db0757a04a5d1f2758cef5518c"
 }
