@@ -5,12 +5,12 @@ import { OutboxPostEndpoint } from '.';
 
 export async function authenticateActor(this: OutboxPostEndpoint) {
   const cookies = cookie.parse(this.req.headers.cookie ?? '');
-  const userId = await this.adapters.auth.getUserIdByToken(
+  const userId = await this.layers.auth.getUserIdByToken(
     cookies.__session ?? '',
   );
 
   try {
-    const authenticatedActor = await this.adapters.db.getActorByUserId(userId);
+    const authenticatedActor = await this.layers.data.getActorByUserId(userId);
 
     assertIsApActor(authenticatedActor);
 

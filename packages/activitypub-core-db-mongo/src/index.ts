@@ -1,8 +1,9 @@
-import fetch from 'isomorphic-fetch';
 import { Db } from 'mongodb';
 
+import { DbAdapter } from 'activitypub-core-types';
+
 import { findOne } from './findOne';
-import { findEntityById } from './findEntityById';
+import { findAll } from './findAll';
 import { findStringValueById } from './findStringValueById';
 import { findStringIdByValue } from './findStringIdByValue';
 import { saveEntity } from './saveEntity';
@@ -13,78 +14,33 @@ import {
   insertOrderedItem,
   removeItem,
 } from './insert';
-import { fetchEntityById } from './fetchEntityById';
-import { queryById } from './queryById';
-import { expandEntity } from './expandEntity';
-import { getPrivateKey } from './getPrivateKey';
-import { getCollectionItems } from './getCollectionItems';
-import { getPaginatedCollectionItems } from './getPaginatedCollectionItems';
-import { expandCollection } from './expandCollection';
-import { findAll } from './findAll';
-import { getActorByUserId } from './getActorByUserId';
-import { getStreamByName } from './getStreamByName';
-import type {
-  CryptoAdapter,
-  DbAdapter,
-  FetchPolyfill,
-} from 'activitypub-core-types';
 
 export class MongoDbAdapter implements DbAdapter {
   db: unknown;
-  adapters: {
-    crypto: CryptoAdapter;
-    fetch?: FetchPolyfill;
-  };
 
-  constructor(
-    db: Db,
-    adapters: {
-      crypto: CryptoAdapter;
-      fetch?: FetchPolyfill;
-    },
-  ) {
+  constructor(db: Db) {
     this.db = db;
-    this.adapters = {
-      fetch,
-      ...adapters,
-    };
   }
 
   // Find.
 
   public findOne = findOne;
   public findAll = findAll;
-  public findEntityById = findEntityById;
   public findStringValueById = findStringValueById;
   public findStringIdByValue = findStringIdByValue;
-  public getPrivateKey = getPrivateKey;
-  public getStreamByName = getStreamByName;
-
-  // Auth.
-
-  public getActorByUserId = getActorByUserId;
 
   // Save.
 
   public saveEntity = saveEntity;
   public saveString = saveString;
 
-  // Insert/Remove
+  // Insert.
 
   public insertItem = insertItem;
-  public removeItem = removeItem;
   public insertOrderedItem = insertOrderedItem;
+
+  // Remove.
+
+  public removeItem = removeItem;
   public removeOrderedItem = removeOrderedItem;
-
-  // Fetch.
-
-  public fetchEntityById = fetchEntityById;
-  public queryById = queryById;
-
-  // Expand
-
-  public expandEntity = expandEntity;
-  public getCollectionItems = getCollectionItems;
-  public getPaginatedCollectionItems = getPaginatedCollectionItems;
-  public expandCollection = expandCollection;
 }

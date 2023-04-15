@@ -7,8 +7,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "directories": {
-    "lib": "lib",
-    "test": "__tests__"
+    "lib": "lib"
   },
   "files": [
     "lib"
@@ -18,9 +17,7 @@
     "url": "git+https://github.com/michaelcpuckett/activitypub-core.git"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.json",
-    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js",
-    "dev": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch",
+    "build": "node .build.js",
     "format": "prettier --config .prettierrc \"**/*.ts\" --write",
     "lint": "eslint src/**/*.ts"
   },
@@ -28,23 +25,16 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "activitypub-core-delivery": "^0.2.132",
     "activitypub-core-types": "^0.2.123",
     "activitypub-core-utilities": "^0.2.123"
   },
   "devDependencies": {
-    "@types/jest": "^29.1.2",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
-    "dotenv": "^16.0.3",
-    "esbuild": "^0.17.16",
-    "esbuild-jest": "^0.5.0",
     "eslint": "^8.25.0",
-    "jest": "^29.1.2",
     "mongodb": "^4.10.0",
     "prettier": "^2.7.1",
-    "ts-jest": "^29.0.3",
-    "typescript": "^4.8.4"
+    "typescript": "^5.0.4"
   },
   "gitHead": "237f2c816e3c96fa691f99af85300a3a9884745a"
 }

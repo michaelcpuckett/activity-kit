@@ -5,23 +5,21 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 const activitypub_core_types_1 = require("activitypub-core-types");
 async function getActors() {
     (0, activitypub_core_types_1.assertIsApActivity)(this.activity);
-    const actorUrls = await this.adapters.delivery.getRecipientUrls(this.activity);
+    const actorUrls = await this.layers.data.getRecipientUrls(this.activity);
     console.log(actorUrls.map((url) => url.toString()));
-    const actors = [];
-    const foundEntities = await Promise.all(actorUrls.map(async (actorUrl) => {
-        const isLocal = (0, activitypub_core_utilities_1.getCollectionNameByUrl)(actorUrl) !== 'foreignEntity';
-        if (isLocal) {
-            return await this.adapters.db.findEntityById(actorUrl);
+    return (await Promise.all(actorUrls.map(async (actorUrl) => {
+        if ((0, activitypub_core_utilities_1.getCollectionNameByUrl)(actorUrl) === 'foreignEntity') {
+            return [];
         }
-    }));
-    for (const foundEntity of foundEntities) {
         try {
+            const foundEntity = await this.layers.data.findEntityById(actorUrl);
             (0, activitypub_core_types_1.assertIsApActor)(foundEntity);
-            actors.push(foundEntity);
+            return [foundEntity];
         }
-        catch (error) { }
-    }
-    return actors;
+        catch (error) {
+            return [];
+        }
+    }))).flat();
 }
 exports.getActors = getActors;
 //# sourceMappingURL=getActors.js.map

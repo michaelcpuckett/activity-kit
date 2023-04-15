@@ -6,7 +6,7 @@ const activitypub_core_utilities_1 = require("activitypub-core-utilities");
 async function handleUndo(activity) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.UNDO);
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
-    const object = await this.adapters.db.findEntityById(objectId);
+    const object = await this.layers.data.findEntityById(objectId);
     (0, activitypub_core_types_1.assertIsApActivity)(object);
     if (!isActorAuthorizedToModifyObject(this.actor, activity)) {
         throw new Error('Not authorized to modify object!');

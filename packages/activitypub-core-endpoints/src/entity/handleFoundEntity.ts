@@ -12,7 +12,7 @@ import { stringify } from 'activitypub-core-utilities';
 
 export async function handleFoundEntity(
   this: EntityGetEndpoint,
-  render: Function,
+  render: (...args: unknown[]) => Promise<string>,
   entity: AP.Entity,
   authorizedActor?: AP.Actor,
 ) {

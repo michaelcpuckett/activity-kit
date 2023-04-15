@@ -3,9 +3,9 @@ import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { OutboxPostEndpoint } from '.';
 
 export async function getActor(this: OutboxPostEndpoint) {
-  const url = new URL(`${LOCAL_DOMAIN}${this.req.url}`);
+  const url = new URL(this.req.url, LOCAL_DOMAIN);
 
-  const actor = await this.adapters.db.findOne('entity', {
+  const actor = await this.layers.data.findOne('entity', {
     outbox: url.toString(),
   });
 

@@ -5,12 +5,12 @@ const respond_1 = require("./respond");
 class WebfingerGetEndpoint {
     req;
     res;
-    adapters;
+    layers;
     plugins;
-    constructor(req, res, adapters, plugins) {
+    constructor(req, res, layers, plugins) {
         this.req = req;
         this.res = res;
-        this.adapters = adapters;
+        this.layers = layers;
         this.plugins = plugins;
     }
     respond = respond_1.respond;

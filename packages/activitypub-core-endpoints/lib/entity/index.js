@@ -7,16 +7,16 @@ const respond_1 = require("./respond");
 class EntityGetEndpoint {
     req;
     res;
-    adapters;
+    layers;
     plugins;
     routes;
     url;
-    constructor(req, res, adapters, plugins, url) {
+    constructor(req, res, layers, plugins, url) {
         this.req = req;
         this.res = res;
-        this.adapters = adapters;
+        this.layers = layers;
         this.plugins = plugins;
-        this.url = url ?? new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${req.url}`);
+        this.url = url ?? new URL(req.url, activitypub_core_utilities_1.LOCAL_DOMAIN);
     }
     handleFoundEntity = handleFoundEntity_1.handleFoundEntity;
     handleBadRequest() {

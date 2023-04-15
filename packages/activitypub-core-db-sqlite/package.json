@@ -17,8 +17,7 @@
     "url": "git+https://github.com/michaelcpuckett/activitypub-core.git"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.json",
-    "dev": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch",
+    "build": "node .build.js",
     "format": "prettier --config .prettierrc \"**/*.ts\" --write",
     "lint": "eslint src/**/*.ts"
   },
@@ -26,21 +25,16 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "activitypub-core-delivery": "^0.2.132",
     "activitypub-core-types": "^0.2.123",
-    "activitypub-core-utilities": "^0.2.123",
-    "sql-template-strings": "^2.2.2",
-    "sqlite": "^4.1.2",
-    "sqlite3": "^5.1.6"
+    "activitypub-core-utilities": "^0.2.123"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
-    "dotenv": "^16.0.3",
     "eslint": "^8.25.0",
-    "mongodb": "^4.10.0",
     "prettier": "^2.7.1",
-    "typescript": "^4.8.4"
+    "typescript": "^5.0.4",
+    "sqlite": "^4.1.2"
   },
   "gitHead": "b032f2efada568db0757a04a5d1f2758cef5518c"
 }

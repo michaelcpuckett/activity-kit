@@ -1,5 +1,5 @@
 import { DbAdapter } from './Db';
-export declare type AuthAdapter = {
+export type AuthAdapter = {
     adapters: {
         db: DbAdapter;
     };

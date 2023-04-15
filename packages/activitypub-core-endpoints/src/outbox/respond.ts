@@ -33,7 +33,7 @@ export async function respond(this: OutboxPostEndpoint) {
       this.routes[type.toLowerCase()],
       compileOptions,
     )({
-      guid: await this.adapters.crypto.randomBytes(16),
+      guid: await this.layers.data.getGuid(),
     })}`,
   );
 
@@ -62,7 +62,7 @@ export async function respond(this: OutboxPostEndpoint) {
   assertIsApActor(this.actor);
 
   // Broadcast to Fediverse.
-  this.adapters.delivery.broadcast(this.activity, this.actor);
+  this.layers.data.broadcast(this.activity, this.actor);
 
   this.res.statusCode = 201;
   this.res.setHeader('Location', this.activity.id.toString());

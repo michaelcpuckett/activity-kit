@@ -7,41 +7,36 @@
   "license": "MIT",
   "main": "lib/index.js",
   "directories": {
-    "lib": "lib",
-    "test": "__tests__"
+    "lib": "lib"
   },
   "files": [
     "lib"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.json",
+    "build": "node .build.js",
     "format": "prettier --config .prettierrc \"**/*.ts\" --write",
-    "lint": "eslint src/**/*.ts",
-    "test": "ts-node ../../node_modules/jasmine/bin/jasmine tests/**/*.ts"
+    "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "activitypub-core-delivery": "^0.2.132",
+    "activitypub-core-auth-layer": "^0.2.132",
+    "activitypub-core-data-layer": "^0.2.132",
+    "activitypub-core-storage-layer": "^0.2.132",
     "activitypub-core-types": "^0.2.123",
     "activitypub-core-utilities": "^0.2.123",
     "cheerio": "^1.0.0-rc.12",
     "cookie": "^0.5.0",
     "formidable": "^2.0.1",
-    "path-to-regexp": "^6.2.1",
-    "superjson": "^1.10.1"
+    "path-to-regexp": "^6.2.1"
   },
   "devDependencies": {
     "@types/cookie": "^0.5.1",
-    "@types/expect": "^24.3.0",
     "@types/formidable": "^2.0.5",
-    "@types/isomorphic-fetch": "^0.0.36",
-    "@types/jasmine": "^4.3.1",
-    "@types/jsonld": "^1.5.6",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0",
     "jasmine": "^4.5.0",
     "prettier": "^2.7.1",
-    "typescript": "^4.8.4"
+    "typescript": "^5.0.4"
   },
   "gitHead": "237f2c816e3c96fa691f99af85300a3a9884745a"
 }

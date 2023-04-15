@@ -15,18 +15,18 @@ export async function handleUndoAnnounce(
   assertIsApType<AP.Announce>(activity, AP.ActivityTypes.ANNOUNCE);
 
   const actorId = getId(activity.actor);
-  const actor = await this.adapters.db.queryById(actorId);
+  const actor = await this.layers.data.queryById(actorId);
 
   assertIsApActor(actor);
 
-  const shared = await this.adapters.db.getStreamByName(actor, 'Shared');
+  const shared = await this.layers.data.getStreamByName(actor, 'Shared');
 
   assertIsApType<AP.OrderedCollection>(
     shared,
     AP.CollectionTypes.ORDERED_COLLECTION,
   );
 
-  await this.adapters.db.removeOrderedItem(shared.id, activity.id);
+  await this.layers.data.removeOrderedItem(shared.id, activity.id);
 
   const objectId = getId(activity.object);
 
@@ -35,7 +35,7 @@ export async function handleUndoAnnounce(
   const isLocal = getCollectionNameByUrl(objectId) !== 'foreignEntity';
 
   if (isLocal) {
-    const object = await this.adapters.db.queryById(objectId);
+    const object = await this.layers.data.queryById(objectId);
 
     assertIsApEntity(object);
 
@@ -49,6 +49,6 @@ export async function handleUndoAnnounce(
       throw new Error('Bad shares collection: no ID.');
     }
 
-    await this.adapters.db.removeOrderedItem(sharesId, activity.id);
+    await this.layers.data.removeOrderedItem(sharesId, activity.id);
   }
 }

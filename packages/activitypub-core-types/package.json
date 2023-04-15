@@ -13,8 +13,7 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.json",
-    "dev": "ts-node ./src/index.ts",
+    "build": "node .build.js",
     "format": "prettier --config .prettierrc \"**/*.ts\" --write",
     "lint": "eslint activitypub/**/*.ts"
   },
@@ -23,7 +22,7 @@
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0",
     "prettier": "^2.7.1",
-    "ts-node": "^10.9.1"
+    "typescript": "^5.0.4"
   },
   "gitHead": "237f2c816e3c96fa691f99af85300a3a9884745a",
   "dependencies": {

@@ -15,7 +15,7 @@ async function respond() {
         ? this.activity.type[0]
         : this.activity.type;
     const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()], compileOptions)({
-        guid: await this.adapters.crypto.randomBytes(16),
+        guid: await this.layers.data.getGuid(),
     })}`);
     this.activity.id = activityId;
     if ((0, activitypub_core_utilities_1.isTypeOf)(this.activity, activitypub_core_types_1.AP.ActivityTypes)) {
@@ -31,7 +31,7 @@ async function respond() {
     (0, activitypub_core_types_1.assertExists)(this.activity.id);
     await this.saveActivity();
     (0, activitypub_core_types_1.assertIsApActor)(this.actor);
-    this.adapters.delivery.broadcast(this.activity, this.actor);
+    this.layers.data.broadcast(this.activity, this.actor);
     this.res.statusCode = 201;
     this.res.setHeader('Location', this.activity.id.toString());
     this.res.end();

@@ -7,13 +7,13 @@ async function handleLike(activity, recipient) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.LIKE);
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
     (0, activitypub_core_types_1.assertExists)(objectId);
-    const object = await this.adapters.db.findEntityById(objectId);
+    const object = await this.layers.data.findEntityById(objectId);
     (0, activitypub_core_types_1.assertIsApEntity)(object);
     try {
         (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
         const likesId = (0, activitypub_core_utilities_1.getId)(object.likes);
         (0, activitypub_core_types_1.assertExists)(likesId);
-        const likes = await this.adapters.db.findEntityById(likesId);
+        const likes = await this.layers.data.findEntityById(likesId);
         (0, activitypub_core_types_1.assertIsApCollection)(likes);
         const attributedToId = (0, activitypub_core_utilities_1.getId)(likes.attributedTo);
         (0, activitypub_core_types_1.assertExists)(attributedToId);
@@ -21,10 +21,10 @@ async function handleLike(activity, recipient) {
             return;
         }
         if ((0, activitypub_core_utilities_1.isType)(likes, activitypub_core_types_1.AP.CollectionTypes.COLLECTION)) {
-            await this.adapters.db.insertItem(likesId, activity.id);
+            await this.layers.data.insertItem(likesId, activity.id);
         }
         else if ((0, activitypub_core_utilities_1.isType)(likes, activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
-            await this.adapters.db.insertOrderedItem(likesId, activity.id);
+            await this.layers.data.insertOrderedItem(likesId, activity.id);
         }
     }
     catch (error) {

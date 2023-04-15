@@ -17,7 +17,7 @@ export async function handleDelete(
 
   assertExists(objectId);
 
-  const object = await this.adapters.db.findEntityById(objectId);
+  const object = await this.layers.data.findEntityById(objectId);
 
   assertIsApEntity(object);
 
@@ -29,5 +29,5 @@ export async function handleDelete(
     formerType: object.type,
   };
 
-  await this.adapters.db.saveEntity(activity.object);
+  await this.layers.data.saveEntity(activity.object);
 }

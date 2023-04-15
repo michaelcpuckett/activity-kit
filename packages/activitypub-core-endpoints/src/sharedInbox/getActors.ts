@@ -9,30 +9,27 @@ export async function getActors(
 ): Promise<AP.Actor[]> {
   assertIsApActivity(this.activity);
 
-  const actorUrls = await this.adapters.delivery.getRecipientUrls(
-    this.activity,
-  );
+  const actorUrls = await this.layers.data.getRecipientUrls(this.activity);
 
   console.log(actorUrls.map((url) => url.toString()));
 
-  const actors: AP.Actor[] = [];
+  return (
+    await Promise.all(
+      actorUrls.map(async (actorUrl) => {
+        if (getCollectionNameByUrl(actorUrl) === 'foreignEntity') {
+          return [];
+        }
 
-  const foundEntities = await Promise.all(
-    actorUrls.map(async (actorUrl) => {
-      const isLocal = getCollectionNameByUrl(actorUrl) !== 'foreignEntity';
+        try {
+          const foundEntity = await this.layers.data.findEntityById(actorUrl);
 
-      if (isLocal) {
-        return await this.adapters.db.findEntityById(actorUrl);
-      }
-    }),
-  );
+          assertIsApActor(foundEntity);
 
-  for (const foundEntity of foundEntities) {
-    try {
-      assertIsApActor(foundEntity);
-      actors.push(foundEntity);
-    } catch (error) {}
-  }
-
-  return actors;
+          return [foundEntity];
+        } catch (error) {
+          return [];
+        }
+      }),
+    )
+  ).flat();
 }

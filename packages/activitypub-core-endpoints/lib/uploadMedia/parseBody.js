@@ -49,10 +49,10 @@ async function parseBody() {
         !Array.isArray(files.file)) {
         this.file = files.file;
         const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.create)({
-            guid: await this.adapters.crypto.randomBytes(16),
+            guid: await this.layers.data.getGuid(),
         })}`);
         const objectId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[getType(this.file.mimetype).toLowerCase()])({
-            guid: await this.adapters.crypto.randomBytes(16),
+            guid: await this.layers.data.getGuid(),
         })}`);
         const object = {
             '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,

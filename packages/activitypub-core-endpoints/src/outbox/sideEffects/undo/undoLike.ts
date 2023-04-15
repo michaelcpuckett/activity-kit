@@ -2,7 +2,6 @@ import {
   AP,
   assertExists,
   assertIsApActor,
-  assertIsApEntity,
   assertIsApExtendedObject,
   assertIsApType,
 } from 'activitypub-core-types';
@@ -16,7 +15,7 @@ export async function handleUndoLike(
   assertIsApType<AP.Like>(activity, AP.ActivityTypes.LIKE);
 
   const actorId = getId((activity as AP.Activity).actor);
-  const actor = await this.adapters.db.queryById(actorId);
+  const actor = await this.layers.data.queryById(actorId);
 
   assertIsApActor(actor);
 
@@ -28,10 +27,10 @@ export async function handleUndoLike(
 
   assertExists(likedId);
 
-  await this.adapters.db.removeOrderedItem(likedId, objectId);
+  await this.layers.data.removeOrderedItem(likedId, objectId);
 
   try {
-    const object = await this.adapters.db.queryById(objectId);
+    const object = await this.layers.data.queryById(objectId);
 
     assertIsApExtendedObject(object);
 
@@ -45,7 +44,7 @@ export async function handleUndoLike(
       throw new Error('Cannot add to remote collection.');
     }
 
-    await this.adapters.db.removeOrderedItem(likesId, activity.id);
+    await this.layers.data.removeOrderedItem(likesId, activity.id);
   } catch (error) {
     console.log(error);
   }

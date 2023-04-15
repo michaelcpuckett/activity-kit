@@ -8,7 +8,7 @@ async function respond() {
     (0, activitypub_core_types_1.assertExists)(this.activity);
     const activityId = (0, activitypub_core_utilities_1.getId)(this.activity);
     if (activityId) {
-        const existingActivity = await this.adapters.db.findEntityById(activityId);
+        const existingActivity = await this.layers.data.findEntityById(activityId);
         if (existingActivity) {
             console.log('We have already received this activity. Assuming it was forwarded by another server.');
             this.res.statusCode = 200;
@@ -22,10 +22,10 @@ async function respond() {
             console.log('Blocked from appearing in this inbox.');
             continue;
         }
-        await this.adapters.db.insertOrderedItem((0, activitypub_core_utilities_1.getId)(actor.inbox), activityId);
+        await this.layers.data.insertOrderedItem((0, activitypub_core_utilities_1.getId)(actor.inbox), activityId);
         await this.runSideEffects(actor);
     }
-    await this.adapters.db.saveEntity(this.activity);
+    await this.layers.data.saveEntity(this.activity);
     await this.broadcastActivity();
     this.res.statusCode = 200;
     this.res.end();

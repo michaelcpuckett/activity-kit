@@ -59,7 +59,7 @@ async function handleCreate(activity) {
         .replace(/^-+|-+$/g, '');
     const type = Array.isArray(object.type) ? object.type[0] : object.type;
     const objectId = new URL(`${activitypub_core_utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()])({
-        guid: await this.adapters.crypto.randomBytes(16),
+        guid: await this.layers.data.getGuid(),
         year,
         month,
         day,
@@ -124,11 +124,11 @@ async function handleCreate(activity) {
         object.shares = objectSharesId;
         object.published = publishedDate;
         if (object.inReplyTo) {
-            const objectInReplyTo = await this.adapters.db.findEntityById((0, activitypub_core_utilities_3.getId)(object.inReplyTo));
+            const objectInReplyTo = await this.layers.data.findEntityById((0, activitypub_core_utilities_3.getId)(object.inReplyTo));
             if (objectInReplyTo && 'replies' in objectInReplyTo) {
                 const repliesCollectionId = (0, activitypub_core_utilities_3.getId)(objectInReplyTo.replies);
                 if (repliesCollectionId) {
-                    await this.adapters.db.insertOrderedItem(repliesCollectionId, objectId);
+                    await this.layers.data.insertOrderedItem(repliesCollectionId, objectId);
                 }
             }
         }
@@ -148,7 +148,7 @@ async function handleCreate(activity) {
                     })}`);
                     tag.id = hashtagCollectionUrl;
                     tag.url = hashtagCollectionUrl;
-                    const hashtagCollection = await this.adapters.db.findEntityById(hashtagCollectionUrl);
+                    const hashtagCollection = await this.layers.data.findEntityById(hashtagCollectionUrl);
                     if (!hashtagCollection) {
                         const hashtagEntity = {
                             id: hashtagCollectionUrl,
@@ -160,29 +160,29 @@ async function handleCreate(activity) {
                             ],
                             orderedItems: [],
                         };
-                        await this.adapters.db.saveEntity(hashtagEntity);
-                        const serverActor = await this.adapters.db.findOne('entity', {
+                        await this.layers.data.saveEntity(hashtagEntity);
+                        const serverActor = await this.layers.data.findOne('entity', {
                             preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
                         });
                         (0, activitypub_core_types_1.assertIsApActor)(serverActor);
-                        const serverHashtags = await this.adapters.db.getStreamByName(serverActor, 'Hashtags');
+                        const serverHashtags = await this.layers.data.getStreamByName(serverActor, 'Hashtags');
                         const serverHashtagsUrl = serverHashtags.id;
-                        await this.adapters.db.insertItem(serverHashtagsUrl, hashtagCollectionUrl);
+                        await this.layers.data.insertItem(serverHashtagsUrl, hashtagCollectionUrl);
                     }
-                    await this.adapters.db.insertOrderedItem(hashtagCollectionUrl, objectId);
+                    await this.layers.data.insertOrderedItem(hashtagCollectionUrl, objectId);
                 }
             }
             object.tag = tags;
         }
         await Promise.all([
-            this.adapters.db.saveEntity(object),
-            this.adapters.db.saveEntity(objectReplies),
-            this.adapters.db.saveEntity(objectLikes),
-            this.adapters.db.saveEntity(objectShares),
+            this.layers.data.saveEntity(object),
+            this.layers.data.saveEntity(objectReplies),
+            this.layers.data.saveEntity(objectLikes),
+            this.layers.data.saveEntity(objectShares),
         ]);
     }
     else {
-        await this.adapters.db.saveEntity(object);
+        await this.layers.data.saveEntity(object);
     }
     (0, activitypub_core_types_1.assertIsApType)(this.activity, activitypub_core_types_1.AP.ActivityTypes.CREATE);
     this.activity.object = object;

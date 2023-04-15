@@ -1,26 +1,33 @@
 import { respond } from './respond';
 import type { IncomingMessage, ServerResponse } from 'http';
-import type { DbAdapter, Plugin } from 'activitypub-core-types';
+import { Plugin } from 'activitypub-core-types';
+import { AuthLayer } from 'activitypub-core-auth-layer';
+import { DataLayer } from 'activitypub-core-data-layer';
+import { StorageLayer } from 'activitypub-core-storage-layer';
 
 export class WebfingerGetEndpoint {
   req: IncomingMessage;
   res: ServerResponse;
-  adapters: {
-    db: DbAdapter;
+  layers: {
+    auth: AuthLayer;
+    data: DataLayer;
+    storage: StorageLayer;
   };
   plugins: Plugin[];
 
   constructor(
     req: IncomingMessage,
     res: ServerResponse,
-    adapters: {
-      db: DbAdapter;
+    layers: {
+      auth: AuthLayer;
+      data: DataLayer;
+      storage: StorageLayer;
     },
     plugins?: Plugin[],
   ) {
     this.req = req;
     this.res = res;
-    this.adapters = adapters;
+    this.layers = layers;
     this.plugins = plugins;
   }
 

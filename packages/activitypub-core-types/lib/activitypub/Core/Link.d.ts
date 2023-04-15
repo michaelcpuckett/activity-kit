@@ -17,5 +17,5 @@ export interface BaseLink extends BaseEntity {
 export interface Mention extends BaseLink {
     type: typeof LinkTypes.MENTION;
 }
-export declare type Link = BaseLink | Mention;
-export declare type LinkReference = URL | Link;
+export type Link = BaseLink | Mention;
+export type LinkReference = URL | Link;

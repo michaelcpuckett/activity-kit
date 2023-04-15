@@ -67,11 +67,11 @@ async function saveActivity() {
     const outboxId = (0, activitypub_core_utilities_1.getId)(this.actor.outbox);
     (0, activitypub_core_types_1.assertExists)(outboxId);
     await Promise.all([
-        this.adapters.db.saveEntity(this.activity),
-        this.adapters.db.saveEntity(replies),
-        this.adapters.db.saveEntity(likes),
-        this.adapters.db.saveEntity(shares),
-        this.adapters.db.insertOrderedItem(outboxId, activityId),
+        this.layers.data.saveEntity(this.activity),
+        this.layers.data.saveEntity(replies),
+        this.layers.data.saveEntity(likes),
+        this.layers.data.saveEntity(shares),
+        this.layers.data.insertOrderedItem(outboxId, activityId),
     ]);
 }
 exports.saveActivity = saveActivity;

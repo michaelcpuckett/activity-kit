@@ -11,11 +11,14 @@ import cookie from 'cookie';
 
 const ITEMS_PER_COLLECTION_PAGE = 50;
 
-export async function respond(this: EntityGetEndpoint, render: Function) {
+export async function respond(
+  this: EntityGetEndpoint,
+  render: (...args: unknown[]) => Promise<string>,
+) {
   const cookies = cookie.parse(this.req.headers.cookie ?? '');
 
-  const authorizedActor = await this.adapters.db.getActorByUserId(
-    await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''),
+  const authorizedActor = await this.layers.data.getActorByUserId(
+    await this.layers.auth.getUserIdByToken(cookies.__session ?? ''),
   );
 
   // TODO authorize entity posts by actor.
@@ -29,7 +32,7 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
   }
   const pathname = hasPage ? urlParts.join('/') : this.url.pathname;
 
-  const entity = await this.adapters.db.findEntityById(
+  const entity = await this.layers.data.findEntityById(
     new URL(`${LOCAL_DOMAIN}${pathname}`),
   );
 
@@ -94,7 +97,7 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
 
   // Treat as CollectionPage.
 
-  const expandedCollection = await this.adapters.db.expandCollection(entity);
+  const expandedCollection = await this.layers.data.expandCollection(entity);
 
   const expandedItems = (() => {
     if (isType(expandedCollection, AP.CollectionTypes.ORDERED_COLLECTION)) {
@@ -130,7 +133,7 @@ export async function respond(this: EntityGetEndpoint, render: Function) {
         'object' in item &&
         item.object instanceof URL
       ) {
-        const object = await this.adapters.db.findEntityById(item.object);
+        const object = await this.layers.data.findEntityById(item.object);
 
         if (object) {
           item.object = object;

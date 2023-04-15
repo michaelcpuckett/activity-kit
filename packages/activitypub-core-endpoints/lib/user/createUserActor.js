@@ -6,7 +6,7 @@ const activitypub_core_types_1 = require("activitypub-core-types");
 const path_to_regexp_1 = require("path-to-regexp");
 async function createUserActor(user) {
     (0, activitypub_core_types_1.assertIsApActor)(user);
-    const { publicKey, privateKey } = await this.adapters.crypto.generateKeyPair();
+    const { publicKey, privateKey } = await this.layers.auth.generateKeyPair();
     const publishedDate = new Date();
     const getRouteUrl = (route, data) => new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
         validate: false,
@@ -205,12 +205,12 @@ async function createUserActor(user) {
         published: publishedDate,
     };
     (0, activitypub_core_types_1.assertIsApActor)(userActor);
-    const botActor = await this.adapters.db.findOne('entity', {
+    const botActor = await this.layers.data.findOne('entity', {
         preferredUsername: activitypub_core_utilities_1.SERVER_ACTOR_USERNAME,
     });
     (0, activitypub_core_types_1.assertIsApActor)(botActor);
     const createActorActivityId = getRouteUrl(this.routes.create, {
-        guid: await this.adapters.crypto.randomBytes(16),
+        guid: await this.layers.data.getGuid(),
     });
     const createActorActivity = {
         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
@@ -228,7 +228,7 @@ async function createUserActor(user) {
             if ('handleCreateUserActor' in plugin) {
                 const pluginActivity = await plugin.handleCreateUserActor.call({
                     activity: createActorActivity,
-                    adapters: this.adapters,
+                    layers: this.layers,
                 });
                 (0, activitypub_core_types_1.assertIsApActor)(pluginActivity.object);
                 userActor = pluginActivity.object;
@@ -245,7 +245,7 @@ async function createUserActor(user) {
                             .replace(/^-+|-+$/g, ''),
                     });
                     userActor.streams.push(streamId);
-                    declaredStreams.push(this.adapters.db.saveEntity({
+                    declaredStreams.push(this.layers.data.saveEntity({
                         '@context': activitypub_core_utilities_1.ACTIVITYSTREAMS_CONTEXT,
                         type: activitypub_core_types_1.AP.CollectionTypes.ORDERED_COLLECTION,
                         totalItems: 0,
@@ -261,30 +261,30 @@ async function createUserActor(user) {
         }
     }
     await Promise.all([
-        this.adapters.db.saveEntity(createActorActivity),
-        this.adapters.db.saveEntity(userActor),
-        this.adapters.db.saveEntity(userInbox),
-        this.adapters.db.saveEntity(userOutbox),
-        this.adapters.db.saveEntity(userLiked),
-        this.adapters.db.saveEntity(userFollowers),
-        this.adapters.db.saveEntity(userFollowing),
-        this.adapters.db.saveEntity(userShared),
-        this.adapters.db.saveEntity(userRequests),
-        this.adapters.db.saveEntity(userBlocks),
-        this.adapters.db.saveEntity(userLists),
-        this.adapters.db.saveEntity(userBookmarks),
-        this.adapters.db.saveString('account', user.uid, user.email),
-        this.adapters.db.saveString('privateKey', user.uid, privateKey),
-        this.adapters.db.saveString('username', user.uid, user.preferredUsername),
+        this.layers.data.saveEntity(createActorActivity),
+        this.layers.data.saveEntity(userActor),
+        this.layers.data.saveEntity(userInbox),
+        this.layers.data.saveEntity(userOutbox),
+        this.layers.data.saveEntity(userLiked),
+        this.layers.data.saveEntity(userFollowers),
+        this.layers.data.saveEntity(userFollowing),
+        this.layers.data.saveEntity(userShared),
+        this.layers.data.saveEntity(userRequests),
+        this.layers.data.saveEntity(userBlocks),
+        this.layers.data.saveEntity(userLists),
+        this.layers.data.saveEntity(userBookmarks),
+        this.layers.data.saveString('account', user.uid, user.email),
+        this.layers.data.saveString('privateKey', user.uid, privateKey),
+        this.layers.data.saveString('username', user.uid, user.preferredUsername),
     ]);
     await Promise.all(declaredStreams);
     if (createActorActivity.id && userInbox.id) {
         await Promise.all([
-            this.adapters.db.insertOrderedItem(new URL(`${botActor.id}/outbox`), createActorActivity.id),
-            this.adapters.db.insertOrderedItem(userInbox.id, createActorActivity.id),
+            this.layers.data.insertOrderedItem(new URL(`${botActor.id}/outbox`), createActorActivity.id),
+            this.layers.data.insertOrderedItem(userInbox.id, createActorActivity.id),
         ]);
     }
-    this.adapters.delivery.broadcast(createActorActivity, botActor);
+    this.layers.data.broadcast(createActorActivity, botActor);
 }
 exports.createUserActor = createUserActor;
 //# sourceMappingURL=createUserActor.js.map

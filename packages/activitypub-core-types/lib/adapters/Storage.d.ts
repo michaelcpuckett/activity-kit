@@ -1,5 +1,5 @@
 import type { File } from 'formidable';
-export declare type StorageAdapter = {
+export type StorageAdapter = {
     params: {
         [key: string]: unknown;
     };

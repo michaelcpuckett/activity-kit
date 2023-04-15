@@ -27,15 +27,15 @@ class OutboxPostEndpoint {
     routes;
     req;
     res;
-    adapters;
+    layers;
     plugins;
     actor = null;
     activity = null;
-    constructor(routes, req, res, adapters, plugins) {
+    constructor(routes, req, res, layers, plugins) {
         this.routes = routes;
         this.req = req;
         this.res = res;
-        this.adapters = adapters;
+        this.layers = layers;
         this.plugins = plugins;
     }
     authenticateActor = authenticateActor_1.authenticateActor;

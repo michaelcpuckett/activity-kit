@@ -7,14 +7,14 @@ async function handleCreate(activity, recipient) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.CREATE);
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
     (0, activitypub_core_types_1.assertExists)(objectId);
-    const existingObject = await this.adapters.db.findEntityById(objectId);
+    const existingObject = await this.layers.data.findEntityById(objectId);
     if (existingObject) {
         console.log('We have already received this object.');
         return;
     }
-    const object = await this.adapters.db.queryById(objectId);
+    const object = await this.layers.data.queryById(objectId);
     (0, activitypub_core_types_1.assertIsApEntity)(object);
-    await this.adapters.db.saveEntity(object);
+    await this.layers.data.saveEntity(object);
     try {
         (0, activitypub_core_types_1.assertIsApExtendedObject)(object);
         const inReplyToId = (0, activitypub_core_utilities_1.getId)(object.inReplyTo);
@@ -22,11 +22,11 @@ async function handleCreate(activity, recipient) {
             return;
         }
         (0, activitypub_core_types_1.assertExists)(inReplyToId);
-        const inReplyTo = await this.adapters.db.findEntityById(inReplyToId);
+        const inReplyTo = await this.layers.data.findEntityById(inReplyToId);
         (0, activitypub_core_types_1.assertIsApExtendedObject)(inReplyTo);
         const repliesCollectionId = (0, activitypub_core_utilities_1.getId)(inReplyTo.replies);
         (0, activitypub_core_types_1.assertExists)(repliesCollectionId);
-        const repliesCollection = await this.adapters.db.findEntityById(repliesCollectionId);
+        const repliesCollection = await this.layers.data.findEntityById(repliesCollectionId);
         (0, activitypub_core_types_1.assertIsApCollection)(repliesCollection);
         const attributedToId = (0, activitypub_core_utilities_1.getId)(repliesCollection.attributedTo);
         (0, activitypub_core_types_1.assertExists)(attributedToId);
@@ -35,7 +35,7 @@ async function handleCreate(activity, recipient) {
             console.log('Not applicable to this Actor.');
             return;
         }
-        await this.adapters.db.insertOrderedItem(repliesCollectionId, objectId);
+        await this.layers.data.insertOrderedItem(repliesCollectionId, objectId);
     }
     catch (error) {
         console.log(error);

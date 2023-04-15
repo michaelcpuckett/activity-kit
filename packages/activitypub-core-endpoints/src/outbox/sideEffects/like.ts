@@ -16,7 +16,7 @@ export async function handleLike(
   assertIsApType<AP.Like>(activity, AP.ActivityTypes.LIKE);
 
   const actorId = getId(activity.actor);
-  const actor = await this.adapters.db.queryById(actorId);
+  const actor = await this.layers.data.queryById(actorId);
 
   assertIsApActor(actor);
 
@@ -24,7 +24,7 @@ export async function handleLike(
 
   assertExists(objectId);
 
-  const object = await this.adapters.db.queryById(objectId);
+  const object = await this.layers.data.queryById(objectId);
 
   assertIsApEntity(object);
 
@@ -32,7 +32,7 @@ export async function handleLike(
 
   assertExists(likedId);
 
-  await this.adapters.db.insertOrderedItem(likedId, objectId);
+  await this.layers.data.insertOrderedItem(likedId, objectId);
 
   try {
     assertIsApExtendedObject(object);
@@ -47,7 +47,7 @@ export async function handleLike(
       throw new Error('Cannot add to remote collection.');
     }
 
-    await this.adapters.db.insertOrderedItem(likesId, activity.id);
+    await this.layers.data.insertOrderedItem(likesId, activity.id);
   } catch (error) {
     console.log(error);
   }

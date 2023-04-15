@@ -3,7 +3,7 @@ import { InboxPostEndpoint } from '.';
 
 export async function getActors(this: InboxPostEndpoint) {
   const url = `${LOCAL_DOMAIN}${this.req.url}`;
-  const actor = await this.adapters.db.findOne('entity', {
+  const actor = await this.layers.data.findOne('entity', {
     inbox: url,
   });
 

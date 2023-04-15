@@ -38,7 +38,7 @@ export async function parseBody(this: UploadMediaPostEndpoint) {
 
     const activityId = new URL(
       `${LOCAL_DOMAIN}${compile(this.routes.create)({
-        guid: await this.adapters.crypto.randomBytes(16),
+        guid: await this.layers.data.getGuid(),
       })}`,
     );
 
@@ -46,7 +46,7 @@ export async function parseBody(this: UploadMediaPostEndpoint) {
       `${LOCAL_DOMAIN}${compile(
         this.routes[getType(this.file.mimetype).toLowerCase()],
       )({
-        guid: await this.adapters.crypto.randomBytes(16),
+        guid: await this.layers.data.getGuid(),
       })}`,
     );
 

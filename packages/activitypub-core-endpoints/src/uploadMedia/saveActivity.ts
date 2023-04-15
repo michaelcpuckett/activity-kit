@@ -16,6 +16,8 @@ export async function saveActivity(this: UploadMediaPostEndpoint) {
 
   const publishedDate = new Date();
 
+  // TODO format replies...
+
   const objectReplies: AP.Collection = {
     '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
     id: new URL(`${this.activity.object.id.toString()}/replies`),
@@ -111,15 +113,15 @@ export async function saveActivity(this: UploadMediaPostEndpoint) {
   this.activity.published = publishedDate;
 
   await Promise.all([
-    this.adapters.db.saveEntity(objectReplies),
-    this.adapters.db.saveEntity(objectLikes),
-    this.adapters.db.saveEntity(objectShares),
-    this.adapters.db.saveEntity(this.activity.object as AP.Entity),
-    this.adapters.db.saveEntity(activityReplies),
-    this.adapters.db.saveEntity(activityLikes),
-    this.adapters.db.saveEntity(activityShares),
-    this.adapters.db.saveEntity(this.activity as AP.Entity),
-    this.adapters.db.insertOrderedItem(
+    this.layers.data.saveEntity(objectReplies),
+    this.layers.data.saveEntity(objectLikes),
+    this.layers.data.saveEntity(objectShares),
+    this.layers.data.saveEntity(this.activity.object as AP.Entity),
+    this.layers.data.saveEntity(activityReplies),
+    this.layers.data.saveEntity(activityLikes),
+    this.layers.data.saveEntity(activityShares),
+    this.layers.data.saveEntity(this.activity as AP.Entity),
+    this.layers.data.insertOrderedItem(
       getId(this.actor?.outbox),
       this.activity.id,
     ),

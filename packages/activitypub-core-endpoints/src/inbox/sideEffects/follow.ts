@@ -32,7 +32,7 @@ export async function handleFollow(
 
   assertExists(objectId);
 
-  const object = await this.adapters.db.queryById(objectId);
+  const object = await this.layers.data.queryById(objectId);
 
   assertIsApEntity(object);
 
@@ -47,7 +47,7 @@ export async function handleFollow(
 
   assertExists(actorId);
 
-  const actor = await this.adapters.db.queryById(actorId);
+  const actor = await this.layers.data.queryById(actorId);
 
   assertIsApActor(actor);
 
@@ -70,7 +70,7 @@ export async function handleFollow(
 
   assertExists(followersId);
 
-  const followers = await this.adapters.db.findEntityById(followersId);
+  const followers = await this.layers.data.findEntityById(followersId);
 
   assertIsApType<AP.Collection>(followers, AP.CollectionTypes.COLLECTION);
   assertIsArray(followers.items);
@@ -86,7 +86,7 @@ export async function handleFollow(
   }
 
   if (followee.manuallyApprovesFollowers) {
-    const requests = await this.adapters.db.getStreamByName(
+    const requests = await this.layers.data.getStreamByName(
       followee,
       'Requests',
     );
@@ -95,7 +95,7 @@ export async function handleFollow(
 
     const requestsId = getId(requests);
 
-    await this.adapters.db.insertItem(requestsId, activityId);
+    await this.layers.data.insertItem(requestsId, activityId);
 
     return;
   }
@@ -104,7 +104,7 @@ export async function handleFollow(
 
   const acceptActivityId = `${new URL(
     `${LOCAL_DOMAIN}${compile(this.routes.accept)({
-      guid: await this.adapters.crypto.randomBytes(16),
+      guid: await this.layers.data.getGuid(),
     })}`,
   )}`;
   const publishedDate = new Date();
@@ -125,13 +125,13 @@ export async function handleFollow(
   assertExists(followeeOutboxId);
 
   await Promise.all([
-    this.adapters.db.saveEntity(acceptActivity),
-    this.adapters.db.insertOrderedItem(
+    this.layers.data.saveEntity(acceptActivity),
+    this.layers.data.insertOrderedItem(
       followeeOutboxId,
       new URL(acceptActivityId),
     ),
-    this.adapters.db.insertItem(followersId, followerId),
+    this.layers.data.insertItem(followersId, followerId),
   ]);
 
-  await this.adapters.delivery.broadcast(acceptActivity, followee);
+  await this.layers.data.broadcast(acceptActivity, followee);
 }

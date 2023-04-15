@@ -21,7 +21,7 @@ export async function handleUpdate(
   assertIsApType<AP.Update>(activity, AP.ActivityTypes.UPDATE);
 
   const actorId = getId(activity.actor);
-  const actor = await this.adapters.db.findEntityById(actorId);
+  const actor = await this.layers.data.findEntityById(actorId);
 
   assertIsApActor(actor);
 
@@ -42,7 +42,7 @@ export async function handleUpdate(
   }
 
   const objectId = getId(activity.object);
-  const existingObject = await this.adapters.db.findEntityById(objectId);
+  const existingObject = await this.layers.data.findEntityById(objectId);
 
   assertIsApEntity(existingObject);
 
@@ -117,7 +117,7 @@ export async function handleUpdate(
           tag.id = hashtagCollectionUrl;
           tag.url = hashtagCollectionUrl;
 
-          const hashtagCollection = await this.adapters.db.findEntityById(
+          const hashtagCollection = await this.layers.data.findEntityById(
             hashtagCollectionUrl,
           );
 
@@ -134,20 +134,20 @@ export async function handleUpdate(
               orderedItems: [],
             };
 
-            await this.adapters.db.saveEntity(hashtagEntity);
+            await this.layers.data.saveEntity(hashtagEntity);
 
             const serverHashtagsUrl = new URL(
               `${LOCAL_DOMAIN}${compile(this.routes.serverHashtags)({})}`,
             );
 
-            await this.adapters.db.insertItem(
+            await this.layers.data.insertItem(
               serverHashtagsUrl,
               hashtagCollectionUrl,
             );
           }
 
           if (!existingTagIds.includes(hashtagCollectionUrl.toString())) {
-            await this.adapters.db.insertOrderedItem(
+            await this.layers.data.insertOrderedItem(
               hashtagCollectionUrl,
               objectId,
             );
@@ -157,7 +157,7 @@ export async function handleUpdate(
 
       for (const existingTagId of existingTagIds) {
         if (!newTagIds.includes(existingTagId)) {
-          await this.adapters.db.removeOrderedItem(
+          await this.layers.data.removeOrderedItem(
             new URL(existingTagId),
             objectId,
           );
@@ -185,7 +185,7 @@ export async function handleUpdate(
       : null),
   };
 
-  await this.adapters.db.saveEntity(activity.object);
+  await this.layers.data.saveEntity(activity.object);
 }
 
 function isActorAuthorizedToModifyObject(

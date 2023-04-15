@@ -1,4 +1,4 @@
-export declare type Routes = {
+export type Routes = {
     serverActor: string;
     serverInbox: string;
     serverOutbox: string;

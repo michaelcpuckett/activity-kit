@@ -7,16 +7,13 @@ export async function broadcastActivity(this: InboxPostEndpoint) {
     throw new Error('No activity.');
   }
 
-  const botActor = await this.adapters.db.findOne('entity', {
+  const botActor = await this.layers.data.findOne('entity', {
     preferredUsername: SERVER_ACTOR_USERNAME,
   });
 
   assertIsApActor(botActor);
 
   if (await this.shouldForwardActivity()) {
-    await this.adapters.delivery.broadcast(
-      this.activity as AP.Activity,
-      botActor,
-    );
+    await this.layers.data.broadcast(this.activity as AP.Activity, botActor);
   }
 }

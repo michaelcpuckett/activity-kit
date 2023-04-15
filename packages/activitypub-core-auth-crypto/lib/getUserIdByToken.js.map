@@ -1,1 +1,0 @@
-{"version":3,"file":"getUserIdByToken.js","sourceRoot":"","sources":["../src/getUserIdByToken.ts"],"names":[],"mappings":";;;AAEO,KAAK,UAAU,gBAAgB,CAEpC,KAAa;IAEb,OAAO,CAAC,MAAM,IAAI,CAAC,QAAQ,CAAC,EAAE,CAAC,mBAAmB,CAAC,OAAO,EAAE,KAAK,CAAC,CAAC,IAAI,IAAI,CAAC;AAC9E,CAAC;AALD,4CAKC"}

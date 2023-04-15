@@ -11,7 +11,7 @@ export { CryptoAdapter } from './Crypto';
 export { Plugin } from './Plugin';
 export { Routes } from './Routes';
 export { FetchPolyfill } from './FetchPolyfill';
-export declare type Adapters = {
+export type Adapters = {
     auth: AuthAdapter;
     db: DbAdapter;
     delivery: DeliveryAdapter;

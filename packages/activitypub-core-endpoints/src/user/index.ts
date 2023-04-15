@@ -6,31 +6,37 @@ import {
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
 import type { IncomingMessage, ServerResponse } from 'http';
-import {
-  Plugin,
-  Routes,
-  Adapters,
-  assertHasApType,
-} from 'activitypub-core-types';
+import { Plugin, Routes } from 'activitypub-core-types';
+import { AuthLayer } from 'activitypub-core-auth-layer';
+import { DataLayer } from 'activitypub-core-data-layer';
+import { StorageLayer } from 'activitypub-core-storage-layer';
 
 export class UserPostEndpoint {
   routes: Routes;
   req: IncomingMessage;
   res: ServerResponse;
-  adapters: Adapters;
+  layers: {
+    auth: AuthLayer;
+    data: DataLayer;
+    storage: StorageLayer;
+  };
   plugins?: Plugin[];
 
   constructor(
     routes: Routes,
     req: IncomingMessage,
     res: ServerResponse,
-    adapters: Adapters,
+    layers: {
+      auth: AuthLayer;
+      data: DataLayer;
+      storage: StorageLayer;
+    },
     plugins?: Plugin[],
   ) {
     this.routes = routes;
     this.req = req;
     this.res = res;
-    this.adapters = adapters;
+    this.layers = layers;
     this.plugins = plugins;
   }
 
@@ -80,7 +86,7 @@ export class UserPostEndpoint {
       return;
     }
 
-    const isUsernameTaken = !!(await this.adapters.db.findOne('entity', {
+    const isUsernameTaken = !!(await this.layers.data.findOne('entity', {
       preferredUsername,
     }));
 
@@ -97,13 +103,13 @@ export class UserPostEndpoint {
     }
 
     try {
-      const { uid, token } = await this.adapters.auth.createUser({
+      const { uid, token } = await this.layers.auth.createUser({
         email,
         password,
         preferredUsername,
       });
 
-      const isBotCreated = !!(await this.adapters.db.findOne('entity', {
+      const isBotCreated = !!(await this.layers.data.findOne('entity', {
         preferredUsername: SERVER_ACTOR_USERNAME,
       }));
 

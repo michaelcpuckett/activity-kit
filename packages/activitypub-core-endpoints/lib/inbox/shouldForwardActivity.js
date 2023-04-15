@@ -32,7 +32,7 @@ async function shouldForwardActivity() {
         if (!addresseeId) {
             continue;
         }
-        const foundItem = await this.adapters.db.findEntityById(addresseeId);
+        const foundItem = await this.layers.data.findEntityById(addresseeId);
         if (!foundItem) {
             continue;
         }
@@ -67,7 +67,7 @@ async function shouldForwardActivity() {
         if (!objectId) {
             continue;
         }
-        const foundItem = await this.adapters.db.findEntityById(objectId);
+        const foundItem = await this.layers.data.findEntityById(objectId);
         if (!foundItem) {
             continue;
         }

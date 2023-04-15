@@ -3,7 +3,7 @@ import { parseStream } from 'activitypub-core-utilities';
 import { InboxPostEndpoint } from '.';
 
 export async function parseBody(this: InboxPostEndpoint) {
-  const activity = (await parseStream(this.req)) as AP.Activity;
+  const activity = await parseStream(this.req);
 
   assertIsApActivity(activity);
 

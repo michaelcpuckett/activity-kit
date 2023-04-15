@@ -6,9 +6,9 @@ export async function insertOrderedItem(
   path: URL,
   url: URL,
 ) {
-  const currentRecord = (await this.findEntityById(
-    path,
-  )) as AP.OrderedCollection;
+  const currentRecord = (await this.findOne('entity', {
+    id: path.toString(),
+  })) as AP.OrderedCollection;
   const originalItems: URL[] = (currentRecord?.orderedItems as URL[]) ?? [];
 
   await this.saveEntity({
@@ -23,9 +23,9 @@ export async function removeOrderedItem(
   path: URL,
   url: URL,
 ) {
-  const currentRecord = (await this.findEntityById(
-    path,
-  )) as AP.OrderedCollection;
+  const currentRecord = (await this.findOne('entity', {
+    id: path.toString(),
+  })) as AP.OrderedCollection;
   const originalItems: URL[] = (currentRecord?.orderedItems as URL[]) ?? [];
 
   if (!originalItems.map((item) => item.toString()).includes(url.toString())) {
@@ -43,7 +43,9 @@ export async function removeOrderedItem(
 }
 
 export async function insertItem(this: SqliteDbAdapter, path: URL, url: URL) {
-  const currentRecord = (await this.findEntityById(path)) as AP.Collection;
+  const currentRecord = (await this.findOne('entity', {
+    id: path.toString(),
+  })) as AP.OrderedCollection;
   const originalItems: URL[] = (currentRecord?.items as URL[]) ?? [];
 
   await this.saveEntity({
@@ -54,9 +56,9 @@ export async function insertItem(this: SqliteDbAdapter, path: URL, url: URL) {
 }
 
 export async function removeItem(this: SqliteDbAdapter, path: URL, url: URL) {
-  const currentRecord = (await this.findEntityById(
-    path,
-  )) as AP.OrderedCollection;
+  const currentRecord = (await this.findOne('entity', {
+    id: path.toString(),
+  })) as AP.OrderedCollection;
   const originalItems: URL[] = (currentRecord?.items as URL[]) ?? [];
 
   if (!originalItems.map((item) => item.toString()).includes(url.toString())) {

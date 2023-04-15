@@ -1,9 +1,5 @@
 import { HomeGetEndpoint } from '.';
-import {
-  AP,
-  assertIsApActor,
-  assertIsApType,
-} from 'activitypub-core-types';
+import { AP, assertIsApActor, assertIsApType } from 'activitypub-core-types';
 import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   CONTENT_TYPE_HEADER,
@@ -18,12 +14,12 @@ import { stringify } from 'activitypub-core-utilities';
 
 export const respond = async function (
   this: HomeGetEndpoint,
-  render: Function,
+  render: (...args: unknown[]) => Promise<string>,
 ) {
   const cookies = cookie.parse(this.req.headers.cookie ?? '');
 
-  const actor = await this.adapters.db.getActorByUserId(
-    await this.adapters.auth.getUserIdByToken(cookies.__session ?? ''),
+  const actor = await this.layers.data.getActorByUserId(
+    await this.layers.auth.getUserIdByToken(cookies.__session ?? ''),
   );
 
   if (!actor) {
@@ -35,8 +31,8 @@ export const respond = async function (
 
   assertIsApActor(actor);
 
-  const actorInbox = await this.adapters.db.findEntityById(getId(actor.inbox));
-  const actorOutbox = await this.adapters.db.findEntityById(
+  const actorInbox = await this.layers.data.findEntityById(getId(actor.inbox));
+  const actorOutbox = await this.layers.data.findEntityById(
     getId(actor.outbox),
   );
 
@@ -44,6 +40,7 @@ export const respond = async function (
     actorInbox,
     AP.CollectionTypes.ORDERED_COLLECTION,
   );
+
   assertIsApType<AP.OrderedCollection>(
     actorOutbox,
     AP.CollectionTypes.ORDERED_COLLECTION,

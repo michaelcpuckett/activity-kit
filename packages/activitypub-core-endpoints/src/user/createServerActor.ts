@@ -11,7 +11,7 @@ import { compile } from 'path-to-regexp';
 
 export async function createServerActor(this: UserPostEndpoint) {
   const { publicKey: botPublicKey, privateKey: botPrivateKey } =
-    await this.adapters.crypto.generateKeyPair();
+    await this.layers.auth.generateKeyPair();
 
   const publishedDate = new Date();
 
@@ -130,13 +130,13 @@ export async function createServerActor(this: UserPostEndpoint) {
   };
 
   await Promise.all([
-    this.adapters.db.saveEntity(botActor),
-    this.adapters.db.saveEntity(botInbox),
-    this.adapters.db.saveEntity(botOutbox),
-    this.adapters.db.saveEntity(botFollowing),
-    this.adapters.db.saveEntity(botFollowers),
-    this.adapters.db.saveEntity(botHashtags),
-    this.adapters.db.saveString('username', 'bot', 'bot'),
-    this.adapters.db.saveString('privateKey', 'bot', botPrivateKey),
+    this.layers.data.saveEntity(botActor),
+    this.layers.data.saveEntity(botInbox),
+    this.layers.data.saveEntity(botOutbox),
+    this.layers.data.saveEntity(botFollowing),
+    this.layers.data.saveEntity(botFollowers),
+    this.layers.data.saveEntity(botHashtags),
+    this.layers.data.saveString('username', 'bot', 'bot'),
+    this.layers.data.saveString('privateKey', 'bot', botPrivateKey),
   ]);
 }

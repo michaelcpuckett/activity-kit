@@ -15,7 +15,7 @@ async function wrapInActivity() {
         ? this.activity.type[0]
         : this.activity.type;
     const activityId = new URL(`${activitypub_core_utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()], compileOptions)({
-        guid: await this.adapters.crypto.randomBytes(16),
+        guid: await this.layers.data.getGuid(),
     })}`);
     this.activity.id = activityId;
     this.activity.url = activityId;

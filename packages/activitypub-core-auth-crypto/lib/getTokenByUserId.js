@@ -1,10 +1,31 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTokenByUserId = void 0;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var getTokenByUserId_exports = {};
+__export(getTokenByUserId_exports, {
+  getTokenByUserId: () => getTokenByUserId
+});
+module.exports = __toCommonJS(getTokenByUserId_exports);
 async function getTokenByUserId(userId) {
-    const token = await this.adapters.crypto.randomBytes(16);
-    await this.adapters.db.saveString('token', userId, token);
-    return token;
+  const token = await this.adapters.crypto.randomBytes(16);
+  await this.adapters.db.saveString("token", userId, token);
+  return token;
 }
-exports.getTokenByUserId = getTokenByUserId;
-//# sourceMappingURL=getTokenByUserId.js.map
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  getTokenByUserId
+});

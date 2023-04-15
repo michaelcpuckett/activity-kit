@@ -6,16 +6,16 @@ const activitypub_core_types_1 = require("activitypub-core-types");
 async function handleUndoAccept(activity) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.ACCEPT);
     const actorId = (0, activitypub_core_utilities_1.getId)(activity.actor);
-    const actor = await this.adapters.db.findEntityById(actorId);
+    const actor = await this.layers.data.findEntityById(actorId);
     (0, activitypub_core_types_1.assertIsApActor)(actor);
     const followersId = (0, activitypub_core_utilities_1.getId)(actor.followers);
     (0, activitypub_core_types_1.assertExists)(followersId);
     const followId = (0, activitypub_core_utilities_1.getId)(activity.object);
-    const follow = await this.adapters.db.queryById(followId);
+    const follow = await this.layers.data.queryById(followId);
     (0, activitypub_core_types_1.assertIsApType)(follow, activitypub_core_types_1.AP.ActivityTypes.FOLLOW);
     const followerId = (0, activitypub_core_utilities_1.getId)(follow.actor);
     (0, activitypub_core_types_1.assertExists)(followerId);
-    await this.adapters.db.removeItem(followersId, followerId);
+    await this.layers.data.removeItem(followersId, followerId);
 }
 exports.handleUndoAccept = handleUndoAccept;
 //# sourceMappingURL=undoAccept.js.map

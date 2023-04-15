@@ -17,7 +17,7 @@
     "url": "git+https://github.com/michaelcpuckett/activitypub-core.git"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.json",
+    "build": "node .build.js",
     "format": "prettier --config .prettierrc \"**/*.ts\" --write",
     "lint": "eslint src/**/*.ts"
   },
@@ -29,6 +29,11 @@
     "ftp": "^0.3.10"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "eslint": "^8.25.0",
+    "prettier": "^2.7.1",
+    "typescript": "^5.0.4",
     "@types/formidable": "^2.0.5",
     "@types/ftp": "^0.3.33"
   },

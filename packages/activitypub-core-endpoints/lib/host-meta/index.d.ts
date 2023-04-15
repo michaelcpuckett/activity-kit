@@ -1,14 +1,22 @@
 /// <reference types="node" />
 import type { IncomingMessage, ServerResponse } from 'http';
-import type { DbAdapter, Plugin } from 'activitypub-core-types';
+import { Plugin } from 'activitypub-core-types';
+import { AuthLayer } from 'activitypub-core-auth-layer';
+import { DataLayer } from 'activitypub-core-data-layer';
+import { StorageLayer } from 'activitypub-core-storage-layer';
 export declare class HostMetaGetEndpoint {
     req: IncomingMessage;
     res: ServerResponse;
-    adapters: {
-        db: DbAdapter;
+    layers: {
+        auth: AuthLayer;
+        data: DataLayer;
+        storage: StorageLayer;
     };
-    constructor(req: IncomingMessage, res: ServerResponse, adapters: {
-        db: DbAdapter;
-    }, plugins: Plugin[]);
+    plugins?: Plugin[];
+    constructor(req: IncomingMessage, res: ServerResponse, layers: {
+        auth: AuthLayer;
+        data: DataLayer;
+        storage: StorageLayer;
+    }, plugins?: Plugin[]);
     respond(): Promise<void>;
 }

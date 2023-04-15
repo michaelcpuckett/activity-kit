@@ -1,5 +1,9 @@
 import { OutboxPostEndpoint } from '..';
-import { assertExists, assertIsApActor, assertIsApType } from 'activitypub-core-types';
+import {
+  assertExists,
+  assertIsApActor,
+  assertIsApType,
+} from 'activitypub-core-types';
 import { getId } from 'activitypub-core-utilities';
 import { AP } from 'activitypub-core-types';
 
@@ -10,16 +14,16 @@ export async function handleBlock(
   assertIsApType<AP.Block>(activity, AP.ActivityTypes.BLOCK);
 
   const actorId = getId(activity.actor);
-  const actor = await this.adapters.db.queryById(actorId);
+  const actor = await this.layers.data.queryById(actorId);
 
   assertIsApActor(actor);
 
   const blockedActorId = getId(activity.object);
-  const blockedActor = await this.adapters.db.queryById(blockedActorId);
+  const blockedActor = await this.layers.data.queryById(blockedActorId);
 
   assertIsApActor(blockedActor);
 
-  const blocks = await this.adapters.db.getStreamByName(actor, 'Blocks');
+  const blocks = await this.layers.data.getStreamByName(actor, 'Blocks');
 
   assertIsApType<AP.Collection>(blocks, AP.CollectionTypes.COLLECTION);
 
@@ -27,7 +31,7 @@ export async function handleBlock(
 
   assertExists(blocksId);
 
-  await this.adapters.db.insertItem(blocksId, activity.id);
+  await this.layers.data.insertItem(blocksId, activity.id);
 
   const followingId = getId(actor.following);
 
@@ -38,7 +42,7 @@ export async function handleBlock(
   assertExists(followersId);
 
   await Promise.all([
-    this.adapters.db.removeItem(followingId, blockedActorId),
-    this.adapters.db.removeItem(followersId, blockedActorId),
+    this.layers.data.removeItem(followingId, blockedActorId),
+    this.layers.data.removeItem(followersId, blockedActorId),
   ]);
 }

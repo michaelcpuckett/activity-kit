@@ -2,7 +2,7 @@ import { BaseCoreObject } from '../Core/CoreObject';
 import { ActivityTypes } from '../util/const';
 import { EntityReference } from '../Core';
 import { TypeOrArrayWithType } from '../Core/Entity';
-declare type BaseActivity = BaseCoreObject & {
+type BaseActivity = BaseCoreObject & {
     type: TypeOrArrayWithType<typeof ActivityTypes[keyof typeof ActivityTypes]>;
     actor: EntityReference | EntityReference[];
     object?: EntityReference | EntityReference[];
@@ -11,97 +11,97 @@ declare type BaseActivity = BaseCoreObject & {
     origin?: EntityReference | EntityReference[];
     instrument?: EntityReference | EntityReference[];
 };
-export declare type IntransitiveActivity = Omit<BaseActivity, 'object'>;
-export declare type TransitiveActivity = BaseActivity & {
+export type IntransitiveActivity = Omit<BaseActivity, 'object'>;
+export type TransitiveActivity = BaseActivity & {
     object: EntityReference | EntityReference[];
 };
-export declare type Accept = BaseActivity & {
+export type Accept = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.ACCEPT>;
 };
-export declare type TentativeAccept = Accept & {
+export type TentativeAccept = Accept & {
     type: TypeOrArrayWithType<typeof ActivityTypes.TENTATIVE_ACCEPT>;
 };
-export declare type Add = BaseActivity & {
+export type Add = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.ADD>;
 };
-export declare type Arrive = IntransitiveActivity & {
+export type Arrive = IntransitiveActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.ARRIVE>;
 };
-export declare type Create = BaseActivity & {
+export type Create = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.CREATE>;
 };
-export declare type Delete = BaseActivity & {
+export type Delete = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.DELETE>;
 };
-export declare type Follow = BaseActivity & {
+export type Follow = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.FOLLOW>;
 };
-export declare type Ignore = BaseActivity & {
+export type Ignore = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.IGNORE>;
 };
-export declare type Join = BaseActivity & {
+export type Join = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.JOIN>;
 };
-export declare type Leave = BaseActivity & {
+export type Leave = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.LEAVE>;
 };
-export declare type Like = BaseActivity & {
+export type Like = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.LIKE>;
 };
-export declare type Offer = BaseActivity & {
+export type Offer = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.OFFER>;
 };
-export declare type Invite = Offer & {
+export type Invite = Offer & {
     type: TypeOrArrayWithType<typeof ActivityTypes.INVITE>;
 };
-export declare type Reject = BaseActivity & {
+export type Reject = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.REJECT>;
 };
-export declare type TentativeReject = Reject & {
+export type TentativeReject = Reject & {
     type: TypeOrArrayWithType<typeof ActivityTypes.TENTATIVE_REJECT>;
 };
-export declare type Remove = BaseActivity & {
+export type Remove = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.REMOVE>;
 };
-export declare type Undo = BaseActivity & {
+export type Undo = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.UNDO>;
 };
-export declare type Update = BaseActivity & {
+export type Update = BaseActivity & {
     type: typeof ActivityTypes.UPDATE;
 };
-export declare type View = BaseActivity & {
+export type View = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.VIEW>;
 };
-export declare type Listen = BaseActivity & {
+export type Listen = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.LISTEN>;
 };
-export declare type Read = BaseActivity & {
+export type Read = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.READ>;
 };
-export declare type Move = BaseActivity & {
+export type Move = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.MOVE>;
 };
-export declare type Travel = IntransitiveActivity & {
+export type Travel = IntransitiveActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.TRAVEL>;
 };
-export declare type Announce = BaseActivity & {
+export type Announce = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.ANNOUNCE>;
 };
-export declare type Block = BaseActivity & {
+export type Block = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.BLOCK>;
 };
-export declare type Flag = BaseActivity & {
+export type Flag = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.FLAG>;
 };
-export declare type Dislike = BaseActivity & {
+export type Dislike = BaseActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.DISLIKE>;
 };
-export declare type Question = IntransitiveActivity & {
+export type Question = IntransitiveActivity & {
     type: TypeOrArrayWithType<typeof ActivityTypes.QUESTION>;
     oneOf: EntityReference | EntityReference[];
     anyOf: EntityReference | EntityReference[];
     closed: EntityReference | Date | boolean;
 };
-export declare type Activity = Accept | Follow | Delete | Create | Arrive | Add | Offer | Like | Leave | Ignore | Join | Reject | Invite | TentativeReject | TentativeAccept | View | Update | Undo | Remove | Read | Listen | Move | Travel | Announce | Block | Flag | Dislike | Question;
-export declare type ActivityReference = URL | Activity;
+export type Activity = Accept | Follow | Delete | Create | Arrive | Add | Offer | Like | Leave | Ignore | Join | Reject | Invite | TentativeReject | TentativeAccept | View | Update | Undo | Remove | Read | Listen | Move | Travel | Announce | Block | Flag | Dislike | Question;
+export type ActivityReference = URL | Activity;
 export {};

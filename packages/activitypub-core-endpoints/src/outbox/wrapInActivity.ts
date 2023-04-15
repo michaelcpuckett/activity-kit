@@ -21,7 +21,7 @@ export async function wrapInActivity(this: OutboxPostEndpoint) {
       this.routes[type.toLowerCase()],
       compileOptions,
     )({
-      guid: await this.adapters.crypto.randomBytes(16),
+      guid: await this.layers.data.getGuid(),
     })}`,
   );
 

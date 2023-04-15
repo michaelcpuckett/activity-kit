@@ -1,3 +1,3 @@
-export declare type StringReferenceMap = {
+export type StringReferenceMap = {
     [key: string]: string;
 };

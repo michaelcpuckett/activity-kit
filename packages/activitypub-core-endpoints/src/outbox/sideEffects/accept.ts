@@ -17,7 +17,7 @@ export async function handleAccept(
 
   assertExists(actorId);
 
-  const actor = await this.adapters.db.queryById(actorId);
+  const actor = await this.layers.data.queryById(actorId);
 
   assertIsApActor(actor);
 
@@ -26,7 +26,7 @@ export async function handleAccept(
   assertExists(followersId);
 
   const followActivityId = getId(activity.object);
-  const followActivity = await this.adapters.db.queryById(followActivityId);
+  const followActivity = await this.layers.data.queryById(followActivityId);
 
   assertIsApType<AP.Follow>(followActivity, AP.ActivityTypes.FOLLOW);
 
@@ -34,7 +34,7 @@ export async function handleAccept(
 
   assertExists(followerId);
 
-  const requests = await this.adapters.db.getStreamByName(actor, 'Requests');
+  const requests = await this.layers.data.getStreamByName(actor, 'Requests');
 
   assertIsApType<AP.Collection>(requests, AP.CollectionTypes.COLLECTION);
 
@@ -43,7 +43,7 @@ export async function handleAccept(
   assertExists(requestsId);
 
   await Promise.all([
-    this.adapters.db.insertItem(followersId, followerId),
-    this.adapters.db.removeItem(requestsId, followActivityId),
+    this.layers.data.insertItem(followersId, followerId),
+    this.layers.data.removeItem(requestsId, followActivityId),
   ]);
 }

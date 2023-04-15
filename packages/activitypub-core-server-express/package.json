@@ -17,17 +17,18 @@
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0",
     "prettier": "^2.7.1",
-    "ts-node": "^10.9.1"
+    "typescript": "^5.0.4"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.json",
-    "dev": "ts-node ./src/index.ts",
+    "build": "node .build.js",
     "format": "prettier --config .prettierrc \"**/*.ts\" --write",
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "activitypub-core-delivery": "^0.2.132",
+    "activitypub-core-auth-layer": "^0.2.132",
+    "activitypub-core-data-layer": "^0.2.132",
     "activitypub-core-endpoints": "^0.2.132",
+    "activitypub-core-storage-layer": "^0.2.132",
     "activitypub-core-types": "^0.2.123",
     "activitypub-core-utilities": "^0.2.123",
     "express": "^4.18.2",

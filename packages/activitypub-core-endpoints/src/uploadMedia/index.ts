@@ -6,12 +6,19 @@ import { authenticateActor } from './authenticateActor';
 import { parseBody } from './parseBody';
 import { cleanup } from './cleanup';
 import { saveActivity } from './saveActivity';
+import { AuthLayer } from 'activitypub-core-auth-layer';
+import { DataLayer } from 'activitypub-core-data-layer';
+import { StorageLayer } from 'activitypub-core-storage-layer';
 
 export class UploadMediaPostEndpoint {
   routes: Routes;
   req: IncomingMessage;
   res: ServerResponse;
-  adapters: Adapters;
+  layers: {
+    auth: AuthLayer;
+    data: DataLayer;
+    storage: StorageLayer;
+  };
   plugins?: Plugin[];
 
   actor: AP.Actor | null = null;
@@ -32,13 +39,17 @@ export class UploadMediaPostEndpoint {
     routes: Routes,
     req: IncomingMessage,
     res: ServerResponse,
-    adapters: Adapters,
+    layers: {
+      auth: AuthLayer;
+      data: DataLayer;
+      storage: StorageLayer;
+    },
     plugins?: Plugin[],
   ) {
     this.routes = routes;
     this.req = req;
     this.res = res;
-    this.adapters = adapters;
+    this.layers = layers;
     this.plugins = plugins;
   }
 
@@ -47,7 +58,7 @@ export class UploadMediaPostEndpoint {
       await this.getActor();
       await this.authenticateActor();
       await this.parseBody();
-      const url = await this.adapters.storage.upload(this.file);
+      const url = await this.layers.storage.upload(this.file);
       this.activity.object.url = url;
       await this.cleanup();
       await this.saveActivity();

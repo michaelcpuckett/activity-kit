@@ -7,7 +7,7 @@ async function handleDelete(activity) {
     (0, activitypub_core_types_1.assertIsApType)(activity, activitypub_core_types_1.AP.ActivityTypes.DELETE);
     const objectId = (0, activitypub_core_utilities_1.getId)(activity.object);
     (0, activitypub_core_types_1.assertExists)(objectId);
-    const object = await this.adapters.db.findEntityById(objectId);
+    const object = await this.layers.data.findEntityById(objectId);
     (0, activitypub_core_types_1.assertIsApEntity)(object);
     activity.object = {
         id: objectId,
@@ -16,7 +16,7 @@ async function handleDelete(activity) {
         deleted: new Date(),
         formerType: object.type,
     };
-    await this.adapters.db.saveEntity(activity.object);
+    await this.layers.data.saveEntity(activity.object);
 }
 exports.handleDelete = handleDelete;
 //# sourceMappingURL=delete.js.map

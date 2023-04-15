@@ -1,16 +1,15 @@
 import { LOCAL_DOMAIN } from 'activitypub-core-utilities';
 import { UploadMediaPostEndpoint } from '.';
+import { assertIsApActor } from 'activitypub-core-types';
 
 export async function getActor(this: UploadMediaPostEndpoint) {
-  const url = new URL(`${LOCAL_DOMAIN}${this.req.url}`);
+  const url = new URL(this.req.url, LOCAL_DOMAIN);
 
-  const actor = await this.adapters.db.findOne('entity', {
+  const actor = await this.layers.data.findOne('entity', {
     'endpoints.uploadMedia': url.toString(),
   });
 
-  if (!actor || !actor.id || !('outbox' in actor)) {
-    throw new Error('No actor with this endpoint.');
-  }
+  assertIsApActor(actor);
 
   this.actor = actor;
 }

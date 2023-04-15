@@ -1,12 +1,5 @@
-import {
-  AP,
-  assertIsApActivity,
-  assertIsArray,
-  Routes,
-} from 'activitypub-core-types';
-import type { Adapters, Plugin } from 'activitypub-core-types';
+import { AP, Routes, Plugin } from 'activitypub-core-types';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { DeliveryAdapter } from 'activitypub-core-delivery';
 import { runSideEffects } from './runSideEffects';
 import { authenticateActor } from './authenticateActor';
 import { wrapInActivity } from './wrapInActivity';
@@ -29,12 +22,19 @@ import { handleUndoFollow } from './sideEffects/undo/undoFollow';
 import { handleUndoAccept } from './sideEffects/undo/undoAccept';
 import { handleUndoLike } from './sideEffects/undo/undoLike';
 import { handleUndoAnnounce } from './sideEffects/undo/undoAnnounce';
+import { AuthLayer } from 'activitypub-core-auth-layer';
+import { DataLayer } from 'activitypub-core-data-layer';
+import { StorageLayer } from 'activitypub-core-storage-layer';
 
 export class OutboxPostEndpoint {
   routes: Routes;
   req: IncomingMessage;
   res: ServerResponse;
-  adapters: Adapters;
+  layers: {
+    auth: AuthLayer;
+    data: DataLayer;
+    storage: StorageLayer;
+  };
   plugins?: Plugin[];
 
   actor: AP.Actor | null = null;
@@ -44,13 +44,17 @@ export class OutboxPostEndpoint {
     routes: Routes,
     req: IncomingMessage,
     res: ServerResponse,
-    adapters: Adapters,
+    layers: {
+      auth: AuthLayer;
+      data: DataLayer;
+      storage: StorageLayer;
+    },
     plugins?: Plugin[],
   ) {
     this.routes = routes;
     this.req = req;
     this.res = res;
-    this.adapters = adapters;
+    this.layers = layers;
     this.plugins = plugins;
   }
 

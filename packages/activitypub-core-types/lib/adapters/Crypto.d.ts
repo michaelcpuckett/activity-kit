@@ -1,5 +1,5 @@
 import { AP } from '../';
-export declare type CryptoAdapter = {
+export type CryptoAdapter = {
     params: {
         [key: string]: unknown;
     };

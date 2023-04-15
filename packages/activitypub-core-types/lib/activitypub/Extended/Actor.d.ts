@@ -3,7 +3,7 @@ import { ActorTypes } from '../util/const';
 import { CollectionReference, EitherCollectionReference, OrderedCollectionReference } from './Collection';
 import { StringReferenceMap } from '../util/values';
 import { TypeOrArrayWithType } from '../Core/Entity';
-declare type BaseActor = BaseCoreObject & {
+type BaseActor = BaseCoreObject & {
     type: TypeOrArrayWithType<typeof ActorTypes[keyof typeof ActorTypes]>;
     inbox: OrderedCollectionReference;
     outbox: OrderedCollectionReference;
@@ -29,21 +29,21 @@ declare type BaseActor = BaseCoreObject & {
     };
     manuallyApprovesFollowers?: boolean;
 };
-export declare type Application = BaseActor & {
+export type Application = BaseActor & {
     type: TypeOrArrayWithType<typeof ActorTypes.APPLICATION>;
 };
-export declare type Person = BaseActor & {
+export type Person = BaseActor & {
     type: TypeOrArrayWithType<typeof ActorTypes.PERSON>;
 };
-export declare type Group = BaseActor & {
+export type Group = BaseActor & {
     type: TypeOrArrayWithType<typeof ActorTypes.GROUP>;
 };
-export declare type Service = BaseActor & {
+export type Service = BaseActor & {
     type: TypeOrArrayWithType<typeof ActorTypes.SERVICE>;
 };
-export declare type Organization = BaseActor & {
+export type Organization = BaseActor & {
     type: TypeOrArrayWithType<typeof ActorTypes.ORGANIZATION>;
 };
-export declare type Actor = Application | Service | Group | Organization | Person;
-export declare type ActorReference = URL | Actor;
+export type Actor = Application | Service | Group | Organization | Person;
+export type ActorReference = URL | Actor;
 export {};

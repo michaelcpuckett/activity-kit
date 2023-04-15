@@ -9,7 +9,11 @@ import {
   LOCAL_HOSTNAME,
   XRD_CONTENT_TYPE,
 } from 'activitypub-core-utilities';
-import {assertExists, assertIsApActor, DbOptions} from 'activitypub-core-types';
+import {
+  assertExists,
+  assertIsApActor,
+  DbOptions,
+} from 'activitypub-core-types';
 
 export const respond = async function (this: WebfingerGetEndpoint) {
   try {
@@ -36,9 +40,13 @@ export const respond = async function (this: WebfingerGetEndpoint) {
       throw new Error('Not found.');
     }
 
-    const actor = await this.adapters.db.findOne('entity', {
-      preferredUsername: username,
-    }, [DbOptions.CASE_INSENSITIVE]);
+    const actor = await this.layers.data.findOne(
+      'entity',
+      {
+        preferredUsername: username,
+      },
+      [DbOptions.CASE_INSENSITIVE],
+    );
 
     assertIsApActor(actor);
 
@@ -54,9 +62,7 @@ export const respond = async function (this: WebfingerGetEndpoint) {
     ) {
       const finger = {
         subject: `acct:${actor.preferredUsername}@${LOCAL_HOSTNAME}`,
-        aliases: [
-          actorUrl.toString(),
-        ],
+        aliases: [actorUrl.toString()],
         links: [
           {
             rel: 'http://webfinger.net/rel/profile-page',
@@ -101,4 +107,4 @@ export const respond = async function (this: WebfingerGetEndpoint) {
     this.res.statusCode = 404;
     this.res.end();
   }
-}
+};
