@@ -39,7 +39,7 @@ export async function getRecipientUrls(
   const actorUrls = (
     await Promise.all(
       recipientIds.map(async (recipientId) => {
-        const foundRecipient = await this.fetchEntityById(recipientId);
+        const foundRecipient = await this.queryById(recipientId);
 
         if (!foundRecipient) {
           return [];
@@ -72,7 +72,7 @@ export async function getRecipientUrls(
 
               assertExists(collectionItemId);
 
-              const expandedCollectionItem = await this.fetchEntityById(
+              const expandedCollectionItem = await this.queryById(
                 collectionItemId,
               );
 
