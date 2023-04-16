@@ -44,7 +44,7 @@ async function getUserIdByToken(token) {
     if (user.uid) {
         return user.uid;
     }
-    return null;
+    return '';
 }
 exports.getUserIdByToken = getUserIdByToken;
 //# sourceMappingURL=getUserIdByToken.js.map

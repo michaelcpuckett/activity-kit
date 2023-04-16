@@ -30,7 +30,6 @@ const getUserIdByToken_1 = require("./getUserIdByToken");
 const getTokenByUserId_1 = require("./getTokenByUserId");
 const authenticatePassword_1 = require("./authenticatePassword");
 class FirebaseAuthAdapter {
-    adapters;
     params;
     constructor(serviceAccount, projectId) {
         this.params.appOptions = {

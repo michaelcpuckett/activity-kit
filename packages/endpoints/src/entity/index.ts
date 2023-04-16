@@ -1,4 +1,4 @@
-import { Plugin, Routes, Library } from '@activity-kit/types';
+import { Plugin, Routes, CoreLibrary } from '@activity-kit/types';
 import { LOCAL_DOMAIN } from '@activity-kit/utilities';
 import { handleFoundEntity } from './handleFoundEntity';
 import { respond } from './respond';

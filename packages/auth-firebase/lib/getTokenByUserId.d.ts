@@ -1,2 +1,2 @@
 import { FirebaseAuthAdapter } from '.';
-export declare function getTokenByUserId(this: FirebaseAuthAdapter, userId: string): string;
+export declare function getTokenByUserId(this: FirebaseAuthAdapter, userId: string): Promise<string>;

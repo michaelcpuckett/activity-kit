@@ -10,7 +10,7 @@ class UploadMediaPostEndpoint {
     routes;
     req;
     res;
-    lib;
+    core;
     plugins;
     actor = null;
     activity = null;
@@ -20,7 +20,7 @@ class UploadMediaPostEndpoint {
     parseBody = parseBody_1.parseBody;
     cleanup = cleanup_1.cleanup;
     saveActivity = saveActivity_1.saveActivity;
-    constructor(routes, req, res, lib, plugins) {
+    constructor(routes, req, res, core, plugins) {
         this.routes = routes;
         this.req = req;
         this.res = res;

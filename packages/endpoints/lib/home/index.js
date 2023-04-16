@@ -5,9 +5,9 @@ const respond_1 = require("./respond");
 class HomeGetEndpoint {
     req;
     res;
-    lib;
+    core;
     plugins;
-    constructor(req, res, lib, plugins) {
+    constructor(req, res, core, plugins) {
         this.req = req;
         this.res = res;
         this.core = core;

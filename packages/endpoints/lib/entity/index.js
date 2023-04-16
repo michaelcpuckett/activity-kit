@@ -7,11 +7,11 @@ const respond_1 = require("./respond");
 class EntityGetEndpoint {
     req;
     res;
-    lib;
+    core;
     plugins;
     routes;
     url;
-    constructor(req, res, lib, plugins, url) {
+    constructor(req, res, core, plugins, url) {
         this.req = req;
         this.res = res;
         this.core = core;

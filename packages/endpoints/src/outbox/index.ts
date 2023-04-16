@@ -1,4 +1,4 @@
-import { AP, Routes, Plugin, Library } from '@activity-kit/types';
+import { AP, Routes, Plugin, CoreLibrary } from '@activity-kit/types';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { runSideEffects } from './runSideEffects';
 import { authenticateActor } from './authenticateActor';

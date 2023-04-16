@@ -1,5 +1,5 @@
 import { EntityGetEndpoint } from '.';
-import { AP, Plugin } from '@activity-kit/types';
+import { AP } from '@activity-kit/types';
 import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   CONTENT_TYPE_HEADER,

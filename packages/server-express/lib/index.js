@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.activityPub = void 0;
+exports.activityKitPlugin = void 0;
 const path_to_regexp_1 = require("path-to-regexp");
 const endpoints_1 = require("@activity-kit/endpoints");
 const utilities_1 = require("@activity-kit/utilities");
 const core_1 = require("@activity-kit/core");
-const activityPub = (config) => async (req, res, next) => {
+const activityKitPlugin = (config) => async (req, res, next) => {
     console.log('INCOMING:', req.url);
-    const library = new core_1.CoreLibrary({
+    const core = new core_1.Core({
         auth: config.adapters.auth,
         crypto: config.adapters.crypto,
         db: config.adapters.db,
@@ -57,27 +57,27 @@ const activityPub = (config) => async (req, res, next) => {
     try {
         if (req.method === 'POST') {
             if (req.url === '/user') {
-                await new endpoints_1.UserPostEndpoint(routes, req, res, library, config.plugins).respond();
+                await new endpoints_1.UserPostEndpoint(routes, req, res, core, config.plugins).respond();
                 next();
                 return;
             }
             if (req.url === '/sharedInbox') {
-                await new endpoints_1.SharedInboxPostEndpoint(routes, req, res, library, config.plugins).respond();
+                await new endpoints_1.SharedInboxPostEndpoint(routes, req, res, core, config.plugins).respond();
                 next();
                 return;
             }
             if (matchesRoute(routes.inbox)) {
-                await new endpoints_1.InboxPostEndpoint(routes, req, res, library, config.plugins).respond();
+                await new endpoints_1.InboxPostEndpoint(routes, req, res, core, config.plugins).respond();
                 next();
                 return;
             }
             if (matchesRoute(routes.endpoint)) {
-                await new endpoints_1.UploadMediaPostEndpoint(routes, req, res, library, config.plugins).respond();
+                await new endpoints_1.UploadMediaPostEndpoint(routes, req, res, core, config.plugins).respond();
                 next();
                 return;
             }
             if (matchesRoute(routes.outbox)) {
-                await new endpoints_1.OutboxPostEndpoint(routes, req, res, library, config.plugins).respond();
+                await new endpoints_1.OutboxPostEndpoint(routes, req, res, core, config.plugins).respond();
                 next();
                 return;
             }
@@ -92,35 +92,35 @@ const activityPub = (config) => async (req, res, next) => {
                 return;
             }
             if (req.url.startsWith('/home')) {
-                await new endpoints_1.HomeGetEndpoint(req, res, library, config.plugins).respond(config.pages.home);
+                await new endpoints_1.HomeGetEndpoint(req, res, core, config.plugins).respond(config.pages.home);
                 next();
                 return;
             }
             if (req.url.startsWith('/proxy')) {
-                await new endpoints_1.ProxyGetEndpoint(req, res, library, config.plugins).respond();
+                await new endpoints_1.ProxyGetEndpoint(req, res, core, config.plugins).respond();
                 next();
                 return;
             }
             if (req.url.startsWith('/.well-known/webfinger')) {
-                await new endpoints_1.WebfingerGetEndpoint(req, res, library, config.plugins).respond();
+                await new endpoints_1.WebfingerGetEndpoint(req, res, core, config.plugins).respond();
                 next();
                 return;
             }
             if (req.url === '/.well-known/host-meta') {
-                await new endpoints_1.HostMetaGetEndpoint(req, res, library, config.plugins).respond();
+                await new endpoints_1.HostMetaGetEndpoint(req, res, core, config.plugins).respond();
                 next();
                 return;
             }
             if (req.url.startsWith('/.well-known/nodeinfo') ||
                 req.url.startsWith('/nodeinfo')) {
-                await new endpoints_1.NodeinfoGetEndpoint(req, res, library, config.plugins).respond();
+                await new endpoints_1.NodeinfoGetEndpoint(req, res, core, config.plugins).respond();
                 next();
                 return;
             }
             const entityParams = getEntityRouteParams();
             if (entityParams) {
                 req.params = entityParams;
-                await new endpoints_1.EntityGetEndpoint(req, res, library, config.plugins).respond(config.pages.entity);
+                await new endpoints_1.EntityGetEndpoint(req, res, core, config.plugins).respond(config.pages.entity);
                 next();
                 return;
             }
@@ -134,5 +134,5 @@ const activityPub = (config) => async (req, res, next) => {
     console.log('Not handled:', req.url);
     next();
 };
-exports.activityPub = activityPub;
+exports.activityKitPlugin = activityKitPlugin;
 //# sourceMappingURL=index.js.map
