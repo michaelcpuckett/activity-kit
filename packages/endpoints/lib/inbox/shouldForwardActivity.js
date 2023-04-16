@@ -1,0 +1,80 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.shouldForwardActivity = void 0;
+const types_1 = require("@activity-kit/types");
+const utilities_1 = require("@activity-kit/utilities");
+async function shouldForwardActivity() {
+    if (!this.activity) {
+        return false;
+    }
+    if (!(0, utilities_1.isTypeOf)(this.activity, types_1.AP.ActivityTypes)) {
+        return false;
+    }
+    const activity = this.activity;
+    const to = activity.to
+        ? Array.isArray(activity.to)
+            ? activity.to
+            : [activity.to]
+        : [];
+    const cc = activity.cc
+        ? Array.isArray(activity.cc)
+            ? activity.cc
+            : [activity.cc]
+        : [];
+    const audience = activity.audience
+        ? Array.isArray(activity.audience)
+            ? activity.audience
+            : [activity.audience]
+        : [];
+    const addressees = [...to, ...cc, ...audience];
+    for (const addressee of addressees) {
+        const addresseeId = (0, utilities_1.getId)(addressee);
+        if (!addresseeId) {
+            continue;
+        }
+        const foundItem = await this.core.findEntityById(addresseeId);
+        if (!foundItem) {
+            continue;
+        }
+        if ((0, utilities_1.isType)(foundItem, types_1.AP.CollectionTypes.COLLECTION) ||
+            (0, utilities_1.isType)(foundItem, types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
+            return true;
+        }
+    }
+    const inReplyTo = activity.to
+        ? Array.isArray(activity.inReplyTo)
+            ? activity.inReplyTo
+            : [activity.inReplyTo]
+        : [];
+    const object = 'object' in activity && activity.object
+        ? Array.isArray(activity.object)
+            ? activity.object
+            : [activity.object]
+        : [];
+    const target = activity.target
+        ? Array.isArray(activity.target)
+            ? activity.target
+            : [activity.target]
+        : [];
+    const tag = activity.tag
+        ? Array.isArray(activity.tag)
+            ? activity.tag
+            : [activity.tag]
+        : [];
+    const objects = [...inReplyTo, ...object, ...target, ...tag];
+    for (const object of objects) {
+        const objectId = (0, utilities_1.getId)(object);
+        if (!objectId) {
+            continue;
+        }
+        const foundItem = await this.core.findEntityById(objectId);
+        if (!foundItem) {
+            continue;
+        }
+        if (foundItem) {
+            return true;
+        }
+    }
+}
+exports.shouldForwardActivity = shouldForwardActivity;
+//# sourceMappingURL=shouldForwardActivity.js.map

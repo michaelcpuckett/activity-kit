@@ -1,2 +1,0 @@
-import { InboxPostEndpoint } from '.';
-export declare function getActors(this: InboxPostEndpoint): Promise<(import("activitypub-core-types/lib/activitypub").Application | import("activitypub-core-types/lib/activitypub").Service | import("activitypub-core-types/lib/activitypub").Group | import("activitypub-core-types/lib/activitypub").Organization | import("activitypub-core-types/lib/activitypub").Person)[]>;

@@ -1,0 +1,43 @@
+{
+  "name": "@activity-kit/plugin-groups",
+  "version": "0.3.7",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michael@puckett.contact>",
+  "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelcpuckett/activitypub-core.git"
+  },
+  "scripts": {
+    "build": "node .build.js",
+    "format": "prettier --config .prettierrc \"**/*.ts\" --write",
+    "lint": "eslint src/**/*.ts"
+  },
+  "devDependencies": {
+    "@types/path-to-regexp": "^1.7.0",
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "eslint": "^8.25.0",
+    "prettier": "^2.7.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@activity-kit/endpoints": "^0.3.7",
+    "@activity-kit/types": "^0.3.2",
+    "@activity-kit/utilities": "^0.3.5",
+    "cheerio": "^1.0.0-rc.12",
+    "jsdom": "^21.1.0",
+    "path-to-regexp": "^6.2.1"
+  },
+  "bugs": {
+    "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
+  }
+}

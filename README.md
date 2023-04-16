@@ -1,6 +1,6 @@
-# activitypub-core
+# ActivityKit
 
-This is a [Lerna](https://lerna.js.org/) monorepo that holds packages related to an implementation of the ActivityPub protocol specification.
+This is a [Lerna](https://lerna.js.org/) monorepo that holds packages related to a TypeScript implementation of the ActivityPub protocol.
 
 [ActivityPub](https://activitypub.rocks) is a standardized method of exchanging social data.
 
@@ -30,12 +30,12 @@ Canonical example using Express + MongoDB + FTP:
 import * as express from "express";
 import { MongoClient } from "mongodb";
 
-import { AP, Adapters } from "activitypub-core-types";
-import { activityPub } from "activitypub-core-server-express";
-import { MongoDbAdapter } from "activitypub-core-db-mongo";
-import { CryptoAuthAdapter } from "activitypub-core-auth-crypto";
-import { NodeCryptoAdapter } from "activitypub-core-crypto-node";
-import { FtpStorageAdapter } from "activitypub-core-storage-ftp";
+import { AP, Adapters } from "@activity-kit/types";
+import { activityKitPlugin } from "@activity-kit/server-express";
+import { MongoDbAdapter } from "@activity-kit/db-mongo";
+import { TokenAuthAdapter } from "@activity-kit/auth-token";
+import { NodeCryptoAdapter } from "@activity-kit/crypto-node";
+import { FtpStorageAdapter } from "@activity-kit/storage-ftp";
 
 // Use Express for all routes.
 const app = express.default();
@@ -63,9 +63,9 @@ const app = express.default();
     crypto: new NodeCryptoAdapter(),
   });
 
-  // Use the activitypub-core Express plugin.
+  // Use the ActivityKit Express plugin.
   app.use(
-    activityPub({
+    activityKitPlugin({
       adapters: {
         auth: cryptoAuthAdapter,
         crypto: nodeCryptoAdapter,
@@ -141,6 +141,99 @@ wholly included in other projects due to this permissive license. There may be
 similiar software that exists, but inclusion would be inviable due to licensing
 restrictions.
 
+## Architecture
+
+This project aims to be agnostic as to how the data is stored, which server is
+used, etc. Adapters that conform to a specific interface can be mixed and matched.
+
+Additionally, Plugins can modify the endpoints.
+
+### Core Layer
+
+The core layer that gets included in all projects include these packages:
+
+- `@activity-kit/types`
+  - The Activity vocabularies converted to TypeScript types.
+- `@activity-kit/endpoints`
+  - The logic for carrying out the bulk of the ActivityPub protocol.
+- `@activity-kit/core`
+  - Provides common functions that use the adapter APIs.
+- `@activity-kit/utilities`
+  - Common functions with no dependencies on packages from upper layers.
+
+### Adapaters
+
+#### Database Adapaters
+
+There is a large amount of data related to profiles and interactions that must be persisted over time.
+
+Currently this project comes with:
+
+- `@activity-kit/db-mongo`
+- `@activity-kit/db-sqlite`
+- TODO: `@activity-kit/db-postgresql`
+- TODO: `@activity-kit/db-d1`
+
+#### Authentication Adapters
+
+Users need to be able to sign up and log in to their account.
+
+Current this project comes with:
+
+- `@activity-kit/auth-token`
+  - Generates tokens via Crypto APIs and stores them in the provided database.
+- `@activity-kit/auth-firebase`
+  - Wrapper around `@firebase/auth`
+
+#### Storage Adapters
+
+Users must be able to upload media, such as profile pictures or attachments.
+
+Currently this project comes with:
+
+- `@activity-kit/storage-ftp`
+  - Uploads media via FTP with the provided credentials.
+- TODO: `@activity-kit/storage-s3`
+  - Upload media via S3-compatible storage APIs.
+
+#### Server Adapters
+
+The server must handle the core endpoint requests.
+
+Currently this project comes with:
+
+- `@activity-kit/server-express`
+- TODO: `@activity-kit/server-fastify`
+- TODO: `@activity-kit/server-koa`
+
+#### Crypto Adapters
+
+There are a few instances that require using native cryptography APIs, such as generating Actors' public/private key pairs.
+
+Typically this will be handled by Node's `crypto` library, but the crypto functions are abstracted to also enable support running within a web worker context.
+
+- `@activity-kit/crypto-node`
+- TODO: `@activity-kit/crypto-browser`
+
+### Plugins
+
+Plugins provide lifecycle hooks that can modify core functionality.
+
+You can write your own.
+
+Currently this project comes with:
+
+- `@activity-kit/plugin-groups`
+- TODO: `@activity-kit/single-user`
+
+### Client/Rendering Layer
+
+This project does not aim to provide any HTML code for client rendering.
+
+The `pages` configuration properties expect a callback function that renders an HTML string, leaving the front-end mostly to the host app.
+
+The front-end should utilize ActivityPub's Client-to-Server protocol to post Activities on behalf of users.
+
 ## Use Cases
 
 There are a few use cases this project attempts to fulfill. Ideally this project
@@ -175,83 +268,3 @@ ephermeral way. Encryption could be a good addition, however.
 
 Ideally this project could be used to build an entire social network that
 interfaces with the rest of the Fediverse.
-
-## Architecture
-
-This project aims to be agnostic as to how the data is stored, which server is
-used, etc. Adapters that conform to a specific interface can be mixed and matched.
-
-Additionally, plugins can modify the endpoints.
-
-### Logic Layer
-
-The logic layer that get included in all projects include these packages:
-
-- `activitypub-core-types`
-  - The Activity vocabularies converted to TypeScript types.
-- `activitypub-core-endpoints`
-  - The logic for carrying out the bulk of the ActivityPub protocol.
-- `activitypub-core-utilities`
-  - Common functions with no dependencies on packages from upper layers.
-- `activitypub-core-library`
-  - Provides common functions that use the adapter APIs.
-
-### Adapaters
-
-#### Database Adapaters
-
-There is a large amount of data related to profiles and interactions that must be persisted over time.
-
-Currently this project comes with:
-
-- `activitypub-core-db-mongo`
-- `activitypub-core-db-sqlite`
-
-* TODO: `db-postgresql`, `db-d1`
-
-#### Authentication Adapters
-
-Users need to be able to sign up and log in to their account.
-
-Current this project comes with:
-
-- `activitypub-core-auth-crypto`
-- `activitypub-core-auth-firebase`
-
-#### Storage Adapters
-
-Users must be able to upload media, such as profile pictures or attachments.
-
-Currently this project comes with:
-
-- `activitypub-core-storage-ftp`
-
-* TODO: `s3`
-
-#### Server Adapters
-
-The server must handle the core endpoint requests.
-
-Currently this project comes with:
-
-- `activitypub-core-server-express`
-
-* TODO: `fastify`, `koa`
-
-### Plugins
-
-Injectable lifecycle hooks that can modify core functionality.
-
-Currently this project comes with:
-
-- `activitypub-core-plugin-groups`
-
-* TODO: `single-user`, `foaf`
-
-### Client/Rendering Layer
-
-This project does not aim to provide any HTML code for client rendering.
-
-The `pages` configuration properties expect a callback function that renders an HTML string, leaving the front-end mostly to the host app.
-
-The front-end should utilize ActivityPub's Client-to-Server protocol to post Activities on behalf of users.

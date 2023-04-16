@@ -1,1 +1,0 @@
-{"version":3,"file":"parseBody.js","sourceRoot":"","sources":["../../src/outbox/parseBody.ts"],"names":[],"mappings":";;;AAAA,mEAA4D;AAC5D,2EAAyD;AAGlD,KAAK,UAAU,SAAS;IAC7B,MAAM,MAAM,GAAG,MAAM,IAAA,wCAAW,EAAC,IAAI,CAAC,GAAG,CAAC,CAAC;IAE3C,IAAA,2CAAkB,EAAC,MAAM,CAAC,CAAC;IAE3B,IAAI,CAAC,QAAQ,GAAG,MAAM,CAAC;AACzB,CAAC;AAND,8BAMC"}
