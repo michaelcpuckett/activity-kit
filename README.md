@@ -16,7 +16,7 @@ This project is still incomplete at the moment. Much of the core functionality i
 
 ### Prerequesities
 
-In addition to hosting the Node server, you will also need (at least):
+In addition to hosting a (Node) server, you will also need:
 
 - **Database**: A compatable database that the server can access.
 - **Storage**: A way to store files such as profile pics.
@@ -51,22 +51,16 @@ const app = express.default();
   // Use the FTP adapter for handling uploaded media.
   const ftpStorageAdapter = new FtpStorageAdapter(ftpStorageAdapterOptions);
 
-  // Use Node's Crypto library for cryptography.
-  const nodeCryptoAdapter = new NodeCryptoAdapter();
-
+  // Use MongoDB to store data.
   const mongoClient = new MongoClient(process.env.AP_MONGO_CLIENT_URL);
   await mongoClient.connect();
   const mongoDb = mongoClient.db("activitypub");
-
-  // Use MongoDB to store data.
-  const mongoDbAdapter = new MongoDbAdapter(mongoDb, {
-    crypto: nodeCryptoAdapter,
-  });
+  const mongoDbAdapter = new MongoDbAdapter(mongoDb);
 
   // Use Mongo + Node's Crypto library for authentication.
   const cryptoAuthAdapter = new CryptoAuthAdapter({
     db: mongoDbAdapter,
-    crypto: nodeCryptoAdapter,
+    crypto: new NodeCryptoAdapter(),
   });
 
   // Use the activitypub-core Express plugin.
@@ -140,8 +134,7 @@ const app = express.default();
 
 This project aims to be spec-compliant.
 
-This project aims to be an non-opinionated as possible, providing abstracted
-layers that can hopefully work with any Node.js project.
+This project aims to be as versatile and non-opinionated as possible. The hope is to be able to integrate with any project.
 
 This project is MIT-licensed, with the hope it will be forked, reused, or
 wholly included in other projects due to this permissive license. There may be
@@ -200,6 +193,8 @@ The logic layer that get included in all projects include these packages:
   - The logic for carrying out the bulk of the ActivityPub protocol.
 - `activitypub-core-utilities`
   - Common functions with no dependencies on packages from upper layers.
+- `activitypub-core-library`
+  - Provides common functions that use the adapter APIs.
 
 ### Adapaters
 
@@ -212,7 +207,7 @@ Currently this project comes with:
 - `activitypub-core-db-mongo`
 - `activitypub-core-db-sqlite`
 
-* TODO: PostreSQL, Cloudflare's d1
+* TODO: `db-postgresql`, `db-d1`
 
 #### Authentication Adapters
 
@@ -231,7 +226,7 @@ Currently this project comes with:
 
 - `activitypub-core-storage-ftp`
 
-* TODO: AWS S3
+* TODO: `s3`
 
 #### Server Adapters
 
@@ -241,7 +236,7 @@ Currently this project comes with:
 
 - `activitypub-core-server-express`
 
-* TODO: Fastify, Next.js
+* TODO: `fastify`, `koa`
 
 ### Plugins
 
@@ -250,6 +245,8 @@ Injectable lifecycle hooks that can modify core functionality.
 Currently this project comes with:
 
 - `activitypub-core-plugin-groups`
+
+* TODO: `single-user`, `foaf`
 
 ### Client/Rendering Layer
 
