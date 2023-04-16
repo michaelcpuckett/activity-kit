@@ -3863,7 +3863,7 @@ const convertFromJsonLd = async (entity) => {
         if (url in CONTEXTS) {
             return {
                 contextUrl: null,
-                document: CONTEXTS[url],
+                document: [CONTEXTS[url]],
                 documentUrl: url,
             };
         }
