@@ -33,5 +33,6 @@
     "eslint": "^8.25.0",
     "prettier": "^2.7.1",
     "typescript": "^5.0.4"
-  }
+  },
+  "gitHead": "94cd24962ff1406bc137c1ac244f960286d6cac0"
 }
