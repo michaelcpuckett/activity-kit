@@ -174,8 +174,8 @@ async function createUserActor(user) {
                 value: 'https://schema.org/value',
             },
         ],
-        id: new URL(userId),
-        url: new URL(userId),
+        id: userId,
+        url: userId,
         type: user.type === types_1.AP.ActorTypes.GROUP
             ? types_1.AP.ActorTypes.GROUP
             : types_1.AP.ActorTypes.PERSON,
@@ -228,7 +228,7 @@ async function createUserActor(user) {
             if ('handleCreateUserActor' in plugin) {
                 const pluginActivity = await plugin.handleCreateUserActor.call({
                     activity: createActorActivity,
-                    lib: this.lib,
+                    core: this.core,
                 });
                 (0, types_1.assertIsApActor)(pluginActivity.object);
                 userActor = pluginActivity.object;

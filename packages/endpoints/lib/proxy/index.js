@@ -22,7 +22,7 @@ class ProxyGetEndpoint {
                     ? utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE
                     : this.req.headers.accept;
                 const fetchedResult = acceptHeader !== utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE
-                    ? await this.lib
+                    ? await this.core
                         .fetch(proxiedUrl.toString(), {
                         headers: {
                             Accept: acceptHeader,

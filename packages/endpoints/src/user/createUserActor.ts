@@ -220,8 +220,8 @@ export async function createUserActor(
         value: 'https://schema.org/value',
       },
     ],
-    id: new URL(userId),
-    url: new URL(userId),
+    id: userId,
+    url: userId,
     type:
       user.type === AP.ActorTypes.GROUP
         ? AP.ActorTypes.GROUP
@@ -282,7 +282,7 @@ export async function createUserActor(
       if ('handleCreateUserActor' in plugin) {
         const pluginActivity = await plugin.handleCreateUserActor.call({
           activity: createActorActivity,
-          lib: this.lib,
+          core: this.core,
         });
 
         assertIsApActor(pluginActivity.object);

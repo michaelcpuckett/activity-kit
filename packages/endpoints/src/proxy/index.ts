@@ -36,7 +36,7 @@ export class ProxyGetEndpoint {
 
         const fetchedResult =
           acceptHeader !== ACTIVITYSTREAMS_CONTENT_TYPE
-            ? await this.lib
+            ? await this.core
                 .fetch(proxiedUrl.toString(), {
                   headers: {
                     Accept: acceptHeader,
