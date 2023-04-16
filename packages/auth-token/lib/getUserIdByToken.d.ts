@@ -1,2 +1,2 @@
-import { CryptoAuthAdapter } from '.';
-export declare function getUserIdByToken(this: CryptoAuthAdapter, token: string): Promise<string | null>;
+import { TokenAuthAdapter } from '.';
+export declare function getUserIdByToken(this: TokenAuthAdapter, token: string): Promise<string | null>;

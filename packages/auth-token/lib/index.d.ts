@@ -1,9 +1,9 @@
-import type { AuthAdapter, CryptoAdapter, DbAdapter } from '@activity-kit/types';
+import { AuthAdapter, CryptoAdapter, DbAdapter } from '@activity-kit/types';
 import { createUser } from './createUser';
 import { getUserIdByToken } from './getUserIdByToken';
 import { getTokenByUserId } from './getTokenByUserId';
 import { authenticatePassword } from './authenticatePassword';
-export declare class CryptoAuthAdapter implements AuthAdapter {
+export declare class TokenAuthAdapter implements AuthAdapter {
     adapters: {
         db: DbAdapter;
         crypto: CryptoAdapter;

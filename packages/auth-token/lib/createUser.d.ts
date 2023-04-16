@@ -1,5 +1,5 @@
-import { CryptoAuthAdapter } from '.';
-export declare function createUser(this: CryptoAuthAdapter, { email, password, preferredUsername, }: {
+import { TokenAuthAdapter } from '.';
+export declare function createUser(this: TokenAuthAdapter, { email, password, preferredUsername, }: {
     email: string;
     password?: string;
     preferredUsername: string;

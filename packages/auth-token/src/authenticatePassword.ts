@@ -1,7 +1,7 @@
-import { CryptoAuthAdapter } from '.';
+import { TokenAuthAdapter } from '.';
 
 export async function authenticatePassword(
-  this: CryptoAuthAdapter,
+  this: TokenAuthAdapter,
   email: string,
   password: string,
 ): Promise<{

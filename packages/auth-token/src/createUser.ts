@@ -1,7 +1,7 @@
-import { CryptoAuthAdapter } from '.';
+import { TokenAuthAdapter } from '.';
 
 export async function createUser(
-  this: CryptoAuthAdapter,
+  this: TokenAuthAdapter,
   {
     email,
     password,

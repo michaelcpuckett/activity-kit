@@ -1,7 +1,7 @@
-import { CryptoAuthAdapter } from '.';
+import { TokenAuthAdapter } from '.';
 
 export async function getTokenByUserId(
-  this: CryptoAuthAdapter,
+  this: TokenAuthAdapter,
   userId: string,
 ): Promise<string> {
   const token = await this.adapters.crypto.randomBytes(16);
