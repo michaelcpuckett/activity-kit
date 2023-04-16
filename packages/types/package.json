@@ -12,6 +12,9 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "node .build.js",
     "format": "prettier --config .prettierrc \"**/*.ts\" --write",
