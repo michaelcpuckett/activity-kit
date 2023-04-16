@@ -57,10 +57,11 @@ const app = express.default();
   const mongoDb = mongoClient.db("activitypub");
   const mongoDbAdapter = new MongoDbAdapter(mongoDb);
 
-  // Use Mongo + Node's Crypto library for authentication.
+  // Use Node's Crypto library + Mongo for authentication.
+  const nodeCryptoAdapter = new NodeCryptoAdapter();
   const cryptoAuthAdapter = new CryptoAuthAdapter({
     db: mongoDbAdapter,
-    crypto: new NodeCryptoAdapter(),
+    crypto: nodeCryptoAdapter,
   });
 
   // Use the ActivityKit Express plugin.
