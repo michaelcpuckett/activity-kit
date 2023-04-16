@@ -1,6 +1,6 @@
 {
   "name": "@activity-kit/server-express",
-  "version": "0.3.7",
+  "version": "0.4.0",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -25,9 +25,9 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "@activity-kit/endpoints": "^0.3.7",
-    "@activity-kit/types": "^0.3.2",
-    "@activity-kit/utilities": "^0.3.5",
+    "@activity-kit/endpoints": "^0.4.0",
+    "@activity-kit/types": "^0.4.0",
+    "@activity-kit/utilities": "^0.4.0",
     "express": "^4.18.2",
     "path-to-regexp": "^6.2.1"
   },
