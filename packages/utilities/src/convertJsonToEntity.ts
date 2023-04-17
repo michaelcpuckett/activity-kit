@@ -49,7 +49,7 @@ function convertItem(item: unknown): unknown {
     }
   } else if (Array.isArray(item)) {
     return item.map(convertItem);
-  } else if (typeof item === 'object') {
+  } else if (item && typeof item === 'object') {
     const object: Record<string, unknown> = {};
 
     for (const objectKey of Object.keys(item)) {

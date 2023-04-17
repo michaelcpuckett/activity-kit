@@ -48,7 +48,7 @@ function convertItem(item) {
     else if (Array.isArray(item)) {
         return item.map(convertItem);
     }
-    else if (typeof item === 'object') {
+    else if (item && typeof item === 'object') {
         const object = {};
         for (const objectKey of Object.keys(item)) {
             if (typeof objectKey === 'string') {
