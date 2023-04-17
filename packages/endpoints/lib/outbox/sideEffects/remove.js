@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleRemove = void 0;
-const utilities_1 = require("@activity-kit/utilities");
 const types_1 = require("@activity-kit/types");
+const utilities_1 = require("@activity-kit/utilities");
 async function handleRemove(activity) {
     (0, types_1.assertIsApType)(activity, types_1.AP.ActivityTypes.REMOVE);
     const objectId = (0, utilities_1.getId)(activity.object);
@@ -16,10 +16,14 @@ async function handleRemove(activity) {
             throw new Error('Not allowed.');
         }
     }
-    if ((0, utilities_1.isType)(target, types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
+    if (Array.isArray(target.type)
+        ? target.type.includes(types_1.AP.CollectionTypes.ORDERED_COLLECTION)
+        : target.type === types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
         await this.core.removeOrderedItem(targetId, objectId);
     }
-    else if ((0, utilities_1.isType)(target, types_1.AP.CollectionTypes.COLLECTION)) {
+    else if (Array.isArray(target.type)
+        ? target.type.includes(types_1.AP.CollectionTypes.COLLECTION)
+        : target.type === types_1.AP.CollectionTypes.COLLECTION) {
         await this.core.removeItem(targetId, objectId);
     }
     else {

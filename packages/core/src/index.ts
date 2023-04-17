@@ -70,12 +70,12 @@ export class Core implements CoreLibrary {
 
     this.findAll = async (
       collection: string,
-      matchingObject: { [key: string]: unknown },
+      matchingObject: Record<string, unknown>,
     ) => await adapters.db.findAll(collection, matchingObject);
 
     this.findOne = async (
       collection: string,
-      matchingObject: { [key: string]: unknown },
+      matchingObject: Record<string, unknown>,
       options?: Array<keyof typeof DbOptions>,
     ) => await adapters.db.findOne(collection, matchingObject, options);
 

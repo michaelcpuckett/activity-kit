@@ -25,8 +25,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.assertIsApTypeOf = exports.assertIsApType = exports.assertIsApTransitiveActivity = exports.assertIsApCollection = exports.assertIsApActor = exports.assertIsApExtendedObject = exports.assertIsApCoreObject = exports.assertIsApActivity = exports.assertIsApEntity = exports.assertHasApType = exports.assertHasType = exports.assertIsArray = exports.assertIsDate = exports.assertIsNumber = exports.assertIsString = exports.assertIsObject = exports.assertExists = exports.isType = exports.isTypeOf = void 0;
 const AP = __importStar(require("../activitypub"));
-function isTypeOf(entity, values) {
-    for (const type of Object.values(values)) {
+function isTypeOf(entity, types) {
+    for (const type of Object.values(types)) {
         if (isType(entity, type)) {
             return true;
         }
@@ -35,6 +35,12 @@ function isTypeOf(entity, values) {
 }
 exports.isTypeOf = isTypeOf;
 function isType(entity, type) {
+    if (typeof entity !== 'object') {
+        return false;
+    }
+    if (!('type' in entity)) {
+        return false;
+    }
     if (Array.isArray(entity.type)
         ? entity.type.includes(type)
         : type === entity.type) {

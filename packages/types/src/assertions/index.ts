@@ -1,14 +1,12 @@
 import * as AP from '../activitypub';
 import { AnyType } from '../activitypub/Core/Entity';
 
-export function isTypeOf(
-  entity: unknown & {
-    type: string | string[];
-  },
-  values: Object,
-): boolean {
-  for (const type of Object.values(values)) {
-    if (isType(entity, type)) {
+export function isTypeOf<T>(
+  entity: unknown,
+  types: Record<string, string>,
+): entity is T {
+  for (const type of Object.values(types)) {
+    if (isType<T>(entity, type)) {
       return true;
     }
   }
@@ -16,12 +14,15 @@ export function isTypeOf(
   return false;
 }
 
-export function isType(
-  entity: unknown & {
-    type: string | string[];
-  },
-  type: string,
-): boolean {
+export function isType<T>(entity: unknown, type: string): entity is T {
+  if (typeof entity !== 'object') {
+    return false;
+  }
+
+  if (!('type' in entity)) {
+    return false;
+  }
+
   if (
     Array.isArray(entity.type)
       ? entity.type.includes(type)
@@ -84,7 +85,7 @@ export function assertHasApType(
 ): asserts value is { type: AnyType | Array<AnyType | string> } {
   assertHasType(value);
 
-  if (!isTypeOf(value, AP.AllTypes)) {
+  if (!isTypeOf<AP.Entity>(value, AP.AllTypes)) {
     throw new Error(`\`${value}\` type is not an ActivityPub type.`);
   }
 }
@@ -98,7 +99,7 @@ export function assertIsApActivity(
 ): asserts value is AP.Activity {
   assertIsApEntity(value);
 
-  if (!isTypeOf(value, AP.ActivityTypes)) {
+  if (!isTypeOf<AP.Activity>(value, AP.ActivityTypes)) {
     throw new Error(`\`${value}\` is not an Activity`);
   }
 }
@@ -108,7 +109,7 @@ export function assertIsApCoreObject(
 ): asserts value is AP.CoreObject {
   assertIsApEntity(value);
 
-  if (!isTypeOf(value, AP.CoreObjectTypes)) {
+  if (!isTypeOf<AP.CoreObject>(value, AP.CoreObjectTypes)) {
     throw new Error(`\`${value}\` is not a Core Object`);
   }
 }
@@ -118,7 +119,7 @@ export function assertIsApExtendedObject(
 ): asserts value is AP.ExtendedObject {
   assertIsApEntity(value);
 
-  if (!isTypeOf(value, AP.ExtendedObjectTypes)) {
+  if (!isTypeOf<AP.ExtendedObject>(value, AP.ExtendedObjectTypes)) {
     throw new Error(`\`${value}\` is not an Extended Object`);
   }
 }
@@ -126,7 +127,7 @@ export function assertIsApExtendedObject(
 export function assertIsApActor(value: unknown): asserts value is AP.Actor {
   assertIsApEntity(value);
 
-  if (!isTypeOf(value, AP.ActorTypes)) {
+  if (!isTypeOf<AP.Actor>(value, AP.ActorTypes)) {
     throw new Error(`\`${value}\` is not an Actor`);
   }
 }
@@ -136,7 +137,7 @@ export function assertIsApCollection(
 ): asserts value is AP.Collection | AP.OrderedCollection {
   assertIsApEntity(value);
 
-  if (!isTypeOf(value, AP.CollectionTypes)) {
+  if (!isTypeOf<AP.EitherCollection>(value, AP.CollectionTypes)) {
     throw new Error(`\`${value}\` is not a Collection`);
   }
 }
@@ -157,7 +158,7 @@ export function assertIsApType<comparison>(
 ): asserts value is comparison {
   assertIsApEntity(value);
 
-  if (!isType(value, comparison)) {
+  if (!isType<comparison>(value, comparison)) {
     throw new Error(`\`${value}\` is not of type ${comparison}`);
   }
 }
@@ -169,7 +170,7 @@ export function assertIsApTypeOf<types>(
   assertIsApEntity(value);
 
   for (const type of comparison) {
-    if (isType(value, type)) {
+    if (isType<types>(value, type)) {
       return;
     }
   }

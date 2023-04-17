@@ -1,5 +1,10 @@
-import { AP, assertIsApActivity, assertIsApType } from '@activity-kit/types';
-import { getId, isType } from '@activity-kit/utilities';
+import {
+  AP,
+  isType,
+  assertIsApActivity,
+  assertIsApType,
+} from '@activity-kit/types';
+import { getId } from '@activity-kit/utilities';
 import { OutboxPostEndpoint } from '../..';
 
 export async function handleUndo(
@@ -18,35 +23,35 @@ export async function handleUndo(
   }
 
   // Run side effects.
-  if (isType(object, AP.ActivityTypes.CREATE)) {
+  if (isType<AP.Create>(object, AP.ActivityTypes.CREATE)) {
     await this.handleDelete(object);
   }
 
-  if (isType(object, AP.ActivityTypes.FOLLOW)) {
+  if (isType<AP.Follow>(object, AP.ActivityTypes.FOLLOW)) {
     await this.handleUndoFollow(object);
   }
 
-  if (isType(object, AP.ActivityTypes.ACCEPT)) {
+  if (isType<AP.Accept>(object, AP.ActivityTypes.ACCEPT)) {
     await this.handleUndoAccept(object);
   }
 
-  if (isType(object, AP.ActivityTypes.BLOCK)) {
+  if (isType<AP.Block>(object, AP.ActivityTypes.BLOCK)) {
     await this.handleUndoBlock(object);
   }
 
-  if (isType(object, AP.ActivityTypes.LIKE)) {
+  if (isType<AP.Like>(object, AP.ActivityTypes.LIKE)) {
     await this.handleUndoLike(object);
   }
 
-  if (isType(object, AP.ActivityTypes.ANNOUNCE)) {
+  if (isType<AP.Announce>(object, AP.ActivityTypes.ANNOUNCE)) {
     await this.handleUndoAnnounce(object);
   }
 
-  if (isType(object, AP.ActivityTypes.ADD)) {
+  if (isType<AP.Add>(object, AP.ActivityTypes.ADD)) {
     await this.handleRemove(object);
   }
 
-  if (isType(object, AP.ActivityTypes.REMOVE)) {
+  if (isType<AP.Remove>(object, AP.ActivityTypes.REMOVE)) {
     await this.handleAdd(object);
   }
 }

@@ -1,11 +1,11 @@
 import { SqliteDbAdapter } from '.';
 import { AP, DbOptions } from '@activity-kit/types';
-import { convertStringsToUrls } from '@activity-kit/utilities';
+import { convertJsonToEntity } from '@activity-kit/utilities';
 
 export async function findOne(
   this: SqliteDbAdapter,
   collection: string,
-  matchingObject: { [key: string]: unknown },
+  matchingObject: Record<string, unknown>,
   options?: Array<keyof typeof DbOptions>,
 ): Promise<AP.Entity | null> {
   const [key] = Object.keys(matchingObject);
@@ -43,5 +43,5 @@ export async function findOne(
     }
   }
 
-  return convertStringsToUrls(value) as AP.Entity;
+  return convertJsonToEntity(value) as AP.Entity;
 }

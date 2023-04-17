@@ -1,11 +1,12 @@
 import {
   AP,
+  isType,
   assertExists,
   assertIsApCollection,
   assertIsApExtendedObject,
   assertIsApType,
 } from '@activity-kit/types';
-import { getId, isType } from '@activity-kit/utilities';
+import { getId } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '..';
 
 // An announcement has been made to a local object.
@@ -39,9 +40,17 @@ export async function handleAnnounce(
       return;
     }
 
-    if (isType(shares, AP.CollectionTypes.COLLECTION)) {
+    if (
+      Array.isArray(shares.type)
+        ? shares.type.includes(AP.CollectionTypes.COLLECTION)
+        : shares.type === AP.CollectionTypes.COLLECTION
+    ) {
       await this.core.insertItem(sharesId, activity.id);
-    } else if (isType(shares, AP.CollectionTypes.ORDERED_COLLECTION)) {
+    } else if (
+      Array.isArray(shares.type)
+        ? shares.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
+        : shares.type === AP.CollectionTypes.ORDERED_COLLECTION
+    ) {
       await this.core.insertOrderedItem(sharesId, activity.id);
     }
   } catch (error) {

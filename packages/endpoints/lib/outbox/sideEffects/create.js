@@ -66,7 +66,7 @@ async function handleCreate(activity) {
         slug,
     })}`);
     object.id = objectId;
-    if ((0, utilities_1.isTypeOf)(object, types_1.AP.ExtendedObjectTypes)) {
+    if ((0, types_1.isTypeOf)(object, types_1.AP.ExtendedObjectTypes)) {
         (0, types_1.assertIsApExtendedObject)(object);
         object.url = objectId;
         const entityRoute = objectId.pathname;
@@ -136,7 +136,7 @@ async function handleCreate(activity) {
             const tags = Array.isArray(object.tag) ? object.tag : [object.tag];
             for (const tag of tags) {
                 if (!(tag instanceof URL) &&
-                    (0, utilities_1.isType)(tag, types_1.AP.ExtendedObjectTypes.HASHTAG)) {
+                    (0, types_1.isType)(tag, types_1.AP.ExtendedObjectTypes.HASHTAG)) {
                     (0, types_1.assertIsApType)(tag, types_1.AP.ExtendedObjectTypes.HASHTAG);
                     const hashtagCollectionUrl = new URL(`${utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.hashtag)({
                         slug: tag.name

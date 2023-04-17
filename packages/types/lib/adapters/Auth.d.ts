@@ -3,9 +3,7 @@ export type AuthAdapter = {
     adapters?: {
         db: DbAdapter;
     };
-    params?: {
-        [key: string]: unknown;
-    };
+    params?: Record<string, unknown>;
     getTokenByUserId: (userId: string) => Promise<string>;
     createUser: (this: AuthAdapter, { email, password, preferredUsername, }: {
         email: string;

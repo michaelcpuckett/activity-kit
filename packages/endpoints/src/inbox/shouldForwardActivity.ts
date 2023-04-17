@@ -1,33 +1,23 @@
-import { AP } from '@activity-kit/types';
-import { getId, isType, isTypeOf } from '@activity-kit/utilities';
+import { AP, isType, isTypeOf } from '@activity-kit/types';
+import { getArray, getId } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '.';
+
+// TODO: Check with Spec.
 
 export async function shouldForwardActivity(this: InboxPostEndpoint) {
   if (!this.activity) {
     return false;
   }
 
-  if (!isTypeOf(this.activity, AP.ActivityTypes)) {
+  if (!isTypeOf<AP.Activity>(this.activity, AP.ActivityTypes)) {
     return false;
   }
 
   const activity = this.activity as AP.Activity;
 
-  const to = activity.to
-    ? Array.isArray(activity.to)
-      ? activity.to
-      : [activity.to]
-    : [];
-  const cc = activity.cc
-    ? Array.isArray(activity.cc)
-      ? activity.cc
-      : [activity.cc]
-    : [];
-  const audience = activity.audience
-    ? Array.isArray(activity.audience)
-      ? activity.audience
-      : [activity.audience]
-    : [];
+  const to = getArray(activity.to);
+  const cc = getArray(activity.cc);
+  const audience = getArray(activity.audience);
 
   const addressees = [...to, ...cc, ...audience];
 
@@ -45,34 +35,20 @@ export async function shouldForwardActivity(this: InboxPostEndpoint) {
     }
 
     if (
-      isType(foundItem, AP.CollectionTypes.COLLECTION) ||
-      isType(foundItem, AP.CollectionTypes.ORDERED_COLLECTION)
+      isType<AP.Collection>(foundItem, AP.CollectionTypes.COLLECTION) ||
+      isType<AP.OrderedCollection>(
+        foundItem,
+        AP.CollectionTypes.ORDERED_COLLECTION,
+      )
     ) {
       return true;
     }
   }
 
-  const inReplyTo = activity.to
-    ? Array.isArray(activity.inReplyTo)
-      ? activity.inReplyTo
-      : [activity.inReplyTo]
-    : [];
-  const object =
-    'object' in activity && activity.object
-      ? Array.isArray(activity.object)
-        ? activity.object
-        : [activity.object]
-      : [];
-  const target = activity.target
-    ? Array.isArray(activity.target)
-      ? activity.target
-      : [activity.target]
-    : [];
-  const tag = activity.tag
-    ? Array.isArray(activity.tag)
-      ? activity.tag
-      : [activity.tag]
-    : [];
+  const inReplyTo = getArray(activity.inReplyTo);
+  const object = 'object' in activity ? getArray(activity.object) : [];
+  const target = 'target' in activity ? getArray(activity.target) : [];
+  const tag = getArray(activity.tag);
 
   const objects = [...inReplyTo, ...object, ...target, ...tag];
 

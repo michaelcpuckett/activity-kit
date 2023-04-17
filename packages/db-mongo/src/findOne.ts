@@ -1,12 +1,12 @@
 import { MongoDbAdapter } from '.';
 import { AP, DbOptions } from '@activity-kit/types';
-import { convertStringsToUrls } from '@activity-kit/utilities';
+import { convertJsonToEntity } from '@activity-kit/utilities';
 import { Db } from 'mongodb';
 
 export async function findOne(
   this: MongoDbAdapter,
   collection: string,
-  matchingObject: { [key: string]: unknown },
+  matchingObject: Record<string, unknown>,
   options?: Array<keyof typeof DbOptions>,
 ): Promise<AP.Entity | null> {
   if (!(this.db instanceof Db)) {
@@ -37,5 +37,5 @@ export async function findOne(
 
   delete (value as Partial<typeof value>)._id;
 
-  return convertStringsToUrls(value) as AP.Entity;
+  return convertJsonToEntity(value) as AP.Entity;
 }

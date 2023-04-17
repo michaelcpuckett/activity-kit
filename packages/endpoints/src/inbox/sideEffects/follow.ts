@@ -1,12 +1,12 @@
 import {
   AP,
+  isTypeOf,
   assertExists,
   assertIsApActor,
   assertIsApEntity,
   assertIsApType,
   assertIsArray,
 } from '@activity-kit/types';
-import { isTypeOf } from '@activity-kit/utilities';
 import {
   ACTIVITYSTREAMS_CONTEXT,
   LOCAL_DOMAIN,
@@ -36,7 +36,7 @@ export async function handleFollow(
 
   assertIsApEntity(object);
 
-  if (!isTypeOf(object, AP.ActorTypes)) {
+  if (!isTypeOf<AP.Actor>(object, AP.ActorTypes)) {
     // Not applicable.
     return;
   }

@@ -7,7 +7,6 @@ exports.respond = void 0;
 const types_1 = require("@activity-kit/types");
 const utilities_1 = require("@activity-kit/utilities");
 const cookie_1 = __importDefault(require("cookie"));
-const utilities_2 = require("@activity-kit/utilities");
 const respond = async function (render) {
     const cookies = cookie_1.default.parse(this.req.headers.cookie ?? '');
     const actor = await this.core.getActorByUserId(await this.core.getUserIdByToken(cookies.__session ?? ''));
@@ -30,7 +29,7 @@ const respond = async function (render) {
         this.req.headers.accept?.includes(utilities_1.LINKED_DATA_CONTENT_TYPE) ||
         this.req.headers.accept?.includes(utilities_1.JSON_CONTENT_TYPE)) {
         this.res.setHeader(utilities_1.CONTENT_TYPE_HEADER, utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);
-        this.res.write((0, utilities_2.stringify)(actor));
+        this.res.write((0, utilities_1.convertEntityToJson)((0, utilities_1.cleanProps)((0, utilities_1.applyContext)(actor))));
     }
     else {
         this.res.setHeader(utilities_1.CONTENT_TYPE_HEADER, utilities_1.HTML_CONTENT_TYPE);
@@ -48,7 +47,7 @@ const respond = async function (render) {
             }
         }
         const formattedProps = Object.fromEntries(Object.entries(props).map(([key, value]) => {
-            return [key, (0, utilities_1.convertUrlsToStrings)(value)];
+            return [key, (0, utilities_1.convertEntityToJson)(value)];
         }));
         this.res.write(await render(formattedProps));
         this.res.end();

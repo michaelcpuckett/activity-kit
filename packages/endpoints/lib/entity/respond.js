@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.respond = void 0;
 const types_1 = require("@activity-kit/types");
+const types_2 = require("@activity-kit/types");
 const utilities_1 = require("@activity-kit/utilities");
 const cookie_1 = __importDefault(require("cookie"));
 const ITEMS_PER_COLLECTION_PAGE = 50;
@@ -26,12 +27,12 @@ async function respond(render) {
         return this.handleNotFound();
     }
     this.res.setHeader('Vary', 'Accept');
-    if (!(0, utilities_1.isTypeOf)(entity, types_1.AP.CollectionTypes) &&
-        !(0, utilities_1.isTypeOf)(entity, types_1.AP.CollectionPageTypes)) {
+    if (!(0, types_2.isTypeOf)(entity, types_1.AP.CollectionTypes) &&
+        !(0, types_2.isTypeOf)(entity, types_1.AP.CollectionPageTypes)) {
         return await this.handleFoundEntity(render, entity, authorizedActor);
     }
     (0, types_1.assertIsApCollection)(entity);
-    const isOrderedCollection = (0, utilities_1.isType)(entity, types_1.AP.CollectionTypes.ORDERED_COLLECTION);
+    const isOrderedCollection = (0, types_2.isType)(entity, types_1.AP.CollectionTypes.ORDERED_COLLECTION);
     const totalItems = Number(entity.totalItems);
     const lastPageIndex = Math.max(1, Math.ceil(totalItems / ITEMS_PER_COLLECTION_PAGE));
     const currentPage = Number(pageParam) || 1;
@@ -52,12 +53,14 @@ async function respond(render) {
     }
     const expandedCollection = await this.core.expandCollection(entity);
     const expandedItems = (() => {
-        if ((0, utilities_1.isType)(expandedCollection, types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
-            (0, types_1.assertIsApType)(expandedCollection, types_1.AP.CollectionTypes.ORDERED_COLLECTION);
+        if (Array.isArray(expandedCollection.type)
+            ? expandedCollection.type.includes(types_1.AP.CollectionTypes.ORDERED_COLLECTION)
+            : expandedCollection.type === types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
             return expandedCollection.orderedItems;
         }
-        if ((0, utilities_1.isType)(expandedCollection, types_1.AP.CollectionTypes.COLLECTION)) {
-            (0, types_1.assertIsApType)(expandedCollection, types_1.AP.CollectionTypes.COLLECTION);
+        if (Array.isArray(expandedCollection.type)
+            ? expandedCollection.type.includes(types_1.AP.CollectionTypes.COLLECTION)
+            : expandedCollection.type === types_1.AP.CollectionTypes.COLLECTION) {
             return expandedCollection.items;
         }
     })();
@@ -66,7 +69,7 @@ async function respond(render) {
     const items = [];
     for (const item of limitedItems) {
         if (item && !(item instanceof URL)) {
-            if ((0, utilities_1.isTypeOf)(item, types_1.AP.ActivityTypes) &&
+            if ((0, types_2.isTypeOf)(item, types_1.AP.ActivityTypes) &&
                 'object' in item &&
                 item.object instanceof URL) {
                 const object = await this.core.findEntityById(item.object);

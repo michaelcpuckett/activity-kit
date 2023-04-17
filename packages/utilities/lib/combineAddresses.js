@@ -3,64 +3,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.combineAddresses = void 0;
 const types_1 = require("@activity-kit/types");
 const getId_1 = require("./getId");
-const isType_1 = require("./isType");
+const getArray_1 = require("./getArray");
 function combineAddresses(activity) {
-    if ((0, isType_1.isType)(activity, types_1.AP.ActivityTypes.CREATE) &&
-        'object' in activity &&
-        activity.object &&
-        'type' in activity.object) {
+    if ('object' in activity) {
         const activityObject = activity.object;
-        if ((0, isType_1.isTypeOf)(activityObject, types_1.AP.CoreObjectTypes)) {
-            const activityTo = Array.isArray(activity.to)
-                ? activity.to
-                : activity.to
-                    ? [activity.to]
-                    : [];
-            const activityCc = Array.isArray(activity.cc)
-                ? activity.cc
-                : activity.cc
-                    ? [activity.cc]
-                    : [];
-            const activityBto = Array.isArray(activity.bto)
-                ? activity.bto
-                : activity.bto
-                    ? [activity.bto]
-                    : [];
-            const activityBcc = Array.isArray(activity.bcc)
-                ? activity.bcc
-                : activity.bcc
-                    ? [activity.bcc]
-                    : [];
-            const activityAudience = Array.isArray(activity.audience)
-                ? activity.audience
-                : activity.audience
-                    ? [activity.audience]
-                    : [];
-            const objectTo = Array.isArray(activityObject.to)
-                ? activityObject.to
-                : activityObject.to
-                    ? [activityObject.to]
-                    : [];
-            const objectCc = Array.isArray(activityObject.cc)
-                ? activityObject.cc
-                : activityObject.cc
-                    ? [activityObject.cc]
-                    : [];
-            const objectBto = Array.isArray(activityObject.bto)
-                ? activityObject.bto
-                : activityObject.bto
-                    ? [activityObject.bto]
-                    : [];
-            const objectBcc = Array.isArray(activityObject.bcc)
-                ? activityObject.bcc
-                : activityObject.bcc
-                    ? [activityObject.bcc]
-                    : [];
-            const objectAudience = Array.isArray(activityObject.audience)
-                ? activityObject.audience
-                    ? activityObject.audience
-                    : [activityObject.audience]
-                : [];
+        if ((0, types_1.isTypeOf)(activityObject, types_1.AP.CoreObjectTypes)) {
+            const activityTo = (0, getArray_1.getArray)(activity.to);
+            const activityCc = (0, getArray_1.getArray)(activity.cc);
+            const activityBto = (0, getArray_1.getArray)(activity.bto);
+            const activityBcc = (0, getArray_1.getArray)(activity.bcc);
+            const activityAudience = (0, getArray_1.getArray)(activity.audience);
+            const objectTo = (0, getArray_1.getArray)(activityObject.to);
+            const objectCc = (0, getArray_1.getArray)(activityObject.cc);
+            const objectBto = (0, getArray_1.getArray)(activityObject.bto);
+            const objectBcc = (0, getArray_1.getArray)(activityObject.bcc);
+            const objectAudience = (0, getArray_1.getArray)(activityObject.audience);
             const to = [...new Set([...activityTo, ...objectTo].map(getId_1.getId))].filter((item) => item);
             const bto = [
                 ...new Set([...activityBto, ...objectBto].map(getId_1.getId)),

@@ -4,7 +4,7 @@ import { AP } from '@activity-kit/types';
 export async function findAll(
   this: SqliteDbAdapter,
   collection: string,
-  matchingObject: { [key: string]: unknown },
+  matchingObject: Record<string, unknown>,
 ): Promise<AP.Entity[] | null> {
   const [key] = Object.keys(matchingObject);
   const [keyValue] = Object.values(matchingObject);

@@ -35,7 +35,7 @@ async function fetchEntityById(id) {
             }
         }
         else {
-            console.log('Found but not 200 or 404.', response.status);
+            console.log('Found but not 200 or 404.', response.status, id.toString());
             throw new Error(`Unexpected status code ${response.status}`);
         }
     })
@@ -44,8 +44,8 @@ async function fetchEntityById(id) {
         console.log(String(error));
         return null;
     });
-    if (fetchedEntity && 'id' in fetchedEntity) {
-        const entity = (0, utilities_1.compressEntity)((0, utilities_1.convertStringsToUrls)(fetchedEntity));
+    if (fetchedEntity) {
+        const entity = (0, utilities_1.compressEntity)((0, utilities_1.convertJsonToEntity)(fetchedEntity));
         await this.saveEntity(entity);
         return entity;
     }

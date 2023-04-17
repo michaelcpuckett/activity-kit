@@ -1,46 +1,45 @@
-import { AP } from '@activity-kit/types';
-import { isType } from '@activity-kit/utilities';
+import { AP, isType } from '@activity-kit/types';
 import { OutboxPostEndpoint } from '.';
 
 export async function runSideEffects(this: OutboxPostEndpoint) {
   try {
-    if (isType(this.activity, AP.ActivityTypes.CREATE)) {
+    if (isType<AP.Create>(this.activity, AP.ActivityTypes.CREATE)) {
       await this.handleCreate(this.activity);
     }
 
-    if (isType(this.activity, AP.ActivityTypes.DELETE)) {
+    if (isType<AP.Delete>(this.activity, AP.ActivityTypes.DELETE)) {
       await this.handleDelete(this.activity);
     }
 
-    if (isType(this.activity, AP.ActivityTypes.ACCEPT)) {
+    if (isType<AP.Accept>(this.activity, AP.ActivityTypes.ACCEPT)) {
       await this.handleAccept(this.activity);
     }
 
-    if (isType(this.activity, AP.ActivityTypes.BLOCK)) {
+    if (isType<AP.Block>(this.activity, AP.ActivityTypes.BLOCK)) {
       await this.handleBlock(this.activity);
     }
 
-    if (isType(this.activity, AP.ActivityTypes.UPDATE)) {
+    if (isType<AP.Update>(this.activity, AP.ActivityTypes.UPDATE)) {
       await this.handleUpdate(this.activity);
     }
 
-    if (isType(this.activity, AP.ActivityTypes.LIKE)) {
+    if (isType<AP.Like>(this.activity, AP.ActivityTypes.LIKE)) {
       await this.handleLike(this.activity);
     }
 
-    if (isType(this.activity, AP.ActivityTypes.ANNOUNCE)) {
+    if (isType<AP.Announce>(this.activity, AP.ActivityTypes.ANNOUNCE)) {
       await this.handleAnnounce(this.activity);
     }
 
-    if (isType(this.activity, AP.ActivityTypes.ADD)) {
+    if (isType<AP.Add>(this.activity, AP.ActivityTypes.ADD)) {
       await this.handleAdd(this.activity);
     }
 
-    if (isType(this.activity, AP.ActivityTypes.REMOVE)) {
+    if (isType<AP.Remove>(this.activity, AP.ActivityTypes.REMOVE)) {
       await this.handleRemove(this.activity);
     }
 
-    if (isType(this.activity, AP.ActivityTypes.UNDO)) {
+    if (isType<AP.Undo>(this.activity, AP.ActivityTypes.UNDO)) {
       await this.handleUndo(this.activity);
     }
   } catch (error) {

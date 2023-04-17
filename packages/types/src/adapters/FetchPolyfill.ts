@@ -65,6 +65,7 @@ declare class Request implements Body {
 }
 
 interface RequestInit {
+  signal?: AbortSignal;
   method?: string;
   headers?: HeadersInit;
   body?: BodyInit;
@@ -145,7 +146,7 @@ declare class Response implements Body {
   readonly bodyUsed: boolean;
   arrayBuffer(): Promise<ArrayBuffer>;
   blob(): Promise<Blob>;
-  json(): Promise<JSON>;
+  json(): Promise<Record<string, unknown>>;
   json<T>(): Promise<T>;
   text(): Promise<string>;
 

@@ -18,10 +18,14 @@ async function handleAnnounce(activity, recipient) {
         if (attributedToId.toString() !== (0, utilities_1.getId)(recipient)?.toString()) {
             return;
         }
-        if ((0, utilities_1.isType)(shares, types_1.AP.CollectionTypes.COLLECTION)) {
+        if (Array.isArray(shares.type)
+            ? shares.type.includes(types_1.AP.CollectionTypes.COLLECTION)
+            : shares.type === types_1.AP.CollectionTypes.COLLECTION) {
             await this.core.insertItem(sharesId, activity.id);
         }
-        else if ((0, utilities_1.isType)(shares, types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
+        else if (Array.isArray(shares.type)
+            ? shares.type.includes(types_1.AP.CollectionTypes.ORDERED_COLLECTION)
+            : shares.type === types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
             await this.core.insertOrderedItem(sharesId, activity.id);
         }
     }

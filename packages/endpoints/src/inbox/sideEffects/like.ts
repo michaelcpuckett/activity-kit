@@ -6,7 +6,7 @@ import {
   assertIsApExtendedObject,
   assertIsApType,
 } from '@activity-kit/types';
-import { getId, isType } from '@activity-kit/utilities';
+import { getId } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '..';
 
 // A Like has been made to a local object.
@@ -45,9 +45,17 @@ export async function handleLike(
       return;
     }
 
-    if (isType(likes, AP.CollectionTypes.COLLECTION)) {
+    if (
+      Array.isArray(likes.type)
+        ? likes.type.includes(AP.CollectionTypes.COLLECTION)
+        : likes.type === AP.CollectionTypes.COLLECTION
+    ) {
       await this.core.insertItem(likesId, activity.id);
-    } else if (isType(likes, AP.CollectionTypes.ORDERED_COLLECTION)) {
+    } else if (
+      Array.isArray(likes.type)
+        ? likes.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
+        : likes.type === AP.CollectionTypes.ORDERED_COLLECTION
+    ) {
       await this.core.insertOrderedItem(likesId, activity.id);
     }
   } catch (error) {

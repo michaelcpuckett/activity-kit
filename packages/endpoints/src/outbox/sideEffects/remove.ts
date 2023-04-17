@@ -1,6 +1,6 @@
 import { OutboxPostEndpoint } from '..';
-import { getId, isType } from '@activity-kit/utilities';
 import { AP, assertIsApCollection, assertIsApType } from '@activity-kit/types';
+import { getId } from '@activity-kit/utilities';
 
 export async function handleRemove(
   this: OutboxPostEndpoint,
@@ -23,9 +23,17 @@ export async function handleRemove(
     }
   }
 
-  if (isType(target, AP.CollectionTypes.ORDERED_COLLECTION)) {
+  if (
+    Array.isArray(target.type)
+      ? target.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
+      : target.type === AP.CollectionTypes.ORDERED_COLLECTION
+  ) {
     await this.core.removeOrderedItem(targetId, objectId);
-  } else if (isType(target, AP.CollectionTypes.COLLECTION)) {
+  } else if (
+    Array.isArray(target.type)
+      ? target.type.includes(AP.CollectionTypes.COLLECTION)
+      : target.type === AP.CollectionTypes.COLLECTION
+  ) {
     await this.core.removeItem(targetId, objectId);
   } else {
     throw new Error('Bad target: Not a collection.');

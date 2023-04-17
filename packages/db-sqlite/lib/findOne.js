@@ -27,7 +27,7 @@ async function findOne(collection, matchingObject, options) {
             value[key] = JSON.parse(value[key].slice('JSON:'.length));
         }
     }
-    return (0, utilities_1.convertStringsToUrls)(value);
+    return (0, utilities_1.convertJsonToEntity)(value);
 }
 exports.findOne = findOne;
 //# sourceMappingURL=findOne.js.map

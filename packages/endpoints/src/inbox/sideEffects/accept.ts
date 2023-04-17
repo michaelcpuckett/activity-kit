@@ -1,12 +1,13 @@
 import {
   AP,
+  isType,
   assertIsApActor,
   assertIsApEntity,
   assertIsApType,
   assertIsArray,
   assertExists,
 } from '@activity-kit/types';
-import { getId, isType } from '@activity-kit/utilities';
+import { getId } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '..';
 
 // A Follow request has been accepted.
@@ -21,11 +22,11 @@ export async function handleAccept(
 
   assertExists(objectId);
 
-  const object = await this.core.findEntityById(objectId);
+  const object = await this.core.queryById(objectId);
 
   assertIsApEntity(object);
 
-  if (!isType(object, AP.ActivityTypes.FOLLOW)) {
+  if (!isType<AP.Follow>(object, AP.ActivityTypes.FOLLOW)) {
     return;
   }
 

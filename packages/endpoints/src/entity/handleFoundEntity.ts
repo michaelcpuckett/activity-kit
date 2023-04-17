@@ -6,9 +6,10 @@ import {
   HTML_CONTENT_TYPE,
   JSON_CONTENT_TYPE,
   LINKED_DATA_CONTENT_TYPE,
+  applyContext,
+  cleanProps,
 } from '@activity-kit/utilities';
-import { convertUrlsToStrings } from '@activity-kit/utilities';
-import { stringify } from '@activity-kit/utilities';
+import { convertEntityToJson } from '@activity-kit/utilities';
 
 export async function handleFoundEntity(
   this: EntityGetEndpoint,
@@ -24,7 +25,7 @@ export async function handleFoundEntity(
     this.req.headers.accept?.includes(JSON_CONTENT_TYPE)
   ) {
     this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
-    this.res.write(stringify(entity));
+    this.res.write(convertEntityToJson(cleanProps(applyContext(entity))));
   } else {
     this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
 
@@ -47,7 +48,7 @@ export async function handleFoundEntity(
     const formattedProps = Object.fromEntries(
       Object.entries(props).map(([key, value]) => {
         if (typeof value === 'object') {
-          return [key, convertUrlsToStrings(value)];
+          return [key, convertEntityToJson(value)];
         } else {
           return [key, value];
         }

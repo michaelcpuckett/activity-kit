@@ -3,7 +3,7 @@ import { AP } from '@activity-kit/types';
 import {
   applyContext,
   cleanProps,
-  convertUrlsToStrings,
+  convertEntityToJson,
   getCollectionNameByUrl,
 } from '@activity-kit/utilities';
 
@@ -90,7 +90,7 @@ export async function saveEntity(this: SqliteDbAdapter, entity: AP.Entity) {
     radius: null,
     units: null,
     describes: null,
-    ...cleanProps(convertUrlsToStrings(applyContext(entity))),
+    ...convertEntityToJson(cleanProps(applyContext(entity))),
     _id,
   };
 

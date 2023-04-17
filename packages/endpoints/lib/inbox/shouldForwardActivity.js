@@ -7,25 +7,13 @@ async function shouldForwardActivity() {
     if (!this.activity) {
         return false;
     }
-    if (!(0, utilities_1.isTypeOf)(this.activity, types_1.AP.ActivityTypes)) {
+    if (!(0, types_1.isTypeOf)(this.activity, types_1.AP.ActivityTypes)) {
         return false;
     }
     const activity = this.activity;
-    const to = activity.to
-        ? Array.isArray(activity.to)
-            ? activity.to
-            : [activity.to]
-        : [];
-    const cc = activity.cc
-        ? Array.isArray(activity.cc)
-            ? activity.cc
-            : [activity.cc]
-        : [];
-    const audience = activity.audience
-        ? Array.isArray(activity.audience)
-            ? activity.audience
-            : [activity.audience]
-        : [];
+    const to = (0, utilities_1.getArray)(activity.to);
+    const cc = (0, utilities_1.getArray)(activity.cc);
+    const audience = (0, utilities_1.getArray)(activity.audience);
     const addressees = [...to, ...cc, ...audience];
     for (const addressee of addressees) {
         const addresseeId = (0, utilities_1.getId)(addressee);
@@ -36,31 +24,15 @@ async function shouldForwardActivity() {
         if (!foundItem) {
             continue;
         }
-        if ((0, utilities_1.isType)(foundItem, types_1.AP.CollectionTypes.COLLECTION) ||
-            (0, utilities_1.isType)(foundItem, types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
+        if ((0, types_1.isType)(foundItem, types_1.AP.CollectionTypes.COLLECTION) ||
+            (0, types_1.isType)(foundItem, types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
             return true;
         }
     }
-    const inReplyTo = activity.to
-        ? Array.isArray(activity.inReplyTo)
-            ? activity.inReplyTo
-            : [activity.inReplyTo]
-        : [];
-    const object = 'object' in activity && activity.object
-        ? Array.isArray(activity.object)
-            ? activity.object
-            : [activity.object]
-        : [];
-    const target = activity.target
-        ? Array.isArray(activity.target)
-            ? activity.target
-            : [activity.target]
-        : [];
-    const tag = activity.tag
-        ? Array.isArray(activity.tag)
-            ? activity.tag
-            : [activity.tag]
-        : [];
+    const inReplyTo = (0, utilities_1.getArray)(activity.inReplyTo);
+    const object = 'object' in activity ? (0, utilities_1.getArray)(activity.object) : [];
+    const target = 'target' in activity ? (0, utilities_1.getArray)(activity.target) : [];
+    const tag = (0, utilities_1.getArray)(activity.tag);
     const objects = [...inReplyTo, ...object, ...target, ...tag];
     for (const object of objects) {
         const objectId = (0, utilities_1.getId)(object);

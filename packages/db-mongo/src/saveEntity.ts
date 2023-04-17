@@ -4,7 +4,7 @@ import { Db } from 'mongodb';
 import {
   applyContext,
   cleanProps,
-  convertUrlsToStrings,
+  convertEntityToJson,
   getCollectionNameByUrl,
 } from '@activity-kit/utilities';
 
@@ -22,9 +22,7 @@ export async function saveEntity(
 
   const collectionName = getCollectionNameByUrl(entity.id);
   const _id = entity.id.toString();
-  const convertedEntity = cleanProps(
-    convertUrlsToStrings(applyContext(entity)),
-  );
+  const convertedEntity = convertEntityToJson(cleanProps(applyContext(entity)));
 
   await this.db.collection(collectionName).replaceOne(
     {

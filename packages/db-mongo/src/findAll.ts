@@ -5,7 +5,7 @@ import { Db } from 'mongodb';
 export async function findAll(
   this: MongoDbAdapter,
   collection: string,
-  matchingObject: { [key: string]: unknown },
+  matchingObject: Record<string, unknown>,
 ): Promise<AP.Entity[] | null> {
   if (!(this.db instanceof Db)) {
     throw new Error('Bad database.');

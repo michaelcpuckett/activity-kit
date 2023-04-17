@@ -12,7 +12,7 @@ async function saveEntity(entity) {
     }
     const collectionName = (0, utilities_1.getCollectionNameByUrl)(entity.id);
     const _id = entity.id.toString();
-    const convertedEntity = (0, utilities_1.cleanProps)((0, utilities_1.convertUrlsToStrings)((0, utilities_1.applyContext)(entity)));
+    const convertedEntity = (0, utilities_1.convertEntityToJson)((0, utilities_1.cleanProps)((0, utilities_1.applyContext)(entity)));
     await this.db.collection(collectionName).replaceOne({
         _id,
     }, convertedEntity, {

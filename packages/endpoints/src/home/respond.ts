@@ -2,15 +2,16 @@ import { HomeGetEndpoint } from '.';
 import { AP, assertIsApActor, assertIsApType } from '@activity-kit/types';
 import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
+  applyContext,
+  cleanProps,
   CONTENT_TYPE_HEADER,
-  convertUrlsToStrings,
+  convertEntityToJson,
   getId,
   HTML_CONTENT_TYPE,
   JSON_CONTENT_TYPE,
   LINKED_DATA_CONTENT_TYPE,
 } from '@activity-kit/utilities';
 import cookie from 'cookie';
-import { stringify } from '@activity-kit/utilities';
 
 export const respond = async function (
   this: HomeGetEndpoint,
@@ -56,7 +57,7 @@ export const respond = async function (
     this.req.headers.accept?.includes(JSON_CONTENT_TYPE)
   ) {
     this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
-    this.res.write(stringify(actor));
+    this.res.write(convertEntityToJson(cleanProps(applyContext(actor))));
   } else {
     this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
 
@@ -77,7 +78,7 @@ export const respond = async function (
 
     const formattedProps = Object.fromEntries(
       Object.entries(props).map(([key, value]) => {
-        return [key, convertUrlsToStrings(value)];
+        return [key, convertEntityToJson(value)];
       }),
     );
 

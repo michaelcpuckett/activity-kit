@@ -1,15 +1,12 @@
 import { OutboxPostEndpoint } from '.';
 import {
   AP,
+  isTypeOf,
   assertExists,
   assertIsApActivity,
   assertIsApActor,
 } from '@activity-kit/types';
-import {
-  isTypeOf,
-  combineAddresses,
-  LOCAL_DOMAIN,
-} from '@activity-kit/utilities';
+import { combineAddresses, LOCAL_DOMAIN } from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
 
 export async function respond(this: OutboxPostEndpoint) {
@@ -39,7 +36,7 @@ export async function respond(this: OutboxPostEndpoint) {
 
   this.activity.id = activityId; // Overwrite ID
 
-  if (isTypeOf(this.activity, AP.ActivityTypes)) {
+  if (isTypeOf<AP.Activity>(this.activity, AP.ActivityTypes)) {
     assertIsApActivity(this.activity);
 
     this.activity.url = activityId;

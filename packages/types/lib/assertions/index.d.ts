@@ -1,11 +1,7 @@
 import * as AP from '../activitypub';
 import { AnyType } from '../activitypub/Core/Entity';
-export declare function isTypeOf(entity: unknown & {
-    type: string | string[];
-}, values: Object): boolean;
-export declare function isType(entity: unknown & {
-    type: string | string[];
-}, type: string): boolean;
+export declare function isTypeOf<T>(entity: unknown, types: Record<string, string>): entity is T;
+export declare function isType<T>(entity: unknown, type: string): entity is T;
 export declare function assertExists(value: unknown): asserts value;
 export declare function assertIsObject(value: unknown): asserts value is object;
 export declare function assertIsString(value: unknown): asserts value is string;

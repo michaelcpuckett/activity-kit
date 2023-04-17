@@ -1,21 +1,21 @@
 import * as jsonld from 'jsonld';
 import getNodeDocumentLoader from 'jsonld/lib/documentLoaders/node';
-import { Context, RemoteDocument } from 'jsonld/jsonld-spec';
+import { RemoteDocument } from 'jsonld/jsonld-spec';
 
+import { AP } from '@activity-kit/types';
 import {
   ACTIVITYSTREAMS_CONTEXT,
   LDP_CONTEXT,
   SCHEMA_ORG_CONTEXT,
   W3ID_SECURITY_CONTEXT,
 } from './globals';
-import { convertStringsToUrls } from './convertStringsToUrls';
+import { convertJsonToEntity } from './convertJsonToEntity';
 import { applyContext } from './applyContext';
 
 type DocumentLoader = jsonld.Options.DocLoader['documentLoader'];
-type getNodeDocumentLoader = () => DocumentLoader;
-const nodeDocumentLoader = getNodeDocumentLoader();
+const nodeDocumentLoader: DocumentLoader = getNodeDocumentLoader();
 
-const CONTEXTS: Record<string, Context> = {
+const CONTEXT_DEFINITIONS: Record<string, jsonld.ContextDefinition> = {
   [ACTIVITYSTREAMS_CONTEXT]: {
     '@vocab': ACTIVITYSTREAMS_CONTEXT,
     xsd: 'http://www.w3.org/2001/XMLSchema#',
@@ -3838,13 +3838,15 @@ const customLoader: DocumentLoader = async (
   url: string,
   callback: (err: Error, remoteDoc: RemoteDocument) => void,
 ): Promise<RemoteDocument> | undefined => {
-  const contextUrl = Object.keys(CONTEXTS).find((key) => key === url);
+  const contextUrl = Object.keys(CONTEXT_DEFINITIONS).find(
+    (key) => key === url,
+  );
 
   if (contextUrl) {
     return {
       contextUrl: null,
       document: {
-        '@context': CONTEXTS[contextUrl],
+        '@context': CONTEXT_DEFINITIONS[contextUrl],
       },
       documentUrl: contextUrl,
     };
@@ -3853,10 +3855,12 @@ const customLoader: DocumentLoader = async (
   return nodeDocumentLoader(url, callback);
 };
 
-const ctx: jsonld.ContextDefinition = CONTEXTS[ACTIVITYSTREAMS_CONTEXT];
+const ctx = CONTEXT_DEFINITIONS[ACTIVITYSTREAMS_CONTEXT];
 
-export const convertFromJsonLd = async (entity: { [key: string]: unknown }) => {
-  const result = await jsonld.compact(entity, ctx, {
+export const convertJsonLdToEntity = async (
+  document: jsonld.JsonLdDocument,
+): Promise<AP.Entity | null> => {
+  const result = await jsonld.compact(document, ctx, {
     documentLoader: customLoader,
   });
 
@@ -3866,7 +3870,7 @@ export const convertFromJsonLd = async (entity: { [key: string]: unknown }) => {
 
   delete result['@context'];
 
-  const converted = convertStringsToUrls(result);
+  const converted = convertJsonToEntity(result);
 
   if (!converted) {
     return null;

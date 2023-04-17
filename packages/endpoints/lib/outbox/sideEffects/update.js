@@ -22,7 +22,7 @@ async function handleUpdate(activity) {
     const existingObject = await this.core.findEntityById(objectId);
     (0, types_1.assertIsApEntity)(existingObject);
     const getTags = async () => {
-        if (!(0, utilities_1.isTypeOf)(existingObject, types_1.AP.CoreObjectTypes)) {
+        if (!(0, types_1.isTypeOf)(existingObject, types_1.AP.CoreObjectTypes)) {
             return null;
         }
         (0, types_1.assertIsApCoreObject)(existingObject);
@@ -68,7 +68,7 @@ async function handleUpdate(activity) {
             });
             for (const tag of newTags) {
                 if (!(tag instanceof URL) &&
-                    (0, utilities_1.isType)(tag, types_1.AP.ExtendedObjectTypes.HASHTAG)) {
+                    (0, types_1.isType)(tag, types_1.AP.ExtendedObjectTypes.HASHTAG)) {
                     (0, types_1.assertIsApType)(tag, types_1.AP.ExtendedObjectTypes.HASHTAG);
                     const index = newTags.indexOf(tag);
                     const hashtagCollectionUrl = new URL(newTagIds[index]);

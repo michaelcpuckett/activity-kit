@@ -11,28 +11,28 @@ async function handleUndo(activity) {
     if (!isActorAuthorizedToModifyObject(this.actor, activity)) {
         throw new Error('Not authorized to modify object!');
     }
-    if ((0, utilities_1.isType)(object, types_1.AP.ActivityTypes.CREATE)) {
+    if ((0, types_1.isType)(object, types_1.AP.ActivityTypes.CREATE)) {
         await this.handleDelete(object);
     }
-    if ((0, utilities_1.isType)(object, types_1.AP.ActivityTypes.FOLLOW)) {
+    if ((0, types_1.isType)(object, types_1.AP.ActivityTypes.FOLLOW)) {
         await this.handleUndoFollow(object);
     }
-    if ((0, utilities_1.isType)(object, types_1.AP.ActivityTypes.ACCEPT)) {
+    if ((0, types_1.isType)(object, types_1.AP.ActivityTypes.ACCEPT)) {
         await this.handleUndoAccept(object);
     }
-    if ((0, utilities_1.isType)(object, types_1.AP.ActivityTypes.BLOCK)) {
+    if ((0, types_1.isType)(object, types_1.AP.ActivityTypes.BLOCK)) {
         await this.handleUndoBlock(object);
     }
-    if ((0, utilities_1.isType)(object, types_1.AP.ActivityTypes.LIKE)) {
+    if ((0, types_1.isType)(object, types_1.AP.ActivityTypes.LIKE)) {
         await this.handleUndoLike(object);
     }
-    if ((0, utilities_1.isType)(object, types_1.AP.ActivityTypes.ANNOUNCE)) {
+    if ((0, types_1.isType)(object, types_1.AP.ActivityTypes.ANNOUNCE)) {
         await this.handleUndoAnnounce(object);
     }
-    if ((0, utilities_1.isType)(object, types_1.AP.ActivityTypes.ADD)) {
+    if ((0, types_1.isType)(object, types_1.AP.ActivityTypes.ADD)) {
         await this.handleRemove(object);
     }
-    if ((0, utilities_1.isType)(object, types_1.AP.ActivityTypes.REMOVE)) {
+    if ((0, types_1.isType)(object, types_1.AP.ActivityTypes.REMOVE)) {
         await this.handleAdd(object);
     }
 }

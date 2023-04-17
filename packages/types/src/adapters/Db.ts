@@ -12,12 +12,12 @@ export type DbAdapter = {
   findAll: (
     this: DbAdapter,
     collection: string,
-    matchingObject: { [key: string]: unknown },
+    matchingObject: Record<string, unknown>,
   ) => Promise<AP.Entity[] | null>;
   findOne: (
     this: DbAdapter,
     collection: string,
-    matchingObject: { [key: string]: unknown },
+    matchingObject: Record<string, unknown>,
     options?: Array<keyof typeof DbOptions>,
   ) => Promise<AP.Entity | null>;
   findStringIdByValue: (

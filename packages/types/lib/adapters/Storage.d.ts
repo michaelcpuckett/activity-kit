@@ -1,8 +1,6 @@
 /// <reference types="node" />
 import type { File } from 'formidable';
 export type StorageAdapter = {
-    params?: {
-        [key: string]: unknown;
-    };
+    params?: Record<string, unknown>;
     upload: (this: StorageAdapter, file: File) => Promise<URL>;
 };

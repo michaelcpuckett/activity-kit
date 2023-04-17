@@ -1,6 +1,6 @@
 import { Core } from '.';
-import { AP, assertIsApCollection } from '@activity-kit/types';
-import { getId, isType } from '@activity-kit/utilities';
+import { AP, isTypeOf } from '@activity-kit/types';
+import { getId } from '@activity-kit/utilities';
 
 export async function expandCollection(
   this: Core,
@@ -18,31 +18,35 @@ export async function expandCollection(
     return null;
   }
 
-  try {
-    assertIsApCollection(foundEntity);
-
+  if (isTypeOf<AP.EitherCollection>(foundEntity, AP.CollectionTypes)) {
     const items = await this.getCollectionItems(foundEntity);
 
     if (!items) {
       return foundEntity;
     }
 
-    if (isType(foundEntity, AP.CollectionTypes.ORDERED_COLLECTION)) {
+    if (
+      Array.isArray(foundEntity.type)
+        ? foundEntity.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
+        : foundEntity.type === AP.CollectionTypes.ORDERED_COLLECTION
+    ) {
       return {
         ...foundEntity,
         orderedItems: items,
       };
     }
 
-    if (isType(foundEntity, AP.CollectionTypes.COLLECTION)) {
+    if (
+      Array.isArray(foundEntity.type)
+        ? foundEntity.type.includes(AP.CollectionTypes.COLLECTION)
+        : foundEntity.type === AP.CollectionTypes.COLLECTION
+    ) {
       return {
         ...foundEntity,
         items,
       };
     }
-
-    return null;
-  } catch (error) {
-    return null;
   }
+
+  return null;
 }

@@ -3,6 +3,7 @@ import {
   Plugin,
   CoreLibrary,
   Routes,
+  isType,
   assertExists,
   assertIsApCollection,
   assertIsApExtendedObject,
@@ -13,7 +14,6 @@ import {
   getId,
   isLocal,
   LOCAL_DOMAIN,
-  isType,
   PUBLIC_ACTOR,
 } from '@activity-kit/utilities';
 import * as cheerio from 'cheerio';
@@ -31,13 +31,13 @@ export function GroupsPlugin() {
       activity: AP.Activity,
       recipient: AP.Actor,
     ) {
-      if (!isType(activity, AP.ActivityTypes.CREATE)) {
+      if (!isType<AP.Create>(activity, AP.ActivityTypes.CREATE)) {
         return;
       }
 
       assertIsApType<AP.Create>(activity, AP.ActivityTypes.CREATE);
 
-      if (!isType(recipient, AP.ActorTypes.GROUP)) {
+      if (!isType<AP.Group>(recipient, AP.ActorTypes.GROUP)) {
         return;
       }
 

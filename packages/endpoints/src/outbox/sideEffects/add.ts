@@ -1,5 +1,5 @@
 import { OutboxPostEndpoint } from '..';
-import { getId, isType } from '@activity-kit/utilities';
+import { getId } from '@activity-kit/utilities';
 import { AP, assertIsApCollection, assertIsApType } from '@activity-kit/types';
 
 export async function handleAdd(this: OutboxPostEndpoint, activity: AP.Entity) {
@@ -20,9 +20,17 @@ export async function handleAdd(this: OutboxPostEndpoint, activity: AP.Entity) {
     }
   }
 
-  if (isType(target, AP.CollectionTypes.ORDERED_COLLECTION)) {
+  if (
+    Array.isArray(target.type)
+      ? target.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
+      : target.type === AP.CollectionTypes.ORDERED_COLLECTION
+  ) {
     await this.core.insertOrderedItem(targetId, objectId);
-  } else if (isType(target, AP.CollectionTypes.COLLECTION)) {
+  } else if (
+    Array.isArray(target.type)
+      ? target.type.includes(AP.CollectionTypes.COLLECTION)
+      : target.type === AP.CollectionTypes.COLLECTION
+  ) {
     await this.core.insertItem(targetId, objectId);
   } else {
     throw new Error('Bad target: Not a collection.');

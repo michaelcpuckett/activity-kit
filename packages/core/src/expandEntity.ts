@@ -6,7 +6,7 @@ export async function expandEntity(
   this: Core,
   originalEntity: AP.Entity,
 ): Promise<AP.Entity> {
-  const entity: { [key: string]: unknown } = { ...originalEntity };
+  const entity: Record<string, unknown> = { ...originalEntity };
 
   for (const [key, value] of Object.entries(entity)) {
     if (

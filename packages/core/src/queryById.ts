@@ -1,6 +1,6 @@
-import { isLocal, isType } from '@activity-kit/utilities';
 import { Core } from '.';
-import { AP } from '@activity-kit/types';
+import { AP, isType } from '@activity-kit/types';
+import { isLocal } from '@activity-kit/utilities';
 
 export async function queryById(
   this: Core,

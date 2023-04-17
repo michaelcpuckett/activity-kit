@@ -20,10 +20,14 @@ async function handleLike(activity, recipient) {
         if (attributedToId.toString() !== (0, utilities_1.getId)(recipient)?.toString()) {
             return;
         }
-        if ((0, utilities_1.isType)(likes, types_1.AP.CollectionTypes.COLLECTION)) {
+        if (Array.isArray(likes.type)
+            ? likes.type.includes(types_1.AP.CollectionTypes.COLLECTION)
+            : likes.type === types_1.AP.CollectionTypes.COLLECTION) {
             await this.core.insertItem(likesId, activity.id);
         }
-        else if ((0, utilities_1.isType)(likes, types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
+        else if (Array.isArray(likes.type)
+            ? likes.type.includes(types_1.AP.CollectionTypes.ORDERED_COLLECTION)
+            : likes.type === types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
             await this.core.insertOrderedItem(likesId, activity.id);
         }
     }

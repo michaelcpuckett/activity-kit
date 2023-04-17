@@ -3,10 +3,10 @@ import {
   AP,
   assertIsApCollection,
   assertIsApEntity,
-  assertIsApType,
   assertIsArray,
 } from '@activity-kit/types';
-import { isType, isTypeOf, LOCAL_DOMAIN } from '@activity-kit/utilities';
+import { isType, isTypeOf } from '@activity-kit/types';
+import { LOCAL_DOMAIN } from '@activity-kit/utilities';
 import cookie from 'cookie';
 
 const ITEMS_PER_COLLECTION_PAGE = 50;
@@ -45,15 +45,15 @@ export async function respond(
   this.res.setHeader('Vary', 'Accept');
 
   if (
-    !isTypeOf(entity, AP.CollectionTypes) &&
-    !isTypeOf(entity, AP.CollectionPageTypes)
+    !isTypeOf<AP.EitherCollection>(entity, AP.CollectionTypes) &&
+    !isTypeOf<AP.EitherCollectionPage>(entity, AP.CollectionPageTypes)
   ) {
     return await this.handleFoundEntity(render, entity, authorizedActor);
   }
 
   assertIsApCollection(entity);
 
-  const isOrderedCollection = isType(
+  const isOrderedCollection = isType<AP.OrderedCollection>(
     entity,
     AP.CollectionTypes.ORDERED_COLLECTION,
   );
@@ -100,19 +100,21 @@ export async function respond(
   const expandedCollection = await this.core.expandCollection(entity);
 
   const expandedItems = (() => {
-    if (isType(expandedCollection, AP.CollectionTypes.ORDERED_COLLECTION)) {
-      assertIsApType<AP.OrderedCollection>(
-        expandedCollection,
-        AP.CollectionTypes.ORDERED_COLLECTION,
-      );
+    if (
+      Array.isArray(expandedCollection.type)
+        ? expandedCollection.type.includes(
+            AP.CollectionTypes.ORDERED_COLLECTION,
+          )
+        : expandedCollection.type === AP.CollectionTypes.ORDERED_COLLECTION
+    ) {
       return expandedCollection.orderedItems;
     }
 
-    if (isType(expandedCollection, AP.CollectionTypes.COLLECTION)) {
-      assertIsApType<AP.Collection>(
-        expandedCollection,
-        AP.CollectionTypes.COLLECTION,
-      );
+    if (
+      Array.isArray(expandedCollection.type)
+        ? expandedCollection.type.includes(AP.CollectionTypes.COLLECTION)
+        : expandedCollection.type === AP.CollectionTypes.COLLECTION
+    ) {
       return expandedCollection.items;
     }
   })();
@@ -129,7 +131,7 @@ export async function respond(
   for (const item of limitedItems) {
     if (item && !(item instanceof URL)) {
       if (
-        isTypeOf(item, AP.ActivityTypes) &&
+        isTypeOf<AP.Activity>(item, AP.ActivityTypes) &&
         'object' in item &&
         item.object instanceof URL
       ) {

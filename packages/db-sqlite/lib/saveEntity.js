@@ -84,7 +84,7 @@ async function saveEntity(entity) {
         radius: null,
         units: null,
         describes: null,
-        ...(0, utilities_1.cleanProps)((0, utilities_1.convertUrlsToStrings)((0, utilities_1.applyContext)(entity))),
+        ...(0, utilities_1.convertEntityToJson)((0, utilities_1.cleanProps)((0, utilities_1.applyContext)(entity))),
         _id,
     };
     for (const key of Object.keys(convertedEntity)) {

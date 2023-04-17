@@ -4,7 +4,7 @@ exports.signAndSendToForeignActorInbox = void 0;
 const utilities_1 = require("@activity-kit/utilities");
 async function signAndSendToForeignActorInbox(foreignActorInbox, actor, activity) {
     console.log('SENDING TO...', foreignActorInbox.toString());
-    const convertedActivity = (0, utilities_1.convertUrlsToStrings)(activity);
+    const convertedActivity = (0, utilities_1.convertEntityToJson)(activity);
     const { dateHeader, digestHeader, signatureHeader } = await this.getHttpSignature(foreignActorInbox, actor.id, await this.getPrivateKey(actor), convertedActivity);
     return await this.fetch(foreignActorInbox.toString(), {
         method: 'post',

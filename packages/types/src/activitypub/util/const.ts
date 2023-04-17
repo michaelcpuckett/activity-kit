@@ -1,4 +1,4 @@
-export const ExtendedObjectTypes = {
+export const ExtendedObjectTypes: Record<string, string> = {
   ARTICLE: 'Article',
   AUDIO: 'Audio',
   DOCUMENT: 'Document',
@@ -14,12 +14,12 @@ export const ExtendedObjectTypes = {
   HASHTAG: 'Hashtag', // Extension
 } as const;
 
-export const LinkTypes = {
+export const LinkTypes: Record<string, string> = {
   LINK: 'Link',
   MENTION: 'Mention',
 } as const;
 
-export const ActorTypes = {
+export const ActorTypes: Record<string, string> = {
   APPLICATION: 'Application',
   GROUP: 'Group',
   ORGANIZATION: 'Organization',
@@ -27,7 +27,7 @@ export const ActorTypes = {
   SERVICE: 'Service',
 } as const;
 
-export const TransitiveActivityTypes = {
+export const TransitiveActivityTypes: Record<string, string> = {
   ACCEPT: 'Accept',
   ADD: 'Add',
   ANNOUNCE: 'Announce',
@@ -55,28 +55,28 @@ export const TransitiveActivityTypes = {
   VIEW: 'View',
 } as const;
 
-export const IntransitiveActivityTypes = {
+export const IntransitiveActivityTypes: Record<string, string> = {
   ARRIVE: 'Arrive',
   TRAVEL: 'Travel',
   QUESTION: 'Question',
 } as const;
 
-export const ActivityTypes = {
+export const ActivityTypes: Record<string, string> = {
   ...TransitiveActivityTypes,
   ...IntransitiveActivityTypes,
 } as const;
 
-export const CollectionTypes = {
+export const CollectionTypes: Record<string, string> = {
   COLLECTION: 'Collection',
   ORDERED_COLLECTION: 'OrderedCollection',
 } as const;
 
-export const CollectionPageTypes = {
+export const CollectionPageTypes: Record<string, string> = {
   COLLECTION_PAGE: 'CollectionPage',
   ORDERED_COLLECTION_PAGE: 'OrderedCollectionPage',
 } as const;
 
-export const CoreObjectTypes = {
+export const CoreObjectTypes: Record<string, string> = {
   ...ExtendedObjectTypes,
   ...ActorTypes,
   ...ActivityTypes,
@@ -84,7 +84,7 @@ export const CoreObjectTypes = {
   ...CollectionPageTypes,
 } as const;
 
-export const AllTypes = {
+export const AllTypes: Record<string, string> = {
   ...CoreObjectTypes,
   ...LinkTypes,
 } as const;

@@ -3,7 +3,7 @@ import {
   CONTENT_TYPE_HEADER,
   ACTIVITYSTREAMS_CONTENT_TYPE,
   ACCEPT_HEADER,
-  convertUrlsToStrings,
+  convertEntityToJson,
 } from '@activity-kit/utilities';
 import { Core } from '.';
 
@@ -15,7 +15,7 @@ export async function signAndSendToForeignActorInbox(
 ): Promise<unknown> {
   console.log('SENDING TO...', foreignActorInbox.toString());
 
-  const convertedActivity = convertUrlsToStrings(activity);
+  const convertedActivity = convertEntityToJson(activity);
   const { dateHeader, digestHeader, signatureHeader } =
     await this.getHttpSignature(
       foreignActorInbox,

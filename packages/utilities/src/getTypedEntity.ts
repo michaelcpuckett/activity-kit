@@ -1,41 +1,46 @@
-import { AP } from '@activity-kit/types';
-import { isTypeOf, isType } from './isType';
+import { AP, isType, isTypeOf } from '@activity-kit/types';
 
-export const getTypedEntity = (entity: AP.Entity) => {
-  if (isTypeOf(entity, AP.LinkTypes)) {
-    return entity as AP.Link;
+export const getTypedEntity = (entity: AP.Entity): AP.Entity | null => {
+  if (isTypeOf<AP.Link>(entity, AP.LinkTypes)) {
+    return entity;
   }
 
-  if (isTypeOf(entity, AP.ActivityTypes)) {
-    return entity as AP.Activity;
+  if (isTypeOf<AP.Activity>(entity, AP.ActivityTypes)) {
+    return entity;
   }
 
-  if (isTypeOf(entity, AP.ActorTypes)) {
-    return entity as AP.Actor;
+  if (isTypeOf<AP.Actor>(entity, AP.ActorTypes)) {
+    return entity;
   }
 
-  if (isType(entity, AP.CollectionTypes.COLLECTION)) {
-    return entity as AP.Collection;
+  if (isType<AP.Collection>(entity, AP.CollectionTypes.COLLECTION)) {
+    return entity;
   }
 
-  if (isType(entity, AP.CollectionTypes.ORDERED_COLLECTION)) {
-    return entity as AP.OrderedCollection;
+  if (
+    isType<AP.OrderedCollection>(entity, AP.CollectionTypes.ORDERED_COLLECTION)
+  ) {
+    return entity;
   }
 
-  if (isType(entity, AP.CollectionPageTypes.COLLECTION_PAGE)) {
-    return entity as AP.CollectionPage;
+  if (
+    isType<AP.CollectionPage>(entity, AP.CollectionPageTypes.COLLECTION_PAGE)
+  ) {
+    return entity;
   }
 
-  if (isType(entity, AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE)) {
-    return entity as AP.OrderedCollectionPage;
+  if (
+    isType<AP.OrderedCollectionPage>(
+      entity,
+      AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE,
+    )
+  ) {
+    return entity;
   }
 
-  if (isTypeOf(entity, AP.ExtendedObjectTypes)) {
-    return entity as AP.ExtendedObject;
+  if (isTypeOf<AP.ExtendedObject>(entity, AP.ExtendedObjectTypes)) {
+    return entity;
   }
-
-  console.log(entity);
-  console.log('^-- entity is null?');
 
   return null;
 };

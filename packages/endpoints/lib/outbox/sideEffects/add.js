@@ -16,10 +16,14 @@ async function handleAdd(activity) {
             throw new Error('Not allowed.');
         }
     }
-    if ((0, utilities_1.isType)(target, types_1.AP.CollectionTypes.ORDERED_COLLECTION)) {
+    if (Array.isArray(target.type)
+        ? target.type.includes(types_1.AP.CollectionTypes.ORDERED_COLLECTION)
+        : target.type === types_1.AP.CollectionTypes.ORDERED_COLLECTION) {
         await this.core.insertOrderedItem(targetId, objectId);
     }
-    else if ((0, utilities_1.isType)(target, types_1.AP.CollectionTypes.COLLECTION)) {
+    else if (Array.isArray(target.type)
+        ? target.type.includes(types_1.AP.CollectionTypes.COLLECTION)
+        : target.type === types_1.AP.CollectionTypes.COLLECTION) {
         await this.core.insertItem(targetId, objectId);
     }
     else {

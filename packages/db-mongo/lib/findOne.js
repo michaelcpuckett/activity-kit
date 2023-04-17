@@ -26,7 +26,7 @@ async function findOne(collection, matchingObject, options) {
         return null;
     }
     delete value._id;
-    return (0, utilities_1.convertStringsToUrls)(value);
+    return (0, utilities_1.convertJsonToEntity)(value);
 }
 exports.findOne = findOne;
 //# sourceMappingURL=findOne.js.map

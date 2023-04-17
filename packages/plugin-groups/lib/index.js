@@ -31,11 +31,11 @@ const path_to_regexp_1 = require("path-to-regexp");
 function GroupsPlugin() {
     const groupsPlugin = {
         async handleInboxSideEffect(activity, recipient) {
-            if (!(0, utilities_1.isType)(activity, types_1.AP.ActivityTypes.CREATE)) {
+            if (!(0, types_1.isType)(activity, types_1.AP.ActivityTypes.CREATE)) {
                 return;
             }
             (0, types_1.assertIsApType)(activity, types_1.AP.ActivityTypes.CREATE);
-            if (!(0, utilities_1.isType)(recipient, types_1.AP.ActorTypes.GROUP)) {
+            if (!(0, types_1.isType)(recipient, types_1.AP.ActorTypes.GROUP)) {
                 return;
             }
             const objectId = (0, utilities_1.getId)(activity.object);

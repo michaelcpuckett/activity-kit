@@ -7,9 +7,9 @@ async function handleAccept(activity, recipient) {
     (0, types_1.assertIsApType)(activity, types_1.AP.ActivityTypes.ACCEPT);
     const objectId = (0, utilities_1.getId)(activity.object);
     (0, types_1.assertExists)(objectId);
-    const object = await this.core.findEntityById(objectId);
+    const object = await this.core.queryById(objectId);
     (0, types_1.assertIsApEntity)(object);
-    if (!(0, utilities_1.isType)(object, types_1.AP.ActivityTypes.FOLLOW)) {
+    if (!(0, types_1.isType)(object, types_1.AP.ActivityTypes.FOLLOW)) {
         return;
     }
     const followActivity = object;

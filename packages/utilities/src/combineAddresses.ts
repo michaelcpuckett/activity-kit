@@ -1,67 +1,22 @@
-import { AP } from '@activity-kit/types';
+import { AP, isTypeOf } from '@activity-kit/types';
 import { getId } from './getId';
-import { isType, isTypeOf } from './isType';
+import { getArray } from './getArray';
 
 export function combineAddresses(activity: AP.Activity): AP.Activity {
-  if (
-    isType(activity, AP.ActivityTypes.CREATE) &&
-    'object' in activity &&
-    activity.object &&
-    'type' in activity.object
-  ) {
-    const activityObject = activity.object as AP.CoreObject;
+  if ('object' in activity) {
+    const activityObject = activity.object;
 
-    if (isTypeOf(activityObject, AP.CoreObjectTypes)) {
-      const activityTo = Array.isArray(activity.to)
-        ? activity.to
-        : activity.to
-        ? [activity.to]
-        : [];
-      const activityCc = Array.isArray(activity.cc)
-        ? activity.cc
-        : activity.cc
-        ? [activity.cc]
-        : [];
-      const activityBto = Array.isArray(activity.bto)
-        ? activity.bto
-        : activity.bto
-        ? [activity.bto]
-        : [];
-      const activityBcc = Array.isArray(activity.bcc)
-        ? activity.bcc
-        : activity.bcc
-        ? [activity.bcc]
-        : [];
-      const activityAudience = Array.isArray(activity.audience)
-        ? activity.audience
-        : activity.audience
-        ? [activity.audience]
-        : [];
-      const objectTo = Array.isArray(activityObject.to)
-        ? activityObject.to
-        : activityObject.to
-        ? [activityObject.to]
-        : [];
-      const objectCc = Array.isArray(activityObject.cc)
-        ? activityObject.cc
-        : activityObject.cc
-        ? [activityObject.cc]
-        : [];
-      const objectBto = Array.isArray(activityObject.bto)
-        ? activityObject.bto
-        : activityObject.bto
-        ? [activityObject.bto]
-        : [];
-      const objectBcc = Array.isArray(activityObject.bcc)
-        ? activityObject.bcc
-        : activityObject.bcc
-        ? [activityObject.bcc]
-        : [];
-      const objectAudience = Array.isArray(activityObject.audience)
-        ? activityObject.audience
-          ? activityObject.audience
-          : [activityObject.audience]
-        : [];
+    if (isTypeOf<AP.CoreObject>(activityObject, AP.CoreObjectTypes)) {
+      const activityTo = getArray(activity.to);
+      const activityCc = getArray(activity.cc);
+      const activityBto = getArray(activity.bto);
+      const activityBcc = getArray(activity.bcc);
+      const activityAudience = getArray(activity.audience);
+      const objectTo = getArray(activityObject.to);
+      const objectCc = getArray(activityObject.cc);
+      const objectBto = getArray(activityObject.bto);
+      const objectBcc = getArray(activityObject.bcc);
+      const objectAudience = getArray(activityObject.audience);
 
       const to = [...new Set([...activityTo, ...objectTo].map(getId))].filter(
         (item) => item,
@@ -79,17 +34,17 @@ export function combineAddresses(activity: AP.Activity): AP.Activity {
         ...new Set([...activityAudience, ...objectAudience].map(getId)),
       ].filter((item) => item);
 
-      activity.to = to as URL[];
-      activity.bto = bto as URL[];
-      activity.cc = cc as URL[];
-      activity.bcc = bcc as URL[];
-      activity.audience = audience as URL[];
+      activity.to = to;
+      activity.bto = bto;
+      activity.cc = cc;
+      activity.bcc = bcc;
+      activity.audience = audience;
 
-      activityObject.to = to as URL[];
-      activityObject.bto = bto as URL[];
-      activityObject.cc = cc as URL[];
-      activityObject.bcc = bcc as URL[];
-      activityObject.audience = audience as URL[];
+      activityObject.to = to;
+      activityObject.bto = bto;
+      activityObject.cc = cc;
+      activityObject.bcc = bcc;
+      activityObject.audience = audience;
 
       activity.object = activityObject;
     }

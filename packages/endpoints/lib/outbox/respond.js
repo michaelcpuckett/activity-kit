@@ -18,7 +18,7 @@ async function respond() {
         guid: await this.core.getGuid(),
     })}`);
     this.activity.id = activityId;
-    if ((0, utilities_1.isTypeOf)(this.activity, types_1.AP.ActivityTypes)) {
+    if ((0, types_1.isTypeOf)(this.activity, types_1.AP.ActivityTypes)) {
         (0, types_1.assertIsApActivity)(this.activity);
         this.activity.url = activityId;
         this.activity = (0, utilities_1.combineAddresses)(this.activity);

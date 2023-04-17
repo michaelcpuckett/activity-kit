@@ -26,14 +26,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.convertFromJsonLd = void 0;
+exports.convertJsonLdToEntity = void 0;
 const jsonld = __importStar(require("jsonld"));
 const node_1 = __importDefault(require("jsonld/lib/documentLoaders/node"));
 const globals_1 = require("./globals");
-const convertStringsToUrls_1 = require("./convertStringsToUrls");
+const convertJsonToEntity_1 = require("./convertJsonToEntity");
 const applyContext_1 = require("./applyContext");
 const nodeDocumentLoader = (0, node_1.default)();
-const CONTEXTS = {
+const CONTEXT_DEFINITIONS = {
     [globals_1.ACTIVITYSTREAMS_CONTEXT]: {
         '@vocab': globals_1.ACTIVITYSTREAMS_CONTEXT,
         xsd: 'http://www.w3.org/2001/XMLSchema#',
@@ -3848,32 +3848,32 @@ const CONTEXTS = {
     },
 };
 const customLoader = async (url, callback) => {
-    const contextUrl = Object.keys(CONTEXTS).find((key) => key === url);
+    const contextUrl = Object.keys(CONTEXT_DEFINITIONS).find((key) => key === url);
     if (contextUrl) {
         return {
             contextUrl: null,
             document: {
-                '@context': CONTEXTS[contextUrl],
+                '@context': CONTEXT_DEFINITIONS[contextUrl],
             },
             documentUrl: contextUrl,
         };
     }
     return nodeDocumentLoader(url, callback);
 };
-const ctx = CONTEXTS[globals_1.ACTIVITYSTREAMS_CONTEXT];
-const convertFromJsonLd = async (entity) => {
-    const result = await jsonld.compact(entity, ctx, {
+const ctx = CONTEXT_DEFINITIONS[globals_1.ACTIVITYSTREAMS_CONTEXT];
+const convertJsonLdToEntity = async (document) => {
+    const result = await jsonld.compact(document, ctx, {
         documentLoader: customLoader,
     });
     if (!result) {
         return null;
     }
     delete result['@context'];
-    const converted = (0, convertStringsToUrls_1.convertStringsToUrls)(result);
+    const converted = (0, convertJsonToEntity_1.convertJsonToEntity)(result);
     if (!converted) {
         return null;
     }
     return (0, applyContext_1.applyContext)(converted);
 };
-exports.convertFromJsonLd = convertFromJsonLd;
-//# sourceMappingURL=convertFromJsonLd.js.map
+exports.convertJsonLdToEntity = convertJsonLdToEntity;
+//# sourceMappingURL=convertJsonLdToEntity.js.map

@@ -3,7 +3,7 @@ import { AP, assertIsApActor } from '@activity-kit/types';
 import {
   ACCEPT_HEADER,
   ACTIVITYSTREAMS_CONTENT_TYPE,
-  convertStringsToUrls,
+  convertJsonToEntity,
   compressEntity,
 } from '@activity-kit/utilities';
 
@@ -27,17 +27,20 @@ export async function fetchEntityById(
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 1250);
 
-  // GET requests (eg. to the inbox) MUST be made with an Accept header of
+  // GET requests (eg. to th e inbox) MUST be made with an Accept header of
   // `application/ld+json; profile="https://www.w3.org/ns/activitystreams"`
-  const fetchedEntity = await this.fetch(id.toString(), {
-    signal: controller.signal,
-    headers: {
-      [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
-      date: dateHeader,
-      signature: signatureHeader,
+  const fetchedEntity: Record<string, unknown> = await this.fetch(
+    id.toString(),
+    {
+      signal: controller.signal,
+      headers: {
+        [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
+        date: dateHeader,
+        signature: signatureHeader,
+      },
     },
-  })
-    .then(async (response: { status: number; json: () => Promise<JSON> }) => {
+  )
+    .then(async (response) => {
       clearTimeout(timeout);
       if (response.status === 200) {
         return await response.json();
@@ -51,7 +54,11 @@ export async function fetchEntityById(
           throw new Error('Not found, but not a tombstone.');
         }
       } else {
-        console.log('Found but not 200 or 404.', response.status);
+        console.log(
+          'Found but not 200 or 404.',
+          response.status,
+          id.toString(),
+        );
         throw new Error(`Unexpected status code ${response.status}`);
       }
     })
@@ -61,8 +68,8 @@ export async function fetchEntityById(
       return null;
     });
 
-  if (fetchedEntity && 'id' in fetchedEntity) {
-    const entity = compressEntity(convertStringsToUrls(fetchedEntity));
+  if (fetchedEntity) {
+    const entity = compressEntity(convertJsonToEntity(fetchedEntity));
     await this.saveEntity(entity);
     return entity;
   }

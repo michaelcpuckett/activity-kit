@@ -1,11 +1,13 @@
 import {
   AP,
+  isType,
+  isTypeOf,
   assertIsApActor,
   assertIsApEntity,
   assertIsApCoreObject,
   assertIsApType,
 } from '@activity-kit/types';
-import { LOCAL_DOMAIN, getId, isType, isTypeOf } from '@activity-kit/utilities';
+import { LOCAL_DOMAIN, getId } from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
 import { OutboxPostEndpoint } from '..';
 
@@ -42,7 +44,7 @@ export async function handleUpdate(
   assertIsApEntity(existingObject);
 
   const getTags = async () => {
-    if (!isTypeOf(existingObject, AP.CoreObjectTypes)) {
+    if (!isTypeOf<AP.CoreObject>(existingObject, AP.CoreObjectTypes)) {
       return null;
     }
 
@@ -101,7 +103,7 @@ export async function handleUpdate(
       for (const tag of newTags) {
         if (
           !(tag instanceof URL) &&
-          isType(tag, AP.ExtendedObjectTypes.HASHTAG)
+          isType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG)
         ) {
           assertIsApType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG);
 

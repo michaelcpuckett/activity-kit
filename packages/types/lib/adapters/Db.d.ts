@@ -7,12 +7,8 @@ export declare const DbOptions: {
 export type DbAdapter = {
     db?: unknown;
     initializeDb?: (this: DbAdapter) => Promise<void>;
-    findAll: (this: DbAdapter, collection: string, matchingObject: {
-        [key: string]: unknown;
-    }) => Promise<AP.Entity[] | null>;
-    findOne: (this: DbAdapter, collection: string, matchingObject: {
-        [key: string]: unknown;
-    }, options?: Array<keyof typeof DbOptions>) => Promise<AP.Entity | null>;
+    findAll: (this: DbAdapter, collection: string, matchingObject: Record<string, unknown>) => Promise<AP.Entity[] | null>;
+    findOne: (this: DbAdapter, collection: string, matchingObject: Record<string, unknown>, options?: Array<keyof typeof DbOptions>) => Promise<AP.Entity | null>;
     findStringIdByValue: (this: DbAdapter, dbCollection: string, value: string) => Promise<string>;
     findStringValueById: (this: DbAdapter, dbCollection: string, _id: string) => Promise<string>;
     insertItem: (this: DbAdapter, path: URL, url: URL) => Promise<void>;

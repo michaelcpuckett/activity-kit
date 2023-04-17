@@ -6,12 +6,12 @@ import {
   assertIsApEntity,
   assertIsApExtendedObject,
   assertIsApType,
+  isType,
+  isTypeOf,
 } from '@activity-kit/types';
 import {
   ACTIVITYSTREAMS_CONTEXT,
   SERVER_ACTOR_USERNAME,
-  isType,
-  isTypeOf,
 } from '@activity-kit/utilities';
 import { LOCAL_DOMAIN } from '@activity-kit/utilities';
 import { getId } from '@activity-kit/utilities';
@@ -77,7 +77,7 @@ export async function handleCreate(
 
   object.id = objectId;
 
-  if (isTypeOf(object, AP.ExtendedObjectTypes)) {
+  if (isTypeOf<AP.ExtendedObject>(object, AP.ExtendedObjectTypes)) {
     assertIsApExtendedObject(object);
 
     object.url = objectId;
@@ -170,7 +170,7 @@ export async function handleCreate(
       for (const tag of tags) {
         if (
           !(tag instanceof URL) &&
-          isType(tag, AP.ExtendedObjectTypes.HASHTAG)
+          isType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG)
         ) {
           assertIsApType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG);
 
