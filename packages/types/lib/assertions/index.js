@@ -35,7 +35,7 @@ function isTypeOf(entity, types) {
 }
 exports.isTypeOf = isTypeOf;
 function isType(entity, type) {
-    if (typeof entity !== 'object') {
+    if (!entity || typeof entity !== 'object') {
         return false;
     }
     if (!('type' in entity)) {

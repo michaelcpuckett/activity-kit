@@ -15,7 +15,7 @@ export function isTypeOf<T>(
 }
 
 export function isType<T>(entity: unknown, type: string): entity is T {
-  if (typeof entity !== 'object') {
+  if (!entity || typeof entity !== 'object') {
     return false;
   }
 

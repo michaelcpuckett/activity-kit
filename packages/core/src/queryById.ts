@@ -14,7 +14,7 @@ export async function queryById(
 
   if (
     !fetchedEntity ||
-    isType(fetchedEntity, AP.ExtendedObjectTypes.TOMBSTONE)
+    isType<AP.Tombstone>(fetchedEntity, AP.ExtendedObjectTypes.TOMBSTONE)
   ) {
     return this.findEntityById(id);
   }
