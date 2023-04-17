@@ -1,70 +1,51 @@
 import { Core } from '.';
-import { AP } from '@activity-kit/types';
+import { AP, isTypeOf } from '@activity-kit/types';
 import { CONTEXT, PUBLIC_ACTOR } from '@activity-kit/utilities';
 
 export async function expandEntity(
   this: Core,
-  originalEntity: AP.Entity,
-): Promise<AP.Entity> {
-  const entity: Record<string, unknown> = { ...originalEntity };
-
-  for (const [key, value] of Object.entries(entity)) {
+  entity: AP.Entity,
+): Promise<AP.Entity | null> {
+  const expandEntry = async (key: string, value: unknown) => {
     if (
+      key === '_id' ||
       key === 'id' ||
       key === 'url' ||
       key === 'type' ||
       key === CONTEXT ||
-      key === '_id' ||
       key === 'publicKey'
     ) {
-      continue;
+      return value;
     } else if (value instanceof URL) {
-      if (!(value.toString() === PUBLIC_ACTOR)) {
+      if (value.toString() === PUBLIC_ACTOR) {
+        return value;
+      } else {
         try {
           const foundEntity = await this.queryById(value);
 
           if (foundEntity) {
-            entity[key] = foundEntity;
+            return foundEntity;
           }
+
+          return value;
         } catch (error) {
-          continue;
+          return value;
         }
       }
     } else if (Array.isArray(value)) {
-      const array = [...value];
-      entity[key] = await Promise.all(
-        array.map(async (item) => {
-          if (item instanceof URL) {
-            if (item.toString() === PUBLIC_ACTOR) {
-              return item;
-            }
-            if (item instanceof URL) {
-              const foundEntity = await this.queryById(item);
-
-              if (foundEntity) {
-                return foundEntity;
-              }
-
-              return item;
-            }
-            try {
-              const url = new URL(item);
-              const foundEntity = await this.queryById(url);
-
-              if (foundEntity) {
-                return foundEntity;
-              }
-
-              return item;
-            } catch (error) {
-              return item;
-            }
-          }
-          return item;
-        }),
-      );
+      return await Promise.all(value.map(expandEntry));
     }
+  };
+
+  const expanded: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(entity)) {
+    expanded[key] = await expandEntry(key, value);
   }
 
-  return entity as unknown as AP.Entity;
+  if (isTypeOf<AP.Entity>(expanded, AP.AllTypes)) {
+    return expanded;
+  }
+
+  return null;
 }

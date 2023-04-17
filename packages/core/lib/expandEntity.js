@@ -1,62 +1,47 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.expandEntity = void 0;
+const types_1 = require("@activity-kit/types");
 const utilities_1 = require("@activity-kit/utilities");
-async function expandEntity(originalEntity) {
-    const entity = { ...originalEntity };
-    for (const [key, value] of Object.entries(entity)) {
-        if (key === 'id' ||
+async function expandEntity(entity) {
+    const expandEntry = async (key, value) => {
+        if (key === '_id' ||
+            key === 'id' ||
             key === 'url' ||
             key === 'type' ||
             key === utilities_1.CONTEXT ||
-            key === '_id' ||
             key === 'publicKey') {
-            continue;
+            return value;
         }
         else if (value instanceof URL) {
-            if (!(value.toString() === utilities_1.PUBLIC_ACTOR)) {
+            if (value.toString() === utilities_1.PUBLIC_ACTOR) {
+                return value;
+            }
+            else {
                 try {
                     const foundEntity = await this.queryById(value);
                     if (foundEntity) {
-                        entity[key] = foundEntity;
+                        return foundEntity;
                     }
+                    return value;
                 }
                 catch (error) {
-                    continue;
+                    return value;
                 }
             }
         }
         else if (Array.isArray(value)) {
-            const array = [...value];
-            entity[key] = await Promise.all(array.map(async (item) => {
-                if (item instanceof URL) {
-                    if (item.toString() === utilities_1.PUBLIC_ACTOR) {
-                        return item;
-                    }
-                    if (item instanceof URL) {
-                        const foundEntity = await this.queryById(item);
-                        if (foundEntity) {
-                            return foundEntity;
-                        }
-                        return item;
-                    }
-                    try {
-                        const url = new URL(item);
-                        const foundEntity = await this.queryById(url);
-                        if (foundEntity) {
-                            return foundEntity;
-                        }
-                        return item;
-                    }
-                    catch (error) {
-                        return item;
-                    }
-                }
-                return item;
-            }));
+            return await Promise.all(value.map(expandEntry));
         }
+    };
+    const expanded = {};
+    for (const [key, value] of Object.entries(entity)) {
+        expanded[key] = await expandEntry(key, value);
     }
-    return entity;
+    if ((0, types_1.isTypeOf)(expanded, types_1.AP.AllTypes)) {
+        return expanded;
+    }
+    return null;
 }
 exports.expandEntity = expandEntity;
 //# sourceMappingURL=expandEntity.js.map

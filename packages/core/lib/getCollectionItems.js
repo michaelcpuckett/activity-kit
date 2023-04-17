@@ -17,6 +17,7 @@ async function getCollectionItems(entity) {
                 result.push(foundItem
                     ? await this.expandEntity(foundItem)
                     : {
+                        id: item,
                         type: types_1.AP.CoreObjectTypes.TOMBSTONE,
                         content: 'Not found',
                     });

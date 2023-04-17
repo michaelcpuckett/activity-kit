@@ -25,6 +25,7 @@ export async function getCollectionItems(
           foundItem
             ? await this.expandEntity(foundItem)
             : {
+                id: item,
                 type: AP.CoreObjectTypes.TOMBSTONE,
                 content: 'Not found',
               },
