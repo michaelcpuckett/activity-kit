@@ -20,6 +20,9 @@ const getId = (entity) => {
         }
         return entity.url.href ?? null;
     }
+    if ('href' in entity) {
+        return entity.href ?? null;
+    }
     return null;
 };
 exports.getId = getId;
