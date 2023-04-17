@@ -11,9 +11,7 @@ async function respond() {
     await this.authenticateActor();
     (0, types_1.assertIsApActor)(this.actor);
     const compileOptions = { encode: encodeURIComponent };
-    const type = Array.isArray(this.activity.type)
-        ? this.activity.type[0]
-        : this.activity.type;
+    const [type] = (0, utilities_1.getArray)(this.activity.type);
     const activityId = new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()], compileOptions)({
         guid: await this.core.getGuid(),
     })}`);

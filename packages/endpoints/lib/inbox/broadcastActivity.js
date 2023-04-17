@@ -12,7 +12,9 @@ async function broadcastActivity() {
     });
     (0, types_1.assertIsApActor)(botActor);
     if (await this.shouldForwardActivity()) {
-        await this.core.broadcast(this.activity, botActor);
+        if ((0, types_1.isTypeOf)(this.activity, types_1.AP.ActivityTypes)) {
+            await this.core.broadcast(this.activity, botActor);
+        }
     }
 }
 exports.broadcastActivity = broadcastActivity;

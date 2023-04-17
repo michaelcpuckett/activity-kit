@@ -6,7 +6,11 @@ import {
   assertIsApActivity,
   assertIsApActor,
 } from '@activity-kit/types';
-import { combineAddresses, LOCAL_DOMAIN } from '@activity-kit/utilities';
+import {
+  combineAddresses,
+  getArray,
+  LOCAL_DOMAIN,
+} from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
 
 export async function respond(this: OutboxPostEndpoint) {
@@ -21,9 +25,7 @@ export async function respond(this: OutboxPostEndpoint) {
 
   const compileOptions = { encode: encodeURIComponent };
 
-  const type = Array.isArray(this.activity.type)
-    ? this.activity.type[0]
-    : this.activity.type;
+  const [type] = getArray(this.activity.type);
 
   const activityId = new URL(
     `${LOCAL_DOMAIN}${compile(

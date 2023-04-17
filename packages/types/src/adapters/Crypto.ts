@@ -1,5 +1,3 @@
-import { AP } from '../';
-
 export type CryptoAdapter = {
   params?: {
     [key: string]: unknown;
@@ -19,7 +17,7 @@ export type CryptoAdapter = {
     foreignTarget: URL,
     actorId: URL,
     privateKey: string,
-    entity?: AP.Entity,
+    entity?: Record<string, unknown>,
   ): Promise<{
     dateHeader: string;
     digestHeader?: string;

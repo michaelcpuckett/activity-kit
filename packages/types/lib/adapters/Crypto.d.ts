@@ -1,5 +1,4 @@
 /// <reference types="node" />
-import { AP } from '../';
 export type CryptoAdapter = {
     params?: {
         [key: string]: unknown;
@@ -9,7 +8,7 @@ export type CryptoAdapter = {
         privateKey: string;
         publicKey: string;
     }>;
-    getHttpSignature(this: CryptoAdapter, foreignTarget: URL, actorId: URL, privateKey: string, entity?: AP.Entity): Promise<{
+    getHttpSignature(this: CryptoAdapter, foreignTarget: URL, actorId: URL, privateKey: string, entity?: Record<string, unknown>): Promise<{
         dateHeader: string;
         digestHeader?: string;
         signatureHeader: string;

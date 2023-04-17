@@ -7,7 +7,7 @@ export async function getHttpSignature(
   foreignTarget: URL,
   actorId: URL,
   privateKey: string,
-  entity?: AP.Entity,
+  entity?: Record<string, unknown>,
 ): Promise<{
   dateHeader: string;
   digestHeader?: string;

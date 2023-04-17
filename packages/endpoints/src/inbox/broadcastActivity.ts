@@ -1,4 +1,4 @@
-import { AP, assertIsApActor } from '@activity-kit/types';
+import { AP, assertIsApActor, isTypeOf } from '@activity-kit/types';
 import { SERVER_ACTOR_USERNAME } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '.';
 
@@ -14,6 +14,8 @@ export async function broadcastActivity(this: InboxPostEndpoint) {
   assertIsApActor(botActor);
 
   if (await this.shouldForwardActivity()) {
-    await this.core.broadcast(this.activity as AP.Activity, botActor);
+    if (isTypeOf<AP.Activity>(this.activity, AP.ActivityTypes)) {
+      await this.core.broadcast(this.activity, botActor);
+    }
   }
 }
