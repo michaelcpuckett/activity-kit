@@ -3,18 +3,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRecipientUrls = void 0;
 const types_1 = require("@activity-kit/types");
 const utilities_1 = require("@activity-kit/utilities");
-const getRecipientsInArrayFormat = (recipientList) => recipientList
-    ? Array.isArray(recipientList)
-        ? recipientList
-        : [recipientList]
-    : [];
 async function getRecipientUrls(activity) {
+    const mentions = ('object' in activity && 'tag' in activity.object
+        ? (0, utilities_1.getArray)(activity.object.tag)
+        : []).filter((entity) => {
+        try {
+            (0, types_1.assertIsApType)(entity, types_1.AP.LinkTypes.MENTION);
+            return true;
+        }
+        catch {
+            return false;
+        }
+    });
     const recipients = [
-        ...getRecipientsInArrayFormat(activity.to),
-        ...getRecipientsInArrayFormat(activity.cc),
-        ...getRecipientsInArrayFormat(activity.bto),
-        ...getRecipientsInArrayFormat(activity.bcc),
-        ...getRecipientsInArrayFormat(activity.audience),
+        ...(0, utilities_1.getArray)(activity.to),
+        ...(0, utilities_1.getArray)(activity.cc),
+        ...(0, utilities_1.getArray)(activity.bto),
+        ...(0, utilities_1.getArray)(activity.bcc),
+        ...(0, utilities_1.getArray)(activity.audience),
+        ...mentions,
     ].flat();
     const recipientIds = recipients
         .map((recipient) => (0, utilities_1.getId)(recipient))
@@ -26,7 +33,7 @@ async function getRecipientUrls(activity) {
         }
         try {
             (0, types_1.assertIsApActor)(foundRecipient);
-            const actorUrl = foundRecipient.url || foundRecipient.id;
+            const actorUrl = (0, utilities_1.getId)(foundRecipient);
             if (actorUrl instanceof URL) {
                 return [actorUrl];
             }
@@ -36,6 +43,7 @@ async function getRecipientUrls(activity) {
         try {
             (0, types_1.assertIsApCollection)(foundRecipient);
             const collectionItems = await this.getPaginatedCollectionItems(foundRecipient);
+            console.log([collectionItems]);
             const actorsInCollection = [];
             for (const collectionItem of collectionItems) {
                 try {
@@ -43,7 +51,7 @@ async function getRecipientUrls(activity) {
                     (0, types_1.assertExists)(collectionItemId);
                     const expandedCollectionItem = await this.queryById(collectionItemId);
                     (0, types_1.assertIsApActor)(expandedCollectionItem);
-                    const actorUrl = expandedCollectionItem.url || expandedCollectionItem.id;
+                    const actorUrl = (0, utilities_1.getId)(expandedCollectionItem);
                     if (actorUrl instanceof URL) {
                         actorsInCollection.push(actorUrl);
                     }

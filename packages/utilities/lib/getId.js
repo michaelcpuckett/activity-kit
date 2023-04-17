@@ -8,24 +8,17 @@ const getId = (entity) => {
     if (entity instanceof URL) {
         return entity;
     }
-    if (typeof entity === 'string') {
-        try {
-            return new URL(entity);
-        }
-        catch (error) {
-            return null;
-        }
+    if ('id' in entity) {
+        return entity.id ?? null;
     }
-    if (typeof entity === 'object' && 'id' in entity && entity.id) {
-        if (entity.id instanceof URL) {
-            return entity.id;
+    if ('url' in entity) {
+        if (entity.url instanceof URL) {
+            return entity.url;
         }
-        try {
-            return new URL(entity.id);
-        }
-        catch (error) {
+        if (Array.isArray(entity.url)) {
             return null;
         }
+        return entity.url.href ?? null;
     }
     return null;
 };
