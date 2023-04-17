@@ -8,7 +8,7 @@ export const LOCAL_DOMAIN = `${PROTOCOL}//${LOCAL_HOSTNAME}${
   PORT === 80 ? '' : `:${PORT}`
 }`;
 export const CONTEXT = '@context';
-export const ACTIVITYSTREAMS_CONTEXT = 'https://www.w3.org/ns/activitystreams#';
+export const ACTIVITYSTREAMS_CONTEXT = 'https://www.w3.org/ns/activitystreams';
 export const W3ID_SECURITY_CONTEXT = 'https://w3id.org/security/v1';
 export const SCHEMA_ORG_CONTEXT = 'https://schema.org/';
 export const LDP_CONTEXT = 'http://www.w3.org/ns/ldp#';

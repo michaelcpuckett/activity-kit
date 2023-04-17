@@ -37,7 +37,7 @@ const CONTEXTS = {
     [globals_1.ACTIVITYSTREAMS_CONTEXT]: {
         '@vocab': globals_1.ACTIVITYSTREAMS_CONTEXT,
         xsd: 'http://www.w3.org/2001/XMLSchema#',
-        as: globals_1.ACTIVITYSTREAMS_CONTEXT,
+        as: `${globals_1.ACTIVITYSTREAMS_CONTEXT}#`,
         ldp: globals_1.LDP_CONTEXT,
         vcard: 'http://www.w3.org/2006/vcard/ns#',
         id: '@id',

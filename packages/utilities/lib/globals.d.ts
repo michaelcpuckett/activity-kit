@@ -5,7 +5,7 @@ export declare const PROTOCOL: string;
 export declare const DB_NAME: string;
 export declare const LOCAL_DOMAIN: string;
 export declare const CONTEXT = "@context";
-export declare const ACTIVITYSTREAMS_CONTEXT = "https://www.w3.org/ns/activitystreams#";
+export declare const ACTIVITYSTREAMS_CONTEXT = "https://www.w3.org/ns/activitystreams";
 export declare const W3ID_SECURITY_CONTEXT = "https://w3id.org/security/v1";
 export declare const SCHEMA_ORG_CONTEXT = "https://schema.org/";
 export declare const LDP_CONTEXT = "http://www.w3.org/ns/ldp#";

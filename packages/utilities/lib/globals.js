@@ -7,7 +7,7 @@ exports.PROTOCOL = process.env.AP_PROTOCOL ?? 'http:';
 exports.DB_NAME = process.env.AP_DB_NAME ?? 'activitypub';
 exports.LOCAL_DOMAIN = `${exports.PROTOCOL}//${exports.LOCAL_HOSTNAME}${exports.PORT === 80 ? '' : `:${exports.PORT}`}`;
 exports.CONTEXT = '@context';
-exports.ACTIVITYSTREAMS_CONTEXT = 'https://www.w3.org/ns/activitystreams#';
+exports.ACTIVITYSTREAMS_CONTEXT = 'https://www.w3.org/ns/activitystreams';
 exports.W3ID_SECURITY_CONTEXT = 'https://w3id.org/security/v1';
 exports.SCHEMA_ORG_CONTEXT = 'https://schema.org/';
 exports.LDP_CONTEXT = 'http://www.w3.org/ns/ldp#';

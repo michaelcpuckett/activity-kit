@@ -19,7 +19,7 @@ const CONTEXTS: Record<string, Context & JsonLd> = {
   [ACTIVITYSTREAMS_CONTEXT]: {
     '@vocab': ACTIVITYSTREAMS_CONTEXT,
     xsd: 'http://www.w3.org/2001/XMLSchema#',
-    as: ACTIVITYSTREAMS_CONTEXT,
+    as: `${ACTIVITYSTREAMS_CONTEXT}#`,
     ldp: LDP_CONTEXT,
     vcard: 'http://www.w3.org/2006/vcard/ns#',
     id: '@id',
