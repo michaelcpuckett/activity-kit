@@ -17,7 +17,6 @@ const nodeDocumentLoader = getNodeDocumentLoader();
 
 const CONTEXTS: Record<string, Context & JsonLd> = {
   [LDP_CONTEXT]: {
-    '@vocab': LDP_CONTEXT,
     ldp: LDP_CONTEXT,
     id: '@id',
     type: '@type',
@@ -3786,13 +3785,11 @@ const CONTEXTS: Record<string, Context & JsonLd> = {
     yield: { '@id': 'schema:yield' },
   },
   [W3ID_SECURITY_CONTEXT]: {
-    '@vocab': W3ID_SECURITY_CONTEXT,
-
     id: '@id',
     type: '@type',
 
     dc: 'http://purl.org/dc/terms/',
-    sec: W3ID_SECURITY_CONTEXT, // Different?
+    sec: 'https://w3id.org/security#',
     xsd: 'http://www.w3.org/2001/XMLSchema#',
 
     EcdsaKoblitzSignature2016: 'sec:EcdsaKoblitzSignature2016',
@@ -3845,9 +3842,9 @@ const customLoader: DocumentLoader = async (
 
   if (contextUrl) {
     return {
-      contextUrl: null, // this is for a context via a link header
-      document: CONTEXTS[contextUrl], // this is the actual document that was loaded
-      documentUrl: contextUrl, // this is the actual context URL after redirects
+      contextUrl: null,
+      document: CONTEXTS[contextUrl],
+      documentUrl: contextUrl,
     };
   }
 
@@ -3864,6 +3861,8 @@ export const convertFromJsonLd = async (entity: { [key: string]: unknown }) => {
   if (!result) {
     return null;
   }
+
+  delete result['@context'];
 
   const converted = convertStringsToUrls(result);
 

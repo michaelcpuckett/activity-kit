@@ -35,7 +35,6 @@ const applyContext_1 = require("./applyContext");
 const nodeDocumentLoader = (0, node_1.default)();
 const CONTEXTS = {
     [globals_1.LDP_CONTEXT]: {
-        '@vocab': globals_1.LDP_CONTEXT,
         ldp: globals_1.LDP_CONTEXT,
         id: '@id',
         type: '@type',
@@ -3803,11 +3802,10 @@ const CONTEXTS = {
         yield: { '@id': 'schema:yield' },
     },
     [globals_1.W3ID_SECURITY_CONTEXT]: {
-        '@vocab': globals_1.W3ID_SECURITY_CONTEXT,
         id: '@id',
         type: '@type',
         dc: 'http://purl.org/dc/terms/',
-        sec: globals_1.W3ID_SECURITY_CONTEXT,
+        sec: 'https://w3id.org/security#',
         xsd: 'http://www.w3.org/2001/XMLSchema#',
         EcdsaKoblitzSignature2016: 'sec:EcdsaKoblitzSignature2016',
         Ed25519Signature2018: 'sec:Ed25519Signature2018',
@@ -3868,6 +3866,7 @@ const convertFromJsonLd = async (entity) => {
     if (!result) {
         return null;
     }
+    delete result['@context'];
     const converted = (0, convertStringsToUrls_1.convertStringsToUrls)(result);
     if (!converted) {
         return null;
