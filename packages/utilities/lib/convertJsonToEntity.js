@@ -38,6 +38,7 @@ function convertItem(item) {
                 if (!Number.isNaN(date)) {
                     return new Date(date);
                 }
+                return item;
             }
         }
         catch (error) {

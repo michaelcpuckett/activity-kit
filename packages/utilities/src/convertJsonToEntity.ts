@@ -41,6 +41,8 @@ function convertItem(item: unknown): unknown {
         if (!Number.isNaN(date)) {
           return new Date(date);
         }
+
+        return item;
       }
     } catch (error) {
       return item;
