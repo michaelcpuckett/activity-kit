@@ -1,6 +1,6 @@
 {
   "name": "@activity-kit/db-sqlite",
-  "version": "0.4.12",
+  "version": "0.4.13",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -28,8 +28,8 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "@activity-kit/types": "^0.4.3",
-    "@activity-kit/utilities": "^0.4.12"
+    "@activity-kit/types": "^0.4.13",
+    "@activity-kit/utilities": "^0.4.13"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.40.0",
