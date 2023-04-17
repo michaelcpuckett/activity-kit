@@ -1,6 +1,6 @@
 {
   "name": "@activity-kit/crypto-node",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -25,7 +25,7 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "@activity-kit/types": "^0.4.13"
+    "@activity-kit/types": "^0.4.14"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.40.0",
