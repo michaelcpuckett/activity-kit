@@ -16,79 +16,6 @@ type getNodeDocumentLoader = () => DocumentLoader;
 const nodeDocumentLoader = getNodeDocumentLoader();
 
 const CONTEXTS: Record<string, Context & JsonLd> = {
-  [LDP_CONTEXT]: {
-    ldp: LDP_CONTEXT,
-    id: '@id',
-    type: '@type',
-    Container: 'ldp:Container',
-    BasicContainer: 'ldp:BasicContainer',
-    DirectContainer: 'ldp:DirectContainer',
-    IndirectContainer: 'ldp:IndirectContainer',
-    hasMemberRelation: {
-      '@id': 'ldp:hasMemberRelation',
-      '@type': '@id',
-    },
-    isMemberOfRelation: {
-      '@id': 'ldp:isMemberOfRelation',
-      '@type': '@id',
-    },
-    membershipResource: {
-      '@id': 'ldp:membershipResource',
-      '@type': '@id',
-    },
-    insertedContentRelation: {
-      '@id': 'ldp:insertedContentRelation',
-      '@type': '@id',
-    },
-    contains: {
-      '@id': 'ldp:contains',
-      '@type': '@id',
-    },
-    member: {
-      '@id': 'ldp:member',
-      '@type': '@id',
-    },
-    constrainedBy: {
-      '@id': 'ldp:constrainedBy',
-      '@type': '@id',
-    },
-    Resource: 'ldp:Resource',
-    RDFSource: 'ldp:RDFSource',
-    NonRDFSource: 'ldp:NonRDFSource',
-    MemberSubject: 'ldp:MemberSubject',
-    PreferContainment: 'ldp:PreferContainment',
-    PreferMembership: 'ldp:PreferMembership',
-    PreferMinimalContainer: 'ldp:PreferMinimalContainer',
-    PageSortCriterion: 'ldp:PageSortCriterion',
-    pageSortCriteria: {
-      '@id': 'ldp:pageSortCriteria',
-      '@type': '@id',
-      '@container': '@list',
-    },
-    pageSortPredicate: {
-      '@id': 'ldp:pageSortPredicate',
-      '@type': '@id',
-    },
-    pageSortOrder: {
-      '@id': 'ldp:pageSortOrder',
-      '@type': '@id',
-    },
-    pageSortCollation: {
-      '@id': 'ldp:pageSortCollation',
-      '@type': '@id',
-    },
-    Ascending: 'ldp:Ascending',
-    Descending: 'ldp:Descending',
-    Page: 'ldp:Page',
-    pageSequence: {
-      '@id': 'ldp:pageSequence',
-      '@type': '@id',
-    },
-    inbox: {
-      '@id': 'ldp:inbox',
-      '@type': '@id',
-    },
-  },
   [ACTIVITYSTREAMS_CONTEXT]: {
     '@vocab': ACTIVITYSTREAMS_CONTEXT,
     xsd: 'http://www.w3.org/2001/XMLSchema#',
@@ -469,6 +396,79 @@ const CONTEXTS: Record<string, Context & JsonLd> = {
     // Extensions
     sensitive: 'as:sensitive',
     manuallyApprovesFollowers: 'as:manuallyApprovesFollowers',
+  },
+  [LDP_CONTEXT]: {
+    ldp: LDP_CONTEXT,
+    id: '@id',
+    type: '@type',
+    Container: 'ldp:Container',
+    BasicContainer: 'ldp:BasicContainer',
+    DirectContainer: 'ldp:DirectContainer',
+    IndirectContainer: 'ldp:IndirectContainer',
+    hasMemberRelation: {
+      '@id': 'ldp:hasMemberRelation',
+      '@type': '@id',
+    },
+    isMemberOfRelation: {
+      '@id': 'ldp:isMemberOfRelation',
+      '@type': '@id',
+    },
+    membershipResource: {
+      '@id': 'ldp:membershipResource',
+      '@type': '@id',
+    },
+    insertedContentRelation: {
+      '@id': 'ldp:insertedContentRelation',
+      '@type': '@id',
+    },
+    contains: {
+      '@id': 'ldp:contains',
+      '@type': '@id',
+    },
+    member: {
+      '@id': 'ldp:member',
+      '@type': '@id',
+    },
+    constrainedBy: {
+      '@id': 'ldp:constrainedBy',
+      '@type': '@id',
+    },
+    Resource: 'ldp:Resource',
+    RDFSource: 'ldp:RDFSource',
+    NonRDFSource: 'ldp:NonRDFSource',
+    MemberSubject: 'ldp:MemberSubject',
+    PreferContainment: 'ldp:PreferContainment',
+    PreferMembership: 'ldp:PreferMembership',
+    PreferMinimalContainer: 'ldp:PreferMinimalContainer',
+    PageSortCriterion: 'ldp:PageSortCriterion',
+    pageSortCriteria: {
+      '@id': 'ldp:pageSortCriteria',
+      '@type': '@id',
+      '@container': '@list',
+    },
+    pageSortPredicate: {
+      '@id': 'ldp:pageSortPredicate',
+      '@type': '@id',
+    },
+    pageSortOrder: {
+      '@id': 'ldp:pageSortOrder',
+      '@type': '@id',
+    },
+    pageSortCollation: {
+      '@id': 'ldp:pageSortCollation',
+      '@type': '@id',
+    },
+    Ascending: 'ldp:Ascending',
+    Descending: 'ldp:Descending',
+    Page: 'ldp:Page',
+    pageSequence: {
+      '@id': 'ldp:pageSequence',
+      '@type': '@id',
+    },
+    inbox: {
+      '@id': 'ldp:inbox',
+      '@type': '@id',
+    },
   },
   [SCHEMA_ORG_CONTEXT]: {
     '@vocab': SCHEMA_ORG_CONTEXT,

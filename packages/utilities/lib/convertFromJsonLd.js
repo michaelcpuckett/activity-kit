@@ -34,79 +34,6 @@ const convertStringsToUrls_1 = require("./convertStringsToUrls");
 const applyContext_1 = require("./applyContext");
 const nodeDocumentLoader = (0, node_1.default)();
 const CONTEXTS = {
-    [globals_1.LDP_CONTEXT]: {
-        ldp: globals_1.LDP_CONTEXT,
-        id: '@id',
-        type: '@type',
-        Container: 'ldp:Container',
-        BasicContainer: 'ldp:BasicContainer',
-        DirectContainer: 'ldp:DirectContainer',
-        IndirectContainer: 'ldp:IndirectContainer',
-        hasMemberRelation: {
-            '@id': 'ldp:hasMemberRelation',
-            '@type': '@id',
-        },
-        isMemberOfRelation: {
-            '@id': 'ldp:isMemberOfRelation',
-            '@type': '@id',
-        },
-        membershipResource: {
-            '@id': 'ldp:membershipResource',
-            '@type': '@id',
-        },
-        insertedContentRelation: {
-            '@id': 'ldp:insertedContentRelation',
-            '@type': '@id',
-        },
-        contains: {
-            '@id': 'ldp:contains',
-            '@type': '@id',
-        },
-        member: {
-            '@id': 'ldp:member',
-            '@type': '@id',
-        },
-        constrainedBy: {
-            '@id': 'ldp:constrainedBy',
-            '@type': '@id',
-        },
-        Resource: 'ldp:Resource',
-        RDFSource: 'ldp:RDFSource',
-        NonRDFSource: 'ldp:NonRDFSource',
-        MemberSubject: 'ldp:MemberSubject',
-        PreferContainment: 'ldp:PreferContainment',
-        PreferMembership: 'ldp:PreferMembership',
-        PreferMinimalContainer: 'ldp:PreferMinimalContainer',
-        PageSortCriterion: 'ldp:PageSortCriterion',
-        pageSortCriteria: {
-            '@id': 'ldp:pageSortCriteria',
-            '@type': '@id',
-            '@container': '@list',
-        },
-        pageSortPredicate: {
-            '@id': 'ldp:pageSortPredicate',
-            '@type': '@id',
-        },
-        pageSortOrder: {
-            '@id': 'ldp:pageSortOrder',
-            '@type': '@id',
-        },
-        pageSortCollation: {
-            '@id': 'ldp:pageSortCollation',
-            '@type': '@id',
-        },
-        Ascending: 'ldp:Ascending',
-        Descending: 'ldp:Descending',
-        Page: 'ldp:Page',
-        pageSequence: {
-            '@id': 'ldp:pageSequence',
-            '@type': '@id',
-        },
-        inbox: {
-            '@id': 'ldp:inbox',
-            '@type': '@id',
-        },
-    },
     [globals_1.ACTIVITYSTREAMS_CONTEXT]: {
         '@vocab': globals_1.ACTIVITYSTREAMS_CONTEXT,
         xsd: 'http://www.w3.org/2001/XMLSchema#',
@@ -486,6 +413,79 @@ const CONTEXTS = {
         },
         sensitive: 'as:sensitive',
         manuallyApprovesFollowers: 'as:manuallyApprovesFollowers',
+    },
+    [globals_1.LDP_CONTEXT]: {
+        ldp: globals_1.LDP_CONTEXT,
+        id: '@id',
+        type: '@type',
+        Container: 'ldp:Container',
+        BasicContainer: 'ldp:BasicContainer',
+        DirectContainer: 'ldp:DirectContainer',
+        IndirectContainer: 'ldp:IndirectContainer',
+        hasMemberRelation: {
+            '@id': 'ldp:hasMemberRelation',
+            '@type': '@id',
+        },
+        isMemberOfRelation: {
+            '@id': 'ldp:isMemberOfRelation',
+            '@type': '@id',
+        },
+        membershipResource: {
+            '@id': 'ldp:membershipResource',
+            '@type': '@id',
+        },
+        insertedContentRelation: {
+            '@id': 'ldp:insertedContentRelation',
+            '@type': '@id',
+        },
+        contains: {
+            '@id': 'ldp:contains',
+            '@type': '@id',
+        },
+        member: {
+            '@id': 'ldp:member',
+            '@type': '@id',
+        },
+        constrainedBy: {
+            '@id': 'ldp:constrainedBy',
+            '@type': '@id',
+        },
+        Resource: 'ldp:Resource',
+        RDFSource: 'ldp:RDFSource',
+        NonRDFSource: 'ldp:NonRDFSource',
+        MemberSubject: 'ldp:MemberSubject',
+        PreferContainment: 'ldp:PreferContainment',
+        PreferMembership: 'ldp:PreferMembership',
+        PreferMinimalContainer: 'ldp:PreferMinimalContainer',
+        PageSortCriterion: 'ldp:PageSortCriterion',
+        pageSortCriteria: {
+            '@id': 'ldp:pageSortCriteria',
+            '@type': '@id',
+            '@container': '@list',
+        },
+        pageSortPredicate: {
+            '@id': 'ldp:pageSortPredicate',
+            '@type': '@id',
+        },
+        pageSortOrder: {
+            '@id': 'ldp:pageSortOrder',
+            '@type': '@id',
+        },
+        pageSortCollation: {
+            '@id': 'ldp:pageSortCollation',
+            '@type': '@id',
+        },
+        Ascending: 'ldp:Ascending',
+        Descending: 'ldp:Descending',
+        Page: 'ldp:Page',
+        pageSequence: {
+            '@id': 'ldp:pageSequence',
+            '@type': '@id',
+        },
+        inbox: {
+            '@id': 'ldp:inbox',
+            '@type': '@id',
+        },
     },
     [globals_1.SCHEMA_ORG_CONTEXT]: {
         '@vocab': globals_1.SCHEMA_ORG_CONTEXT,

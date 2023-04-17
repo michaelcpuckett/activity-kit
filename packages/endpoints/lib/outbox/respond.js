@@ -21,13 +21,13 @@ async function respond() {
     if ((0, utilities_1.isTypeOf)(this.activity, types_1.AP.ActivityTypes)) {
         (0, types_1.assertIsApActivity)(this.activity);
         this.activity.url = activityId;
+        this.activity = (0, utilities_1.combineAddresses)(this.activity);
         await this.runSideEffects();
     }
     else {
         await this.wrapInActivity();
     }
     (0, types_1.assertIsApActivity)(this.activity);
-    this.activity = (0, utilities_1.combineAddresses)(this.activity);
     (0, types_1.assertExists)(this.activity.id);
     await this.saveActivity();
     (0, types_1.assertIsApActor)(this.actor);

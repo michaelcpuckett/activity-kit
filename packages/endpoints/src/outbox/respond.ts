@@ -44,6 +44,9 @@ export async function respond(this: OutboxPostEndpoint) {
 
     this.activity.url = activityId;
 
+    // Address activity and object the same way.
+    this.activity = combineAddresses(this.activity);
+
     await this.runSideEffects();
   } else {
     // If not activity type, wrap object in a Create activity.
@@ -51,9 +54,6 @@ export async function respond(this: OutboxPostEndpoint) {
   }
 
   assertIsApActivity(this.activity);
-
-  // Address activity and object the same way.
-  this.activity = combineAddresses(this.activity);
 
   assertExists(this.activity.id);
 
