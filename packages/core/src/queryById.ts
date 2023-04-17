@@ -19,5 +19,5 @@ export async function queryById(
     return this.findEntityById(id);
   }
 
-  return null;
+  return fetchedEntity;
 }

@@ -12,7 +12,7 @@ async function queryById(id) {
         (0, utilities_1.isType)(fetchedEntity, types_1.AP.ExtendedObjectTypes.TOMBSTONE)) {
         return this.findEntityById(id);
     }
-    return null;
+    return fetchedEntity;
 }
 exports.queryById = queryById;
 //# sourceMappingURL=queryById.js.map
