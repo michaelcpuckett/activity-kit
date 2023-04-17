@@ -1,6 +1,6 @@
 import * as jsonld from 'jsonld';
 import getNodeDocumentLoader from 'jsonld/lib/documentLoaders/node';
-import { Context, JsonLd, RemoteDocument } from 'jsonld/jsonld-spec';
+import { Context, RemoteDocument } from 'jsonld/jsonld-spec';
 
 import {
   ACTIVITYSTREAMS_CONTEXT,
@@ -15,7 +15,7 @@ type DocumentLoader = jsonld.Options.DocLoader['documentLoader'];
 type getNodeDocumentLoader = () => DocumentLoader;
 const nodeDocumentLoader = getNodeDocumentLoader();
 
-const CONTEXTS: Record<string, Context & JsonLd> = {
+const CONTEXTS: Record<string, Context> = {
   [ACTIVITYSTREAMS_CONTEXT]: {
     '@vocab': ACTIVITYSTREAMS_CONTEXT,
     xsd: 'http://www.w3.org/2001/XMLSchema#',
@@ -3843,7 +3843,9 @@ const customLoader: DocumentLoader = async (
   if (contextUrl) {
     return {
       contextUrl: null,
-      document: CONTEXTS[contextUrl],
+      document: {
+        '@context': CONTEXTS[contextUrl],
+      },
       documentUrl: contextUrl,
     };
   }

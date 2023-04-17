@@ -3852,7 +3852,9 @@ const customLoader = async (url, callback) => {
     if (contextUrl) {
         return {
             contextUrl: null,
-            document: CONTEXTS[contextUrl],
+            document: {
+                '@context': CONTEXTS[contextUrl],
+            },
             documentUrl: contextUrl,
         };
     }
