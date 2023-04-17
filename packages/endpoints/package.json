@@ -1,6 +1,6 @@
 {
   "name": "@activity-kit/endpoints",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -21,9 +21,9 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "@activity-kit/core": "^0.4.10",
+    "@activity-kit/core": "^0.4.11",
     "@activity-kit/types": "^0.4.3",
-    "@activity-kit/utilities": "^0.4.9",
+    "@activity-kit/utilities": "^0.4.11",
     "cheerio": "^1.0.0-rc.12",
     "cookie": "^0.5.0",
     "formidable": "^2.0.1",
