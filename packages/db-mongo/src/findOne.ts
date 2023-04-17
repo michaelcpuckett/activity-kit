@@ -13,7 +13,7 @@ export async function findOne(
     throw new Error('Bad database.');
   }
 
-  let value = null;
+  let value: Record<string, unknown> = null;
 
   if (options && options.includes(DbOptions.CASE_INSENSITIVE)) {
     const cursor = this.db
@@ -35,7 +35,7 @@ export async function findOne(
     return null;
   }
 
-  delete (value as Partial<typeof value>)._id;
+  delete value._id;
 
-  return convertJsonToEntity(value) as AP.Entity;
+  return convertJsonToEntity(value);
 }

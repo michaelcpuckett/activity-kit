@@ -1,5 +1,6 @@
 import { MongoDbAdapter } from '.';
 import { AP } from '@activity-kit/types';
+import { convertJsonToEntity } from '@activity-kit/utilities';
 import { Db } from 'mongodb';
 
 export async function findAll(
@@ -21,5 +22,5 @@ export async function findAll(
     return null;
   }
 
-  return value as unknown as AP.Entity[];
+  return value.map(convertJsonToEntity);
 }
