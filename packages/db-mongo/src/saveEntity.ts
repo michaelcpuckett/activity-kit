@@ -2,8 +2,6 @@ import { MongoDbAdapter } from '.';
 import { AP } from '@activity-kit/types';
 import { Db } from 'mongodb';
 import {
-  applyContext,
-  cleanProps,
   convertEntityToJson,
   getCollectionNameByUrl,
 } from '@activity-kit/utilities';
@@ -22,15 +20,12 @@ export async function saveEntity(
 
   const collectionName = getCollectionNameByUrl(entity.id);
   const _id = entity.id.toString();
-  const convertedEntity = convertEntityToJson(
-    cleanProps(applyContext<AP.Entity>(entity)),
-  );
 
   await this.db.collection(collectionName).replaceOne(
     {
       _id,
     },
-    convertedEntity,
+    convertEntityToJson(entity),
     {
       upsert: true,
     },
