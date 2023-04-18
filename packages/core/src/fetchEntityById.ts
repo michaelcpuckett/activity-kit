@@ -13,12 +13,12 @@ export async function fetchEntityById(
   this: Core,
   id: URL,
 ): Promise<AP.Entity | null> {
-  async function getContentType(url: URL): Promise<string | null> {
+  const getContentType = async (url: URL): Promise<string | null> => {
     const response = await this.fetch(url.toString(), { method: 'HEAD' });
     return response.headers.get('Content-Type');
-  }
+  };
 
-  async function isJsonLdContentType(url: URL): Promise<boolean> {
+  const isJsonLdContentType = async (url: URL): Promise<boolean> => {
     const contentType = await getContentType(url);
     if (!contentType) {
       return false;
@@ -29,7 +29,7 @@ export async function fetchEntityById(
       contentType.includes(LINKED_DATA_CONTENT_TYPE) ||
       contentType.includes(JSON_CONTENT_TYPE)
     );
-  }
+  };
 
   if (!isJsonLdContentType(id)) {
     return null;

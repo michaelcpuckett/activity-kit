@@ -4,11 +4,11 @@ exports.fetchEntityById = void 0;
 const types_1 = require("@activity-kit/types");
 const utilities_1 = require("@activity-kit/utilities");
 async function fetchEntityById(id) {
-    async function getContentType(url) {
+    const getContentType = async (url) => {
         const response = await this.fetch(url.toString(), { method: 'HEAD' });
         return response.headers.get('Content-Type');
-    }
-    async function isJsonLdContentType(url) {
+    };
+    const isJsonLdContentType = async (url) => {
         const contentType = await getContentType(url);
         if (!contentType) {
             return false;
@@ -16,7 +16,7 @@ async function fetchEntityById(id) {
         return (contentType.includes(utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE) ||
             contentType.includes(utilities_1.LINKED_DATA_CONTENT_TYPE) ||
             contentType.includes(utilities_1.JSON_CONTENT_TYPE));
-    }
+    };
     if (!isJsonLdContentType(id)) {
         return null;
     }
