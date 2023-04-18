@@ -59,5 +59,7 @@ function convertItem(item: unknown): unknown {
     }
 
     return convertObject(object);
+  } else {
+    return item;
   }
 }

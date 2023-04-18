@@ -34,6 +34,8 @@ export async function expandEntity(
       }
     } else if (Array.isArray(value)) {
       return await Promise.all(value.map(expandEntry));
+    } else {
+      return value;
     }
   };
 

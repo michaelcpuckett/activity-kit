@@ -57,5 +57,8 @@ function convertItem(item) {
         }
         return convertObject(object);
     }
+    else {
+        return item;
+    }
 }
 //# sourceMappingURL=convertJsonToEntity.js.map

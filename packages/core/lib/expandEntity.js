@@ -33,6 +33,9 @@ async function expandEntity(entity) {
         else if (Array.isArray(value)) {
             return await Promise.all(value.map(expandEntry));
         }
+        else {
+            return value;
+        }
     };
     const expanded = {};
     for (const [key, value] of Object.entries(entity)) {
