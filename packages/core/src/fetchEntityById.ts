@@ -5,12 +5,36 @@ import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   convertJsonToEntity,
   compressEntity,
+  LINKED_DATA_CONTENT_TYPE,
+  JSON_CONTENT_TYPE,
 } from '@activity-kit/utilities';
 
 export async function fetchEntityById(
   this: Core,
   id: URL,
 ): Promise<AP.Entity | null> {
+  async function getContentType(url: URL): Promise<string | null> {
+    const response = await this.fetch(url.toString(), { method: 'HEAD' });
+    return response.headers.get('Content-Type');
+  }
+
+  async function isJsonLdContentType(url: URL): Promise<boolean> {
+    const contentType = await getContentType(url);
+    if (!contentType) {
+      return false;
+    }
+
+    return (
+      contentType.includes(ACTIVITYSTREAMS_CONTENT_TYPE) ||
+      contentType.includes(LINKED_DATA_CONTENT_TYPE) ||
+      contentType.includes(JSON_CONTENT_TYPE)
+    );
+  }
+
+  if (!isJsonLdContentType(id)) {
+    return null;
+  }
+
   // Send HTTP Signature for Mastodon in secure mode.
   const actor = await this.findOne('entity', {
     preferredUsername: 'bot',

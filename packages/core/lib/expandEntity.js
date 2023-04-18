@@ -20,10 +20,7 @@ async function expandEntity(entity) {
             else {
                 try {
                     const foundEntity = await this.queryById(value);
-                    if (foundEntity) {
-                        return foundEntity;
-                    }
-                    return value;
+                    return foundEntity ?? value;
                 }
                 catch (error) {
                     return value;
