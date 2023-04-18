@@ -1,1 +1,0 @@
-{"version":3,"file":"getCollectionNameByUrl.js","sourceRoot":"","sources":["../../../src/getCollectionNameByUrl.ts"],"names":[],"mappings":";;;AAAA,uCAA2C;AAEpC,MAAM,sBAAsB,GAAG,CAAC,GAAQ,EAAE,EAAE;IACjD,MAAM,OAAO,GAAG,GAAG,CAAC,QAAQ,KAAK,wBAAc,CAAC;IAEhD,IAAI,CAAC,OAAO,EAAE;QACZ,OAAO,eAAe,CAAC;KACxB;IAED,OAAO,QAAQ,CAAC;AAClB,CAAC,CAAC;AARW,QAAA,sBAAsB,0BAQjC"}
