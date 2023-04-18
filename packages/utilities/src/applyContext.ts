@@ -20,7 +20,10 @@ export function applyContext<T>(entity: AP.Entity): T {
     return entity;
   }
 
-  if (!entity['@context']) {
-    entity['@context'] = new URL(ACTIVITYSTREAMS_CONTEXT);
+  if (isTypeOf<T & AP.Entity>(entity, AP.AllTypes)) {
+    if (!entity['@context']) {
+      entity['@context'] = new URL(ACTIVITYSTREAMS_CONTEXT);
+      return entity;
+    }
   }
 }

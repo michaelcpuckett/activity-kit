@@ -19,8 +19,11 @@ function applyContext(entity) {
         }
         return entity;
     }
-    if (!entity['@context']) {
-        entity['@context'] = new URL(globals_1.ACTIVITYSTREAMS_CONTEXT);
+    if ((0, types_1.isTypeOf)(entity, types_1.AP.AllTypes)) {
+        if (!entity['@context']) {
+            entity['@context'] = new URL(globals_1.ACTIVITYSTREAMS_CONTEXT);
+            return entity;
+        }
     }
 }
 exports.applyContext = applyContext;
