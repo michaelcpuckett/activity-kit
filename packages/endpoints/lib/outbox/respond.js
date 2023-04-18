@@ -26,6 +26,7 @@ async function respond() {
     }
     else {
         this.activity = await this.wrapInActivity(body);
+        await this.handleCreate(this.activity);
     }
     (0, types_1.assertIsApActivity)(this.activity);
     (0, types_1.assertExists)(this.activity.id);

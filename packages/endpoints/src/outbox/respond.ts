@@ -47,6 +47,8 @@ export async function respond(this: OutboxPostEndpoint) {
   } else {
     // If not activity type, wrap object in a Create activity.
     this.activity = await this.wrapInActivity(body);
+
+    await this.handleCreate(this.activity);
   }
 
   assertIsApActivity(this.activity);

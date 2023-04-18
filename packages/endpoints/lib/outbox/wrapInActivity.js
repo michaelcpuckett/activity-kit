@@ -5,20 +5,18 @@ const utilities_1 = require("@activity-kit/utilities");
 const types_1 = require("@activity-kit/types");
 const path_to_regexp_1 = require("path-to-regexp");
 async function wrapInActivity(body) {
-    this.activity = (0, utilities_1.combineAddresses)({
-        type: types_1.AP.ActivityTypes.CREATE,
-        actor: this.actor.id,
-        object: body,
-    });
-    const [type] = (0, utilities_1.getArray)(this.activity.type);
-    const activityId = new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()], {
+    const id = new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.create, {
         encode: encodeURIComponent,
     })({
         guid: await this.core.getGuid(),
     })}`);
-    this.activity.id = activityId;
-    this.activity.url = activityId;
-    await this.handleCreate(this.activity);
+    return (0, utilities_1.applyContext)(this.combineAddresses({
+        id,
+        url: id,
+        type: types_1.AP.ActivityTypes.CREATE,
+        actor: this.actor.id,
+        object: body,
+    }));
 }
 exports.wrapInActivity = wrapInActivity;
 //# sourceMappingURL=wrapInActivity.js.map
