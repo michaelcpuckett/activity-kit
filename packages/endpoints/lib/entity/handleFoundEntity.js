@@ -9,7 +9,7 @@ async function handleFoundEntity(render, entity, authorizedActor) {
         this.req.headers.accept?.includes(utilities_1.LINKED_DATA_CONTENT_TYPE) ||
         this.req.headers.accept?.includes(utilities_1.JSON_CONTENT_TYPE)) {
         this.res.setHeader(utilities_1.CONTENT_TYPE_HEADER, utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);
-        this.res.write((0, utilities_2.convertEntityToJson)((0, utilities_1.cleanProps)((0, utilities_1.applyContext)(entity))));
+        this.res.write(JSON.stringify((0, utilities_2.convertEntityToJson)((0, utilities_1.cleanProps)((0, utilities_1.applyContext)(entity)))));
     }
     else {
         this.res.setHeader(utilities_1.CONTENT_TYPE_HEADER, utilities_1.HTML_CONTENT_TYPE);

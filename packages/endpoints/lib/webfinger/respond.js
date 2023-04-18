@@ -48,8 +48,7 @@ const respond = async function () {
             this.res.write(JSON.stringify(finger));
         }
         else {
-            const finger = `
-        <?xml version="1.0" encoding="UTF-8" ?>
+            const finger = `<?xml version="1.0" encoding="UTF-8" ?>
         <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
           <Subject>acct:${actor.preferredUsername}@${utilities_1.LOCAL_HOSTNAME}</Subject>
           <Alias>${actorUrl.toString()}</Alias>

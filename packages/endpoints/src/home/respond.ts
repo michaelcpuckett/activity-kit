@@ -57,7 +57,9 @@ export const respond = async function (
     this.req.headers.accept?.includes(JSON_CONTENT_TYPE)
   ) {
     this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
-    this.res.write(convertEntityToJson(cleanProps(applyContext(actor))));
+    this.res.write(
+      JSON.stringify(convertEntityToJson(cleanProps(applyContext(actor)))),
+    );
   } else {
     this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);
 

@@ -76,8 +76,7 @@ export const respond = async function (this: WebfingerGetEndpoint) {
       this.res.setHeader(CONTENT_TYPE_HEADER, JRD_CONTENT_TYPE);
       this.res.write(JSON.stringify(finger));
     } else {
-      const finger = `
-        <?xml version="1.0" encoding="UTF-8" ?>
+      const finger = `<?xml version="1.0" encoding="UTF-8" ?>
         <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
           <Subject>acct:${actor.preferredUsername}@${LOCAL_HOSTNAME}</Subject>
           <Alias>${actorUrl.toString()}</Alias>

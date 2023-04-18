@@ -29,7 +29,7 @@ const respond = async function (render) {
         this.req.headers.accept?.includes(utilities_1.LINKED_DATA_CONTENT_TYPE) ||
         this.req.headers.accept?.includes(utilities_1.JSON_CONTENT_TYPE)) {
         this.res.setHeader(utilities_1.CONTENT_TYPE_HEADER, utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE);
-        this.res.write((0, utilities_1.convertEntityToJson)((0, utilities_1.cleanProps)((0, utilities_1.applyContext)(actor))));
+        this.res.write(JSON.stringify((0, utilities_1.convertEntityToJson)((0, utilities_1.cleanProps)((0, utilities_1.applyContext)(actor)))));
     }
     else {
         this.res.setHeader(utilities_1.CONTENT_TYPE_HEADER, utilities_1.HTML_CONTENT_TYPE);
