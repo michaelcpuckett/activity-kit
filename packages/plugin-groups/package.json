@@ -1,6 +1,6 @@
 {
   "name": "@activity-kit/plugin-groups",
-  "version": "0.4.30",
+  "version": "0.4.31",
   "description": "> TODO: description",
   "author": "Michael Puckett <michael@puckett.contact>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -33,7 +33,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@activity-kit/endpoints": "^0.4.30",
+    "@activity-kit/endpoints": "^0.4.31",
     "@activity-kit/types": "^0.4.22",
     "@activity-kit/utilities": "^0.4.30",
     "cheerio": "^1.0.0-rc.12",
