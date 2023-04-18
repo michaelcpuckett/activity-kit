@@ -11,9 +11,9 @@ function applyContext(entity) {
                 new URL(globals_1.ACTIVITYSTREAMS_CONTEXT),
                 new URL(globals_1.W3ID_SECURITY_CONTEXT),
                 {
-                    'schema:PropertyValue': 'https://schema.org/PropertyValue',
-                    'schema:value': 'https://schema.org/value',
-                    'schema:name': 'https://schema.org/name',
+                    'schema:PropertyValue': new URL('https://schema.org/PropertyValue'),
+                    'schema:value': new URL('https://schema.org/value'),
+                    'schema:name': new URL('https://schema.org/name'),
                 },
             ];
         }

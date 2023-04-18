@@ -10,9 +10,9 @@ export function applyContext<T>(entity: AP.Entity): T {
         new URL(ACTIVITYSTREAMS_CONTEXT),
         new URL(W3ID_SECURITY_CONTEXT),
         {
-          'schema:PropertyValue': 'https://schema.org/PropertyValue',
-          'schema:value': 'https://schema.org/value',
-          'schema:name': 'https://schema.org/name',
+          'schema:PropertyValue': new URL('https://schema.org/PropertyValue'),
+          'schema:value': new URL('https://schema.org/value'),
+          'schema:name': new URL('https://schema.org/name'),
         },
       ];
     }
