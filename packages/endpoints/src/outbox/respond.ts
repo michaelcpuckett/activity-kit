@@ -5,51 +5,48 @@ import {
   assertExists,
   assertIsApActivity,
   assertIsApActor,
+  assertIsApEntity,
 } from '@activity-kit/types';
-import {
-  combineAddresses,
-  getArray,
-  LOCAL_DOMAIN,
-} from '@activity-kit/utilities';
+import { parseStream, getArray, LOCAL_DOMAIN } from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
 
-export async function respond(this: OutboxPostEndpoint) {
-  await this.parseBody();
+// TODO: Accept Object instead of Activity...
 
-  assertExists(this.activity);
+export async function respond(this: OutboxPostEndpoint) {
+  const body = await parseStream(this.req);
+
+  assertIsApEntity(body);
 
   await this.getActor();
   await this.authenticateActor();
 
   assertIsApActor(this.actor);
 
-  const compileOptions = { encode: encodeURIComponent };
+  if (isTypeOf<AP.Activity>(body, AP.ActivityTypes)) {
+    assertIsApActivity(body);
 
-  const [type] = getArray(this.activity.type);
+    this.activity = body;
 
-  const activityId = new URL(
-    `${LOCAL_DOMAIN}${compile(
-      this.routes[type.toLowerCase()],
-      compileOptions,
-    )({
-      guid: await this.core.getGuid(),
-    })}`,
-  );
+    const [type] = getArray(this.activity.type);
 
-  this.activity.id = activityId; // Overwrite ID
+    const activityId = new URL(
+      `${LOCAL_DOMAIN}${compile(this.routes[type.toLowerCase()], {
+        encode: encodeURIComponent,
+      })({
+        guid: await this.core.getGuid(),
+      })}`,
+    );
 
-  if (isTypeOf<AP.Activity>(this.activity, AP.ActivityTypes)) {
-    assertIsApActivity(this.activity);
-
+    this.activity.id = activityId; // Overwrite ID
     this.activity.url = activityId;
 
     // Address activity and object the same way.
-    this.activity = combineAddresses(this.activity);
+    this.activity = this.combineAddresses(this.activity);
 
     await this.runSideEffects();
   } else {
     // If not activity type, wrap object in a Create activity.
-    await this.wrapInActivity();
+    this.activity = await this.wrapInActivity(body);
   }
 
   assertIsApActivity(this.activity);

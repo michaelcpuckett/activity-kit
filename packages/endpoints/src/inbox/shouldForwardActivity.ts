@@ -15,9 +15,9 @@ export async function shouldForwardActivity(this: InboxPostEndpoint) {
 
   const activity = this.activity as AP.Activity;
 
-  const to = getArray(activity.to);
-  const cc = getArray(activity.cc);
-  const audience = getArray(activity.audience);
+  const to = getArray<AP.EntityReference>(activity.to);
+  const cc = getArray<AP.EntityReference>(activity.cc);
+  const audience = getArray<AP.EntityReference>(activity.audience);
 
   const addressees = [...to, ...cc, ...audience];
 
@@ -45,10 +45,12 @@ export async function shouldForwardActivity(this: InboxPostEndpoint) {
     }
   }
 
-  const inReplyTo = getArray(activity.inReplyTo);
-  const object = 'object' in activity ? getArray(activity.object) : [];
-  const target = 'target' in activity ? getArray(activity.target) : [];
-  const tag = getArray(activity.tag);
+  const inReplyTo = getArray<AP.EntityReference>(activity.inReplyTo);
+  const object =
+    'object' in activity ? getArray<AP.EntityReference>(activity.object) : [];
+  const target =
+    'target' in activity ? getArray<AP.EntityReference>(activity.target) : [];
+  const tag = getArray<AP.EntityReference>(activity.tag);
 
   const objects = [...inReplyTo, ...object, ...target, ...tag];
 

@@ -1,1 +1,0 @@
-{"version":3,"file":"convertEntityToJson.js","sourceRoot":"","sources":["../src/convertEntityToJson.ts"],"names":[],"mappings":";;;AACA,yCAAsC;AAE/B,MAAM,mBAAmB,GAAG,CACjC,MAAiB,EACQ,EAAE;IAC3B,OAAO,IAAI,CAAC,KAAK,CAAC,IAAA,qBAAS,EAAC,MAAM,CAAC,CAAC,CAAC,IAAI,CAAC;AAC5C,CAAC,CAAC;AAJW,QAAA,mBAAmB,uBAI9B"}

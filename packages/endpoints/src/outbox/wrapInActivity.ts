@@ -1,26 +1,28 @@
 import { OutboxPostEndpoint } from '.';
-import { LOCAL_DOMAIN, combineAddresses } from '@activity-kit/utilities';
+import {
+  LOCAL_DOMAIN,
+  combineAddresses,
+  getArray,
+} from '@activity-kit/utilities';
 import { AP } from '@activity-kit/types';
 import { compile } from 'path-to-regexp';
 
-export async function wrapInActivity(this: OutboxPostEndpoint) {
+export async function wrapInActivity(
+  this: OutboxPostEndpoint,
+  body: AP.Entity,
+) {
   this.activity = combineAddresses({
     type: AP.ActivityTypes.CREATE,
     actor: this.actor.id,
-    object: this.activity,
+    object: body,
   });
 
-  const compileOptions = { encode: encodeURIComponent };
-
-  const type = Array.isArray(this.activity.type)
-    ? this.activity.type[0]
-    : this.activity.type;
+  const [type] = getArray(this.activity.type);
 
   const activityId = new URL(
-    `${LOCAL_DOMAIN}${compile(
-      this.routes[type.toLowerCase()],
-      compileOptions,
-    )({
+    `${LOCAL_DOMAIN}${compile(this.routes[type.toLowerCase()], {
+      encode: encodeURIComponent,
+    })({
       guid: await this.core.getGuid(),
     })}`,
   );

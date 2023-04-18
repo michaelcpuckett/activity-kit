@@ -3,8 +3,8 @@ import type { IncomingMessage, ServerResponse } from 'http';
 import { runSideEffects } from './runSideEffects';
 import { authenticateActor } from './authenticateActor';
 import { wrapInActivity } from './wrapInActivity';
+import { combineAddresses } from './combineAddresses';
 import { saveActivity } from './saveActivity';
-import { parseBody } from './parseBody';
 import { getActor } from './getActor';
 import { respond } from './respond';
 import { handleDelete } from './sideEffects/delete';
@@ -52,7 +52,7 @@ export class OutboxPostEndpoint {
   protected runSideEffects = runSideEffects;
   protected saveActivity = saveActivity;
   protected wrapInActivity = wrapInActivity;
-  protected parseBody = parseBody;
+  protected combineAddresses = combineAddresses;
   public respond = respond;
 
   protected handleAdd = handleAdd;
