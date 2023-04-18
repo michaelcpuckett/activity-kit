@@ -33,7 +33,7 @@ export class UserPostEndpoint {
   protected createUserActor = createUserActor;
 
   public async respond() {
-    const body: { [key: string]: string } = JSON.parse(
+    const body: Record<string, string> = JSON.parse(
       await streamToString(this.req),
     );
 

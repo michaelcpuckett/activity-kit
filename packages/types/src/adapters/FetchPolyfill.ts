@@ -6,7 +6,7 @@ export type FetchPolyfill = typeof fetch;
 // Project: https://github.com/github/fetch
 // Definitions by: Ryan Graham <https://github.com/ryan-codingintrigue>, Kagami Sascha Rosylight <https://github.com/saschanaz>
 
-declare type HeadersInit = Headers | string[][] | { [key: string]: string };
+declare type HeadersInit = Headers | string[][] | Record<string, string>;
 declare class Headers {
   constructor(init?: HeadersInit);
 

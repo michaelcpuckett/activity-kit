@@ -2,9 +2,7 @@
 /// <reference types="node" />
 declare let fetch: (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 export type FetchPolyfill = typeof fetch;
-declare type HeadersInit = Headers | string[][] | {
-    [key: string]: string;
-};
+declare type HeadersInit = Headers | string[][] | Record<string, string>;
 declare class Headers {
     constructor(init?: HeadersInit);
     append(name: string, value: string): void;

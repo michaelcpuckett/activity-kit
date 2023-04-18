@@ -17,7 +17,7 @@ export const getStreamByName = async function (
         return null;
       }
 
-      return await this.findEntityById(streamId);
+      return await this.queryById(streamId);
     }),
   );
 

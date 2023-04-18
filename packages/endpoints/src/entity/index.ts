@@ -6,7 +6,7 @@ import type { IncomingMessage, ServerResponse } from 'http';
 
 export class EntityGetEndpoint {
   req: IncomingMessage & {
-    params: { [key: string]: string };
+    params: Record<string, string>;
   };
   res: ServerResponse;
   core: CoreLibrary;
@@ -16,7 +16,7 @@ export class EntityGetEndpoint {
 
   constructor(
     req: IncomingMessage & {
-      params: { [key: string]: string };
+      params: Record<string, string>;
     },
     res: ServerResponse,
     core: CoreLibrary,

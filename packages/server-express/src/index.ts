@@ -47,7 +47,7 @@ export const activityKitPlugin =
   }) =>
   async (
     req: IncomingMessage & {
-      params: { [key: string]: string };
+      params: Record<string, string>;
     },
     res: ServerResponse,
     next: NextFunction,
@@ -72,7 +72,9 @@ export const activityKitPlugin =
     const getEntityRouteParams = () => {
       for (const route of Object.values(routes)) {
         if (matchesRoute(route)) {
-          const matches = matchRegExpPath(route)(req.url);
+          const matches = matchRegExpPath<Record<string, string>>(route)(
+            req.url,
+          );
 
           if (matches) {
             return matches.params;
@@ -101,7 +103,9 @@ export const activityKitPlugin =
           (collectionRoute === '/' ? '' : collectionRoute) + '/page/:page';
 
         if (matchesRoute(collectionPageRoute)) {
-          const matches = matchRegExpPath(collectionPageRoute)(req.url);
+          const matches = matchRegExpPath<Record<string, string>>(
+            collectionPageRoute,
+          )(req.url);
 
           if (matches) {
             return matches.params;
@@ -239,7 +243,7 @@ export const activityKitPlugin =
         const entityParams = getEntityRouteParams();
 
         if (entityParams) {
-          req.params = entityParams as { [key: string]: string };
+          req.params = entityParams;
 
           await new EntityGetEndpoint(req, res, core, config.plugins).respond(
             config.pages.entity,

@@ -1,3 +1,1 @@
-export type StringReferenceMap = {
-    [key: string]: string;
-};
+export type StringReferenceMap = Record<string, string>;

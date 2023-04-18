@@ -6,9 +6,7 @@ import { respond } from './respond';
 import type { IncomingMessage, ServerResponse } from 'http';
 export declare class EntityGetEndpoint {
     req: IncomingMessage & {
-        params: {
-            [key: string]: string;
-        };
+        params: Record<string, string>;
     };
     res: ServerResponse;
     core: CoreLibrary;
@@ -16,9 +14,7 @@ export declare class EntityGetEndpoint {
     routes?: Routes;
     url: URL;
     constructor(req: IncomingMessage & {
-        params: {
-            [key: string]: string;
-        };
+        params: Record<string, string>;
     }, res: ServerResponse, core: CoreLibrary, plugins?: Plugin[], url?: URL);
     protected handleFoundEntity: typeof handleFoundEntity;
     protected handleBadRequest(): {

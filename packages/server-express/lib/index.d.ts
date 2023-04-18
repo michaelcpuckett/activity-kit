@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import type { NextFunction } from 'express';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { Adapters, AP, Plugin, Routes } from '@activity-kit/types';
@@ -17,7 +16,5 @@ export declare const activityKitPlugin: (config: {
     adapters: Adapters;
     plugins?: Plugin[];
 }) => (req: IncomingMessage & {
-    params: {
-        [key: string]: string;
-    };
+    params: Record<string, string>;
 }, res: ServerResponse, next: NextFunction) => Promise<void>;

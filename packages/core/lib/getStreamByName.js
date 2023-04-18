@@ -10,7 +10,7 @@ const getStreamByName = async function (actor, name) {
         if (!streamId) {
             return null;
         }
-        return await this.findEntityById(streamId);
+        return await this.queryById(streamId);
     }));
     for (const stream of streams) {
         try {
