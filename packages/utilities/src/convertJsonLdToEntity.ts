@@ -3876,5 +3876,5 @@ export const convertJsonLdToEntity = async (
     return null;
   }
 
-  return applyContext(converted);
+  return applyContext<AP.Entity>(converted);
 };

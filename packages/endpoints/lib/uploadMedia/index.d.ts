@@ -14,9 +14,7 @@ export declare class UploadMediaPostEndpoint {
     core: CoreLibrary;
     plugins?: Plugin[];
     actor: AP.Actor | null;
-    activity: (AP.Create & {
-        object: AP.Image | AP.Document | AP.Video | AP.Audio;
-    }) | null;
+    activity: AP.TransitiveActivity | null;
     file: File | null;
     protected getActor: typeof getActor;
     protected authenticateActor: typeof authenticateActor;

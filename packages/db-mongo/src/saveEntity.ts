@@ -22,7 +22,9 @@ export async function saveEntity(
 
   const collectionName = getCollectionNameByUrl(entity.id);
   const _id = entity.id.toString();
-  const convertedEntity = convertEntityToJson(cleanProps(applyContext(entity)));
+  const convertedEntity = convertEntityToJson(
+    cleanProps(applyContext<AP.Entity>(entity)),
+  );
 
   await this.db.collection(collectionName).replaceOne(
     {

@@ -1,7 +1,7 @@
 import * as AP from '../activitypub';
 import { AnyType } from '../activitypub/Core/Entity';
-export declare function isTypeOf<T>(entity: unknown, types: Record<string, string>): entity is T;
-export declare function isType<T>(entity: unknown, type: string): entity is T;
+export declare function isType<T extends AP.Entity>(entity: unknown, type: string): entity is T;
+export declare function isTypeOf<T extends AP.Entity>(entity: unknown, types: Record<string, string>): entity is T;
 export declare function assertExists(value: unknown): asserts value;
 export declare function assertIsObject(value: unknown): asserts value is object;
 export declare function assertIsString(value: unknown): asserts value is string;
@@ -21,5 +21,5 @@ export declare function assertIsApExtendedObject(value: unknown): asserts value 
 export declare function assertIsApActor(value: unknown): asserts value is AP.Actor;
 export declare function assertIsApCollection(value: unknown): asserts value is AP.Collection | AP.OrderedCollection;
 export declare function assertIsApTransitiveActivity(value: unknown): asserts value is AP.TransitiveActivity;
-export declare function assertIsApType<comparison>(value: unknown, comparison: string): asserts value is comparison;
-export declare function assertIsApTypeOf<types>(value: unknown, comparison: string[]): asserts value is types;
+export declare function assertIsApType<T extends AP.Entity>(value: unknown, type: string): asserts value is T;
+export declare function assertIsApTypeOf<T extends AP.Entity>(value: unknown, comparison: Record<string, string>): asserts value is T;

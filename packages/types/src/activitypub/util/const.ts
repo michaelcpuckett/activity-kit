@@ -1,4 +1,4 @@
-export const ExtendedObjectTypes: Record<string, string> = {
+export const ExtendedObjectTypes = {
   ARTICLE: 'Article',
   AUDIO: 'Audio',
   DOCUMENT: 'Document',
@@ -14,12 +14,12 @@ export const ExtendedObjectTypes: Record<string, string> = {
   HASHTAG: 'Hashtag', // Extension
 } as const;
 
-export const LinkTypes: Record<string, string> = {
+export const LinkTypes = {
   LINK: 'Link',
   MENTION: 'Mention',
 } as const;
 
-export const ActorTypes: Record<string, string> = {
+export const ActorTypes = {
   APPLICATION: 'Application',
   GROUP: 'Group',
   ORGANIZATION: 'Organization',
@@ -27,7 +27,7 @@ export const ActorTypes: Record<string, string> = {
   SERVICE: 'Service',
 } as const;
 
-export const TransitiveActivityTypes: Record<string, string> = {
+export const TransitiveActivityTypes = {
   ACCEPT: 'Accept',
   ADD: 'Add',
   ANNOUNCE: 'Announce',
@@ -55,28 +55,28 @@ export const TransitiveActivityTypes: Record<string, string> = {
   VIEW: 'View',
 } as const;
 
-export const IntransitiveActivityTypes: Record<string, string> = {
+export const IntransitiveActivityTypes = {
   ARRIVE: 'Arrive',
   TRAVEL: 'Travel',
   QUESTION: 'Question',
 } as const;
 
-export const ActivityTypes: Record<string, string> = {
+export const ActivityTypes = {
   ...TransitiveActivityTypes,
   ...IntransitiveActivityTypes,
 } as const;
 
-export const CollectionTypes: Record<string, string> = {
+export const CollectionTypes = {
   COLLECTION: 'Collection',
   ORDERED_COLLECTION: 'OrderedCollection',
 } as const;
 
-export const CollectionPageTypes: Record<string, string> = {
+export const CollectionPageTypes = {
   COLLECTION_PAGE: 'CollectionPage',
   ORDERED_COLLECTION_PAGE: 'OrderedCollectionPage',
 } as const;
 
-export const CoreObjectTypes: Record<string, string> = {
+export const CoreObjectTypes = {
   ...ExtendedObjectTypes,
   ...ActorTypes,
   ...ActivityTypes,
@@ -84,7 +84,7 @@ export const CoreObjectTypes: Record<string, string> = {
   ...CollectionPageTypes,
 } as const;
 
-export const AllTypes: Record<string, string> = {
+export const AllTypes = {
   ...CoreObjectTypes,
   ...LinkTypes,
 } as const;

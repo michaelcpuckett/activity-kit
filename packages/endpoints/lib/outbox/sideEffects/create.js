@@ -75,8 +75,7 @@ async function handleCreate(activity) {
         })({
             entityRoute,
         })}`);
-        const objectReplies = {
-            '@context': new URL(utilities_1.ACTIVITYSTREAMS_CONTEXT),
+        const objectReplies = (0, utilities_1.applyContext)({
             id: objectRepliesId,
             url: objectRepliesId,
             name: 'Replies',
@@ -85,14 +84,13 @@ async function handleCreate(activity) {
             orderedItems: [],
             published: publishedDate,
             attributedTo: actorId,
-        };
+        });
         const objectLikesId = new URL(`${utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.likes, {
             validate: false,
         })({
             entityRoute,
         })}`);
-        const objectLikes = {
-            '@context': new URL(utilities_1.ACTIVITYSTREAMS_CONTEXT),
+        const objectLikes = (0, utilities_1.applyContext)({
             id: objectLikesId,
             url: objectLikesId,
             name: 'Likes',
@@ -101,14 +99,13 @@ async function handleCreate(activity) {
             orderedItems: [],
             published: publishedDate,
             attributedTo: actorId,
-        };
+        });
         const objectSharesId = new URL(`${utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.shares, {
             validate: false,
         })({
             entityRoute,
         })}`);
-        const objectShares = {
-            '@context': new URL(utilities_1.ACTIVITYSTREAMS_CONTEXT),
+        const objectShares = (0, utilities_1.applyContext)({
             id: objectSharesId,
             url: objectSharesId,
             name: 'Shares',
@@ -117,7 +114,7 @@ async function handleCreate(activity) {
             orderedItems: [],
             published: publishedDate,
             attributedTo: actorId,
-        };
+        });
         object.attributedTo = actorId;
         object.replies = objectRepliesId;
         object.likes = objectLikesId;

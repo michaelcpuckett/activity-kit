@@ -9,10 +9,7 @@ import {
   isType,
   isTypeOf,
 } from '@activity-kit/types';
-import {
-  ACTIVITYSTREAMS_CONTEXT,
-  SERVER_ACTOR_USERNAME,
-} from '@activity-kit/utilities';
+import { SERVER_ACTOR_USERNAME, applyContext } from '@activity-kit/utilities';
 import { LOCAL_DOMAIN } from '@activity-kit/utilities';
 import { getId } from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
@@ -92,8 +89,7 @@ export async function handleCreate(
       })}`,
     );
 
-    const objectReplies: AP.OrderedCollection = {
-      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
+    const objectReplies = applyContext<AP.OrderedCollection>({
       id: objectRepliesId,
       url: objectRepliesId,
       name: 'Replies',
@@ -102,7 +98,7 @@ export async function handleCreate(
       orderedItems: [],
       published: publishedDate,
       attributedTo: actorId,
-    };
+    });
 
     const objectLikesId = new URL(
       `${LOCAL_DOMAIN}${compile(this.routes.likes, {
@@ -112,8 +108,7 @@ export async function handleCreate(
       })}`,
     );
 
-    const objectLikes: AP.OrderedCollection = {
-      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
+    const objectLikes = applyContext<AP.OrderedCollection>({
       id: objectLikesId,
       url: objectLikesId,
       name: 'Likes',
@@ -122,7 +117,7 @@ export async function handleCreate(
       orderedItems: [],
       published: publishedDate,
       attributedTo: actorId,
-    };
+    });
 
     const objectSharesId = new URL(
       `${LOCAL_DOMAIN}${compile(this.routes.shares, {
@@ -132,8 +127,7 @@ export async function handleCreate(
       })}`,
     );
 
-    const objectShares: AP.OrderedCollection = {
-      '@context': new URL(ACTIVITYSTREAMS_CONTEXT),
+    const objectShares = applyContext<AP.OrderedCollection>({
       id: objectSharesId,
       url: objectSharesId,
       name: 'Shares',
@@ -142,7 +136,7 @@ export async function handleCreate(
       orderedItems: [],
       published: publishedDate,
       attributedTo: actorId,
-    };
+    });
 
     object.attributedTo = actorId;
     object.replies = objectRepliesId;

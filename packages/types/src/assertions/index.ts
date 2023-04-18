@@ -1,32 +1,18 @@
 import * as AP from '../activitypub';
 import { AnyType } from '../activitypub/Core/Entity';
 
-export function isTypeOf<T>(
+export function isType<T extends AP.Entity>(
   entity: unknown,
-  types: Record<string, string>,
+  type: string,
 ): entity is T {
-  for (const type of Object.values(types)) {
-    if (isType<T>(entity, type)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-export function isType<T>(entity: unknown, type: string): entity is T {
   if (!entity || typeof entity !== 'object') {
     return false;
   }
 
-  if (!('type' in entity)) {
-    return false;
-  }
+  const entityType: string | string[] = (entity as T).type;
 
   if (
-    Array.isArray(entity.type)
-      ? entity.type.includes(type)
-      : type === entity.type
+    Array.isArray(entityType) ? entityType.includes(type) : type === entityType
   ) {
     return true;
   }
@@ -34,39 +20,46 @@ export function isType<T>(entity: unknown, type: string): entity is T {
   return false;
 }
 
+export function isTypeOf<T extends AP.Entity>(
+  entity: unknown,
+  types: Record<string, string>,
+): entity is T {
+  return Object.values(types).some((type) => isType<T>(entity, type));
+}
+
 export function assertExists(value: unknown): asserts value {
   if (typeof value === 'undefined' || value === null) {
-    throw new Error(`\`${value}\` is undefined or null.`);
+    throw new Error(`"${value}" is undefined or null.`);
   }
 }
 
 export function assertIsObject(value: unknown): asserts value is object {
   if (typeof value !== 'object') {
-    throw new Error(`\`${value}\` is not an object.`);
+    throw new Error(`"${value}" is not an object.`);
   }
 }
 
 export function assertIsString(value: unknown): asserts value is string {
   if (typeof value !== 'string') {
-    throw new Error(`\`${value}\` is not a string.`);
+    throw new Error(`"${value}" is not a string.`);
   }
 }
 
 export function assertIsNumber(value: unknown): asserts value is number {
   if (typeof value !== 'number') {
-    throw new Error(`\`${value}\` is not a number.`);
+    throw new Error(`"${value}" is not a number.`);
   }
 }
 
 export function assertIsDate(value: unknown): asserts value is Date {
   if (!(value instanceof Date)) {
-    throw new Error(`\`${value}\` is not a Date object.`);
+    throw new Error(`"${value}" is not a Date object.`);
   }
 }
 
 export function assertIsArray(value: unknown): asserts value is Array<unknown> {
   if (!Array.isArray(value)) {
-    throw new Error(`\`${value}\` is not an array.`);
+    throw new Error(`"${value}" is not an array.`);
   }
 }
 
@@ -76,7 +69,7 @@ export function assertHasType(
   assertIsObject(value);
 
   if (!('type' in value)) {
-    throw new Error(`\`${value}\` has no type.`);
+    throw new Error(`"${value}" has no type.`);
   }
 }
 
@@ -86,7 +79,7 @@ export function assertHasApType(
   assertHasType(value);
 
   if (!isTypeOf<AP.Entity>(value, AP.AllTypes)) {
-    throw new Error(`\`${value}\` type is not an ActivityPub type.`);
+    throw new Error(`"${value}" type is not an ActivityPub type.`);
   }
 }
 
@@ -100,7 +93,7 @@ export function assertIsApActivity(
   assertIsApEntity(value);
 
   if (!isTypeOf<AP.Activity>(value, AP.ActivityTypes)) {
-    throw new Error(`\`${value}\` is not an Activity`);
+    throw new Error(`"${value}" is not an Activity`);
   }
 }
 
@@ -110,7 +103,7 @@ export function assertIsApCoreObject(
   assertIsApEntity(value);
 
   if (!isTypeOf<AP.CoreObject>(value, AP.CoreObjectTypes)) {
-    throw new Error(`\`${value}\` is not a Core Object`);
+    throw new Error(`"${value}" is not a Core Object`);
   }
 }
 
@@ -120,7 +113,7 @@ export function assertIsApExtendedObject(
   assertIsApEntity(value);
 
   if (!isTypeOf<AP.ExtendedObject>(value, AP.ExtendedObjectTypes)) {
-    throw new Error(`\`${value}\` is not an Extended Object`);
+    throw new Error(`"${value}" is not an Extended Object`);
   }
 }
 
@@ -128,7 +121,7 @@ export function assertIsApActor(value: unknown): asserts value is AP.Actor {
   assertIsApEntity(value);
 
   if (!isTypeOf<AP.Actor>(value, AP.ActorTypes)) {
-    throw new Error(`\`${value}\` is not an Actor`);
+    throw new Error(`"${value}" is not an Actor`);
   }
 }
 
@@ -138,7 +131,7 @@ export function assertIsApCollection(
   assertIsApEntity(value);
 
   if (!isTypeOf<AP.EitherCollection>(value, AP.CollectionTypes)) {
-    throw new Error(`\`${value}\` is not a Collection`);
+    throw new Error(`"${value}" is not a Collection`);
   }
 }
 
@@ -148,32 +141,28 @@ export function assertIsApTransitiveActivity(
   assertIsApActivity(value);
 
   if (!('object' in value)) {
-    throw new Error(`\`${value}\` is not a TransitiveActivity.`);
+    throw new Error(`"${value}" is not a TransitiveActivity.`);
   }
 }
 
-export function assertIsApType<comparison>(
+export function assertIsApType<T extends AP.Entity>(
   value: unknown,
-  comparison: string,
-): asserts value is comparison {
+  type: string,
+): asserts value is T {
   assertIsApEntity(value);
 
-  if (!isType<comparison>(value, comparison)) {
-    throw new Error(`\`${value}\` is not of type ${comparison}`);
+  if (!isType<T>(value, type)) {
+    throw new Error(`"${value}" is not of type ${type}.`);
   }
 }
 
-export function assertIsApTypeOf<types>(
+export function assertIsApTypeOf<T extends AP.Entity>(
   value: unknown,
-  comparison: string[],
-): asserts value is types {
+  comparison: Record<string, string>,
+): asserts value is T {
   assertIsApEntity(value);
 
-  for (const type of comparison) {
-    if (isType<types>(value, type)) {
-      return;
-    }
+  if (!isTypeOf<T>(value, comparison)) {
+    throw new Error(`"${value}" does not match any provided type.`);
   }
-
-  throw new Error(`\`${value}\` does not match any provided type.`);
 }

@@ -8,9 +8,9 @@ import {
   assertIsArray,
 } from '@activity-kit/types';
 import {
-  ACTIVITYSTREAMS_CONTEXT,
   LOCAL_DOMAIN,
   PUBLIC_ACTOR,
+  applyContext,
 } from '@activity-kit/utilities';
 import { getId } from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
@@ -106,8 +106,7 @@ export async function handleFollow(
   )}`;
   const publishedDate = new Date();
 
-  const acceptActivity: AP.Accept = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const acceptActivity = applyContext<AP.Accept>({
     id: new URL(acceptActivityId),
     url: new URL(acceptActivityId),
     type: AP.ActivityTypes.ACCEPT,
@@ -115,7 +114,7 @@ export async function handleFollow(
     actor: followeeId,
     object: activityId,
     published: publishedDate,
-  };
+  });
 
   const followeeOutboxId = getId(followee.outbox);
 

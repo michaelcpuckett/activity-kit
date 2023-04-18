@@ -9,7 +9,7 @@ async function expandEntity(entity) {
             key === 'id' ||
             key === 'url' ||
             key === 'type' ||
-            key === utilities_1.CONTEXT ||
+            key === '@context' ||
             key === 'publicKey') {
             return value;
         }

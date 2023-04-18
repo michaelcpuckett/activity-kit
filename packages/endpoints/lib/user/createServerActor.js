@@ -17,8 +17,7 @@ async function createServerActor() {
     const inboxId = getRouteUrl(this.routes.serverInbox, {
         entityRoute,
     });
-    const botInbox = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const botInbox = (0, utilities_1.applyContext)({
         id: inboxId,
         url: inboxId,
         type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
@@ -26,12 +25,11 @@ async function createServerActor() {
         attributedTo: userId,
         orderedItems: [],
         published: publishedDate,
-    };
+    });
     const outboxId = getRouteUrl(this.routes.serverOutbox, {
         entityRoute,
     });
-    const botOutbox = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const botOutbox = (0, utilities_1.applyContext)({
         id: outboxId,
         url: outboxId,
         type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
@@ -39,12 +37,11 @@ async function createServerActor() {
         attributedTo: userId,
         orderedItems: [],
         published: publishedDate,
-    };
+    });
     const followersId = getRouteUrl(this.routes.serverFollowers, {
         entityRoute,
     });
-    const botFollowers = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const botFollowers = (0, utilities_1.applyContext)({
         id: followersId,
         url: followersId,
         name: 'Followers',
@@ -53,12 +50,11 @@ async function createServerActor() {
         attributedTo: userId,
         items: [],
         published: publishedDate,
-    };
+    });
     const followingId = getRouteUrl(this.routes.serverFollowing, {
         entityRoute,
     });
-    const botFollowing = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const botFollowing = (0, utilities_1.applyContext)({
         id: followingId,
         url: followingId,
         name: 'Following',
@@ -67,12 +63,11 @@ async function createServerActor() {
         attributedTo: userId,
         items: [],
         published: publishedDate,
-    };
+    });
     const hashtagsId = getRouteUrl(this.routes.serverHashtags, {
         entityRoute,
     });
-    const botHashtags = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const botHashtags = (0, utilities_1.applyContext)({
         id: hashtagsId,
         url: hashtagsId,
         name: 'Hashtags',
@@ -81,9 +76,8 @@ async function createServerActor() {
         attributedTo: userId,
         items: [],
         published: publishedDate,
-    };
-    const botActor = {
-        '@context': [utilities_1.ACTIVITYSTREAMS_CONTEXT, utilities_1.W3ID_SECURITY_CONTEXT],
+    });
+    const botActor = (0, utilities_1.applyContext)({
         id: userId,
         url: userId,
         type: types_1.AP.ActorTypes.APPLICATION,
@@ -103,7 +97,7 @@ async function createServerActor() {
             publicKeyPem: botPublicKey,
         },
         published: publishedDate,
-    };
+    });
     await Promise.all([
         this.core.saveEntity(botActor),
         this.core.saveEntity(botInbox),

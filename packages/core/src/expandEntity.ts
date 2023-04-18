@@ -1,6 +1,6 @@
 import { Core } from '.';
 import { AP, isTypeOf } from '@activity-kit/types';
-import { CONTEXT, PUBLIC_ACTOR } from '@activity-kit/utilities';
+import { PUBLIC_ACTOR } from '@activity-kit/utilities';
 
 export async function expandEntity(
   this: Core,
@@ -12,7 +12,7 @@ export async function expandEntity(
       key === 'id' ||
       key === 'url' ||
       key === 'type' ||
-      key === CONTEXT ||
+      key === '@context' ||
       key === 'publicKey'
     ) {
       return value;

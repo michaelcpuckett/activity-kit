@@ -90,7 +90,7 @@ export async function saveEntity(this: SqliteDbAdapter, entity: AP.Entity) {
     radius: null,
     units: null,
     describes: null,
-    ...convertEntityToJson(cleanProps(applyContext(entity))),
+    ...convertEntityToJson(cleanProps(applyContext<AP.Entity>(entity))),
     _id,
   };
 

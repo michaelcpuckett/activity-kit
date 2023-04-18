@@ -3,46 +3,51 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.saveActivity = void 0;
 const types_1 = require("@activity-kit/types");
 const utilities_1 = require("@activity-kit/utilities");
+const path_to_regexp_1 = require("path-to-regexp");
 async function saveActivity() {
-    if (!this.activity ||
-        !this.activity.id ||
-        !this.activity.object ||
-        this.activity.object instanceof URL ||
-        Array.isArray(this.activity.object) ||
-        !this.activity.object.id) {
-        throw new Error('Bad activity / bad object.');
-    }
+    (0, types_1.assertIsApTransitiveActivity)(this.activity);
+    (0, types_1.assertIsApExtendedObject)(this.activity.object);
     const publishedDate = new Date();
-    const objectReplies = {
-        '@context': new URL(utilities_1.ACTIVITYSTREAMS_CONTEXT),
-        id: new URL(`${this.activity.object.id.toString()}/replies`),
-        url: new URL(`${this.activity.object.id.toString()}/replies`),
+    const getRouteUrl = (route, data) => new URL((0, path_to_regexp_1.compile)(route, {
+        validate: false,
+    })(data), utilities_1.LOCAL_DOMAIN);
+    const entityRoute = `${this.activity.object.id}`;
+    const objectRepliesId = getRouteUrl(this.routes.replies, {
+        entityRoute,
+    });
+    const objectReplies = (0, utilities_1.applyContext)({
+        id: objectRepliesId,
+        url: objectRepliesId,
         name: 'Replies',
         type: types_1.AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         items: [],
         published: publishedDate,
-    };
-    const objectLikes = {
-        '@context': new URL(utilities_1.ACTIVITYSTREAMS_CONTEXT),
-        id: new URL(`${this.activity.object.id.toString()}/likes`),
-        url: new URL(`${this.activity.object.id.toString()}/likes`),
+    });
+    const objectLikesId = getRouteUrl(this.routes.likes, {
+        entityRoute,
+    });
+    const objectLikes = (0, utilities_1.applyContext)({
+        id: objectLikesId,
+        url: objectLikesId,
         name: 'Likes',
         type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
         published: publishedDate,
-    };
-    const objectShares = {
-        '@context': new URL(utilities_1.ACTIVITYSTREAMS_CONTEXT),
-        id: new URL(`${this.activity.object.id.toString()}/shares`),
-        url: new URL(`${this.activity.object.id.toString()}/shares`),
+    });
+    const objectSharesId = getRouteUrl(this.routes.shares, {
+        entityRoute,
+    });
+    const objectShares = (0, utilities_1.applyContext)({
+        id: objectSharesId,
+        url: objectSharesId,
         name: 'Shares',
         type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         orderedItems: [],
         published: publishedDate,
-    };
+    });
     if (objectLikes.id instanceof URL) {
         this.activity.object.likes = objectLikes.id;
     }

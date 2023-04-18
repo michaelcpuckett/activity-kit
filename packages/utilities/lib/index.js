@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getArray = exports.isLocal = exports.deduplicateUrls = exports.getTypedEntity = exports.streamToString = exports.parseStream = exports.getId = exports.getCollectionNameByUrl = exports.convertEntityToJson = exports.convertJsonToEntity = exports.convertFromJsonLd = exports.compressEntity = exports.combineAddresses = exports.cleanProps = exports.applyContext = void 0;
+exports.getArray = exports.isLocal = exports.deduplicateUrls = exports.streamToString = exports.parseStream = exports.getId = exports.getCollectionNameByUrl = exports.convertEntityToJson = exports.convertJsonToEntity = exports.convertFromJsonLd = exports.compressEntity = exports.combineAddresses = exports.cleanProps = exports.applyContext = void 0;
 __exportStar(require("./globals"), exports);
 var applyContext_1 = require("./applyContext");
 Object.defineProperty(exports, "applyContext", { enumerable: true, get: function () { return applyContext_1.applyContext; } });
@@ -38,8 +38,6 @@ var parseStream_1 = require("./parseStream");
 Object.defineProperty(exports, "parseStream", { enumerable: true, get: function () { return parseStream_1.parseStream; } });
 var streamToString_1 = require("./streamToString");
 Object.defineProperty(exports, "streamToString", { enumerable: true, get: function () { return streamToString_1.streamToString; } });
-var getTypedEntity_1 = require("./getTypedEntity");
-Object.defineProperty(exports, "getTypedEntity", { enumerable: true, get: function () { return getTypedEntity_1.getTypedEntity; } });
 var deduplicateUrls_1 = require("./deduplicateUrls");
 Object.defineProperty(exports, "deduplicateUrls", { enumerable: true, get: function () { return deduplicateUrls_1.deduplicateUrls; } });
 var isLocal_1 = require("./isLocal");

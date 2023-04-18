@@ -10,7 +10,6 @@ export { getCollectionNameByUrl } from './getCollectionNameByUrl';
 export { getId } from './getId';
 export { parseStream } from './parseStream';
 export { streamToString } from './streamToString';
-export { getTypedEntity } from './getTypedEntity';
 export { deduplicateUrls } from './deduplicateUrls';
 export { isLocal } from './isLocal';
 export { getArray } from './getArray';

@@ -26,7 +26,9 @@ export async function handleFoundEntity(
   ) {
     this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
     this.res.write(
-      JSON.stringify(convertEntityToJson(cleanProps(applyContext(entity)))),
+      JSON.stringify(
+        convertEntityToJson(cleanProps(applyContext<AP.Entity>(entity))),
+      ),
     );
   } else {
     this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);

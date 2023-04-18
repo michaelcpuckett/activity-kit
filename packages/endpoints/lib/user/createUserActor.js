@@ -18,8 +18,7 @@ async function createUserActor(user) {
     const inboxId = getRouteUrl(this.routes.inbox, {
         entityRoute,
     });
-    const userInbox = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const userInbox = (0, utilities_1.applyContext)({
         id: inboxId,
         url: inboxId,
         name: 'Inbox',
@@ -28,12 +27,11 @@ async function createUserActor(user) {
         attributedTo: userId,
         orderedItems: [],
         published: publishedDate,
-    };
+    });
     const outboxId = getRouteUrl(this.routes.outbox, {
         entityRoute,
     });
-    const userOutbox = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const userOutbox = (0, utilities_1.applyContext)({
         id: outboxId,
         url: outboxId,
         name: 'Outbox',
@@ -42,12 +40,11 @@ async function createUserActor(user) {
         attributedTo: userId,
         orderedItems: [],
         published: publishedDate,
-    };
+    });
     const followersId = getRouteUrl(this.routes.followers, {
         entityRoute,
     });
-    const userFollowers = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const userFollowers = (0, utilities_1.applyContext)({
         id: followersId,
         url: followersId,
         name: 'Followers',
@@ -56,12 +53,11 @@ async function createUserActor(user) {
         attributedTo: userId,
         items: [],
         published: publishedDate,
-    };
+    });
     const followingId = getRouteUrl(this.routes.following, {
         entityRoute,
     });
-    const userFollowing = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const userFollowing = (0, utilities_1.applyContext)({
         id: followingId,
         url: followingId,
         name: 'Following',
@@ -70,12 +66,11 @@ async function createUserActor(user) {
         attributedTo: userId,
         items: [],
         published: publishedDate,
-    };
+    });
     const likedId = getRouteUrl(this.routes.liked, {
         entityRoute,
     });
-    const userLiked = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const userLiked = (0, utilities_1.applyContext)({
         id: likedId,
         url: likedId,
         name: 'Liked',
@@ -84,13 +79,12 @@ async function createUserActor(user) {
         attributedTo: userId,
         orderedItems: [],
         published: publishedDate,
-    };
+    });
     const sharedId = getRouteUrl(this.routes.stream, {
         entityRoute,
         slug: 'shared',
     });
-    const userShared = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const userShared = (0, utilities_1.applyContext)({
         id: sharedId,
         url: sharedId,
         name: 'Shared',
@@ -99,13 +93,12 @@ async function createUserActor(user) {
         attributedTo: userId,
         orderedItems: [],
         published: publishedDate,
-    };
+    });
     const blocksId = getRouteUrl(this.routes.stream, {
         entityRoute,
         slug: 'blocks',
     });
-    const userBlocks = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const userBlocks = (0, utilities_1.applyContext)({
         id: blocksId,
         url: blocksId,
         name: 'Blocks',
@@ -114,13 +107,12 @@ async function createUserActor(user) {
         attributedTo: userId,
         items: [],
         published: publishedDate,
-    };
+    });
     const userRequestsId = getRouteUrl(this.routes.stream, {
         entityRoute,
         slug: 'requests',
     });
-    const userRequests = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const userRequests = (0, utilities_1.applyContext)({
         id: userRequestsId,
         url: userRequestsId,
         name: 'Requests',
@@ -129,13 +121,12 @@ async function createUserActor(user) {
         attributedTo: userId,
         items: [],
         published: publishedDate,
-    };
+    });
     const userListsId = getRouteUrl(this.routes.stream, {
         entityRoute,
         slug: 'lists',
     });
-    const userLists = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const userLists = (0, utilities_1.applyContext)({
         id: userListsId,
         url: userListsId,
         name: 'Lists',
@@ -145,13 +136,12 @@ async function createUserActor(user) {
         attributedTo: userId,
         items: [],
         published: publishedDate,
-    };
+    });
     const userBookmarksId = getRouteUrl(this.routes.stream, {
         entityRoute,
         slug: 'bookmarks',
     });
-    const userBookmarks = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const userBookmarks = (0, utilities_1.applyContext)({
         id: userBookmarksId,
         url: userBookmarksId,
         name: 'Bookmarks',
@@ -160,20 +150,12 @@ async function createUserActor(user) {
         attributedTo: userId,
         orderedItems: [],
         published: publishedDate,
-    };
+    });
     const uploadMediaId = getRouteUrl(this.routes.endpoint, {
         entityRoute,
         slug: 'upload-media',
     });
-    let userActor = {
-        '@context': [
-            utilities_1.ACTIVITYSTREAMS_CONTEXT,
-            utilities_1.W3ID_SECURITY_CONTEXT,
-            {
-                PropertyValue: 'https://schema.org/PropertyValue',
-                value: 'https://schema.org/value',
-            },
-        ],
+    let userActor = (0, utilities_1.applyContext)({
         id: userId,
         url: userId,
         type: user.type === types_1.AP.ActorTypes.GROUP
@@ -203,7 +185,7 @@ async function createUserActor(user) {
             publicKeyPem: publicKey,
         },
         published: publishedDate,
-    };
+    });
     (0, types_1.assertIsApActor)(userActor);
     const botActor = await this.core.findOne('entity', {
         preferredUsername: utilities_1.SERVER_ACTOR_USERNAME,
@@ -212,8 +194,7 @@ async function createUserActor(user) {
     const createActorActivityId = getRouteUrl(this.routes.create, {
         guid: await this.core.getGuid(),
     });
-    const createActorActivity = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const createActorActivity = (0, utilities_1.applyContext)({
         id: createActorActivityId,
         url: createActorActivityId,
         type: types_1.AP.ActivityTypes.CREATE,
@@ -221,7 +202,7 @@ async function createUserActor(user) {
         object: userActor,
         to: [new URL(utilities_1.PUBLIC_ACTOR)],
         published: publishedDate,
-    };
+    });
     const declaredStreams = [];
     if (this.plugins) {
         for (const plugin of this.plugins) {
@@ -245,8 +226,7 @@ async function createUserActor(user) {
                             .replace(/^-+|-+$/g, ''),
                     });
                     userActor.streams.push(streamId);
-                    declaredStreams.push(this.core.saveEntity({
-                        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+                    declaredStreams.push(this.core.saveEntity((0, utilities_1.applyContext)({
                         type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
                         totalItems: 0,
                         attributedTo: userId,
@@ -255,7 +235,7 @@ async function createUserActor(user) {
                         name: streamName,
                         id: streamId,
                         url: streamId,
-                    }));
+                    })));
                 }));
             }
         }
@@ -280,7 +260,7 @@ async function createUserActor(user) {
     await Promise.all(declaredStreams);
     if (createActorActivity.id && userInbox.id) {
         await Promise.all([
-            this.core.insertOrderedItem(new URL(`${botActor.id}/outbox`), createActorActivity.id),
+            this.core.insertOrderedItem((0, utilities_1.getId)(botActor.outbox), createActorActivity.id),
             this.core.insertOrderedItem(userInbox.id, createActorActivity.id),
         ]);
     }

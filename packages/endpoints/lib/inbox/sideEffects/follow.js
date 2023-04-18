@@ -52,8 +52,7 @@ async function handleFollow(activity, recipient) {
         guid: await this.core.getGuid(),
     })}`)}`;
     const publishedDate = new Date();
-    const acceptActivity = {
-        '@context': utilities_1.ACTIVITYSTREAMS_CONTEXT,
+    const acceptActivity = (0, utilities_1.applyContext)({
         id: new URL(acceptActivityId),
         url: new URL(acceptActivityId),
         type: types_1.AP.ActivityTypes.ACCEPT,
@@ -61,7 +60,7 @@ async function handleFollow(activity, recipient) {
         actor: followeeId,
         object: activityId,
         published: publishedDate,
-    };
+    });
     const followeeOutboxId = (0, utilities_2.getId)(followee.outbox);
     (0, types_1.assertExists)(followeeOutboxId);
     await Promise.all([

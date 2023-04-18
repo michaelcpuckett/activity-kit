@@ -13,7 +13,7 @@ export async function broadcast(
   activity: AP.Activity,
   actor: AP.Actor,
 ): Promise<unknown> {
-  const publicActivity = cleanProps(applyContext(activity));
+  const publicActivity = cleanProps(applyContext<AP.Activity>(activity));
 
   if (!('actor' in publicActivity)) {
     throw new Error('Not an activity?');

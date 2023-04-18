@@ -1,12 +1,12 @@
-import { AP } from '@activity-kit/types';
 import {
-  ACTIVITYSTREAMS_CONTEXT,
   LOCAL_DOMAIN,
   PUBLIC_ACTOR,
+  applyContext,
 } from '@activity-kit/utilities';
 import * as formidable from 'formidable';
 import { compile } from 'path-to-regexp';
 import { UploadMediaPostEndpoint } from '.';
+import { AP, assertIsApTransitiveActivity } from '@activity-kit/types';
 
 export async function parseBody(this: UploadMediaPostEndpoint) {
   const form = formidable.default({
@@ -50,25 +50,27 @@ export async function parseBody(this: UploadMediaPostEndpoint) {
       })}`,
     );
 
-    const object: AP.Image | AP.Document | AP.Audio | AP.Video = {
-      '@context': ACTIVITYSTREAMS_CONTEXT,
+    const object = applyContext<AP.ExtendedObject>({
       to: new URL(PUBLIC_ACTOR),
       type: getType(this.file.mimetype),
       mediaType: this.file.mimetype,
       ...JSON.parse(fields.object),
       id: objectId,
       attributedTo: this.actor.id,
-    };
+    });
 
-    this.activity = {
-      '@context': ACTIVITYSTREAMS_CONTEXT,
+    const activity = applyContext<AP.Create>({
       to: new URL(PUBLIC_ACTOR),
-      type: 'Create',
+      type: AP.ActivityTypes.CREATE,
       id: activityId,
       url: activityId,
       actor: this.actor.id,
       object,
-    };
+    });
+
+    assertIsApTransitiveActivity(activity);
+
+    this.activity = activity;
   }
 }
 

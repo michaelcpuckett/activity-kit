@@ -1,10 +1,10 @@
 import {
-  ACTIVITYSTREAMS_CONTEXT,
   PUBLIC_ACTOR,
   SERVER_ACTOR_USERNAME,
-  W3ID_SECURITY_CONTEXT,
   LOCAL_DOMAIN,
   SHARED_INBOX_ID,
+  applyContext,
+  getId,
 } from '@activity-kit/utilities';
 import { AP, assertIsApActor } from '@activity-kit/types';
 import { UserPostEndpoint } from '.';
@@ -43,8 +43,7 @@ export async function createUserActor(
     entityRoute,
   });
 
-  const userInbox: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const userInbox = applyContext<AP.OrderedCollection>({
     id: inboxId,
     url: inboxId,
     name: 'Inbox',
@@ -53,14 +52,13 @@ export async function createUserActor(
     attributedTo: userId,
     orderedItems: [],
     published: publishedDate,
-  };
+  });
 
   const outboxId = getRouteUrl(this.routes.outbox, {
     entityRoute,
   });
 
-  const userOutbox: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const userOutbox = applyContext<AP.OrderedCollection>({
     id: outboxId,
     url: outboxId,
     name: 'Outbox',
@@ -69,14 +67,13 @@ export async function createUserActor(
     attributedTo: userId,
     orderedItems: [],
     published: publishedDate,
-  };
+  });
 
   const followersId = getRouteUrl(this.routes.followers, {
     entityRoute,
   });
 
-  const userFollowers: AP.Collection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const userFollowers = applyContext<AP.Collection>({
     id: followersId,
     url: followersId,
     name: 'Followers',
@@ -85,14 +82,13 @@ export async function createUserActor(
     attributedTo: userId,
     items: [],
     published: publishedDate,
-  };
+  });
 
   const followingId = getRouteUrl(this.routes.following, {
     entityRoute,
   });
 
-  const userFollowing: AP.Collection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const userFollowing = applyContext<AP.Collection>({
     id: followingId,
     url: followingId,
     name: 'Following',
@@ -101,14 +97,13 @@ export async function createUserActor(
     attributedTo: userId,
     items: [],
     published: publishedDate,
-  };
+  });
 
   const likedId = getRouteUrl(this.routes.liked, {
     entityRoute,
   });
 
-  const userLiked: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const userLiked = applyContext<AP.OrderedCollection>({
     id: likedId,
     url: likedId,
     name: 'Liked',
@@ -117,15 +112,14 @@ export async function createUserActor(
     attributedTo: userId,
     orderedItems: [],
     published: publishedDate,
-  };
+  });
 
   const sharedId = getRouteUrl(this.routes.stream, {
     entityRoute,
     slug: 'shared',
   });
 
-  const userShared: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const userShared = applyContext<AP.OrderedCollection>({
     id: sharedId,
     url: sharedId,
     name: 'Shared',
@@ -134,15 +128,14 @@ export async function createUserActor(
     attributedTo: userId,
     orderedItems: [],
     published: publishedDate,
-  };
+  });
 
   const blocksId = getRouteUrl(this.routes.stream, {
     entityRoute,
     slug: 'blocks',
   });
 
-  const userBlocks: AP.Collection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const userBlocks = applyContext<AP.Collection>({
     id: blocksId,
     url: blocksId,
     name: 'Blocks',
@@ -151,15 +144,14 @@ export async function createUserActor(
     attributedTo: userId,
     items: [],
     published: publishedDate,
-  };
+  });
 
   const userRequestsId = getRouteUrl(this.routes.stream, {
     entityRoute,
     slug: 'requests',
   });
 
-  const userRequests: AP.Collection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const userRequests = applyContext<AP.Collection>({
     id: userRequestsId,
     url: userRequestsId,
     name: 'Requests',
@@ -168,15 +160,14 @@ export async function createUserActor(
     attributedTo: userId,
     items: [],
     published: publishedDate,
-  };
+  });
 
   const userListsId = getRouteUrl(this.routes.stream, {
     entityRoute,
     slug: 'lists',
   });
 
-  const userLists: AP.Collection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const userLists = applyContext<AP.Collection>({
     id: userListsId,
     url: userListsId,
     name: 'Lists',
@@ -187,15 +178,14 @@ export async function createUserActor(
     attributedTo: userId,
     items: [],
     published: publishedDate,
-  };
+  });
 
   const userBookmarksId = getRouteUrl(this.routes.stream, {
     entityRoute,
     slug: 'bookmarks',
   });
 
-  const userBookmarks: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const userBookmarks = applyContext<AP.OrderedCollection>({
     id: userBookmarksId,
     url: userBookmarksId,
     name: 'Bookmarks',
@@ -204,22 +194,14 @@ export async function createUserActor(
     attributedTo: userId,
     orderedItems: [],
     published: publishedDate,
-  };
+  });
 
   const uploadMediaId = getRouteUrl(this.routes.endpoint, {
     entityRoute,
     slug: 'upload-media',
   });
 
-  let userActor = {
-    '@context': [
-      ACTIVITYSTREAMS_CONTEXT,
-      W3ID_SECURITY_CONTEXT,
-      {
-        PropertyValue: 'https://schema.org/PropertyValue',
-        value: 'https://schema.org/value',
-      },
-    ],
+  let userActor = applyContext<AP.Actor>({
     id: userId,
     url: userId,
     type:
@@ -250,7 +232,7 @@ export async function createUserActor(
       publicKeyPem: publicKey,
     },
     published: publishedDate,
-  };
+  });
 
   assertIsApActor(userActor);
 
@@ -264,8 +246,7 @@ export async function createUserActor(
     guid: await this.core.getGuid(),
   });
 
-  const createActorActivity = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const createActorActivity = applyContext<AP.Create>({
     id: createActorActivityId,
     url: createActorActivityId,
     type: AP.ActivityTypes.CREATE,
@@ -273,7 +254,7 @@ export async function createUserActor(
     object: userActor,
     to: [new URL(PUBLIC_ACTOR)],
     published: publishedDate,
-  };
+  });
 
   const declaredStreams = [];
 
@@ -307,17 +288,18 @@ export async function createUserActor(
             userActor.streams.push(streamId);
 
             declaredStreams.push(
-              this.core.saveEntity({
-                '@context': ACTIVITYSTREAMS_CONTEXT,
-                type: AP.CollectionTypes.ORDERED_COLLECTION,
-                totalItems: 0,
-                attributedTo: userId,
-                orderedItems: [],
-                published: publishedDate,
-                name: streamName,
-                id: streamId,
-                url: streamId,
-              }),
+              this.core.saveEntity(
+                applyContext<AP.OrderedCollection>({
+                  type: AP.CollectionTypes.ORDERED_COLLECTION,
+                  totalItems: 0,
+                  attributedTo: userId,
+                  orderedItems: [],
+                  published: publishedDate,
+                  name: streamName,
+                  id: streamId,
+                  url: streamId,
+                }),
+              ),
             );
           }),
         );
@@ -348,7 +330,7 @@ export async function createUserActor(
   if (createActorActivity.id && userInbox.id) {
     await Promise.all([
       this.core.insertOrderedItem(
-        new URL(`${botActor.id}/outbox`),
+        getId(botActor.outbox),
         createActorActivity.id,
       ),
       this.core.insertOrderedItem(userInbox.id, createActorActivity.id),

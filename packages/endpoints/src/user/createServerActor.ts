@@ -1,9 +1,8 @@
 import {
-  ACTIVITYSTREAMS_CONTEXT,
   LOCAL_DOMAIN,
   SERVER_ACTOR_USERNAME,
   SHARED_INBOX_ID,
-  W3ID_SECURITY_CONTEXT,
+  applyContext,
 } from '@activity-kit/utilities';
 import { AP } from '@activity-kit/types';
 import { UserPostEndpoint } from '.';
@@ -32,8 +31,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     entityRoute,
   });
 
-  const botInbox: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const botInbox = applyContext<AP.OrderedCollection>({
     id: inboxId,
     url: inboxId,
     type: AP.CollectionTypes.ORDERED_COLLECTION,
@@ -41,14 +39,13 @@ export async function createServerActor(this: UserPostEndpoint) {
     attributedTo: userId,
     orderedItems: [],
     published: publishedDate,
-  };
+  });
 
   const outboxId = getRouteUrl(this.routes.serverOutbox, {
     entityRoute,
   });
 
-  const botOutbox: AP.OrderedCollection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const botOutbox = applyContext<AP.OrderedCollection>({
     id: outboxId,
     url: outboxId,
     type: AP.CollectionTypes.ORDERED_COLLECTION,
@@ -56,14 +53,13 @@ export async function createServerActor(this: UserPostEndpoint) {
     attributedTo: userId,
     orderedItems: [],
     published: publishedDate,
-  };
+  });
 
   const followersId = getRouteUrl(this.routes.serverFollowers, {
     entityRoute,
   });
 
-  const botFollowers: AP.Collection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const botFollowers = applyContext<AP.Collection>({
     id: followersId,
     url: followersId,
     name: 'Followers',
@@ -72,14 +68,13 @@ export async function createServerActor(this: UserPostEndpoint) {
     attributedTo: userId,
     items: [],
     published: publishedDate,
-  };
+  });
 
   const followingId = getRouteUrl(this.routes.serverFollowing, {
     entityRoute,
   });
 
-  const botFollowing: AP.Collection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const botFollowing = applyContext<AP.Collection>({
     id: followingId,
     url: followingId,
     name: 'Following',
@@ -88,14 +83,13 @@ export async function createServerActor(this: UserPostEndpoint) {
     attributedTo: userId,
     items: [],
     published: publishedDate,
-  };
+  });
 
   const hashtagsId = getRouteUrl(this.routes.serverHashtags, {
     entityRoute,
   });
 
-  const botHashtags: AP.Collection = {
-    '@context': ACTIVITYSTREAMS_CONTEXT,
+  const botHashtags = applyContext<AP.Collection>({
     id: hashtagsId,
     url: hashtagsId,
     name: 'Hashtags',
@@ -104,10 +98,9 @@ export async function createServerActor(this: UserPostEndpoint) {
     attributedTo: userId,
     items: [],
     published: publishedDate,
-  };
+  });
 
-  const botActor: AP.Actor = {
-    '@context': [ACTIVITYSTREAMS_CONTEXT, W3ID_SECURITY_CONTEXT],
+  const botActor = applyContext<AP.Actor>({
     id: userId,
     url: userId,
     type: AP.ActorTypes.APPLICATION,
@@ -127,7 +120,7 @@ export async function createServerActor(this: UserPostEndpoint) {
       publicKeyPem: botPublicKey,
     },
     published: publishedDate,
-  };
+  });
 
   await Promise.all([
     this.core.saveEntity(botActor),
