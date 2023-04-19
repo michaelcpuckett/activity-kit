@@ -11,18 +11,18 @@ async function getPaginatedCollectionItems(collection) {
         if (firstCollectionPageId) {
             const firstCollectionPage = await this.queryById(firstCollectionPageId);
             try {
-                (0, types_1.assertIsApTypeOf)(firstCollectionPage, Object.values(types_1.AP.CollectionPageTypes));
+                (0, types_1.assertIsApTypeOf)(firstCollectionPage, types_1.AP.CollectionPageTypes);
                 let nextCollectionPage = firstCollectionPage;
                 while (nextCollectionPage) {
                     try {
-                        (0, types_1.assertIsApTypeOf)(nextCollectionPage, Object.values(types_1.AP.CollectionPageTypes));
+                        (0, types_1.assertIsApTypeOf)(nextCollectionPage, types_1.AP.CollectionPageTypes);
                         const collectionPageItems = nextCollectionPage.orderedItems || nextCollectionPage.items;
                         (0, types_1.assertIsArray)(collectionPageItems);
                         collectionItems.push(collectionPageItems);
                         const nextCollectionPageId = (0, utilities_1.getId)(nextCollectionPage.next);
                         (0, types_1.assertExists)(nextCollectionPageId);
                         const potentialNextCollectionPage = await this.queryById(nextCollectionPageId);
-                        (0, types_1.assertIsApTypeOf)(potentialNextCollectionPage, Object.values(types_1.AP.CollectionPageTypes));
+                        (0, types_1.assertIsApTypeOf)(potentialNextCollectionPage, types_1.AP.CollectionPageTypes);
                         nextCollectionPage = potentialNextCollectionPage;
                     }
                     catch (error) {

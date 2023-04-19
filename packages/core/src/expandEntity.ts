@@ -29,7 +29,9 @@ export async function expandEntity(
         }
       }
     } else if (Array.isArray(value)) {
-      return await Promise.all(value.map(expandEntry));
+      return await Promise.all(
+        value.map(async (item) => await expandEntry('', item)),
+      );
     } else {
       return value;
     }

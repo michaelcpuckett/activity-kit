@@ -25,7 +25,7 @@ export async function getPaginatedCollectionItems(
       try {
         assertIsApTypeOf<AP.EitherCollectionPage>(
           firstCollectionPage,
-          Object.values(AP.CollectionPageTypes),
+          AP.CollectionPageTypes,
         );
 
         let nextCollectionPage: AP.EitherCollectionPage | null =
@@ -35,7 +35,7 @@ export async function getPaginatedCollectionItems(
           try {
             assertIsApTypeOf<AP.EitherCollectionPage>(
               nextCollectionPage,
-              Object.values(AP.CollectionPageTypes),
+              AP.CollectionPageTypes,
             );
 
             const collectionPageItems =
@@ -55,7 +55,7 @@ export async function getPaginatedCollectionItems(
 
             assertIsApTypeOf<AP.EitherCollectionPage>(
               potentialNextCollectionPage,
-              Object.values(AP.CollectionPageTypes),
+              AP.CollectionPageTypes,
             );
 
             nextCollectionPage = potentialNextCollectionPage;
