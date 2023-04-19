@@ -31,7 +31,7 @@ export async function fetchEntityById(
     );
   };
 
-  if (!isJsonLdContentType(id)) {
+  if (!(await isJsonLdContentType(id))) {
     return null;
   }
 

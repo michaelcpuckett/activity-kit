@@ -17,7 +17,7 @@ async function fetchEntityById(id) {
             contentType.includes(utilities_1.LINKED_DATA_CONTENT_TYPE) ||
             contentType.includes(utilities_1.JSON_CONTENT_TYPE));
     };
-    if (!isJsonLdContentType(id)) {
+    if (!(await isJsonLdContentType(id))) {
         return null;
     }
     const actor = await this.findOne('entity', {
