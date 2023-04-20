@@ -76,6 +76,8 @@ const app = express.default();
 
       plugins: [],
 
+      routes: {},
+
       pages: {
         // Login/Signup via Auth adapter.
         login: async (): Promise<string> => {
@@ -158,7 +160,7 @@ The core layer that gets included in all projects include these packages:
 - `@activity-kit/endpoints`
   - The logic for carrying out the bulk of the ActivityPub protocol.
 - `@activity-kit/core`
-  - Provides common functions that use the adapter APIs.
+  - Common functions that depend on the Adapter APIs.
 - `@activity-kit/utilities`
   - Common functions with no dependencies on packages from upper layers.
 
@@ -205,6 +207,7 @@ Currently this project comes with:
 
 - `@activity-kit/server-express`
 - TODO: `@activity-kit/server-fastify`
+- TODO: `@activity-kit/server-serverless`
 - TODO: `@activity-kit/server-koa`
 
 #### Crypto Adapters
@@ -215,6 +218,12 @@ Typically this will be handled by Node's `crypto` library, but the crypto functi
 
 - `@activity-kit/crypto-node`
 - TODO: `@activity-kit/crypto-browser`
+
+#### Email Adapters
+
+In the future, email will be an optional adapter that can be used to reset passwords and send notifications to users.
+
+- TODO: `@activity-kit/email-nodemailer`
 
 ### Plugins
 
@@ -237,33 +246,25 @@ The front-end should utilize ActivityPub's Client-to-Server protocol to post Act
 
 ## Use Cases
 
-There are a few use cases this project attempts to fulfill. Ideally this project
-papers over some of the complexity of JSON-LD, Activity Streams collections, etc. to make getting started easy.
+There are a few use cases this project attempts to fulfill. Ideally this project papers over some of the complexity of JSON-LD, Activity Streams collections, etc. to make getting started easy.
 
 ### Connecting a Blog to the Fediverse
 
-Someone already has an HTML blog and a domain name and wants their posts to be
-read by others and get replies. Instead of setting up a CMS, they decide to set
-up an ActivityPub server.
+Someone already has an HTML blog and a domain name and wants their posts to be read by others and get replies. Instead of setting up a CMS, they decide to set up an ActivityPub server.
 
 ### Single-Server Social Feeds
 
 An exercise app wants to build in social features to make their users feel
 proud of their achievements. This would probably include something like a
-notification bell and a feed where updates about their friends appear. Users
-might have with the option to react with an emoji or sticker.
+notification bell and a feed where updates about their friends appear. Users might have with the option to react with an emoji or sticker.
 
 All these exchanges would stay local to the server.
 
 ### Private Group Chat
 
-A small group of people who communicate online become dissatisfied with their
-existing app's policies and decide to communicate privately. They would like to
-develop their own system for communication.
+A small group of people who communicate online become dissatisfied with their existing app's policies and decide to communicate privately. They would like to develop their own system for communication.
 
-Although ActivityPub does not define an encryption layer, messages could stay
-local to a single server or could be exchanged between all parties in an
-ephermeral way. Encryption could be a good addition, however.
+Although ActivityPub does not define an encryption layer, messages could stay local to a single server or could be exchanged between all parties in an ephermeral way. Encryption could be a good addition, however.
 
 ### Federated Social Network
 

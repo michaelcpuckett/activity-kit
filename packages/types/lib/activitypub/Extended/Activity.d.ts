@@ -4,7 +4,7 @@ import { ActivityTypes } from '../util/const';
 import { EntityReference } from '../Core';
 import { TypeOrArrayWithType } from '../Core/Entity';
 type BaseActivity = BaseCoreObject & {
-    type: TypeOrArrayWithType<typeof ActivityTypes[keyof typeof ActivityTypes]>;
+    type: TypeOrArrayWithType<(typeof ActivityTypes)[keyof typeof ActivityTypes]>;
     actor: EntityReference | EntityReference[];
     object?: EntityReference | EntityReference[];
     target?: EntityReference | EntityReference[];

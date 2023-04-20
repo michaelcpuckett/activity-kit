@@ -14,7 +14,7 @@ See CHECKLIST.md
 - standardize plugin system
 - as:sensitive
 - watch for performance issues
-- caching of remote objects -- too many?
+- best way to handle caching of remote objects such as a follower collection?
 - foaf / schema.org / others
 - nodeinfo users + posts
-- client crypto / d1 cloudflare
+- forgot password, change password

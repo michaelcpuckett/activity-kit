@@ -110,7 +110,7 @@ export class Core implements CoreLibrary {
       foreignTarget: URL,
       actorId: URL,
       privateKey: string,
-      entity?: AP.Entity,
+      entity?: Record<string, unknown>,
     ) =>
       await adapters.crypto.getHttpSignature(
         foreignTarget,

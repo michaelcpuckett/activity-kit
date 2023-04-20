@@ -1,4 +1,3 @@
-import { AP } from '@activity-kit/types';
 import * as crypto from 'crypto';
 import { NodeCryptoAdapter } from '.';
 
