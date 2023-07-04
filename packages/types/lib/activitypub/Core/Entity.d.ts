@@ -1,9 +1,8 @@
 /// <reference types="node" />
-import { AllTypes } from '../util/const';
-export type AnyType = typeof AllTypes[keyof typeof AllTypes];
-export type TypeOrArrayWithType<Type> = Type | [Type, ...AnyType[]];
-export type BaseEntity = {
-    '@context'?: URL | URL[] | unknown;
+import { TypeOrArrayWithType, AnyType } from '../util/const';
+import { ContextDefinition } from 'jsonld';
+export type BaseEntity<T extends AnyType> = {
+    '@context'?: URL | URL[] | ContextDefinition;
     id?: URL | null;
-    type: TypeOrArrayWithType<AnyType>;
+    type: TypeOrArrayWithType<T>;
 };

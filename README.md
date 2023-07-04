@@ -140,14 +140,11 @@ This project aims to be spec-compliant.
 This project aims to be as versatile and non-opinionated as possible. The hope is to be able to integrate with any project.
 
 This project is MIT-licensed, with the hope it will be forked, reused, or
-wholly included in other projects due to this permissive license. There may be
-similiar software that exists, but inclusion would be inviable due to licensing
-restrictions.
+wholly included in other projects due to this permissive license. There may be similiar software that exists, but inclusion would be inviable due to licensing restrictions.
 
 ## Architecture
 
-This project aims to be agnostic as to how the data is stored, which server is
-used, etc. Adapters that conform to a specific interface can be mixed and matched.
+This project aims to be agnostic as to how the data is stored, which server is used, etc. Adapters that conform to a specific interface can be mixed and matched.
 
 Additionally, Plugins can modify the endpoints.
 

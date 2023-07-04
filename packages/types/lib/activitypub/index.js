@@ -1,15 +1,20 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AllTypes = exports.CollectionPageTypes = exports.CollectionTypes = exports.ExtendedObjectTypes = exports.ActorTypes = exports.ActivityTypes = exports.IntransitiveActivityTypes = exports.TransitiveActivityTypes = exports.LinkTypes = exports.CoreObjectTypes = void 0;
-var const_1 = require("./util/const");
-Object.defineProperty(exports, "CoreObjectTypes", { enumerable: true, get: function () { return const_1.CoreObjectTypes; } });
-Object.defineProperty(exports, "LinkTypes", { enumerable: true, get: function () { return const_1.LinkTypes; } });
-Object.defineProperty(exports, "TransitiveActivityTypes", { enumerable: true, get: function () { return const_1.TransitiveActivityTypes; } });
-Object.defineProperty(exports, "IntransitiveActivityTypes", { enumerable: true, get: function () { return const_1.IntransitiveActivityTypes; } });
-Object.defineProperty(exports, "ActivityTypes", { enumerable: true, get: function () { return const_1.ActivityTypes; } });
-Object.defineProperty(exports, "ActorTypes", { enumerable: true, get: function () { return const_1.ActorTypes; } });
-Object.defineProperty(exports, "ExtendedObjectTypes", { enumerable: true, get: function () { return const_1.ExtendedObjectTypes; } });
-Object.defineProperty(exports, "CollectionTypes", { enumerable: true, get: function () { return const_1.CollectionTypes; } });
-Object.defineProperty(exports, "CollectionPageTypes", { enumerable: true, get: function () { return const_1.CollectionPageTypes; } });
-Object.defineProperty(exports, "AllTypes", { enumerable: true, get: function () { return const_1.AllTypes; } });
+__exportStar(require("./Core"), exports);
+__exportStar(require("./Extended"), exports);
+__exportStar(require("./util"), exports);
 //# sourceMappingURL=index.js.map

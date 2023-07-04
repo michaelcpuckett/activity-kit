@@ -1,7 +1,8 @@
-import { BaseEntity, TypeOrArrayWithType } from './Entity';
-import { LinkTypes } from '../util/const';
-import { StringReferenceMap } from '../util/values';
+import { BaseEntity } from './Entity';
+import { LinkTypes, OrArray, StringReferenceMap } from '../util';
 import { EntityReference } from '.';
+
+export type AnyLinkType = (typeof LinkTypes)[keyof typeof LinkTypes];
 
 /**
  * Per the ActivityStreams Vocabulary spec:
@@ -15,22 +16,22 @@ import { EntityReference } from '.';
  * > as opposed to properties of the resource.
  */
 
-export interface BaseLink extends BaseEntity {
-  type: TypeOrArrayWithType<typeof LinkTypes[keyof typeof LinkTypes]>;
+export type LinkProperties = {
   height?: number;
   href?: URL;
   hrefLang?: string;
   mediaType?: string;
   name?: string;
   nameMap?: StringReferenceMap;
-  preview?: EntityReference | EntityReference[];
-  rel?: string | string[];
+  preview?: OrArray<EntityReference>;
+  rel?: OrArray<string>;
   width?: number;
-}
+};
 
-export interface Mention extends BaseLink {
-  type: typeof LinkTypes.MENTION;
-}
+export type BaseLink<T extends AnyLinkType> = BaseEntity<T> & LinkProperties;
 
-export type Link = BaseLink | Mention;
+type LinkEntity = BaseLink<typeof LinkTypes.LINK>;
+export type Mention = BaseLink<typeof LinkTypes.MENTION>;
+
+export type Link = LinkEntity | Mention;
 export type LinkReference = URL | Link;

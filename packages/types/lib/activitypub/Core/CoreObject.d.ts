@@ -1,41 +1,40 @@
-import { CoreObjectTypes } from '../util/const';
-import type { BaseEntity, TypeOrArrayWithType } from './Entity';
+import { CoreObjectTypes, OrArray } from '../util';
 import type { EntityReference } from '.';
 import type { StringReferenceMap } from '../util/values';
 import type { ImageReference } from '../Extended/ExtendedObject';
 import type { LinkReference } from './Link';
 import type { CollectionReference, OrderedCollectionReference } from '../Extended/Collection';
-export interface BaseCoreObject extends BaseEntity {
-    type: TypeOrArrayWithType<typeof CoreObjectTypes[keyof typeof CoreObjectTypes]>;
-    attachment?: EntityReference | EntityReference[];
-    attributedTo?: EntityReference | EntityReference[];
-    audience?: EntityReference | EntityReference[];
-    bcc?: EntityReference | EntityReference[];
-    bto?: EntityReference | EntityReference[];
-    cc?: EntityReference | EntityReference[];
+export type AnyCoreObjectType = (typeof CoreObjectTypes)[keyof typeof CoreObjectTypes];
+export type CoreObjectProperties = {
+    attachment?: OrArray<EntityReference>;
+    attributedTo?: OrArray<EntityReference>;
+    audience?: OrArray<EntityReference>;
+    bcc?: OrArray<EntityReference>;
+    bto?: OrArray<EntityReference>;
+    cc?: OrArray<EntityReference>;
     content?: string;
     contentMap?: StringReferenceMap;
-    context?: EntityReference | EntityReference[];
+    context?: OrArray<EntityReference>;
     duration?: string;
     endTime?: Date;
-    generator?: EntityReference | EntityReference[];
-    icon?: ImageReference | ImageReference[] | LinkReference | LinkReference[];
-    image?: ImageReference | ImageReference[] | LinkReference | LinkReference[];
-    inReplyTo?: EntityReference | EntityReference[];
-    location?: EntityReference | EntityReference[];
+    generator?: OrArray<EntityReference>;
+    icon?: ImageReference | LinkReference | Array<ImageReference | LinkReference>;
+    image?: ImageReference | LinkReference | Array<ImageReference | LinkReference>;
+    inReplyTo?: OrArray<EntityReference>;
+    location?: OrArray<EntityReference>;
     mediaType?: string;
     name?: string;
     nameMap?: StringReferenceMap;
-    preview?: EntityReference | EntityReference[];
+    preview?: OrArray<EntityReference>;
     published?: Date;
     replies?: CollectionReference;
     startTime?: Date;
     summary?: string;
     summaryMap?: StringReferenceMap;
-    tag?: EntityReference | EntityReference[];
-    to?: EntityReference | EntityReference[];
+    tag?: OrArray<EntityReference>;
+    to?: OrArray<EntityReference>;
     updated?: Date;
-    url?: LinkReference | LinkReference[];
+    url?: OrArray<LinkReference>;
     likes?: OrderedCollectionReference;
     shares?: OrderedCollectionReference;
     source?: {
@@ -43,4 +42,4 @@ export interface BaseCoreObject extends BaseEntity {
         contentMap?: StringReferenceMap;
     };
     sensitive?: boolean;
-}
+};

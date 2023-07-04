@@ -1,12 +1,9 @@
-import { AllTypes } from '../util/const';
+import { TypeOrArrayWithType, AnyType } from '../util/const';
+import { ContextDefinition } from 'jsonld';
 
-export type AnyType = typeof AllTypes[keyof typeof AllTypes];
-
-export type TypeOrArrayWithType<Type> = Type | [Type, ...AnyType[]];
-
-export type BaseEntity = {
-  '@context'?: URL | URL[] | unknown;
+export type BaseEntity<T extends AnyType> = {
+  '@context'?: URL | URL[] | ContextDefinition;
   // Activity Pub allows null.
   id?: URL | null;
-  type: TypeOrArrayWithType<AnyType>;
+  type: TypeOrArrayWithType<T>;
 };

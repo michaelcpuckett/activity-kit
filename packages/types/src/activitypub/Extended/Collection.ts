@@ -1,48 +1,59 @@
-import { CollectionTypes, CollectionPageTypes } from '../util/const';
-import { BaseCoreObject } from '../Core/CoreObject';
+import { CollectionTypes, CollectionPageTypes, OrArray } from '../util';
+import { CoreObjectProperties } from '../Core/CoreObject';
 import { EntityReference } from '../Core';
 import { Link } from '../Core/Link';
-import { TypeOrArrayWithType } from '../Core/Entity';
+import { BaseEntity } from '../Core/Entity';
 
-type BaseCollection = BaseCoreObject & {
-  type: TypeOrArrayWithType<
-    | typeof CollectionTypes[keyof typeof CollectionTypes]
-    | typeof CollectionPageTypes[keyof typeof CollectionPageTypes]
-  >;
+export type AnyCollectionType =
+  (typeof CollectionTypes)[keyof typeof CollectionTypes];
+
+export type AnyCollectionPageType =
+  (typeof CollectionPageTypes)[keyof typeof CollectionPageTypes];
+
+export type AnyCollectionOrCollectionPageType =
+  | AnyCollectionType
+  | AnyCollectionPageType;
+
+type CollectionProperties = {
   totalItems?: number;
-  items?: EntityReference | EntityReference[];
-  orderedItems?: EntityReference | EntityReference[];
+  items?: OrArray<EntityReference>;
+  orderedItems?: OrArray<EntityReference>;
   current?: URL | CollectionPage | Link;
   first?: URL | CollectionPage | Link;
   last?: URL | CollectionPage | Link;
 };
 
-export type Collection = BaseCollection & {
-  type: TypeOrArrayWithType<typeof CollectionTypes.COLLECTION>;
-};
+export type BaseCollection<T extends AnyCollectionOrCollectionPageType> =
+  BaseEntity<T> & CoreObjectProperties & CollectionProperties;
 
-export type OrderedCollection = BaseCollection & {
-  type: TypeOrArrayWithType<typeof CollectionTypes.ORDERED_COLLECTION>;
-};
+export type Collection = BaseCollection<typeof CollectionTypes.COLLECTION>;
 
-type BaseCollectionPage = BaseCollection & {
-  type: TypeOrArrayWithType<
-    typeof CollectionPageTypes[keyof typeof CollectionPageTypes]
-  >;
+export type OrderedCollection = BaseCollection<
+  typeof CollectionTypes.ORDERED_COLLECTION
+>;
+
+type CollectionPageProperties = {
   partOf?: URL | EitherCollection | Link;
   next?: URL | CollectionPage | Link;
   prev?: URL | CollectionPage | Link;
 };
 
-export type CollectionPage = BaseCollectionPage & {
-  type: TypeOrArrayWithType<typeof CollectionPageTypes.COLLECTION_PAGE>;
+type BaseCollectionPage<T extends AnyCollectionPageType> = BaseCollection<T> &
+  CollectionPageProperties;
+
+export type CollectionPage = BaseCollectionPage<
+  typeof CollectionPageTypes.COLLECTION_PAGE
+>;
+
+type OrderedCollectionPageProperties = {
+  startIndex?: number;
+  orderedItems?: OrArray<EntityReference>;
 };
 
-export type OrderedCollectionPage = BaseCollectionPage & {
-  type: TypeOrArrayWithType<typeof CollectionPageTypes.ORDERED_COLLECTION_PAGE>;
-  startIndex?: number;
-  orderedItems?: EntityReference | EntityReference[];
-};
+export type OrderedCollectionPage = BaseCollectionPage<
+  typeof CollectionPageTypes.ORDERED_COLLECTION_PAGE
+> &
+  OrderedCollectionPageProperties;
 
 export type CollectionReference = URL | Collection;
 export type OrderedCollectionReference = URL | OrderedCollection;

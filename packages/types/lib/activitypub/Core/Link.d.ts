@@ -1,22 +1,22 @@
 /// <reference types="node" />
-import { BaseEntity, TypeOrArrayWithType } from './Entity';
-import { LinkTypes } from '../util/const';
-import { StringReferenceMap } from '../util/values';
+import { BaseEntity } from './Entity';
+import { LinkTypes, OrArray, StringReferenceMap } from '../util';
 import { EntityReference } from '.';
-export interface BaseLink extends BaseEntity {
-    type: TypeOrArrayWithType<typeof LinkTypes[keyof typeof LinkTypes]>;
+export type AnyLinkType = (typeof LinkTypes)[keyof typeof LinkTypes];
+export type LinkProperties = {
     height?: number;
     href?: URL;
     hrefLang?: string;
     mediaType?: string;
     name?: string;
     nameMap?: StringReferenceMap;
-    preview?: EntityReference | EntityReference[];
-    rel?: string | string[];
+    preview?: OrArray<EntityReference>;
+    rel?: OrArray<string>;
     width?: number;
-}
-export interface Mention extends BaseLink {
-    type: typeof LinkTypes.MENTION;
-}
-export type Link = BaseLink | Mention;
+};
+export type BaseLink<T extends AnyLinkType> = BaseEntity<T> & LinkProperties;
+type LinkEntity = BaseLink<typeof LinkTypes.LINK>;
+export type Mention = BaseLink<typeof LinkTypes.MENTION>;
+export type Link = LinkEntity | Mention;
 export type LinkReference = URL | Link;
+export {};

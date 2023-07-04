@@ -21,6 +21,7 @@
     "lint": "eslint activitypub/**/*.ts"
   },
   "devDependencies": {
+    "@types/jsonld": "^1.5.9",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0",

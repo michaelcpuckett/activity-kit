@@ -88,3 +88,7 @@ export const AllTypes = {
   ...CoreObjectTypes,
   ...LinkTypes,
 } as const;
+
+export type AnyType = (typeof AllTypes)[keyof typeof AllTypes];
+
+export type TypeOrArrayWithType<T extends AnyType> = T | [T, ...AnyType[]];

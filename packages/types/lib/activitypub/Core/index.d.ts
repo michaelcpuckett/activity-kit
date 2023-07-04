@@ -1,12 +1,12 @@
 /// <reference types="node" />
-import { Link } from './Link';
-import { ExtendedObject } from '../Extended/ExtendedObject';
+import { Link, Mention } from './Link';
 import { Actor } from '../Extended/Actor';
 import { Activity } from '../Extended/Activity';
 import { Collection, OrderedCollection } from '../Extended/Collection';
 import { CollectionPage, OrderedCollectionPage } from '../Extended/Collection';
+import { ExtendedObject } from '../Extended';
 export type { Link, LinkReference, Mention } from './Link';
 export type CoreObject = ExtendedObject | Actor | Activity | Collection | OrderedCollection | CollectionPage | OrderedCollectionPage;
 export type CoreObjectReference = URL | CoreObject;
-export type Entity = CoreObject | Link;
-export type EntityReference = URL | CoreObject | Link;
+export type Entity = CoreObject | Link | Mention;
+export type EntityReference = URL | Entity;

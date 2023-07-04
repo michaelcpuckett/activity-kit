@@ -200,3 +200,5 @@ export declare const AllTypes: {
     readonly VIDEO: "Video";
     readonly HASHTAG: "Hashtag";
 };
+export type AnyType = (typeof AllTypes)[keyof typeof AllTypes];
+export type TypeOrArrayWithType<T extends AnyType> = T | [T, ...AnyType[]];

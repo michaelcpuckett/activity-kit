@@ -1,11 +1,11 @@
 /// <reference types="node" />
-import { BaseCoreObject } from '../Core/CoreObject';
+import { BaseEntity } from '../Core/Entity';
+import { CoreObjectProperties } from '../Core/CoreObject';
 import { ActorTypes } from '../util/const';
 import { CollectionReference, EitherCollectionReference, OrderedCollectionReference } from './Collection';
-import { StringReferenceMap } from '../util/values';
-import { TypeOrArrayWithType } from '../Core/Entity';
-type BaseActor = BaseCoreObject & {
-    type: TypeOrArrayWithType<typeof ActorTypes[keyof typeof ActorTypes]>;
+import { StringReferenceMap } from '../util';
+export type AnyActorType = (typeof ActorTypes)[keyof typeof ActorTypes];
+export type ActorProperties = {
     inbox: OrderedCollectionReference;
     outbox: OrderedCollectionReference;
     following?: CollectionReference;
@@ -30,21 +30,12 @@ type BaseActor = BaseCoreObject & {
     };
     manuallyApprovesFollowers?: boolean;
 };
-export type Application = BaseActor & {
-    type: TypeOrArrayWithType<typeof ActorTypes.APPLICATION>;
-};
-export type Person = BaseActor & {
-    type: TypeOrArrayWithType<typeof ActorTypes.PERSON>;
-};
-export type Group = BaseActor & {
-    type: TypeOrArrayWithType<typeof ActorTypes.GROUP>;
-};
-export type Service = BaseActor & {
-    type: TypeOrArrayWithType<typeof ActorTypes.SERVICE>;
-};
-export type Organization = BaseActor & {
-    type: TypeOrArrayWithType<typeof ActorTypes.ORGANIZATION>;
-};
+type BaseActor<T extends AnyActorType> = BaseEntity<T> & CoreObjectProperties & ActorProperties;
+export type Application = BaseActor<typeof ActorTypes.APPLICATION>;
+export type Person = BaseActor<typeof ActorTypes.PERSON>;
+export type Group = BaseActor<typeof ActorTypes.GROUP>;
+export type Service = BaseActor<typeof ActorTypes.SERVICE>;
+export type Organization = BaseActor<typeof ActorTypes.ORGANIZATION>;
 export type Actor = Application | Service | Group | Organization | Person;
 export type ActorReference = URL | Actor;
 export {};
