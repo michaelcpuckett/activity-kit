@@ -91,4 +91,8 @@ export const AllTypes = {
 
 export type AnyType = (typeof AllTypes)[keyof typeof AllTypes];
 
-export type TypeOrArrayWithType<T extends AnyType> = T | [T, ...AnyType[]];
+import { OrArray } from './values';
+
+export type TypeOrArrayWithType<T extends OrArray<AnyType>> =
+  | T
+  | [...(T extends Array<unknown> ? T : [T]), ...AnyType[]];

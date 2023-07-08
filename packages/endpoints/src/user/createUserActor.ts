@@ -7,23 +7,17 @@ import {
   getId,
 } from '@activity-kit/utilities';
 import { AP, assertIsApActor } from '@activity-kit/types';
-import { UserPostEndpoint } from '.';
+import { UserPostEndpoint, User } from '.';
 import { compile } from 'path-to-regexp';
 
 export async function createUserActor(
   this: UserPostEndpoint,
-  user: {
-    uid: string;
-    type: string;
-    email: string;
-    name: string;
-    preferredUsername: string;
-  },
+  user: User,
+  uid: string,
 ) {
   assertIsApActor(user);
 
   const { publicKey, privateKey } = await this.core.generateKeyPair();
-
   const publishedDate = new Date();
 
   const getRouteUrl = (route: string, data: Record<string, string>) =>
@@ -33,7 +27,11 @@ export async function createUserActor(
       })(data)}`,
     );
 
-  const userId = getRouteUrl(this.routes[user.type.toLowerCase()], {
+  const firstType = (
+    Array.isArray(user.type) ? user.type[0] : user.type
+  ).toLowerCase();
+
+  const userId = getRouteUrl(this.routes[firstType], {
     username: user.preferredUsername,
   });
 
@@ -201,13 +199,12 @@ export async function createUserActor(
     slug: 'upload-media',
   });
 
-  let userActor = applyContext<AP.Actor>({
+  const userActorProperties: {
+    id: URL;
+  } & AP.CoreObjectProperties &
+    AP.ActorProperties = {
     id: userId,
     url: userId,
-    type:
-      user.type === AP.ActorTypes.GROUP
-        ? AP.ActorTypes.GROUP
-        : AP.ActorTypes.PERSON,
     name: user.name,
     preferredUsername: user.preferredUsername,
     inbox: userInbox.id,
@@ -232,7 +229,19 @@ export async function createUserActor(
       publicKeyPem: publicKey,
     },
     published: publishedDate,
-  });
+  };
+
+  let userActor: AP.Person | AP.Group = applyContext(
+    user.type === AP.ActorTypes.GROUP
+      ? {
+          ...userActorProperties,
+          type: AP.ActorTypes.GROUP,
+        }
+      : {
+          ...userActorProperties,
+          type: AP.ActorTypes.PERSON,
+        },
+  );
 
   assertIsApActor(userActor);
 
@@ -320,9 +329,9 @@ export async function createUserActor(
     this.core.saveEntity(userBlocks),
     this.core.saveEntity(userLists),
     this.core.saveEntity(userBookmarks),
-    this.core.saveString('account', user.uid, user.email),
-    this.core.saveString('privateKey', user.uid, privateKey),
-    this.core.saveString('username', user.uid, user.preferredUsername),
+    this.core.saveString('account', uid, user.email),
+    this.core.saveString('privateKey', uid, privateKey),
+    this.core.saveString('username', uid, user.preferredUsername),
   ]);
 
   await Promise.all(declaredStreams);
