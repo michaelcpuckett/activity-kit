@@ -31,7 +31,7 @@ import * as express from "express";
 import { MongoClient } from "mongodb";
 
 import { AP, Adapters } from "@activity-kit/types";
-import { activityKitPlugin } from "@activity-kit/server-express";
+import { activityKitPlugin } from "@activity-kit/express-middleware";
 import { MongoDbAdapter } from "@activity-kit/db-mongo";
 import { TokenAuthAdapter } from "@activity-kit/auth-token";
 import { NodeCryptoAdapter } from "@activity-kit/crypto-node";
@@ -202,10 +202,7 @@ The server must handle the core endpoint requests.
 
 Currently this project comes with:
 
-- `@activity-kit/server-express`
-- TODO: `@activity-kit/server-fastify`
-- TODO: `@activity-kit/server-serverless`
-- TODO: `@activity-kit/server-koa`
+- `@activity-kit/express-middleware`
 
 #### Crypto Adapters
 

@@ -4,14 +4,15 @@ exports.createUserActor = void 0;
 const utilities_1 = require("@activity-kit/utilities");
 const types_1 = require("@activity-kit/types");
 const path_to_regexp_1 = require("path-to-regexp");
-async function createUserActor(user) {
+async function createUserActor(user, uid) {
     (0, types_1.assertIsApActor)(user);
     const { publicKey, privateKey } = await this.core.generateKeyPair();
     const publishedDate = new Date();
     const getRouteUrl = (route, data) => new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
         validate: false,
     })(data)}`);
-    const userId = getRouteUrl(this.routes[user.type.toLowerCase()], {
+    const firstType = (Array.isArray(user.type) ? user.type[0] : user.type).toLowerCase();
+    const userId = getRouteUrl(this.routes[firstType], {
         username: user.preferredUsername,
     });
     const entityRoute = userId.pathname;
@@ -155,12 +156,9 @@ async function createUserActor(user) {
         entityRoute,
         slug: 'upload-media',
     });
-    let userActor = (0, utilities_1.applyContext)({
+    const userActorProperties = {
         id: userId,
         url: userId,
-        type: user.type === types_1.AP.ActorTypes.GROUP
-            ? types_1.AP.ActorTypes.GROUP
-            : types_1.AP.ActorTypes.PERSON,
         name: user.name,
         preferredUsername: user.preferredUsername,
         inbox: userInbox.id,
@@ -185,7 +183,16 @@ async function createUserActor(user) {
             publicKeyPem: publicKey,
         },
         published: publishedDate,
-    });
+    };
+    let userActor = (0, utilities_1.applyContext)(user.type === types_1.AP.ActorTypes.GROUP
+        ? {
+            ...userActorProperties,
+            type: types_1.AP.ActorTypes.GROUP,
+        }
+        : {
+            ...userActorProperties,
+            type: types_1.AP.ActorTypes.PERSON,
+        });
     (0, types_1.assertIsApActor)(userActor);
     const botActor = await this.core.findOne('entity', {
         preferredUsername: utilities_1.SERVER_ACTOR_USERNAME,
@@ -253,9 +260,9 @@ async function createUserActor(user) {
         this.core.saveEntity(userBlocks),
         this.core.saveEntity(userLists),
         this.core.saveEntity(userBookmarks),
-        this.core.saveString('account', user.uid, user.email),
-        this.core.saveString('privateKey', user.uid, privateKey),
-        this.core.saveString('username', user.uid, user.preferredUsername),
+        this.core.saveString('account', uid, user.email),
+        this.core.saveString('privateKey', uid, privateKey),
+        this.core.saveString('username', uid, user.preferredUsername),
     ]);
     await Promise.all(declaredStreams);
     if (createActorActivity.id && userInbox.id) {

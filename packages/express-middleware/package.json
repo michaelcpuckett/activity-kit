@@ -1,5 +1,5 @@
 {
-  "name": "@activity-kit/server-express",
+  "name": "@activity-kit/express-middleware",
   "version": "0.4.36",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",

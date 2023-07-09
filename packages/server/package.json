@@ -1,0 +1,44 @@
+{
+  "name": "@activity-kit/server",
+  "version": "0.4.36",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michaelcpuckett@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "eslint": "^8.25.0",
+    "prettier": "^2.7.1",
+    "typescript": "^5.0.4"
+  },
+  "scripts": {
+    "build": "node .build.js",
+    "format": "prettier --config .prettierrc \"**/*.ts\" --write",
+    "lint": "eslint src/**/*.ts",
+    "dev": "node lib/index.js"
+  },
+  "dependencies": {
+    "@activity-kit/auth-token": "^0.4.36",
+    "@activity-kit/crypto-node": "^0.4.36",
+    "@activity-kit/db-mongo": "^0.4.36",
+    "@activity-kit/endpoints": "^0.4.36",
+    "@activity-kit/express-middleware": "^0.4.36",
+    "@activity-kit/storage-ftp": "^0.4.36",
+    "@activity-kit/types": "^0.4.36",
+    "@activity-kit/utilities": "^0.4.36",
+    "@lit-labs/ssr": "^3.1.5",
+    "express": "^4.18.2",
+    "lit": "^2.7.6"
+  }
+}
