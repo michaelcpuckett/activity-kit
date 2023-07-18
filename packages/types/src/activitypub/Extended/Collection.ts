@@ -1,9 +1,4 @@
-import {
-  CollectionTypes,
-  CollectionPageTypes,
-  OrArray,
-  AnyType,
-} from '../util';
+import { CollectionTypes, CollectionPageTypes, OrArray } from '../util';
 import { CoreObjectProperties } from '../Core/CoreObject';
 import { EntityReference } from '../Core';
 import { Link } from '../Core/Link';
@@ -21,8 +16,8 @@ export type AnyCollectionOrCollectionPageType =
 
 type CollectionProperties = {
   totalItems?: number;
-  items?: OrArray<BaseEntity<AnyType>>;
-  orderedItems?: OrArray<BaseEntity<AnyType>>;
+  items?: OrArray<EntityReference>;
+  orderedItems?: OrArray<EntityReference>;
   current?: URL | CollectionPage | Link;
   first?: URL | CollectionPage | Link;
   last?: URL | CollectionPage | Link;
