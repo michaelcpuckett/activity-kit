@@ -1,6 +1,6 @@
 {
   "name": "@activity-kit/auth-token",
-  "version": "0.4.39",
+  "version": "0.4.40",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -25,7 +25,7 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "@activity-kit/types": "^0.4.39"
+    "@activity-kit/types": "^0.4.40"
   },
   "bugs": {
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
