@@ -4,7 +4,7 @@ import {
   TransitiveActivityTypes,
   IntransitiveActivityTypes,
 } from '../util';
-import { EntityReference } from '../Core';
+import { CoreObjectProperties, EntityReference } from '../Core';
 import { BaseEntity } from '../Core/Entity';
 
 export type AnyActivityType =
@@ -36,6 +36,7 @@ export type ActivityProperties = {
  */
 
 type BaseActivity<T extends AnyActivityType> = BaseEntity<T> &
+  CoreObjectProperties &
   ActivityProperties;
 
 type TransitiveActivityProperties = {

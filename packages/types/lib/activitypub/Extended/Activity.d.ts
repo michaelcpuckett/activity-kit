@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { ActivityTypes, OrArray, TransitiveActivityTypes, IntransitiveActivityTypes } from '../util';
-import { EntityReference } from '../Core';
+import { CoreObjectProperties, EntityReference } from '../Core';
 import { BaseEntity } from '../Core/Entity';
 export type AnyActivityType = (typeof ActivityTypes)[keyof typeof ActivityTypes];
 export type AnyTransitiveActivityType = (typeof TransitiveActivityTypes)[keyof typeof TransitiveActivityTypes];
@@ -13,7 +13,7 @@ export type ActivityProperties = {
     origin?: OrArray<EntityReference>;
     instrument?: OrArray<EntityReference>;
 };
-type BaseActivity<T extends AnyActivityType> = BaseEntity<T> & ActivityProperties;
+type BaseActivity<T extends AnyActivityType> = BaseEntity<T> & CoreObjectProperties & ActivityProperties;
 type TransitiveActivityProperties = {
     object: OrArray<EntityReference>;
 };

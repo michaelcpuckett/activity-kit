@@ -201,4 +201,4 @@ export declare const AllTypes: {
     readonly HASHTAG: "Hashtag";
 };
 export type AnyType = (typeof AllTypes)[keyof typeof AllTypes];
-export type TypeOrArrayWithType<T> = T | [T, ...Array<AnyType>];
+export type TypeOrArrayWithType<T extends AnyType> = T | [T, ...Array<AnyType>];

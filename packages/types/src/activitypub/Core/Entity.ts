@@ -5,5 +5,5 @@ export type BaseEntity<T extends AnyType> = {
   '@context'?: URL | URL[] | ContextDefinition;
   // Activity Pub allows null.
   id?: URL | null;
-  type: TypeOrArrayWithType<T>;
+  type: T | TypeOrArrayWithType<T>;
 };

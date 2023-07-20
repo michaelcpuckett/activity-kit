@@ -4,5 +4,5 @@ import { ContextDefinition } from 'jsonld';
 export type BaseEntity<T extends AnyType> = {
     '@context'?: URL | URL[] | ContextDefinition;
     id?: URL | null;
-    type: TypeOrArrayWithType<T>;
+    type: T | TypeOrArrayWithType<T>;
 };
