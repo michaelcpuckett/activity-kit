@@ -1,5 +1,4 @@
 import * as AP from '../activitypub';
-import { AnyType } from '../activitypub/Core/Entity';
 
 export function isType<T extends AP.Entity>(
   entity: unknown,
@@ -75,7 +74,7 @@ export function assertHasType(
 
 export function assertHasApType(
   value: unknown,
-): asserts value is { type: AnyType | Array<AnyType | string> } {
+): asserts value is { type: AP.AnyType | Array<AP.AnyType | string> } {
   assertHasType(value);
 
   if (!isTypeOf<AP.Entity>(value, AP.AllTypes)) {
@@ -137,7 +136,7 @@ export function assertIsApCollection(
 
 export function assertIsApTransitiveActivity(
   value: unknown,
-): asserts value is AP.TransitiveActivity {
+): asserts value is AP.TransitiveActivity<AP.AnyTransitiveActivityType> {
   assertIsApActivity(value);
 
   if (!('object' in value)) {
