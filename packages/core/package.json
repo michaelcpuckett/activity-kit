@@ -1,6 +1,6 @@
 {
   "name": "@activity-kit/core",
-  "version": "0.4.41",
+  "version": "0.4.42",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -28,8 +28,8 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "@activity-kit/types": "^0.4.41",
-    "@activity-kit/utilities": "^0.4.41",
+    "@activity-kit/types": "^0.4.42",
+    "@activity-kit/utilities": "^0.4.42",
     "isomorphic-fetch": "^3.0.0"
   },
   "devDependencies": {
