@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Core = void 0;
+exports.DbOptions = exports.Core = void 0;
 const isomorphic_fetch_1 = __importDefault(require("isomorphic-fetch"));
 const findEntityById_1 = require("./findEntityById");
 const fetchEntityById_1 = require("./fetchEntityById");
@@ -88,4 +88,6 @@ class Core {
     signAndSendToForeignActorInbox = signAndSendToForeignActorInbox_1.signAndSendToForeignActorInbox;
 }
 exports.Core = Core;
+var adapters_1 = require("./adapters");
+Object.defineProperty(exports, "DbOptions", { enumerable: true, get: function () { return adapters_1.DbOptions; } });
 //# sourceMappingURL=index.js.map

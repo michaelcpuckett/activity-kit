@@ -1,6 +1,6 @@
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
-import { CoreLibrary, Plugin, Routes } from '@activity-kit/types';
+import { CoreLibrary, Plugin, Routes } from '@activity-kit/core';
 export declare class User {
     readonly type: string;
     readonly email: string;

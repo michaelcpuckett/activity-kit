@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import type { IncomingMessage, ServerResponse } from 'http';
-import { Plugin, CoreLibrary } from '@activity-kit/types';
+import { Plugin, CoreLibrary } from '@activity-kit/core';
 export declare class WebfingerGetEndpoint {
     req: IncomingMessage;
     res: ServerResponse;

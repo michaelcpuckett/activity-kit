@@ -4,7 +4,7 @@ import {
 } from '@activity-kit/utilities';
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
-import { CoreLibrary, Plugin, Routes } from '@activity-kit/types';
+import { CoreLibrary, Plugin, Routes } from '@activity-kit/core';
 
 export class User {
   readonly type: string;

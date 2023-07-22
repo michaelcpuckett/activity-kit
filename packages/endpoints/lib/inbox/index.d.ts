@@ -1,5 +1,6 @@
 /// <reference types="node" />
-import { AP, CoreLibrary, Plugin, Routes } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { CoreLibrary, Plugin, Routes } from '@activity-kit/core';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { getActors } from './getActors';
 import { parseBody } from './parseBody';

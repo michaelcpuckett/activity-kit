@@ -1,15 +1,13 @@
+import * as AP from '@activity-kit/types';
+import { Plugin, CoreLibrary, Routes } from '@activity-kit/core';
 import {
-  AP,
-  Plugin,
-  CoreLibrary,
-  Routes,
   isType,
   assertExists,
   assertIsApCollection,
   assertIsApExtendedObject,
   assertIsApType,
   assertIsArray,
-} from '@activity-kit/types';
+} from '@activity-kit/type-utilities';
 import {
   getId,
   isLocal,

@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'http';
-import { CoreLibrary, Plugin } from '@activity-kit/types';
+import { CoreLibrary, Plugin } from '@activity-kit/core';
 import { respond } from './respond';
 
 export class HomeGetEndpoint {

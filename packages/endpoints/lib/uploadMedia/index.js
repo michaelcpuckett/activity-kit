@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UploadMediaPostEndpoint = void 0;
-const types_1 = require("@activity-kit/types");
 const getActor_1 = require("./getActor");
 const authenticateActor_1 = require("./authenticateActor");
 const parseBody_1 = require("./parseBody");
 const cleanup_1 = require("./cleanup");
 const saveActivity_1 = require("./saveActivity");
+const type_utilities_1 = require("@activity-kit/type-utilities");
 class UploadMediaPostEndpoint {
     routes;
     req;
@@ -33,7 +33,7 @@ class UploadMediaPostEndpoint {
             await this.getActor();
             await this.authenticateActor();
             await this.parseBody();
-            (0, types_1.assertIsApExtendedObject)(this.activity.object);
+            (0, type_utilities_1.assertIsApExtendedObject)(this.activity.object);
             const url = await this.core.upload(this.file);
             this.activity.object.url = url;
             await this.cleanup();

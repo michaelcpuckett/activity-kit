@@ -181,3 +181,15 @@ export class Core implements CoreLibrary {
   public broadcast = broadcast;
   public signAndSendToForeignActorInbox = signAndSendToForeignActorInbox;
 }
+
+export {
+  AuthAdapter,
+  CryptoAdapter,
+  DbAdapter,
+  DbOptions,
+  FetchPolyfill,
+  StorageAdapter,
+  CoreLibrary,
+  Plugin,
+  Routes,
+} from './adapters';

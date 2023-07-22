@@ -57,3 +57,4 @@ export declare class Core implements CoreLibrary {
     broadcast: typeof broadcast;
     signAndSendToForeignActorInbox: typeof signAndSendToForeignActorInbox;
 }
+export { AuthAdapter, CryptoAdapter, DbAdapter, DbOptions, FetchPolyfill, StorageAdapter, CoreLibrary, Plugin, Routes, } from './adapters';

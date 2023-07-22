@@ -6,7 +6,7 @@ import {
   JSON_CONTENT_TYPE,
   LOCAL_DOMAIN,
 } from '@activity-kit/utilities';
-import { CoreLibrary, Plugin } from '@activity-kit/types';
+import { CoreLibrary, Plugin } from '@activity-kit/core';
 
 export class HostMetaGetEndpoint {
   req: IncomingMessage;

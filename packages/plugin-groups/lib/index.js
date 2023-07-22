@@ -24,24 +24,25 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GroupsPlugin = void 0;
-const types_1 = require("@activity-kit/types");
+const AP = __importStar(require("@activity-kit/types"));
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 const cheerio = __importStar(require("cheerio"));
 const path_to_regexp_1 = require("path-to-regexp");
 function GroupsPlugin() {
     const groupsPlugin = {
         async handleInboxSideEffect(activity, recipient) {
-            if (!(0, types_1.isType)(activity, types_1.AP.ActivityTypes.CREATE)) {
+            if (!(0, type_utilities_1.isType)(activity, AP.ActivityTypes.CREATE)) {
                 return;
             }
-            (0, types_1.assertIsApType)(activity, types_1.AP.ActivityTypes.CREATE);
-            if (!(0, types_1.isType)(recipient, types_1.AP.ActorTypes.GROUP)) {
+            (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.CREATE);
+            if (!(0, type_utilities_1.isType)(recipient, AP.ActorTypes.GROUP)) {
                 return;
             }
             const objectId = (0, utilities_1.getId)(activity.object);
-            (0, types_1.assertExists)(objectId);
+            (0, type_utilities_1.assertExists)(objectId);
             const object = await this.core.queryById(objectId);
-            (0, types_1.assertIsApExtendedObject)(object);
+            (0, type_utilities_1.assertIsApExtendedObject)(object);
             const objectToBeSharedId = await (async () => {
                 if (object.inReplyTo) {
                     if (object.content) {
@@ -59,17 +60,17 @@ function GroupsPlugin() {
             })();
             const hasAlreadyBeenShared = await (async () => {
                 const shared = await this.core.getStreamByName(recipient, 'Shared');
-                (0, types_1.assertIsApType)(shared, types_1.AP.CollectionTypes.ORDERED_COLLECTION);
+                (0, type_utilities_1.assertIsApType)(shared, AP.CollectionTypes.ORDERED_COLLECTION);
                 const sharedItems = shared.orderedItems;
-                (0, types_1.assertIsArray)(sharedItems);
+                (0, type_utilities_1.assertIsArray)(sharedItems);
                 for (const sharedItem of sharedItems) {
                     try {
                         const sharedItemId = (0, utilities_1.getId)(sharedItem);
-                        (0, types_1.assertExists)(sharedItemId);
+                        (0, type_utilities_1.assertExists)(sharedItemId);
                         const foundSharedItem = await this.core.findEntityById(sharedItemId);
-                        (0, types_1.assertIsApType)(foundSharedItem, types_1.AP.ActivityTypes.ANNOUNCE);
+                        (0, type_utilities_1.assertIsApType)(foundSharedItem, AP.ActivityTypes.ANNOUNCE);
                         const sharedItemObjectId = (0, utilities_1.getId)(foundSharedItem.object);
-                        (0, types_1.assertExists)(sharedItemObjectId);
+                        (0, type_utilities_1.assertExists)(sharedItemObjectId);
                         if (sharedItemObjectId.toString() === objectToBeSharedId.toString()) {
                             return true;
                         }
@@ -84,14 +85,14 @@ function GroupsPlugin() {
                 return;
             }
             const recipientId = (0, utilities_1.getId)(recipient);
-            (0, types_1.assertExists)(recipientId);
+            (0, type_utilities_1.assertExists)(recipientId);
             const followersId = (0, utilities_1.getId)(recipient.followers);
-            (0, types_1.assertExists)(followersId);
+            (0, type_utilities_1.assertExists)(followersId);
             const followersCollection = await this.core.findEntityById(followersId);
-            (0, types_1.assertIsApCollection)(followersCollection);
-            (0, types_1.assertIsArray)(followersCollection.items);
+            (0, type_utilities_1.assertIsApCollection)(followersCollection);
+            (0, type_utilities_1.assertIsArray)(followersCollection.items);
             const actorId = (0, utilities_1.getId)(activity.actor);
-            (0, types_1.assertExists)(actorId);
+            (0, type_utilities_1.assertExists)(actorId);
             if (!followersCollection.items
                 .map((id) => id.toString())
                 .includes(actorId.toString())) {
@@ -104,13 +105,13 @@ function GroupsPlugin() {
                 guid: await this.core.getGuid(),
             })}`);
             const shared = await this.core.getStreamByName(recipient, 'Shared');
-            (0, types_1.assertIsApCollection)(shared);
+            (0, type_utilities_1.assertIsApCollection)(shared);
             const sharedId = (0, utilities_1.getId)(shared);
-            (0, types_1.assertExists)(sharedId);
+            (0, type_utilities_1.assertExists)(sharedId);
             const announceActivity = {
                 id: announceActivityId,
                 url: announceActivityId,
-                type: types_1.AP.ActivityTypes.ANNOUNCE,
+                type: AP.ActivityTypes.ANNOUNCE,
                 actor: recipientId,
                 to: [new URL(utilities_1.PUBLIC_ACTOR), followersId],
                 object: objectToBeSharedId,
@@ -119,13 +120,13 @@ function GroupsPlugin() {
             await this.core.insertOrderedItem(sharedId, announceActivityId);
             if ((0, utilities_1.isLocal)(objectToBeSharedId)) {
                 const object = await this.core.findEntityById(objectId);
-                (0, types_1.assertIsApExtendedObject)(object);
+                (0, type_utilities_1.assertIsApExtendedObject)(object);
                 const sharesId = (0, utilities_1.getId)(object.shares);
-                (0, types_1.assertExists)(sharesId);
+                (0, type_utilities_1.assertExists)(sharesId);
                 await this.core.insertOrderedItem(sharesId, announceActivityId);
             }
             const outboxId = (0, utilities_1.getId)(recipient.outbox);
-            (0, types_1.assertExists)(outboxId);
+            (0, type_utilities_1.assertExists)(outboxId);
             await Promise.all([
                 this.core.saveEntity(announceActivity),
                 this.core.insertOrderedItem(outboxId, announceActivityId),

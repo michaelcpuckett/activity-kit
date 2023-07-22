@@ -1,4 +1,4 @@
-import * as AP from '../activitypub';
+import * as AP from '@activity-kit/types';
 import { CoreLibrary, Routes } from './';
 
 export type Plugin = {

@@ -1,5 +1,6 @@
 /// <reference types="node" />
-import { AP, Routes, Plugin, CoreLibrary } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { Routes, Plugin, CoreLibrary } from '@activity-kit/core';
 import { runSideEffects } from './runSideEffects';
 import { wrapInActivity } from './wrapInActivity';
 import { combineAddresses } from './combineAddresses';

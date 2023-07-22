@@ -1,10 +1,5 @@
-import {
-  CoreLibrary,
-  AP,
-  Plugin,
-  Routes,
-  assertIsApExtendedObject,
-} from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { CoreLibrary, Plugin, Routes } from '@activity-kit/core';
 import type { IncomingMessage, ServerResponse } from 'http';
 import type { File } from 'formidable';
 import { getActor } from './getActor';
@@ -12,7 +7,7 @@ import { authenticateActor } from './authenticateActor';
 import { parseBody } from './parseBody';
 import { cleanup } from './cleanup';
 import { saveActivity } from './saveActivity';
-import { AnyTransitiveActivityType } from '@activity-kit/types/lib/activitypub';
+import { assertIsApExtendedObject } from '@activity-kit/type-utilities';
 
 export class UploadMediaPostEndpoint {
   routes: Routes;
@@ -22,7 +17,7 @@ export class UploadMediaPostEndpoint {
   plugins?: Plugin[];
 
   actor: AP.Actor | null = null;
-  activity: AP.TransitiveActivity<AnyTransitiveActivityType> | null = null;
+  activity: AP.TransitiveActivity<AP.AnyTransitiveActivityType> | null = null;
   file: File | null = null;
 
   protected getActor = getActor;

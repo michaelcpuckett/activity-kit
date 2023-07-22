@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import type { IncomingMessage, ServerResponse } from 'http';
-import { CoreLibrary, Plugin } from '@activity-kit/types';
+import { CoreLibrary, Plugin } from '@activity-kit/core';
 export declare class ProxyGetEndpoint {
     req: IncomingMessage;
     res: ServerResponse;

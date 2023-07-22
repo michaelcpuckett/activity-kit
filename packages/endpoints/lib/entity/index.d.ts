@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { CoreLibrary } from '@activity-kit/types';
+import { CoreLibrary } from '@activity-kit/core';
 import { handleFoundEntity } from './handleFoundEntity';
 import { respond } from './respond';
 export declare class EntityGetEndpoint {

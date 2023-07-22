@@ -1,4 +1,4 @@
-import * as AP from '..';
+import * as AP from '@activity-kit/types';
 
 import { AuthAdapter } from './Auth';
 import { CryptoAdapter } from './Crypto';
