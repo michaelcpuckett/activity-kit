@@ -1,4 +1,4 @@
-import { AuthAdapter, CryptoAdapter, DbAdapter, FetchPolyfill, StorageAdapter, CoreLibrary } from '@activity-kit/types';
+import { AuthAdapter, CryptoAdapter, DbAdapter, FetchPolyfill, StorageAdapter, CoreLibrary } from './adapters';
 import { findEntityById } from './findEntityById';
 import { fetchEntityById } from './fetchEntityById';
 import { queryById } from './queryById';

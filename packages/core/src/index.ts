@@ -1,7 +1,6 @@
 import fetch from 'isomorphic-fetch';
 
 import {
-  AP,
   AuthAdapter,
   CryptoAdapter,
   DbAdapter,
@@ -9,7 +8,7 @@ import {
   FetchPolyfill,
   StorageAdapter,
   CoreLibrary,
-} from '@activity-kit/types';
+} from './adapters';
 
 import { findEntityById } from './findEntityById';
 import { fetchEntityById } from './fetchEntityById';

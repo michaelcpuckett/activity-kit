@@ -1,5 +1,5 @@
 {
-  "name": "type-utilities",
+  "name": "@activity-kit/type-utilities",
   "version": "0.4.45",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
@@ -12,6 +12,9 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "node .build.js",
     "format": "prettier --config .prettierrc \"**/*.ts\" --write",
