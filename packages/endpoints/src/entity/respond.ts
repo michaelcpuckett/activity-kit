@@ -6,12 +6,13 @@ import {
   assertIsArray,
 } from '@activity-kit/types';
 import { isType, isTypeOf } from '@activity-kit/types';
+import { getId } from '@activity-kit/utilities';
 
 const ITEMS_PER_COLLECTION_PAGE = 50;
 
 export async function respond(
   this: EntityGetEndpoint,
-  render: (...args: unknown[]) => Promise<string>,
+  render: (args: { entity: AP.Entity }) => Promise<string>,
 ): Promise<{
   statusCode: number;
   contentType?: string;
@@ -32,7 +33,7 @@ export async function respond(
     !isTypeOf<AP.EitherCollection>(entity, AP.CollectionTypes) &&
     !isTypeOf<AP.EitherCollectionPage>(entity, AP.CollectionPageTypes)
   ) {
-    return this.handleNotFound();
+    return this.handleFoundEntity(entity, render);
   }
 
   assertIsApCollection(entity);

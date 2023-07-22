@@ -5,14 +5,13 @@ const types_1 = require("@activity-kit/types");
 const utilities_1 = require("@activity-kit/utilities");
 const path_to_regexp_1 = require("path-to-regexp");
 async function respond() {
-    const body = await (0, utilities_1.parseStream)(this.req);
-    (0, types_1.assertIsApEntity)(body);
+    console.log(this.body);
+    (0, types_1.assertIsApEntity)(this.body);
     await this.getActor();
-    await this.authenticateActor();
     (0, types_1.assertIsApActor)(this.actor);
-    if ((0, types_1.isTypeOf)(body, types_1.AP.ActivityTypes)) {
-        (0, types_1.assertIsApActivity)(body);
-        this.activity = body;
+    if ((0, types_1.isTypeOf)(this.body, types_1.AP.ActivityTypes)) {
+        (0, types_1.assertIsApActivity)(this.body);
+        this.activity = this.body;
         const [type] = (0, utilities_1.getArray)(this.activity.type);
         const activityId = new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()], {
             encode: encodeURIComponent,
@@ -25,7 +24,7 @@ async function respond() {
         await this.runSideEffects();
     }
     else {
-        this.activity = await this.wrapInActivity(body);
+        this.activity = await this.wrapInActivity(this.body);
         await this.handleCreate(this.activity);
     }
     (0, types_1.assertIsApActivity)(this.activity);
@@ -33,9 +32,11 @@ async function respond() {
     await this.saveActivity();
     (0, types_1.assertIsApActor)(this.actor);
     this.core.broadcast(this.activity, this.actor);
-    this.res.statusCode = 201;
-    this.res.setHeader('Location', this.activity.id.toString());
-    this.res.end();
+    return {
+        statusCode: 201,
+        contentType: 'application/activity+json',
+        location: this.activity.id.toString(),
+    };
 }
 exports.respond = respond;
 //# sourceMappingURL=respond.js.map

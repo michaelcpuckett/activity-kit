@@ -50,17 +50,15 @@ class User {
 }
 exports.User = User;
 class UserPostEndpoint {
-    routes;
-    headers;
-    body;
     core;
+    body;
+    routes;
     plugins;
-    constructor(routes, headers, body, core, plugins) {
-        this.routes = routes;
-        this.headers = headers;
-        this.body = body;
+    constructor(core, options) {
         this.core = core;
-        this.plugins = plugins;
+        this.body = options.body;
+        this.routes = options.routes;
+        this.plugins = options.plugins;
     }
     createServerActor = createServerActor_1.createServerActor;
     createUserActor = createUserActor_1.createUserActor;

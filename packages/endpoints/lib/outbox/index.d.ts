@@ -1,8 +1,6 @@
 /// <reference types="node" />
 import { AP, Routes, Plugin, CoreLibrary } from '@activity-kit/types';
-import type { IncomingMessage, ServerResponse } from 'http';
 import { runSideEffects } from './runSideEffects';
-import { authenticateActor } from './authenticateActor';
 import { wrapInActivity } from './wrapInActivity';
 import { combineAddresses } from './combineAddresses';
 import { saveActivity } from './saveActivity';
@@ -24,15 +22,20 @@ import { handleUndoAccept } from './sideEffects/undo/undoAccept';
 import { handleUndoLike } from './sideEffects/undo/undoLike';
 import { handleUndoAnnounce } from './sideEffects/undo/undoAnnounce';
 export declare class OutboxPostEndpoint {
+    readonly core: CoreLibrary;
+    body: Record<string, unknown>;
+    url: URL;
     routes: Routes;
-    req: IncomingMessage;
-    res: ServerResponse;
-    core: CoreLibrary;
     plugins?: Plugin[];
-    actor: AP.Actor | null;
+    actor: AP.Actor;
     activity: AP.Entity | null;
-    constructor(routes: Routes, req: IncomingMessage, res: ServerResponse, core: CoreLibrary, plugins?: Plugin[]);
-    protected authenticateActor: typeof authenticateActor;
+    constructor(core: CoreLibrary, options: {
+        body: Record<string, unknown>;
+        url: URL;
+        actor: AP.Actor;
+        routes: Routes;
+        plugins?: Plugin[];
+    });
     protected getActor: typeof getActor;
     protected runSideEffects: typeof runSideEffects;
     protected saveActivity: typeof saveActivity;

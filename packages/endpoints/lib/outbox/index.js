@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OutboxPostEndpoint = void 0;
 const runSideEffects_1 = require("./runSideEffects");
-const authenticateActor_1 = require("./authenticateActor");
 const wrapInActivity_1 = require("./wrapInActivity");
 const combineAddresses_1 = require("./combineAddresses");
 const saveActivity_1 = require("./saveActivity");
@@ -24,21 +23,22 @@ const undoAccept_1 = require("./sideEffects/undo/undoAccept");
 const undoLike_1 = require("./sideEffects/undo/undoLike");
 const undoAnnounce_1 = require("./sideEffects/undo/undoAnnounce");
 class OutboxPostEndpoint {
-    routes;
-    req;
-    res;
     core;
+    body;
+    url;
+    routes;
     plugins;
-    actor = null;
+    actor;
     activity = null;
-    constructor(routes, req, res, core, plugins) {
-        this.routes = routes;
-        this.req = req;
-        this.res = res;
+    constructor(core, options) {
         this.core = core;
-        this.plugins = plugins;
+        this.core = core;
+        this.actor = options.actor;
+        this.body = options.body;
+        this.url = options.url;
+        this.routes = options.routes;
+        this.plugins = options.plugins;
     }
-    authenticateActor = authenticateActor_1.authenticateActor;
     getActor = getActor_1.getActor;
     runSideEffects = runSideEffects_1.runSideEffects;
     saveActivity = saveActivity_1.saveActivity;

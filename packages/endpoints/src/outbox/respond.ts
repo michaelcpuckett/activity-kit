@@ -7,25 +7,22 @@ import {
   assertIsApActor,
   assertIsApEntity,
 } from '@activity-kit/types';
-import { parseStream, getArray, LOCAL_DOMAIN } from '@activity-kit/utilities';
+import { getArray, LOCAL_DOMAIN } from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
 
-// TODO: Accept Object instead of Activity...
-
 export async function respond(this: OutboxPostEndpoint) {
-  const body = await parseStream(this.req);
+  console.log(this.body);
 
-  assertIsApEntity(body);
+  assertIsApEntity(this.body);
 
   await this.getActor();
-  await this.authenticateActor();
 
   assertIsApActor(this.actor);
 
-  if (isTypeOf<AP.Activity>(body, AP.ActivityTypes)) {
-    assertIsApActivity(body);
+  if (isTypeOf<AP.Activity>(this.body, AP.ActivityTypes)) {
+    assertIsApActivity(this.body);
 
-    this.activity = body;
+    this.activity = this.body;
 
     const [type] = getArray(this.activity.type);
 
@@ -46,7 +43,7 @@ export async function respond(this: OutboxPostEndpoint) {
     await this.runSideEffects();
   } else {
     // If not activity type, wrap object in a Create activity.
-    this.activity = await this.wrapInActivity(body);
+    this.activity = await this.wrapInActivity(this.body);
 
     await this.handleCreate(this.activity);
   }
@@ -62,7 +59,9 @@ export async function respond(this: OutboxPostEndpoint) {
   // Broadcast to Fediverse.
   this.core.broadcast(this.activity, this.actor);
 
-  this.res.statusCode = 201;
-  this.res.setHeader('Location', this.activity.id.toString());
-  this.res.end();
+  return {
+    statusCode: 201,
+    contentType: 'application/activity+json',
+    location: this.activity.id.toString(),
+  };
 }

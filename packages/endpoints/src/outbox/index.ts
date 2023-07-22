@@ -1,7 +1,5 @@
 import { AP, Routes, Plugin, CoreLibrary } from '@activity-kit/types';
-import type { IncomingMessage, ServerResponse } from 'http';
 import { runSideEffects } from './runSideEffects';
-import { authenticateActor } from './authenticateActor';
 import { wrapInActivity } from './wrapInActivity';
 import { combineAddresses } from './combineAddresses';
 import { saveActivity } from './saveActivity';
@@ -24,30 +22,32 @@ import { handleUndoLike } from './sideEffects/undo/undoLike';
 import { handleUndoAnnounce } from './sideEffects/undo/undoAnnounce';
 
 export class OutboxPostEndpoint {
+  body: Record<string, unknown>;
+  url: URL;
   routes: Routes;
-  req: IncomingMessage;
-  res: ServerResponse;
-  core: CoreLibrary;
   plugins?: Plugin[];
+  actor: AP.Actor;
 
-  actor: AP.Actor | null = null;
   activity: AP.Entity | null = null;
 
   constructor(
-    routes: Routes,
-    req: IncomingMessage,
-    res: ServerResponse,
-    core: CoreLibrary,
-    plugins?: Plugin[],
+    readonly core: CoreLibrary,
+    options: {
+      body: Record<string, unknown>;
+      url: URL;
+      actor: AP.Actor;
+      routes: Routes;
+      plugins?: Plugin[];
+    },
   ) {
-    this.routes = routes;
-    this.req = req;
-    this.res = res;
     this.core = core;
-    this.plugins = plugins;
+    this.actor = options.actor;
+    this.body = options.body;
+    this.url = options.url;
+    this.routes = options.routes;
+    this.plugins = options.plugins;
   }
 
-  protected authenticateActor = authenticateActor;
   protected getActor = getActor;
   protected runSideEffects = runSideEffects;
   protected saveActivity = saveActivity;

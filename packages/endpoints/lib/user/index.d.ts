@@ -10,12 +10,15 @@ export declare class User {
     constructor(rawBody: Record<string, unknown>);
 }
 export declare class UserPostEndpoint {
-    routes: Routes;
-    headers: JSON;
+    readonly core: CoreLibrary;
     body: Record<string, unknown>;
-    core: CoreLibrary;
+    routes: Routes;
     plugins?: Plugin[];
-    constructor(routes: Routes, headers: JSON, body: Record<string, unknown>, core: CoreLibrary, plugins?: Plugin[]);
+    constructor(core: CoreLibrary, options: {
+        body: Record<string, unknown>;
+        routes: Routes;
+        plugins?: Plugin[];
+    });
     protected createServerActor: typeof createServerActor;
     protected createUserActor: typeof createUserActor;
     respond(): Promise<{

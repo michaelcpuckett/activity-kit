@@ -17,7 +17,7 @@ async function respond(render) {
     }
     if (!(0, types_2.isTypeOf)(entity, types_1.AP.CollectionTypes) &&
         !(0, types_2.isTypeOf)(entity, types_1.AP.CollectionPageTypes)) {
-        return this.handleNotFound();
+        return this.handleFoundEntity(entity, render);
     }
     (0, types_1.assertIsApCollection)(entity);
     const totalItems = Number(entity.totalItems);

@@ -58,24 +58,21 @@ export class User {
 }
 
 export class UserPostEndpoint {
-  routes: Routes;
-  headers: JSON;
   body: Record<string, unknown>;
-  core: CoreLibrary;
+  routes: Routes;
   plugins?: Plugin[];
 
   constructor(
-    routes: Routes,
-    headers: JSON,
-    body: Record<string, unknown>,
-    core: CoreLibrary,
-    plugins?: Plugin[],
+    readonly core: CoreLibrary,
+    options: {
+      body: Record<string, unknown>;
+      routes: Routes;
+      plugins?: Plugin[];
+    },
   ) {
-    this.routes = routes;
-    this.headers = headers;
-    this.body = body;
-    this.core = core;
-    this.plugins = plugins;
+    this.body = options.body;
+    this.routes = options.routes;
+    this.plugins = options.plugins;
   }
 
   protected createServerActor = createServerActor;
