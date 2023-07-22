@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findOne = void 0;
-const types_1 = require("@activity-kit/types");
+const core_1 = require("@activity-kit/core");
 const utilities_1 = require("@activity-kit/utilities");
 const mongodb_1 = require("mongodb");
 async function findOne(collection, matchingObject, options) {
@@ -9,7 +9,7 @@ async function findOne(collection, matchingObject, options) {
         throw new Error('Bad database.');
     }
     let value = null;
-    if (options && options.includes(types_1.DbOptions.CASE_INSENSITIVE)) {
+    if (options && options.includes(core_1.DbOptions.CASE_INSENSITIVE)) {
         const cursor = this.db
             .collection(collection)
             .find(matchingObject)

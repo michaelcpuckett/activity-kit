@@ -1,4 +1,4 @@
-import { CryptoAdapter } from '@activity-kit/types';
+import { CryptoAdapter } from '@activity-kit/core';
 import { generateKeyPair } from './generateKeyPair';
 import { randomBytes } from './randomBytes';
 import { hashPassword } from './hashPassword';

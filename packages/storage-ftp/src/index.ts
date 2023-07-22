@@ -1,4 +1,4 @@
-import type { StorageAdapter } from '@activity-kit/types';
+import { StorageAdapter } from '@activity-kit/core';
 import { upload } from './upload';
 import { default as FtpClient } from 'ftp';
 
