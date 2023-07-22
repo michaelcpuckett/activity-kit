@@ -1,4 +1,4 @@
-import * as AP from '../activitypub';
+import * as AP from '@activity-kit/types';
 
 export const DbOptions = {
   CASE_INSENSITIVE: 'CASE_INSENSITIVE',

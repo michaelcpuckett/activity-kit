@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import * as AP from '../activitypub';
+import * as AP from '@activity-kit/types';
 export declare const DbOptions: {
     readonly CASE_INSENSITIVE: "CASE_INSENSITIVE";
     readonly CASE_SENSITIVE: "CASE_SENSITIVE";
