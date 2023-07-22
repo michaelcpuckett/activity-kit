@@ -40,6 +40,10 @@ export async function runSideEffects(this: OutboxPostEndpoint) {
       await this.handleRemove(this.activity);
     }
 
+    if (isType<AP.Follow>(this.activity, AP.ActivityTypes.FOLLOW)) {
+      await this.handleFollow(this.activity);
+    }
+
     if (isType<AP.Undo>(this.activity, AP.ActivityTypes.UNDO)) {
       await this.handleUndo(this.activity);
     }

@@ -75,4 +75,9 @@ export async function handleAccept(
   }
 
   await this.core.insertItem(followingId, followeeId);
+
+  const requests = await this.core.getStreamByName(follower, 'Requests');
+  const requestsId = getId(requests);
+
+  await this.core.removeItem(requestsId, getId(followActivity));
 }

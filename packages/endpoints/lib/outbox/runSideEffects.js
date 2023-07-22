@@ -55,6 +55,9 @@ async function runSideEffects() {
         if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.REMOVE)) {
             await this.handleRemove(this.activity);
         }
+        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.FOLLOW)) {
+            await this.handleFollow(this.activity);
+        }
         if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.UNDO)) {
             await this.handleUndo(this.activity);
         }

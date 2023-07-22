@@ -61,6 +61,9 @@ async function handleAccept(activity, recipient) {
         return;
     }
     await this.core.insertItem(followingId, followeeId);
+    const requests = await this.core.getStreamByName(follower, 'Requests');
+    const requestsId = (0, utilities_1.getId)(requests);
+    await this.core.removeItem(requestsId, (0, utilities_1.getId)(followActivity));
 }
 exports.handleAccept = handleAccept;
 //# sourceMappingURL=accept.js.map

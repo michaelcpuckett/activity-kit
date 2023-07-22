@@ -18,6 +18,7 @@ const block_1 = require("./sideEffects/block");
 const add_1 = require("./sideEffects/add");
 const undo_1 = require("./sideEffects/undo");
 const remove_1 = require("./sideEffects/remove");
+const follow_1 = require("./sideEffects/follow");
 const undoBlock_1 = require("./sideEffects/undo/undoBlock");
 const undoFollow_1 = require("./sideEffects/undo/undoFollow");
 const undoAccept_1 = require("./sideEffects/undo/undoAccept");
@@ -55,6 +56,7 @@ class OutboxPostEndpoint {
     handleLike = like_1.handleLike;
     handleRemove = remove_1.handleRemove;
     handleUpdate = update_1.handleUpdate;
+    handleFollow = follow_1.handleFollow;
     handleUndo = undo_1.handleUndo;
     handleUndoLike = undoLike_1.handleUndoLike;
     handleUndoFollow = undoFollow_1.handleUndoFollow;
