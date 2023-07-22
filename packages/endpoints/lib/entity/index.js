@@ -1,38 +1,32 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EntityGetEndpoint = void 0;
-const utilities_1 = require("@activity-kit/utilities");
 const handleFoundEntity_1 = require("./handleFoundEntity");
 const respond_1 = require("./respond");
 class EntityGetEndpoint {
-    req;
-    res;
     core;
-    plugins;
-    routes;
     url;
-    constructor(req, res, core, plugins, url) {
-        this.req = req;
-        this.res = res;
+    returnHtml;
+    constructor(core, options) {
         this.core = core;
-        this.plugins = plugins;
-        this.url = url ?? new URL(req.url, utilities_1.LOCAL_DOMAIN);
+        this.url = options.url;
+        this.returnHtml = options.returnHtml;
     }
     handleFoundEntity = handleFoundEntity_1.handleFoundEntity;
     handleBadRequest() {
-        this.res.statusCode = 500;
-        this.res.write('Bad request');
-        this.res.end();
         return {
-            props: {},
+            statusCode: 500,
+            body: JSON.stringify({
+                error: 'Bad request',
+            }),
         };
     }
     handleNotFound() {
-        this.res.statusCode = 404;
-        this.res.write('Not found');
-        this.res.end();
         return {
-            props: {},
+            statusCode: 404,
+            body: JSON.stringify({
+                error: 'Not found',
+            }),
         };
     }
     respond = respond_1.respond;

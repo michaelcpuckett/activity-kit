@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getArray = exports.isLocal = exports.deduplicateUrls = exports.streamToString = exports.parseStream = exports.getId = exports.getCollectionNameByUrl = exports.convertEntityToJson = exports.convertJsonToEntity = exports.convertJsonLdToEntity = exports.compressEntity = exports.cleanProps = exports.applyContext = void 0;
+exports.getArray = exports.isLocal = exports.deduplicateUrls = exports.streamToString = exports.parseStream = exports.getEntity = exports.getId = exports.getCollectionNameByUrl = exports.convertEntityToJson = exports.convertJsonToEntity = exports.convertJsonLdToEntity = exports.compressEntity = exports.cleanProps = exports.applyContext = void 0;
 __exportStar(require("./globals"), exports);
 var applyContext_1 = require("./applyContext");
 Object.defineProperty(exports, "applyContext", { enumerable: true, get: function () { return applyContext_1.applyContext; } });
@@ -32,6 +32,8 @@ var getCollectionNameByUrl_1 = require("./getCollectionNameByUrl");
 Object.defineProperty(exports, "getCollectionNameByUrl", { enumerable: true, get: function () { return getCollectionNameByUrl_1.getCollectionNameByUrl; } });
 var getId_1 = require("./getId");
 Object.defineProperty(exports, "getId", { enumerable: true, get: function () { return getId_1.getId; } });
+var getEntity_1 = require("./getEntity");
+Object.defineProperty(exports, "getEntity", { enumerable: true, get: function () { return getEntity_1.getEntity; } });
 var parseStream_1 = require("./parseStream");
 Object.defineProperty(exports, "parseStream", { enumerable: true, get: function () { return parseStream_1.parseStream; } });
 var streamToString_1 = require("./streamToString");

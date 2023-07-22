@@ -1,15 +1,12 @@
 import {
   RESERVED_USERNAMES,
   SERVER_ACTOR_USERNAME,
-  streamToString,
 } from '@activity-kit/utilities';
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
-import type { IncomingMessage, ServerResponse } from 'http';
 import { CoreLibrary, Plugin, Routes } from '@activity-kit/types';
 
 export class User {
-  readonly uid: string;
   readonly type: string;
   readonly email: string;
   readonly name: string;
@@ -17,13 +14,6 @@ export class User {
   readonly password: string;
 
   constructor(rawBody: Record<string, unknown>) {
-    if (typeof rawBody.uid !== 'string') {
-      throw {
-        error: 'No uid provided',
-        field: 'uid',
-      };
-    }
-
     if (typeof rawBody.type !== 'string') {
       throw {
         error: 'No type provided',
@@ -59,7 +49,6 @@ export class User {
       };
     }
 
-    this.uid = rawBody.uid;
     this.type = rawBody.type;
     this.email = rawBody.email;
     this.name = rawBody.name;
@@ -70,21 +59,21 @@ export class User {
 
 export class UserPostEndpoint {
   routes: Routes;
-  req: IncomingMessage;
-  res: ServerResponse;
+  headers: JSON;
+  body: Record<string, unknown>;
   core: CoreLibrary;
   plugins?: Plugin[];
 
   constructor(
     routes: Routes,
-    req: IncomingMessage,
-    res: ServerResponse,
+    headers: JSON,
+    body: Record<string, unknown>,
     core: CoreLibrary,
     plugins?: Plugin[],
   ) {
     this.routes = routes;
-    this.req = req;
-    this.res = res;
+    this.headers = headers;
+    this.body = body;
     this.core = core;
     this.plugins = plugins;
   }
@@ -93,21 +82,23 @@ export class UserPostEndpoint {
   protected createUserActor = createUserActor;
 
   public async respond() {
-    const body: Record<string, unknown> = JSON.parse(
-      await streamToString(this.req),
-    );
-
-    const user = await new Promise<User>((resolve) => {
-      resolve(new User(body));
-    }).catch((error: Record<string, string>) => {
-      this.res.statusCode = 300;
-      this.res.write(JSON.stringify(error));
-      this.res.end();
+    const result = await new Promise<User>((resolve) => {
+      resolve(new User(this.body));
+    }).catch((error: unknown) => {
+      console.log(error);
+      return new Error(`${error}`);
     });
 
-    if (!user) {
-      return;
+    if (result instanceof Error) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({
+          message: 'Internal server error.',
+        }),
+      };
     }
+
+    const user = result;
 
     const isUsernameTaken = !!(await this.core.findOne('entity', {
       preferredUsername: user.preferredUsername,
@@ -117,15 +108,13 @@ export class UserPostEndpoint {
       isUsernameTaken ||
       RESERVED_USERNAMES.includes(user.preferredUsername)
     ) {
-      this.res.statusCode = 409;
-      this.res.write(
-        JSON.stringify({
+      return {
+        statusCode: 409,
+        body: JSON.stringify({
           error: 'Username taken.',
           field: 'username',
         }),
-      );
-      this.res.end();
-      return;
+      };
     }
 
     try {
@@ -145,21 +134,19 @@ export class UserPostEndpoint {
 
       await this.createUserActor(user, uid);
 
-      this.res.statusCode = 200;
-      this.res.write(
-        JSON.stringify({
+      return {
+        statusCode: 201,
+        body: JSON.stringify({
           token,
         }),
-      );
-      this.res.end();
+      };
     } catch (error) {
-      this.res.statusCode = 300;
-      this.res.write(
-        JSON.stringify({
+      return {
+        statusCode: 300,
+        body: JSON.stringify({
           error: error.toString(),
         }),
-      );
-      this.res.end();
+      };
     }
   }
 }

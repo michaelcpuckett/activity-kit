@@ -1,5 +1,6 @@
 import {
   AP,
+  assertIsApEntity,
   assertIsApExtendedObject,
   assertIsApTransitiveActivity,
 } from '@activity-kit/types';
@@ -8,6 +9,7 @@ import { UploadMediaPostEndpoint } from '.';
 import { compile } from 'path-to-regexp';
 
 export async function saveActivity(this: UploadMediaPostEndpoint) {
+  assertIsApEntity(this.activity);
   assertIsApTransitiveActivity(this.activity);
   assertIsApExtendedObject(this.activity.object);
 

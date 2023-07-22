@@ -1,54 +1,39 @@
-import { Plugin, Routes, CoreLibrary } from '@activity-kit/types';
-import { LOCAL_DOMAIN } from '@activity-kit/utilities';
+import { CoreLibrary } from '@activity-kit/types';
 import { handleFoundEntity } from './handleFoundEntity';
 import { respond } from './respond';
-import type { IncomingMessage, ServerResponse } from 'http';
 
 export class EntityGetEndpoint {
-  req: IncomingMessage & {
-    params: Record<string, string>;
-  };
-  res: ServerResponse;
-  core: CoreLibrary;
-  plugins?: Plugin[];
-  routes?: Routes;
-  url: URL;
+  protected url: URL;
+  protected returnHtml: boolean;
 
   constructor(
-    req: IncomingMessage & {
-      params: Record<string, string>;
+    protected readonly core: CoreLibrary,
+    options: {
+      url: URL;
+      returnHtml?: boolean;
     },
-    res: ServerResponse,
-    core: CoreLibrary,
-    plugins?: Plugin[],
-    url?: URL,
   ) {
-    this.req = req;
-    this.res = res;
-    this.core = core;
-    this.plugins = plugins;
-    this.url = url ?? new URL(req.url, LOCAL_DOMAIN);
+    this.url = options.url;
+    this.returnHtml = options.returnHtml;
   }
 
   protected handleFoundEntity = handleFoundEntity;
 
   protected handleBadRequest() {
-    this.res.statusCode = 500;
-    this.res.write('Bad request');
-    this.res.end();
-
     return {
-      props: {},
+      statusCode: 500,
+      body: JSON.stringify({
+        error: 'Bad request',
+      }),
     };
   }
 
   protected handleNotFound() {
-    this.res.statusCode = 404;
-    this.res.write('Not found');
-    this.res.end();
-
     return {
-      props: {},
+      statusCode: 404,
+      body: JSON.stringify({
+        error: 'Not found',
+      }),
     };
   }
 

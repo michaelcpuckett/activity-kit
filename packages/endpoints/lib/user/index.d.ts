@@ -1,10 +1,7 @@
-/// <reference types="node" />
 import { createServerActor } from './createServerActor';
 import { createUserActor } from './createUserActor';
-import type { IncomingMessage, ServerResponse } from 'http';
 import { CoreLibrary, Plugin, Routes } from '@activity-kit/types';
 export declare class User {
-    readonly uid: string;
     readonly type: string;
     readonly email: string;
     readonly name: string;
@@ -14,12 +11,15 @@ export declare class User {
 }
 export declare class UserPostEndpoint {
     routes: Routes;
-    req: IncomingMessage;
-    res: ServerResponse;
+    headers: JSON;
+    body: Record<string, unknown>;
     core: CoreLibrary;
     plugins?: Plugin[];
-    constructor(routes: Routes, req: IncomingMessage, res: ServerResponse, core: CoreLibrary, plugins?: Plugin[]);
+    constructor(routes: Routes, headers: JSON, body: Record<string, unknown>, core: CoreLibrary, plugins?: Plugin[]);
     protected createServerActor: typeof createServerActor;
     protected createUserActor: typeof createUserActor;
-    respond(): Promise<void>;
+    respond(): Promise<{
+        statusCode: number;
+        body: string;
+    }>;
 }

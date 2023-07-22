@@ -6,35 +6,21 @@ import {
   assertIsArray,
 } from '@activity-kit/types';
 import { isType, isTypeOf } from '@activity-kit/types';
-import { LOCAL_DOMAIN } from '@activity-kit/utilities';
-import cookie from 'cookie';
 
 const ITEMS_PER_COLLECTION_PAGE = 50;
 
 export async function respond(
   this: EntityGetEndpoint,
   render: (...args: unknown[]) => Promise<string>,
-) {
-  const cookies = cookie.parse(this.req.headers.cookie ?? '');
-
-  const authorizedActor = await this.core.getActorByUserId(
-    await this.core.getUserIdByToken(cookies.__session ?? ''),
-  );
-
-  // TODO authorize entity posts by actor.
-
-  // Remove CollectionPage URL /page/:page param
-  const urlParts = this.url.pathname.split('/');
-  const pageParam = urlParts.pop();
-  const hasPage = this.req.params['page'] === pageParam;
-  if (hasPage) {
-    urlParts.pop();
-  }
-  const pathname = hasPage ? urlParts.join('/') : this.url.pathname;
-
-  const entity = await this.core.findEntityById(
-    new URL(`${LOCAL_DOMAIN}${pathname}`),
-  );
+): Promise<{
+  statusCode: number;
+  contentType?: string;
+  body: string;
+}> {
+  const hasPage = this.url.href.includes('/page/');
+  const pageParts = this.url.href.split('/page/');
+  const baseUrl = hasPage ? new URL(pageParts[0]) : this.url;
+  const entity = await this.core.findEntityById(baseUrl);
 
   try {
     assertIsApEntity(entity);
@@ -42,39 +28,39 @@ export async function respond(
     return this.handleNotFound();
   }
 
-  this.res.setHeader('Vary', 'Accept');
-
   if (
     !isTypeOf<AP.EitherCollection>(entity, AP.CollectionTypes) &&
     !isTypeOf<AP.EitherCollectionPage>(entity, AP.CollectionPageTypes)
   ) {
-    return await this.handleFoundEntity(render, entity, authorizedActor);
+    return this.handleNotFound();
   }
 
   assertIsApCollection(entity);
+
+  const totalItems = Number(entity.totalItems);
+
+  const lastPageIndex = Math.max(
+    1,
+    Math.ceil(totalItems / ITEMS_PER_COLLECTION_PAGE),
+  );
 
   const isOrderedCollection = isType<AP.OrderedCollection>(
     entity,
     AP.CollectionTypes.ORDERED_COLLECTION,
   );
 
-  const totalItems = Number(entity.totalItems);
-  const lastPageIndex = Math.max(
-    1,
-    Math.ceil(totalItems / ITEMS_PER_COLLECTION_PAGE),
-  );
-  const currentPage = Number(pageParam) || 1;
-  const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE;
-  const startIndex = firstItemIndex + 1;
-  const baseUrl = new URL(pathname, new URL(LOCAL_DOMAIN));
-
   const getPageUrl = (page: number) =>
     new URL(
-      `${pathname === '/' ? '' : pathname}/page/${page}`,
-      new URL(LOCAL_DOMAIN),
+      `${this.url.pathname === '/' ? '' : this.url.pathname}/page/${page}`,
+      this.url.origin,
     );
 
   // Treat as a Collection.
+
+  const page = pageParts[1];
+  const currentPage = page ? Number(page) : 1;
+  const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE;
+  const startIndex = firstItemIndex + 1;
 
   if (!hasPage) {
     assertIsApCollection(entity);
@@ -88,11 +74,7 @@ export async function respond(
       last: getPageUrl(lastPageIndex),
     };
 
-    return await this.handleFoundEntity(
-      render,
-      collectionEntity,
-      authorizedActor,
-    );
+    return this.handleFoundEntity(collectionEntity, render);
   }
 
   // Treat as CollectionPage.
@@ -173,11 +155,7 @@ export async function respond(
       startIndex,
     };
 
-    return await this.handleFoundEntity(
-      render,
-      orderedCollectionPageEntity,
-      authorizedActor,
-    );
+    return this.handleFoundEntity(orderedCollectionPageEntity, render);
   }
 
   const collectionPageEntity: AP.CollectionPage = {
@@ -186,9 +164,5 @@ export async function respond(
     items: items,
   };
 
-  return await this.handleFoundEntity(
-    render,
-    collectionPageEntity,
-    authorizedActor,
-  );
+  return this.handleFoundEntity(collectionPageEntity, render);
 }

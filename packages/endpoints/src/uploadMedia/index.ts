@@ -12,6 +12,7 @@ import { authenticateActor } from './authenticateActor';
 import { parseBody } from './parseBody';
 import { cleanup } from './cleanup';
 import { saveActivity } from './saveActivity';
+import { AnyTransitiveActivityType } from '@activity-kit/types/lib/activitypub';
 
 export class UploadMediaPostEndpoint {
   routes: Routes;
@@ -21,7 +22,7 @@ export class UploadMediaPostEndpoint {
   plugins?: Plugin[];
 
   actor: AP.Actor | null = null;
-  activity: AP.TransitiveActivity | null = null;
+  activity: AP.TransitiveActivity<AnyTransitiveActivityType> | null = null;
   file: File | null = null;
 
   protected getActor = getActor;

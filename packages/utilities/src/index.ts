@@ -7,6 +7,7 @@ export { convertJsonToEntity } from './convertJsonToEntity';
 export { convertEntityToJson } from './convertEntityToJson';
 export { getCollectionNameByUrl } from './getCollectionNameByUrl';
 export { getId } from './getId';
+export { getEntity } from './getEntity';
 export { parseStream } from './parseStream';
 export { streamToString } from './streamToString';
 export { deduplicateUrls } from './deduplicateUrls';

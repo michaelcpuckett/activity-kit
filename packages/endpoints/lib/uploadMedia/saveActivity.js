@@ -5,6 +5,7 @@ const types_1 = require("@activity-kit/types");
 const utilities_1 = require("@activity-kit/utilities");
 const path_to_regexp_1 = require("path-to-regexp");
 async function saveActivity() {
+    (0, types_1.assertIsApEntity)(this.activity);
     (0, types_1.assertIsApTransitiveActivity)(this.activity);
     (0, types_1.assertIsApExtendedObject)(this.activity.object);
     const publishedDate = new Date();
