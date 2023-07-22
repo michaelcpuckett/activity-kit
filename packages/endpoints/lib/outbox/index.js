@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OutboxPostEndpoint = void 0;
+const utilities_1 = require("@activity-kit/utilities");
 const runSideEffects_1 = require("./runSideEffects");
 const wrapInActivity_1 = require("./wrapInActivity");
 const combineAddresses_1 = require("./combineAddresses");
@@ -34,10 +35,10 @@ class OutboxPostEndpoint {
         this.core = core;
         this.core = core;
         this.actor = options.actor;
-        this.body = options.body;
+        this.body = (0, utilities_1.convertJsonToEntity)(options.body);
         this.url = options.url;
         this.routes = options.routes;
-        this.plugins = options.plugins;
+        this.plugins = options.plugins || [];
     }
     getActor = getActor_1.getActor;
     runSideEffects = runSideEffects_1.runSideEffects;

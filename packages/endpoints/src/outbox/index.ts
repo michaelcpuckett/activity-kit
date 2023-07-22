@@ -1,4 +1,5 @@
 import * as AP from '@activity-kit/types';
+import { convertJsonToEntity } from '@activity-kit/utilities';
 import { Routes, Plugin, CoreLibrary } from '@activity-kit/core';
 import { runSideEffects } from './runSideEffects';
 import { wrapInActivity } from './wrapInActivity';
@@ -43,10 +44,10 @@ export class OutboxPostEndpoint {
   ) {
     this.core = core;
     this.actor = options.actor;
-    this.body = options.body;
+    this.body = convertJsonToEntity(options.body);
     this.url = options.url;
     this.routes = options.routes;
-    this.plugins = options.plugins;
+    this.plugins = options.plugins || [];
   }
 
   protected getActor = getActor;
