@@ -1,12 +1,13 @@
-import { EntityGetEndpoint } from '.';
+import * as AP from '@activity-kit/types';
 import {
-  AP,
   assertIsApCollection,
   assertIsApEntity,
   assertIsArray,
-} from '@activity-kit/types';
-import { isType, isTypeOf } from '@activity-kit/types';
-import { getId } from '@activity-kit/utilities';
+  isType,
+  isTypeOf,
+} from '@activity-kit/type-utilities';
+
+import { EntityGetEndpoint } from '.';
 
 const ITEMS_PER_COLLECTION_PAGE = 50;
 

@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getActors = void 0;
 const utilities_1 = require("@activity-kit/utilities");
-const types_1 = require("@activity-kit/types");
+const type_utilities_1 = require("@activity-kit/type-utilities");
 async function getActors() {
-    (0, types_1.assertIsApActivity)(this.activity);
+    (0, type_utilities_1.assertIsApActivity)(this.activity);
     const actorUrls = await this.core.getRecipientUrls(this.activity);
     console.log(actorUrls.map((url) => url.toString()));
     return (await Promise.all(actorUrls.map(async (actorUrl) => {
@@ -13,7 +13,7 @@ async function getActors() {
         }
         try {
             const foundEntity = await this.core.findEntityById(actorUrl);
-            (0, types_1.assertIsApActor)(foundEntity);
+            (0, type_utilities_1.assertIsApActor)(foundEntity);
             return [foundEntity];
         }
         catch (error) {

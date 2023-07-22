@@ -1,11 +1,11 @@
 import { OutboxPostEndpoint } from '..';
+import * as AP from '@activity-kit/types';
 import {
   assertExists,
   assertIsApActor,
   assertIsApType,
-} from '@activity-kit/types';
+} from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
-import * as AP from '@activity-kit/types';
 
 export async function handleBlock(
   this: OutboxPostEndpoint,

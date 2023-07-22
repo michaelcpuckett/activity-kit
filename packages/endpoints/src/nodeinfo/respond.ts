@@ -1,12 +1,12 @@
 import { NodeinfoGetEndpoint } from '.';
+import * as AP from '@activity-kit/types';
+import * as fs from 'fs';
+import * as path from 'path';
 import {
   CONTENT_TYPE_HEADER,
   JSON_CONTENT_TYPE,
   LOCAL_DOMAIN,
 } from '@activity-kit/utilities';
-import * as AP from '@activity-kit/types';
-import * as fs from 'fs';
-import * as path from 'path';
 
 export async function respond(this: NodeinfoGetEndpoint) {
   const url = this.req.url ?? '';

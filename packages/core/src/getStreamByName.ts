@@ -1,5 +1,9 @@
 import { Core } from '.';
-import { AP, assertIsApCollection, assertIsArray } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import {
+  assertIsApCollection,
+  assertIsArray,
+} from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export const getStreamByName = async function (

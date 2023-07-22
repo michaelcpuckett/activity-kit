@@ -1,11 +1,35 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUserActor = void 0;
 const utilities_1 = require("@activity-kit/utilities");
-const types_1 = require("@activity-kit/types");
+const AP = __importStar(require("@activity-kit/types"));
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const path_to_regexp_1 = require("path-to-regexp");
 async function createUserActor(user, uid) {
-    (0, types_1.assertIsApActor)(user);
+    (0, type_utilities_1.assertIsApActor)(user);
     const { publicKey, privateKey } = await this.core.generateKeyPair();
     const publishedDate = new Date();
     const getRouteUrl = (route, data) => new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
@@ -23,7 +47,7 @@ async function createUserActor(user, uid) {
         id: inboxId,
         url: inboxId,
         name: 'Inbox',
-        type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         orderedItems: [],
@@ -36,7 +60,7 @@ async function createUserActor(user, uid) {
         id: outboxId,
         url: outboxId,
         name: 'Outbox',
-        type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         orderedItems: [],
@@ -49,7 +73,7 @@ async function createUserActor(user, uid) {
         id: followersId,
         url: followersId,
         name: 'Followers',
-        type: types_1.AP.CollectionTypes.COLLECTION,
+        type: AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         items: [],
@@ -62,7 +86,7 @@ async function createUserActor(user, uid) {
         id: followingId,
         url: followingId,
         name: 'Following',
-        type: types_1.AP.CollectionTypes.COLLECTION,
+        type: AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         items: [],
@@ -75,7 +99,7 @@ async function createUserActor(user, uid) {
         id: likedId,
         url: likedId,
         name: 'Liked',
-        type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         orderedItems: [],
@@ -89,7 +113,7 @@ async function createUserActor(user, uid) {
         id: sharedId,
         url: sharedId,
         name: 'Shared',
-        type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         orderedItems: [],
@@ -103,7 +127,7 @@ async function createUserActor(user, uid) {
         id: blocksId,
         url: blocksId,
         name: 'Blocks',
-        type: types_1.AP.CollectionTypes.COLLECTION,
+        type: AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         items: [],
@@ -117,7 +141,7 @@ async function createUserActor(user, uid) {
         id: userRequestsId,
         url: userRequestsId,
         name: 'Requests',
-        type: types_1.AP.CollectionTypes.COLLECTION,
+        type: AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         items: [],
@@ -132,7 +156,7 @@ async function createUserActor(user, uid) {
         url: userListsId,
         name: 'Lists',
         summary: 'A user\'s set of curated lists of other users, such as "Friends Only".',
-        type: types_1.AP.CollectionTypes.COLLECTION,
+        type: AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         items: [],
@@ -146,7 +170,7 @@ async function createUserActor(user, uid) {
         id: userBookmarksId,
         url: userBookmarksId,
         name: 'Bookmarks',
-        type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         orderedItems: [],
@@ -184,27 +208,27 @@ async function createUserActor(user, uid) {
         },
         published: publishedDate,
     };
-    let userActor = (0, utilities_1.applyContext)(user.type === types_1.AP.ActorTypes.GROUP
+    let userActor = (0, utilities_1.applyContext)(user.type === AP.ActorTypes.GROUP
         ? {
             ...userActorProperties,
-            type: types_1.AP.ActorTypes.GROUP,
+            type: AP.ActorTypes.GROUP,
         }
         : {
             ...userActorProperties,
-            type: types_1.AP.ActorTypes.PERSON,
+            type: AP.ActorTypes.PERSON,
         });
-    (0, types_1.assertIsApActor)(userActor);
+    (0, type_utilities_1.assertIsApActor)(userActor);
     const botActor = await this.core.findOne('entity', {
         preferredUsername: utilities_1.SERVER_ACTOR_USERNAME,
     });
-    (0, types_1.assertIsApActor)(botActor);
+    (0, type_utilities_1.assertIsApActor)(botActor);
     const createActorActivityId = getRouteUrl(this.routes.create, {
         guid: await this.core.getGuid(),
     });
     const createActorActivity = (0, utilities_1.applyContext)({
         id: createActorActivityId,
         url: createActorActivityId,
-        type: types_1.AP.ActivityTypes.CREATE,
+        type: AP.ActivityTypes.CREATE,
         actor: botActor,
         object: userActor,
         to: [new URL(utilities_1.PUBLIC_ACTOR)],
@@ -218,7 +242,7 @@ async function createUserActor(user, uid) {
                     activity: createActorActivity,
                     core: this.core,
                 });
-                (0, types_1.assertIsApActor)(pluginActivity.object);
+                (0, type_utilities_1.assertIsApActor)(pluginActivity.object);
                 userActor = pluginActivity.object;
             }
             if ('declareUserActorStreams' in plugin) {
@@ -234,7 +258,7 @@ async function createUserActor(user, uid) {
                     });
                     userActor.streams.push(streamId);
                     declaredStreams.push(this.core.saveEntity((0, utilities_1.applyContext)({
-                        type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+                        type: AP.CollectionTypes.ORDERED_COLLECTION,
                         totalItems: 0,
                         attributedTo: userId,
                         orderedItems: [],

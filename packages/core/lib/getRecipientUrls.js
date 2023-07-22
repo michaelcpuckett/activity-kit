@@ -1,14 +1,38 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRecipientUrls = void 0;
-const types_1 = require("@activity-kit/types");
+const AP = __importStar(require("@activity-kit/types"));
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function getRecipientUrls(activity) {
     const mentions = ('object' in activity && 'tag' in activity.object
         ? (0, utilities_1.getArray)(activity.object.tag)
         : []).filter((entity) => {
         try {
-            (0, types_1.assertIsApType)(entity, types_1.AP.LinkTypes.MENTION);
+            (0, type_utilities_1.assertIsApType)(entity, AP.LinkTypes.MENTION);
             return true;
         }
         catch {
@@ -32,7 +56,7 @@ async function getRecipientUrls(activity) {
             return [];
         }
         try {
-            (0, types_1.assertIsApActor)(foundRecipient);
+            (0, type_utilities_1.assertIsApActor)(foundRecipient);
             const actorUrl = (0, utilities_1.getId)(foundRecipient);
             if (actorUrl instanceof URL) {
                 return [actorUrl];
@@ -41,16 +65,16 @@ async function getRecipientUrls(activity) {
         catch (error) {
         }
         try {
-            (0, types_1.assertIsApCollection)(foundRecipient);
+            (0, type_utilities_1.assertIsApCollection)(foundRecipient);
             const collectionItems = await this.getPaginatedCollectionItems(foundRecipient);
             console.log([collectionItems]);
             const actorsInCollection = [];
             for (const collectionItem of collectionItems) {
                 try {
                     const collectionItemId = (0, utilities_1.getId)(collectionItem);
-                    (0, types_1.assertExists)(collectionItemId);
+                    (0, type_utilities_1.assertExists)(collectionItemId);
                     const expandedCollectionItem = await this.queryById(collectionItemId);
-                    (0, types_1.assertIsApActor)(expandedCollectionItem);
+                    (0, type_utilities_1.assertIsApActor)(expandedCollectionItem);
                     const actorUrl = (0, utilities_1.getId)(expandedCollectionItem);
                     if (actorUrl instanceof URL) {
                         actorsInCollection.push(actorUrl);

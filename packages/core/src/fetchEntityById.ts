@@ -1,5 +1,6 @@
 import { Core } from '.';
-import { AP, assertIsApActor } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { assertIsApActor } from '@activity-kit/type-utilities';
 import {
   ACCEPT_HEADER,
   ACTIVITYSTREAMS_CONTENT_TYPE,

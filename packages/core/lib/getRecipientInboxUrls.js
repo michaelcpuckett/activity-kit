@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRecipientInboxUrls = void 0;
-const types_1 = require("@activity-kit/types");
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function getRecipientInboxUrls(activity, actor, inboxesOnly) {
     const recipientUrls = await this.getRecipientUrls(activity);
@@ -11,7 +11,7 @@ async function getRecipientInboxUrls(activity, actor, inboxesOnly) {
                 return [];
             }
             const foundEntity = await this.fetchEntityById(recipientUrl);
-            (0, types_1.assertIsApActor)(foundEntity);
+            (0, type_utilities_1.assertIsApActor)(foundEntity);
             if (!inboxesOnly) {
                 if (foundEntity.endpoints) {
                     if (foundEntity.endpoints.sharedInbox instanceof URL) {

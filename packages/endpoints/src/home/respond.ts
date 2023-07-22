@@ -1,5 +1,5 @@
-import { HomeGetEndpoint } from '.';
-import { AP, assertIsApActor, assertIsApType } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { assertIsApActor, assertIsApType } from '@activity-kit/type-utilities';
 import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   applyContext,
@@ -12,6 +12,8 @@ import {
   LINKED_DATA_CONTENT_TYPE,
 } from '@activity-kit/utilities';
 import cookie from 'cookie';
+
+import { HomeGetEndpoint } from '.';
 
 export const respond = async function (
   this: HomeGetEndpoint,

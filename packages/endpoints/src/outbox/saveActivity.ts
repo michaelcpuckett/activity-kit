@@ -1,5 +1,5 @@
 import { OutboxPostEndpoint } from '.';
-import { assertExists, assertIsApActivity } from '@activity-kit/types';
+import { assertExists, assertIsApActivity } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export async function saveActivity(this: OutboxPostEndpoint) {

@@ -1,14 +1,38 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUpdate = void 0;
-const types_1 = require("@activity-kit/types");
+const AP = __importStar(require("@activity-kit/types"));
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 const path_to_regexp_1 = require("path-to-regexp");
 async function handleUpdate(activity) {
-    (0, types_1.assertIsApType)(activity, types_1.AP.ActivityTypes.UPDATE);
+    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.UPDATE);
     const actorId = (0, utilities_1.getId)(activity.actor);
     const actor = await this.core.findEntityById(actorId);
-    (0, types_1.assertIsApActor)(actor);
+    (0, type_utilities_1.assertIsApActor)(actor);
     if (activity.object instanceof URL) {
         throw new Error('Bad activity: Providing a URL for the object is not sufficient for Update.');
     }
@@ -20,17 +44,17 @@ async function handleUpdate(activity) {
     }
     const objectId = (0, utilities_1.getId)(activity.object);
     const existingObject = await this.core.findEntityById(objectId);
-    (0, types_1.assertIsApEntity)(existingObject);
+    (0, type_utilities_1.assertIsApEntity)(existingObject);
     const getTags = async () => {
-        if (!(0, types_1.isTypeOf)(existingObject, types_1.AP.CoreObjectTypes)) {
+        if (!(0, type_utilities_1.isTypeOf)(existingObject, AP.CoreObjectTypes)) {
             return null;
         }
-        (0, types_1.assertIsApCoreObject)(existingObject);
+        (0, type_utilities_1.assertIsApCoreObject)(existingObject);
         const newObject = {
             type: existingObject.type,
             ...activity.object,
         };
-        (0, types_1.assertIsApCoreObject)(newObject);
+        (0, type_utilities_1.assertIsApCoreObject)(newObject);
         if (existingObject.tag || newObject.tag) {
             const existingTags = existingObject.tag
                 ? Array.isArray(existingObject.tag)
@@ -68,8 +92,8 @@ async function handleUpdate(activity) {
             });
             for (const tag of newTags) {
                 if (!(tag instanceof URL) &&
-                    (0, types_1.isType)(tag, types_1.AP.ExtendedObjectTypes.HASHTAG)) {
-                    (0, types_1.assertIsApType)(tag, types_1.AP.ExtendedObjectTypes.HASHTAG);
+                    (0, type_utilities_1.isType)(tag, AP.ExtendedObjectTypes.HASHTAG)) {
+                    (0, type_utilities_1.assertIsApType)(tag, AP.ExtendedObjectTypes.HASHTAG);
                     const index = newTags.indexOf(tag);
                     const hashtagCollectionUrl = new URL(newTagIds[index]);
                     tag.id = hashtagCollectionUrl;
@@ -81,8 +105,8 @@ async function handleUpdate(activity) {
                             url: hashtagCollectionUrl,
                             name: tag.name,
                             type: [
-                                types_1.AP.ExtendedObjectTypes.HASHTAG,
-                                types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+                                AP.ExtendedObjectTypes.HASHTAG,
+                                AP.CollectionTypes.ORDERED_COLLECTION,
                             ],
                             orderedItems: [],
                         };

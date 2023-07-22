@@ -1,10 +1,10 @@
+import * as AP from '@activity-kit/types';
 import {
-  AP,
   assertExists,
   assertIsApActor,
   assertIsApExtendedObject,
   assertIsApType,
-} from '@activity-kit/types';
+} from '@activity-kit/type-utilities';
 import { isLocal, getId } from '@activity-kit/utilities';
 import { OutboxPostEndpoint } from '../..';
 

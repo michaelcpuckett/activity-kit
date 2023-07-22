@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.respond = void 0;
 const utilities_1 = require("@activity-kit/utilities");
-const types_1 = require("@activity-kit/types");
+const type_utilities_1 = require("@activity-kit/type-utilities");
 async function respond() {
     await this.parseBody();
-    (0, types_1.assertExists)(this.activity);
+    (0, type_utilities_1.assertExists)(this.activity);
     const activityId = (0, utilities_1.getId)(this.activity);
     if (activityId) {
         const existingActivity = await this.core.findEntityById(activityId);

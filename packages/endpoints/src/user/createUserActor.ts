@@ -6,7 +6,8 @@ import {
   applyContext,
   getId,
 } from '@activity-kit/utilities';
-import { AP, assertIsApActor } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { assertIsApActor } from '@activity-kit/type-utilities';
 import { UserPostEndpoint, User } from '.';
 import { compile } from 'path-to-regexp';
 

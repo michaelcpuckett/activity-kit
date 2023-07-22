@@ -1,12 +1,12 @@
+import * as AP from '@activity-kit/types';
 import {
-  AP,
   isTypeOf,
   assertExists,
   assertIsApActor,
   assertIsApEntity,
   assertIsApType,
   assertIsArray,
-} from '@activity-kit/types';
+} from '@activity-kit/type-utilities';
 import {
   LOCAL_DOMAIN,
   PUBLIC_ACTOR,

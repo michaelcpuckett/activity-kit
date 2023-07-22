@@ -1,4 +1,5 @@
-import { AP, isType } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { isType } from '@activity-kit/type-utilities';
 import { OutboxPostEndpoint } from '.';
 
 export async function runSideEffects(this: OutboxPostEndpoint) {

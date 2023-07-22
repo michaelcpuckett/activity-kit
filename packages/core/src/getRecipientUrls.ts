@@ -1,11 +1,11 @@
 import { Core } from '.';
+import * as AP from '@activity-kit/types';
 import {
-  AP,
   assertIsApCollection,
   assertIsApActor,
   assertExists,
   assertIsApType,
-} from '@activity-kit/types';
+} from '@activity-kit/type-utilities';
 import {
   getId,
   PUBLIC_ACTOR,

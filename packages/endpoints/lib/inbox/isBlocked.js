@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isBlocked = void 0;
-const types_1 = require("@activity-kit/types");
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function isBlocked(actor) {
     try {
-        (0, types_1.assertIsApActivity)(this.activity);
+        (0, type_utilities_1.assertIsApActivity)(this.activity);
         const activityActorId = (0, utilities_1.getId)(this.activity.actor);
-        (0, types_1.assertExists)(activityActorId);
+        (0, type_utilities_1.assertExists)(activityActorId);
         const activityActor = await this.core.queryById(activityActorId);
-        (0, types_1.assertIsApActor)(activityActor);
+        (0, type_utilities_1.assertIsApActor)(activityActor);
         const blocks = await this.core.getStreamByName(actor, 'Blocks');
-        (0, types_1.assertIsApCollection)(blocks);
-        (0, types_1.assertIsArray)(blocks.items);
+        (0, type_utilities_1.assertIsApCollection)(blocks);
+        (0, type_utilities_1.assertIsArray)(blocks.items);
         const blockedActorIds = await Promise.all(blocks.items
             .map(async (item) => {
             const id = (0, utilities_1.getId)(item);

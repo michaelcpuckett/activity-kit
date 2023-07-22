@@ -1,7 +1,11 @@
-import { EntityGetEndpoint } from '.';
 import * as AP from '@activity-kit/types';
-import { applyContext, cleanProps } from '@activity-kit/utilities';
-import { convertEntityToJson } from '@activity-kit/utilities';
+import {
+  applyContext,
+  cleanProps,
+  convertEntityToJson,
+} from '@activity-kit/utilities';
+
+import { EntityGetEndpoint } from '.';
 
 export async function handleFoundEntity(
   this: EntityGetEndpoint,

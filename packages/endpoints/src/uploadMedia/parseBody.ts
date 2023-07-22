@@ -6,7 +6,8 @@ import {
 import * as formidable from 'formidable';
 import { compile } from 'path-to-regexp';
 import { UploadMediaPostEndpoint } from '.';
-import { AP, assertIsApTransitiveActivity } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { assertIsApTransitiveActivity } from '@activity-kit/type-utilities';
 
 export async function parseBody(this: UploadMediaPostEndpoint) {
   const form = formidable.default({

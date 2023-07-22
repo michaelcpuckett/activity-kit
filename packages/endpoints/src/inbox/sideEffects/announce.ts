@@ -1,11 +1,10 @@
 import {
-  AP,
-  isType,
   assertExists,
   assertIsApCollection,
   assertIsApExtendedObject,
   assertIsApType,
-} from '@activity-kit/types';
+} from '@activity-kit/type-utilities';
+import * as AP from '@activity-kit/types';
 import { getId } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '..';
 

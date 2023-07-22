@@ -1,10 +1,10 @@
 import { getId } from '@activity-kit/utilities';
+import * as AP from '@activity-kit/types';
 import {
-  AP,
   assertExists,
   assertIsApActor,
   assertIsApType,
-} from '@activity-kit/types';
+} from '@activity-kit/type-utilities';
 import { OutboxPostEndpoint } from '../..';
 
 export async function handleUndoFollow(

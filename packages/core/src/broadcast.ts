@@ -1,7 +1,6 @@
 import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { cleanProps } from '@activity-kit/utilities';
-import { applyContext } from '@activity-kit/utilities';
+import { applyContext, cleanProps } from '@activity-kit/utilities';
 
 /**
  *    [x] Removes the `bto` and `bcc` properties from Objects before delivery

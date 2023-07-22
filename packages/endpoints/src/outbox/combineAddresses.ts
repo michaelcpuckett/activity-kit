@@ -1,5 +1,6 @@
 import { OutboxPostEndpoint } from '.';
-import { AP, isTypeOf } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { isTypeOf } from '@activity-kit/type-utilities';
 import { getId, getArray } from '@activity-kit/utilities';
 
 export function combineAddresses(

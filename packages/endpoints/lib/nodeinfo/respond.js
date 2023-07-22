@@ -24,10 +24,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.respond = void 0;
-const utilities_1 = require("@activity-kit/utilities");
 const AP = __importStar(require("@activity-kit/types"));
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
+const utilities_1 = require("@activity-kit/utilities");
 async function respond() {
     const url = this.req.url ?? '';
     const version = parseFloat(url.split('nodeinfo/')[1]);

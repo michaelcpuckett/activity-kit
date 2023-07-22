@@ -24,16 +24,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleCreate = void 0;
-const types_1 = require("@activity-kit/types");
+const AP = __importStar(require("@activity-kit/types"));
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 const utilities_2 = require("@activity-kit/utilities");
 const utilities_3 = require("@activity-kit/utilities");
 const path_to_regexp_1 = require("path-to-regexp");
 const cheerio = __importStar(require("cheerio"));
 async function handleCreate(activity) {
-    (0, types_1.assertIsApType)(activity, types_1.AP.ActivityTypes.CREATE);
+    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.CREATE);
     const actorId = (0, utilities_3.getId)(activity.actor);
-    (0, types_1.assertExists)(actorId);
+    (0, type_utilities_1.assertExists)(actorId);
     const object = activity.object;
     if (object instanceof URL) {
         throw new Error('Bad object: URL reference is not allowed for Create.');
@@ -41,7 +42,7 @@ async function handleCreate(activity) {
     if (Array.isArray(object)) {
         throw new Error('Internal error: Object array not supported currently. TODO.');
     }
-    (0, types_1.assertIsApEntity)(object);
+    (0, type_utilities_1.assertIsApEntity)(object);
     const publishedDate = new Date();
     const dateFormatter = new Intl.DateTimeFormat('en-US', {
         year: 'numeric',
@@ -66,8 +67,8 @@ async function handleCreate(activity) {
         slug,
     })}`);
     object.id = objectId;
-    if ((0, types_1.isTypeOf)(object, types_1.AP.ExtendedObjectTypes)) {
-        (0, types_1.assertIsApExtendedObject)(object);
+    if ((0, type_utilities_1.isTypeOf)(object, AP.ExtendedObjectTypes)) {
+        (0, type_utilities_1.assertIsApExtendedObject)(object);
         object.url = objectId;
         const entityRoute = objectId.pathname;
         const objectRepliesId = new URL(`${utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.replies, {
@@ -79,7 +80,7 @@ async function handleCreate(activity) {
             id: objectRepliesId,
             url: objectRepliesId,
             name: 'Replies',
-            type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+            type: AP.CollectionTypes.ORDERED_COLLECTION,
             totalItems: 0,
             orderedItems: [],
             published: publishedDate,
@@ -94,7 +95,7 @@ async function handleCreate(activity) {
             id: objectLikesId,
             url: objectLikesId,
             name: 'Likes',
-            type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+            type: AP.CollectionTypes.ORDERED_COLLECTION,
             totalItems: 0,
             orderedItems: [],
             published: publishedDate,
@@ -109,7 +110,7 @@ async function handleCreate(activity) {
             id: objectSharesId,
             url: objectSharesId,
             name: 'Shares',
-            type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+            type: AP.CollectionTypes.ORDERED_COLLECTION,
             totalItems: 0,
             orderedItems: [],
             published: publishedDate,
@@ -133,8 +134,8 @@ async function handleCreate(activity) {
             const tags = Array.isArray(object.tag) ? object.tag : [object.tag];
             for (const tag of tags) {
                 if (!(tag instanceof URL) &&
-                    (0, types_1.isType)(tag, types_1.AP.ExtendedObjectTypes.HASHTAG)) {
-                    (0, types_1.assertIsApType)(tag, types_1.AP.ExtendedObjectTypes.HASHTAG);
+                    (0, type_utilities_1.isType)(tag, AP.ExtendedObjectTypes.HASHTAG)) {
+                    (0, type_utilities_1.assertIsApType)(tag, AP.ExtendedObjectTypes.HASHTAG);
                     const hashtagCollectionUrl = new URL(`${utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.hashtag)({
                         slug: tag.name
                             .replace('#', '')
@@ -152,8 +153,8 @@ async function handleCreate(activity) {
                             url: hashtagCollectionUrl,
                             name: tag.name,
                             type: [
-                                types_1.AP.ExtendedObjectTypes.HASHTAG,
-                                types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+                                AP.ExtendedObjectTypes.HASHTAG,
+                                AP.CollectionTypes.ORDERED_COLLECTION,
                             ],
                             orderedItems: [],
                         };
@@ -161,7 +162,7 @@ async function handleCreate(activity) {
                         const serverActor = await this.core.findOne('entity', {
                             preferredUsername: utilities_1.SERVER_ACTOR_USERNAME,
                         });
-                        (0, types_1.assertIsApActor)(serverActor);
+                        (0, type_utilities_1.assertIsApActor)(serverActor);
                         const serverHashtags = await this.core.getStreamByName(serverActor, 'Hashtags');
                         const serverHashtagsUrl = serverHashtags.id;
                         await this.core.insertItem(serverHashtagsUrl, hashtagCollectionUrl);
@@ -181,7 +182,7 @@ async function handleCreate(activity) {
     else {
         await this.core.saveEntity(object);
     }
-    (0, types_1.assertIsApType)(this.activity, types_1.AP.ActivityTypes.CREATE);
+    (0, type_utilities_1.assertIsApType)(this.activity, AP.ActivityTypes.CREATE);
     this.activity.object = object;
 }
 exports.handleCreate = handleCreate;

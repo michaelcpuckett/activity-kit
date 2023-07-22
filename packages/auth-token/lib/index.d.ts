@@ -1,4 +1,4 @@
-import { AuthAdapter, CryptoAdapter, DbAdapter } from '@activity-kit/types';
+import { AuthAdapter, CryptoAdapter, DbAdapter } from '@activity-kit/core';
 import { createUser } from './createUser';
 import { getUserIdByToken } from './getUserIdByToken';
 import { getTokenByUserId } from './getTokenByUserId';

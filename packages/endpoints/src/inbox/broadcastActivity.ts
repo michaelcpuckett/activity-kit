@@ -1,4 +1,5 @@
-import { AP, assertIsApActor, isTypeOf } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { assertIsApActor, isTypeOf } from '@activity-kit/type-utilities';
 import { SERVER_ACTOR_USERNAME } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '.';
 

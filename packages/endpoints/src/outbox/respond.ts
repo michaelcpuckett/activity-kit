@@ -1,12 +1,12 @@
 import { OutboxPostEndpoint } from '.';
+import * as AP from '@activity-kit/types';
 import {
-  AP,
   isTypeOf,
   assertExists,
   assertIsApActivity,
   assertIsApActor,
   assertIsApEntity,
-} from '@activity-kit/types';
+} from '@activity-kit/type-utilities';
 import { getArray, LOCAL_DOMAIN } from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
 

@@ -27,7 +27,8 @@ exports.parseBody = void 0;
 const utilities_1 = require("@activity-kit/utilities");
 const formidable = __importStar(require("formidable"));
 const path_to_regexp_1 = require("path-to-regexp");
-const types_1 = require("@activity-kit/types");
+const AP = __importStar(require("@activity-kit/types"));
+const type_utilities_1 = require("@activity-kit/type-utilities");
 async function parseBody() {
     const form = formidable.default({
         multiples: true,
@@ -65,13 +66,13 @@ async function parseBody() {
         });
         const activity = (0, utilities_1.applyContext)({
             to: new URL(utilities_1.PUBLIC_ACTOR),
-            type: types_1.AP.ActivityTypes.CREATE,
+            type: AP.ActivityTypes.CREATE,
             id: activityId,
             url: activityId,
             actor: this.actor.id,
             object,
         });
-        (0, types_1.assertIsApTransitiveActivity)(activity);
+        (0, type_utilities_1.assertIsApTransitiveActivity)(activity);
         this.activity = activity;
     }
 }

@@ -1,20 +1,44 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUndoAccept = void 0;
 const utilities_1 = require("@activity-kit/utilities");
-const types_1 = require("@activity-kit/types");
+const AP = __importStar(require("@activity-kit/types"));
+const type_utilities_1 = require("@activity-kit/type-utilities");
 async function handleUndoAccept(activity) {
-    (0, types_1.assertIsApType)(activity, types_1.AP.ActivityTypes.ACCEPT);
+    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.ACCEPT);
     const actorId = (0, utilities_1.getId)(activity.actor);
     const actor = await this.core.findEntityById(actorId);
-    (0, types_1.assertIsApActor)(actor);
+    (0, type_utilities_1.assertIsApActor)(actor);
     const followersId = (0, utilities_1.getId)(actor.followers);
-    (0, types_1.assertExists)(followersId);
+    (0, type_utilities_1.assertExists)(followersId);
     const followId = (0, utilities_1.getId)(activity.object);
     const follow = await this.core.queryById(followId);
-    (0, types_1.assertIsApType)(follow, types_1.AP.ActivityTypes.FOLLOW);
+    (0, type_utilities_1.assertIsApType)(follow, AP.ActivityTypes.FOLLOW);
     const followerId = (0, utilities_1.getId)(follow.actor);
-    (0, types_1.assertExists)(followerId);
+    (0, type_utilities_1.assertExists)(followerId);
     await this.core.removeItem(followersId, followerId);
 }
 exports.handleUndoAccept = handleUndoAccept;

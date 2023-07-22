@@ -1,6 +1,10 @@
 import { OutboxPostEndpoint } from '..';
+import * as AP from '@activity-kit/types';
 import { getId } from '@activity-kit/utilities';
-import { AP, assertIsApCollection, assertIsApType } from '@activity-kit/types';
+import {
+  assertIsApCollection,
+  assertIsApType,
+} from '@activity-kit/type-utilities';
 
 export async function handleAdd(this: OutboxPostEndpoint, activity: AP.Entity) {
   assertIsApType<AP.Add>(activity, AP.ActivityTypes.ADD);

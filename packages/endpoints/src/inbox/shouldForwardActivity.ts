@@ -1,4 +1,5 @@
-import { AP, isType, isTypeOf } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { isType, isTypeOf } from '@activity-kit/type-utilities';
 import { getArray, getId } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '.';
 

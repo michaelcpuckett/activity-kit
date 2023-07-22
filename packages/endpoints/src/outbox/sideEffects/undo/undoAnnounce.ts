@@ -1,11 +1,11 @@
 import { isLocal, getId } from '@activity-kit/utilities';
+import * as AP from '@activity-kit/types';
 import {
-  AP,
   assertExists,
   assertIsApActor,
   assertIsApEntity,
   assertIsApType,
-} from '@activity-kit/types';
+} from '@activity-kit/type-utilities';
 import { OutboxPostEndpoint } from '../..';
 
 export async function handleUndoAnnounce(

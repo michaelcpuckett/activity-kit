@@ -1,5 +1,9 @@
 import { OutboxPostEndpoint } from '..';
-import { AP, assertIsApCollection, assertIsApType } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import {
+  assertIsApCollection,
+  assertIsApType,
+} from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export async function handleRemove(

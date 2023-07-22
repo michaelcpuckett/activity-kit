@@ -2,9 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.broadcast = void 0;
 const utilities_1 = require("@activity-kit/utilities");
-const utilities_2 = require("@activity-kit/utilities");
 async function broadcast(activity, actor) {
-    const publicActivity = (0, utilities_1.cleanProps)((0, utilities_2.applyContext)(activity));
+    const publicActivity = (0, utilities_1.cleanProps)((0, utilities_1.applyContext)(activity));
     if (!('actor' in publicActivity)) {
         throw new Error('Not an activity?');
     }

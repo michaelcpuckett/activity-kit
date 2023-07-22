@@ -1,4 +1,4 @@
-import { assertIsApActivity } from '@activity-kit/types';
+import { assertIsApActivity } from '@activity-kit/type-utilities';
 import { parseStream } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '.';
 

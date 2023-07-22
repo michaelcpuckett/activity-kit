@@ -24,26 +24,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleBlock = void 0;
-const types_1 = require("@activity-kit/types");
-const utilities_1 = require("@activity-kit/utilities");
 const AP = __importStar(require("@activity-kit/types"));
+const type_utilities_1 = require("@activity-kit/type-utilities");
+const utilities_1 = require("@activity-kit/utilities");
 async function handleBlock(activity) {
-    (0, types_1.assertIsApType)(activity, AP.ActivityTypes.BLOCK);
+    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.BLOCK);
     const actorId = (0, utilities_1.getId)(activity.actor);
     const actor = await this.core.queryById(actorId);
-    (0, types_1.assertIsApActor)(actor);
+    (0, type_utilities_1.assertIsApActor)(actor);
     const blockedActorId = (0, utilities_1.getId)(activity.object);
     const blockedActor = await this.core.queryById(blockedActorId);
-    (0, types_1.assertIsApActor)(blockedActor);
+    (0, type_utilities_1.assertIsApActor)(blockedActor);
     const blocks = await this.core.getStreamByName(actor, 'Blocks');
-    (0, types_1.assertIsApType)(blocks, AP.CollectionTypes.COLLECTION);
+    (0, type_utilities_1.assertIsApType)(blocks, AP.CollectionTypes.COLLECTION);
     const blocksId = (0, utilities_1.getId)(blocks);
-    (0, types_1.assertExists)(blocksId);
+    (0, type_utilities_1.assertExists)(blocksId);
     await this.core.insertItem(blocksId, activity.id);
     const followingId = (0, utilities_1.getId)(actor.following);
-    (0, types_1.assertExists)(followingId);
+    (0, type_utilities_1.assertExists)(followingId);
     const followersId = (0, utilities_1.getId)(actor.followers);
-    (0, types_1.assertExists)(followersId);
+    (0, type_utilities_1.assertExists)(followersId);
     await Promise.all([
         this.core.removeItem(followingId, blockedActorId),
         this.core.removeItem(followersId, blockedActorId),

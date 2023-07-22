@@ -1,12 +1,12 @@
 import { OutboxPostEndpoint } from '..';
+import * as AP from '@activity-kit/types';
 import {
-  AP,
   assertExists,
   assertIsApActor,
   assertIsApEntity,
   assertIsApExtendedObject,
   assertIsApType,
-} from '@activity-kit/types';
+} from '@activity-kit/type-utilities';
 import { isLocal, getId } from '@activity-kit/utilities';
 
 export async function handleLike(

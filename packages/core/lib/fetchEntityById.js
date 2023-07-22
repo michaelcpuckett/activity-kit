@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchEntityById = void 0;
-const types_1 = require("@activity-kit/types");
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function fetchEntityById(id) {
     const getContentType = async (url) => {
@@ -23,7 +23,7 @@ async function fetchEntityById(id) {
     const actor = await this.findOne('entity', {
         preferredUsername: 'bot',
     });
-    (0, types_1.assertIsApActor)(actor);
+    (0, type_utilities_1.assertIsApActor)(actor);
     const { dateHeader, signatureHeader } = await this.getHttpSignature(id, actor.id, await this.getPrivateKey(actor));
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 1250);

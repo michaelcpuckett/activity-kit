@@ -1,5 +1,6 @@
 import { Core } from '.';
-import { AP, isTypeOf } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { isTypeOf } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export async function expandCollection(

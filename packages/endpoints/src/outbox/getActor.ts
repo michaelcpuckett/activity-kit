@@ -1,4 +1,4 @@
-import { assertIsApActor } from '@activity-kit/types';
+import { assertIsApActor } from '@activity-kit/type-utilities';
 import { OutboxPostEndpoint } from '.';
 
 export async function getActor(this: OutboxPostEndpoint) {

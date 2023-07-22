@@ -2,15 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.respond = void 0;
 const utilities_1 = require("@activity-kit/utilities");
-const types_1 = require("@activity-kit/types");
+const type_utilities_1 = require("@activity-kit/type-utilities");
+const core_1 = require("@activity-kit/core");
 const respond = async function () {
     try {
         this.res.setHeader('Vary', 'Accept');
-        (0, types_1.assertExists)(this.req.url);
+        (0, type_utilities_1.assertExists)(this.req.url);
         const query = new URL(this.req.url, utilities_1.LOCAL_DOMAIN).searchParams;
-        (0, types_1.assertExists)(query);
+        (0, type_utilities_1.assertExists)(query);
         const resource = query.get('resource');
-        (0, types_1.assertExists)(resource);
+        (0, type_utilities_1.assertExists)(resource);
         if (!resource.startsWith('acct:')) {
             throw new Error('Not found.');
         }
@@ -21,10 +22,10 @@ const respond = async function () {
         }
         const actor = await this.core.findOne('entity', {
             preferredUsername: username,
-        }, [types_1.DbOptions.CASE_INSENSITIVE]);
-        (0, types_1.assertIsApActor)(actor);
+        }, [core_1.DbOptions.CASE_INSENSITIVE]);
+        (0, type_utilities_1.assertIsApActor)(actor);
         const actorUrl = actor.url;
-        (0, types_1.assertExists)(actorUrl);
+        (0, type_utilities_1.assertExists)(actorUrl);
         this.res.statusCode = 200;
         if (this.req.headers.accept?.includes(utilities_1.JSON_CONTENT_TYPE) ||
             this.req.headers.accept?.includes(utilities_1.JRD_CONTENT_TYPE)) {

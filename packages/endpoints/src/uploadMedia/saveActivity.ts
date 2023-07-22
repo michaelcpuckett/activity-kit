@@ -1,11 +1,11 @@
+import { UploadMediaPostEndpoint } from '.';
+import * as AP from '@activity-kit/types';
 import {
-  AP,
   assertIsApEntity,
   assertIsApExtendedObject,
   assertIsApTransitiveActivity,
-} from '@activity-kit/types';
+} from '@activity-kit/type-utilities';
 import { LOCAL_DOMAIN, applyContext, getId } from '@activity-kit/utilities';
-import { UploadMediaPostEndpoint } from '.';
 import { compile } from 'path-to-regexp';
 
 export async function saveActivity(this: UploadMediaPostEndpoint) {

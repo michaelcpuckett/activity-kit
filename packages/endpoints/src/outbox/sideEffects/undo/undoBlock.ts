@@ -1,5 +1,6 @@
 import { getId } from '@activity-kit/utilities';
-import { AP, assertIsApActor, assertIsApType } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { assertIsApActor, assertIsApType } from '@activity-kit/type-utilities';
 import { OutboxPostEndpoint } from '../..';
 
 export async function handleUndoBlock(

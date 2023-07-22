@@ -1,6 +1,6 @@
 import { OutboxPostEndpoint } from '..';
+import * as AP from '@activity-kit/types';
 import {
-  AP,
   assertExists,
   assertIsApActor,
   assertIsApEntity,
@@ -8,7 +8,7 @@ import {
   assertIsApType,
   isType,
   isTypeOf,
-} from '@activity-kit/types';
+} from '@activity-kit/type-utilities';
 import { SERVER_ACTOR_USERNAME, applyContext } from '@activity-kit/utilities';
 import { LOCAL_DOMAIN } from '@activity-kit/utilities';
 import { getId } from '@activity-kit/utilities';

@@ -9,7 +9,8 @@ import {
   LOCAL_HOSTNAME,
   XRD_CONTENT_TYPE,
 } from '@activity-kit/utilities';
-import { assertExists, assertIsApActor, DbOptions } from '@activity-kit/types';
+import { assertExists, assertIsApActor } from '@activity-kit/type-utilities';
+import { DbOptions } from '@activity-kit/core';
 
 export const respond = async function (this: WebfingerGetEndpoint) {
   try {

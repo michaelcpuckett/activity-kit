@@ -1,5 +1,6 @@
 import { Core } from '.';
-import { AP, assertIsApCollection } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { assertIsApCollection } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export async function getCollectionItems(
