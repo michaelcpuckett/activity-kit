@@ -11,8 +11,6 @@ import { getArray, LOCAL_DOMAIN } from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
 
 export async function respond(this: OutboxPostEndpoint) {
-  console.log(this.body);
-
   assertIsApEntity(this.body);
 
   await this.getActor();

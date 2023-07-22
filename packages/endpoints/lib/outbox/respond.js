@@ -29,7 +29,6 @@ const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 const path_to_regexp_1 = require("path-to-regexp");
 async function respond() {
-    console.log(this.body);
     (0, type_utilities_1.assertIsApEntity)(this.body);
     await this.getActor();
     (0, type_utilities_1.assertIsApActor)(this.actor);
