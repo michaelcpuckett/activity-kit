@@ -1,5 +1,5 @@
 import { Core } from '.';
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 import { cleanProps } from '@activity-kit/utilities';
 import { applyContext } from '@activity-kit/utilities';
 

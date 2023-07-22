@@ -1,5 +1,5 @@
 import { Core } from '.';
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 import { getCollectionNameByUrl } from '@activity-kit/utilities';
 
 export async function findEntityById(

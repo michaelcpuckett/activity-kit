@@ -25,7 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.respond = void 0;
 const utilities_1 = require("@activity-kit/utilities");
-const types_1 = require("@activity-kit/types");
+const AP = __importStar(require("@activity-kit/types"));
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 async function respond() {
@@ -33,10 +33,10 @@ async function respond() {
     const version = parseFloat(url.split('nodeinfo/')[1]);
     const getTotalUsers = async () => {
         const persons = await this.core.findAll('entity', {
-            type: types_1.AP.ActorTypes.PERSON,
+            type: AP.ActorTypes.PERSON,
         });
         const groups = await this.core.findAll('entity', {
-            type: types_1.AP.ActorTypes.GROUP,
+            type: AP.ActorTypes.GROUP,
         });
         return persons.length + groups.length;
     };

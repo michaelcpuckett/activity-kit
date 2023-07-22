@@ -1,5 +1,5 @@
 import { Core } from '.';
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 
 export async function getPrivateKey(this: Core, actor: AP.Actor) {
   if (!actor.preferredUsername) {

@@ -1,5 +1,5 @@
 import { EntityGetEndpoint } from '.';
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 import { applyContext, cleanProps } from '@activity-kit/utilities';
 import { convertEntityToJson } from '@activity-kit/utilities';
 

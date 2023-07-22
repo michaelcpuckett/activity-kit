@@ -4,7 +4,7 @@ import {
   JSON_CONTENT_TYPE,
   LOCAL_DOMAIN,
 } from '@activity-kit/utilities';
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 import * as fs from 'fs';
 import * as path from 'path';
 

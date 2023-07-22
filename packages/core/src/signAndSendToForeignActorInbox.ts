@@ -1,4 +1,4 @@
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 import {
   CONTENT_TYPE_HEADER,
   ACTIVITYSTREAMS_CONTENT_TYPE,

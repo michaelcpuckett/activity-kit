@@ -4,7 +4,7 @@ import {
   SHARED_INBOX_ID,
   applyContext,
 } from '@activity-kit/utilities';
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 import { UserPostEndpoint } from '.';
 import { compile } from 'path-to-regexp';
 

@@ -1,8 +1,31 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createServerActor = void 0;
 const utilities_1 = require("@activity-kit/utilities");
-const types_1 = require("@activity-kit/types");
+const AP = __importStar(require("@activity-kit/types"));
 const path_to_regexp_1 = require("path-to-regexp");
 async function createServerActor() {
     const { publicKey: botPublicKey, privateKey: botPrivateKey } = await this.core.generateKeyPair();
@@ -20,7 +43,7 @@ async function createServerActor() {
     const botInbox = (0, utilities_1.applyContext)({
         id: inboxId,
         url: inboxId,
-        type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         orderedItems: [],
@@ -32,7 +55,7 @@ async function createServerActor() {
     const botOutbox = (0, utilities_1.applyContext)({
         id: outboxId,
         url: outboxId,
-        type: types_1.AP.CollectionTypes.ORDERED_COLLECTION,
+        type: AP.CollectionTypes.ORDERED_COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         orderedItems: [],
@@ -45,7 +68,7 @@ async function createServerActor() {
         id: followersId,
         url: followersId,
         name: 'Followers',
-        type: types_1.AP.CollectionTypes.COLLECTION,
+        type: AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         items: [],
@@ -58,7 +81,7 @@ async function createServerActor() {
         id: followingId,
         url: followingId,
         name: 'Following',
-        type: types_1.AP.CollectionTypes.COLLECTION,
+        type: AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         items: [],
@@ -71,7 +94,7 @@ async function createServerActor() {
         id: hashtagsId,
         url: hashtagsId,
         name: 'Hashtags',
-        type: types_1.AP.CollectionTypes.COLLECTION,
+        type: AP.CollectionTypes.COLLECTION,
         totalItems: 0,
         attributedTo: userId,
         items: [],
@@ -80,7 +103,7 @@ async function createServerActor() {
     const botActor = (0, utilities_1.applyContext)({
         id: userId,
         url: userId,
-        type: types_1.AP.ActorTypes.APPLICATION,
+        type: AP.ActorTypes.APPLICATION,
         name: utilities_1.SERVER_ACTOR_USERNAME,
         preferredUsername: utilities_1.SERVER_ACTOR_USERNAME,
         inbox: botInbox.id,

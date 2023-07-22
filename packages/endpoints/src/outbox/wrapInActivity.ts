@@ -1,6 +1,6 @@
 import { OutboxPostEndpoint } from '.';
 import { LOCAL_DOMAIN, applyContext } from '@activity-kit/utilities';
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 import { compile } from 'path-to-regexp';
 
 export async function wrapInActivity(

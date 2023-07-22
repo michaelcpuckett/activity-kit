@@ -1,5 +1,5 @@
 import type { IncomingMessage } from 'http';
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 import { convertJsonLdToEntity } from './convertJsonLdToEntity';
 import { streamToString } from './streamToString';
 

@@ -1,4 +1,4 @@
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 
 export const getId = (
   entity?: undefined | null | AP.EntityReference | AP.EntityReference[],

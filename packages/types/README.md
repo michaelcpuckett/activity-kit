@@ -5,5 +5,5 @@
 ## Usage
 
 ```
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 ```

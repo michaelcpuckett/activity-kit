@@ -2,7 +2,7 @@ import { isLocal } from '@activity-kit/utilities';
 import { SharedInboxPostEndpoint } from '.';
 import { InboxPostEndpoint } from '../inbox';
 import { assertIsApActivity, assertIsApActor } from '@activity-kit/types';
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 
 export async function getActors(
   this: InboxPostEndpoint & SharedInboxPostEndpoint,

@@ -1,5 +1,5 @@
 import { SqliteDbAdapter } from '.';
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 import {
   applyContext,
   cleanProps,

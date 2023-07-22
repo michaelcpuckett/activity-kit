@@ -1,0 +1,30 @@
+{
+  "name": "type-utilities",
+  "version": "0.4.44",
+  "description": "> TODO: description",
+  "author": "Michael Puckett <michaelcpuckett@gmail.com>",
+  "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "node .build.js",
+    "format": "prettier --config .prettierrc \"**/*.ts\" --write",
+    "lint": "eslint activitypub/**/*.ts"
+  },
+  "dependencies": {
+    "@activity-kit/types": "^0.4.42"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "eslint": "^8.25.0",
+    "prettier": "^2.7.1",
+    "typescript": "^5.0.4"
+  }
+}

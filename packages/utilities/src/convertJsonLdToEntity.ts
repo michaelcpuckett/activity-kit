@@ -2,7 +2,7 @@ import * as jsonld from 'jsonld';
 import getNodeDocumentLoader from 'jsonld/lib/documentLoaders/node';
 import { RemoteDocument } from 'jsonld/jsonld-spec';
 
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 import {
   ACTIVITYSTREAMS_CONTEXT,
   LDP_CONTEXT,

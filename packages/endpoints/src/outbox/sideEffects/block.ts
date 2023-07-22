@@ -5,7 +5,7 @@ import {
   assertIsApType,
 } from '@activity-kit/types';
 import { getId } from '@activity-kit/utilities';
-import { AP } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
 
 export async function handleBlock(
   this: OutboxPostEndpoint,

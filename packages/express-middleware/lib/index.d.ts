@@ -2,7 +2,7 @@ import type { NextFunction } from 'express';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { Adapters, AP, Plugin, Routes } from '@activity-kit/types';
 export declare const activityKitPlugin: (config: {
-    routes?: Partial<Routes>;
+    routes?: Routes;
     pages: {
         login: () => Promise<string>;
         home: ({ actor }: {

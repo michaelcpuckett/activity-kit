@@ -1,4 +1,4 @@
-import { AP, AuthAdapter, CryptoAdapter, DbAdapter, FetchPolyfill, StorageAdapter, CoreLibrary } from '@activity-kit/types';
+import { AuthAdapter, CryptoAdapter, DbAdapter, FetchPolyfill, StorageAdapter, CoreLibrary } from '@activity-kit/types';
 import { findEntityById } from './findEntityById';
 import { fetchEntityById } from './fetchEntityById';
 import { queryById } from './queryById';
@@ -45,7 +45,7 @@ export declare class Core implements CoreLibrary {
     findEntityById: typeof findEntityById;
     getActorByUserId: typeof getActorByUserId;
     getPrivateKey: typeof getPrivateKey;
-    getStreamByName: (this: Core, actor: AP.Actor, name: string) => Promise<AP.EitherCollection>;
+    getStreamByName: (this: Core, actor: AP.Actor, name: string) => Promise<any>;
     fetchEntityById: typeof fetchEntityById;
     queryById: typeof queryById;
     expandEntity: typeof expandEntity;

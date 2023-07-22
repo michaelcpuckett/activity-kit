@@ -1,3 +1,3 @@
-export * as AP from './activitypub';
-export * from './assertions';
-export * from './adapters';
+export * from './Core';
+export * from './Extended';
+export * from './util';
