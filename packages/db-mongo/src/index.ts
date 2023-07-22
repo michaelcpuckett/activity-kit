@@ -1,6 +1,6 @@
 import { Db } from 'mongodb';
 
-import { DbAdapter } from '@activity-kit/types';
+import { DbAdapter } from '@activity-kit/core';
 
 import { findOne } from './findOne';
 import { findAll } from './findAll';

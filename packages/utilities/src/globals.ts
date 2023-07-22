@@ -1,5 +1,3 @@
-import { Routes } from '@activity-kit/types';
-
 export const PORT = Number(process.env.AP_PORT ?? 3000);
 export const LOCAL_HOSTNAME = process.env.AP_HOST_NAME ?? 'localhost';
 export const PROTOCOL = process.env.AP_PROTOCOL ?? 'http:';
@@ -27,7 +25,7 @@ export const JRD_CONTENT_TYPE = 'application/jrd+json';
 export const JSON_CONTENT_TYPE = 'application/json';
 export const HTML_CONTENT_TYPE = 'text/html';
 export const USERNAME_REGEXP = /^[\w\d]{3,12}$/;
-export const DEFAULT_ROUTES: Routes = {
+export const DEFAULT_ROUTES = {
   // Server Actor.
   serverActor: '/:username',
   serverInbox: '(.+)?:entityRoute/inbox',

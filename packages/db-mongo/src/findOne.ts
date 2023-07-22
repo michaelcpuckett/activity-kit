@@ -1,5 +1,6 @@
 import { MongoDbAdapter } from '.';
-import { AP, DbOptions } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { DbOptions } from '@activity-kit/core';
 import { convertJsonToEntity } from '@activity-kit/utilities';
 import { Db } from 'mongodb';
 

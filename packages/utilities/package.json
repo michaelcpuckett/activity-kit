@@ -28,6 +28,7 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
+    "@activity-kit/type-utilities": "^0.4.46",
     "@activity-kit/types": "^0.4.45",
     "jsonld": "^8.1.0"
   },

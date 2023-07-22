@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.compressEntity = void 0;
-const types_1 = require("@activity-kit/types");
+const type_utilities_1 = require("@activity-kit/type-utilities");
 function compressEntity(entity) {
     const object = {};
     for (const key of Object.keys(entity)) {
@@ -11,7 +11,7 @@ function compressEntity(entity) {
     }
     const compressed = compressObject(object);
     try {
-        (0, types_1.assertIsApEntity)(compressed);
+        (0, type_utilities_1.assertIsApEntity)(compressed);
         return compressed;
     }
     catch (error) {

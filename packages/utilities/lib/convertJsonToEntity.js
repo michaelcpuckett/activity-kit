@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.convertJsonToEntity = void 0;
-const types_1 = require("@activity-kit/types");
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const globals_1 = require("./globals");
 function convertJsonToEntity(object) {
     const converted = convertObject(object);
     try {
-        (0, types_1.assertIsApEntity)(converted);
+        (0, type_utilities_1.assertIsApEntity)(converted);
         return converted;
     }
     catch (error) {

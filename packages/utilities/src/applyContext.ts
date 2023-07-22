@@ -1,4 +1,5 @@
-import { AP, assertIsApEntity, isTypeOf } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { assertIsApEntity, isTypeOf } from '@activity-kit/type-utilities';
 import { ACTIVITYSTREAMS_CONTEXT, W3ID_SECURITY_CONTEXT } from './globals';
 
 export function applyContext<T>(entity: AP.Entity): T {

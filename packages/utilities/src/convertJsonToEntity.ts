@@ -1,4 +1,5 @@
-import { AP, assertIsApEntity } from '@activity-kit/types';
+import * as AP from '@activity-kit/types';
+import { assertIsApEntity } from '@activity-kit/type-utilities';
 import { PUBLIC_ACTOR } from './globals';
 
 export function convertJsonToEntity(
