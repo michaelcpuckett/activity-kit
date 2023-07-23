@@ -33,26 +33,26 @@ async function respond(render) {
     const baseUrl = hasPage ? new URL(pageParts[0]) : this.url;
     const entity = await this.core.findEntityById(baseUrl);
     try {
-        (0, type_utilities_1.assertIsApEntity)(entity);
+        type_utilities_1.assert.isApEntity(entity);
     }
     catch (error) {
         return this.handleNotFound();
     }
-    if (!(0, type_utilities_1.isTypeOf)(entity, AP.CollectionTypes) &&
-        !(0, type_utilities_1.isTypeOf)(entity, AP.CollectionPageTypes)) {
+    if (!type_utilities_1.guard.isTypeOf(entity, AP.CollectionTypes) &&
+        !type_utilities_1.guard.isTypeOf(entity, AP.CollectionPageTypes)) {
         return this.handleFoundEntity(entity, render);
     }
-    (0, type_utilities_1.assertIsApCollection)(entity);
+    type_utilities_1.assert.isApCollection(entity);
     const totalItems = Number(entity.totalItems);
     const lastPageIndex = Math.max(1, Math.ceil(totalItems / ITEMS_PER_COLLECTION_PAGE));
-    const isOrderedCollection = (0, type_utilities_1.isType)(entity, AP.CollectionTypes.ORDERED_COLLECTION);
+    const isOrderedCollection = type_utilities_1.guard.isType(entity, AP.CollectionTypes.ORDERED_COLLECTION);
     const getPageUrl = (page) => new URL(`${this.url.pathname === '/' ? '' : this.url.pathname}/page/${page}`, this.url.origin);
     const page = pageParts[1];
     const currentPage = page ? Number(page) : 1;
     const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE;
     const startIndex = firstItemIndex + 1;
     if (!hasPage) {
-        (0, type_utilities_1.assertIsApCollection)(entity);
+        type_utilities_1.assert.isApCollection(entity);
         delete entity.orderedItems;
         delete entity.items;
         const collectionEntity = {
@@ -75,12 +75,12 @@ async function respond(render) {
             return expandedCollection.items;
         }
     })();
-    (0, type_utilities_1.assertIsArray)(expandedItems);
+    type_utilities_1.assert.isArray(expandedItems);
     const limitedItems = expandedItems.slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE);
     const items = [];
     for (const item of limitedItems) {
         if (item && !(item instanceof URL)) {
-            if ((0, type_utilities_1.isTypeOf)(item, AP.ActivityTypes) &&
+            if (type_utilities_1.guard.isTypeOf(item, AP.ActivityTypes) &&
                 'object' in item &&
                 item.object instanceof URL) {
                 const object = await this.core.findEntityById(item.object);

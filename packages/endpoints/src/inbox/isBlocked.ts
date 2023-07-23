@@ -1,11 +1,5 @@
 import * as AP from '@activity-kit/types';
-import {
-  assertExists,
-  assertIsApActivity,
-  assertIsApActor,
-  assertIsApCollection,
-  assertIsArray,
-} from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '.';
 
@@ -14,20 +8,20 @@ export async function isBlocked(
   actor: AP.Actor,
 ): Promise<boolean> {
   try {
-    assertIsApActivity(this.activity);
+    assert.isApActivity(this.activity);
 
     const activityActorId = getId(this.activity.actor);
 
-    assertExists(activityActorId);
+    assert.exists(activityActorId);
 
     const activityActor = await this.core.queryById(activityActorId);
 
-    assertIsApActor(activityActor);
+    assert.isApActor(activityActor);
 
     const blocks = await this.core.getStreamByName(actor, 'Blocks');
 
-    assertIsApCollection(blocks);
-    assertIsArray(blocks.items);
+    assert.isApCollection(blocks);
+    assert.isArray(blocks.items);
 
     const blockedActorIds = await Promise.all(
       blocks.items

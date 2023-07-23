@@ -28,18 +28,18 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleAnnounce(activity) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.ANNOUNCE);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.ANNOUNCE);
     const actorId = (0, utilities_1.getId)(activity.actor);
     const actor = await this.core.queryById(actorId);
-    (0, type_utilities_1.assertIsApActor)(actor);
+    type_utilities_1.assert.isApActor(actor);
     const shared = await this.core.getStreamByName(actor, 'Shared');
-    (0, type_utilities_1.assertIsApType)(shared, AP.CollectionTypes.ORDERED_COLLECTION);
+    type_utilities_1.assert.isApType(shared, AP.CollectionTypes.ORDERED_COLLECTION);
     await this.core.insertOrderedItem(shared.id, activity.id);
     const objectId = (0, utilities_1.getId)(activity.object);
-    (0, type_utilities_1.assertExists)(objectId);
+    type_utilities_1.assert.exists(objectId);
     if ((0, utilities_1.isLocal)(objectId)) {
         const object = await this.core.queryById(objectId);
-        (0, type_utilities_1.assertIsApEntity)(object);
+        type_utilities_1.assert.isApEntity(object);
         if (!('shares' in object)) {
             throw new Error('Object is local, but `shares` is not in this object.');
         }

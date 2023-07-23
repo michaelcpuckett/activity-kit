@@ -1,9 +1,4 @@
-import {
-  assertExists,
-  assertIsApCollection,
-  assertIsApExtendedObject,
-  assertIsApType,
-} from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import * as AP from '@activity-kit/types';
 import { getId } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '..';
@@ -14,25 +9,25 @@ export async function handleAnnounce(
   activity: AP.Entity,
   recipient: AP.Actor,
 ) {
-  assertIsApType<AP.Announce>(activity, AP.ActivityTypes.ANNOUNCE);
+  assert.isApType<AP.Announce>(activity, AP.ActivityTypes.ANNOUNCE);
 
   const objectId = getId(activity.object);
 
-  assertExists(objectId);
+  assert.exists(objectId);
 
   const object = await this.core.findEntityById(objectId);
 
   try {
-    assertIsApExtendedObject(object);
+    assert.isApExtendedObject(object);
 
     const sharesId = getId(object.shares);
     const shares = await this.core.findEntityById(sharesId);
 
-    assertIsApCollection(shares);
+    assert.isApCollection(shares);
 
     const attributedToId = getId(shares.attributedTo);
 
-    assertExists(attributedToId);
+    assert.exists(attributedToId);
 
     if (attributedToId.toString() !== getId(recipient)?.toString()) {
       // Not applicable to this Actor.

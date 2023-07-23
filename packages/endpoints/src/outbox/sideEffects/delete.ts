@@ -1,25 +1,21 @@
 import { OutboxPostEndpoint } from '..';
 import * as AP from '@activity-kit/types';
-import {
-  assertExists,
-  assertIsApEntity,
-  assertIsApType,
-} from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export async function handleDelete(
   this: OutboxPostEndpoint,
   activity: AP.Entity,
 ) {
-  assertIsApType<AP.Delete>(activity, AP.ActivityTypes.DELETE);
+  assert.isApType<AP.Delete>(activity, AP.ActivityTypes.DELETE);
 
   const objectId = getId(activity.object);
 
-  assertExists(objectId);
+  assert.exists(objectId);
 
   const object = await this.core.findEntityById(objectId);
 
-  assertIsApEntity(object);
+  assert.isApEntity(object);
 
   activity.object = {
     id: objectId,

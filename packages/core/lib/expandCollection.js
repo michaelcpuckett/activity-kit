@@ -36,7 +36,7 @@ async function expandCollection(collection) {
     if (!foundEntity) {
         return null;
     }
-    if ((0, type_utilities_1.isTypeOf)(foundEntity, AP.CollectionTypes)) {
+    if (type_utilities_1.guard.isTypeOf(foundEntity, AP.CollectionTypes)) {
         const items = await this.getCollectionItems(foundEntity);
         if (!items) {
             return foundEntity;

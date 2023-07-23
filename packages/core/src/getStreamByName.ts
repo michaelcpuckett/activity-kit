@@ -1,9 +1,6 @@
 import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import {
-  assertIsApCollection,
-  assertIsArray,
-} from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export const getStreamByName = async function (
@@ -11,7 +8,7 @@ export const getStreamByName = async function (
   actor: AP.Actor,
   name: string,
 ): Promise<AP.EitherCollection | null> {
-  assertIsArray(actor.streams);
+  assert.isArray(actor.streams);
 
   const streams = await Promise.all(
     actor.streams.map(async (stream: AP.Entity | URL) => {
@@ -27,7 +24,7 @@ export const getStreamByName = async function (
 
   for (const stream of streams) {
     try {
-      assertIsApCollection(stream);
+      assert.isApCollection(stream);
 
       if (stream.name === name) {
         return stream;

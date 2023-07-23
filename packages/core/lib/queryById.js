@@ -33,7 +33,7 @@ async function queryById(id) {
     }
     const fetchedEntity = await this.fetchEntityById(id);
     if (!fetchedEntity ||
-        (0, type_utilities_1.isType)(fetchedEntity, AP.ExtendedObjectTypes.TOMBSTONE)) {
+        type_utilities_1.guard.isType(fetchedEntity, AP.ExtendedObjectTypes.TOMBSTONE)) {
         return this.findEntityById(id);
     }
     return fetchedEntity;

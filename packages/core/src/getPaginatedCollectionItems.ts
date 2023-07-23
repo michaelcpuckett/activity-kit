@@ -1,11 +1,6 @@
 import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import {
-  assertExists,
-  assertIsApCollection,
-  assertIsApTypeOf,
-  assertIsArray,
-} from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export async function getPaginatedCollectionItems(
@@ -15,7 +10,7 @@ export async function getPaginatedCollectionItems(
   const collectionItems: AP.EntityReference[][] = [];
 
   try {
-    assertIsApCollection(collection);
+    assert.isApCollection(collection);
 
     const firstCollectionPageId = getId(collection.first);
 
@@ -23,7 +18,7 @@ export async function getPaginatedCollectionItems(
       const firstCollectionPage = await this.queryById(firstCollectionPageId);
 
       try {
-        assertIsApTypeOf<AP.EitherCollectionPage>(
+        assert.isApTypeOf<AP.EitherCollectionPage>(
           firstCollectionPage,
           AP.CollectionPageTypes,
         );
@@ -33,7 +28,7 @@ export async function getPaginatedCollectionItems(
 
         while (nextCollectionPage) {
           try {
-            assertIsApTypeOf<AP.EitherCollectionPage>(
+            assert.isApTypeOf<AP.EitherCollectionPage>(
               nextCollectionPage,
               AP.CollectionPageTypes,
             );
@@ -41,19 +36,19 @@ export async function getPaginatedCollectionItems(
             const collectionPageItems =
               nextCollectionPage.orderedItems || nextCollectionPage.items;
 
-            assertIsArray(collectionPageItems);
+            assert.isArray(collectionPageItems);
 
             collectionItems.push(collectionPageItems);
 
             const nextCollectionPageId = getId(nextCollectionPage.next);
 
-            assertExists(nextCollectionPageId);
+            assert.exists(nextCollectionPageId);
 
             const potentialNextCollectionPage = await this.queryById(
               nextCollectionPageId,
             );
 
-            assertIsApTypeOf<AP.EitherCollectionPage>(
+            assert.isApTypeOf<AP.EitherCollectionPage>(
               potentialNextCollectionPage,
               AP.CollectionPageTypes,
             );

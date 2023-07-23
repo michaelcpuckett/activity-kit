@@ -1,6 +1,6 @@
 import { InboxPostEndpoint } from '.';
 import * as AP from '@activity-kit/types';
-import { isType } from '@activity-kit/type-utilities';
+import { guard } from '@activity-kit/type-utilities';
 
 export async function runSideEffects(
   this: InboxPostEndpoint,
@@ -17,23 +17,23 @@ export async function runSideEffects(
   }
 
   try {
-    if (isType<AP.Create>(this.activity, AP.ActivityTypes.CREATE)) {
+    if (guard.isType<AP.Create>(this.activity, AP.ActivityTypes.CREATE)) {
       await this.handleCreate(this.activity, recipient);
     }
 
-    if (isType<AP.Follow>(this.activity, AP.ActivityTypes.FOLLOW)) {
+    if (guard.isType<AP.Follow>(this.activity, AP.ActivityTypes.FOLLOW)) {
       await this.handleFollow(this.activity, recipient);
     }
 
-    if (isType<AP.Accept>(this.activity, AP.ActivityTypes.ACCEPT)) {
+    if (guard.isType<AP.Accept>(this.activity, AP.ActivityTypes.ACCEPT)) {
       await this.handleAccept(this.activity, recipient);
     }
 
-    if (isType<AP.Like>(this.activity, AP.ActivityTypes.LIKE)) {
+    if (guard.isType<AP.Like>(this.activity, AP.ActivityTypes.LIKE)) {
       await this.handleLike(this.activity, recipient);
     }
 
-    if (isType<AP.Announce>(this.activity, AP.ActivityTypes.ANNOUNCE)) {
+    if (guard.isType<AP.Announce>(this.activity, AP.ActivityTypes.ANNOUNCE)) {
       await this.handleAnnounce(this.activity, recipient);
     }
   } catch (error) {

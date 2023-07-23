@@ -28,21 +28,21 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleLike(activity) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.LIKE);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.LIKE);
     const actorId = (0, utilities_1.getId)(activity.actor);
     const actor = await this.core.queryById(actorId);
-    (0, type_utilities_1.assertIsApActor)(actor);
+    type_utilities_1.assert.isApActor(actor);
     const objectId = (0, utilities_1.getId)(activity.object);
-    (0, type_utilities_1.assertExists)(objectId);
+    type_utilities_1.assert.exists(objectId);
     const object = await this.core.queryById(objectId);
-    (0, type_utilities_1.assertIsApEntity)(object);
+    type_utilities_1.assert.isApEntity(object);
     const likedId = (0, utilities_1.getId)(actor.liked);
-    (0, type_utilities_1.assertExists)(likedId);
+    type_utilities_1.assert.exists(likedId);
     await this.core.insertOrderedItem(likedId, objectId);
     try {
-        (0, type_utilities_1.assertIsApExtendedObject)(object);
+        type_utilities_1.assert.isApExtendedObject(object);
         const likesId = (0, utilities_1.getId)(object.likes);
-        (0, type_utilities_1.assertExists)(likesId);
+        type_utilities_1.assert.exists(likesId);
         if (!(0, utilities_1.isLocal)(objectId)) {
             throw new Error('Cannot add to remote collection.');
         }

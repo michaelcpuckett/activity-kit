@@ -1,24 +1,24 @@
 import { OutboxPostEndpoint } from '.';
-import { assertExists, assertIsApActivity } from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export async function saveActivity(this: OutboxPostEndpoint) {
-  assertIsApActivity(this.activity);
+  assert.isApActivity(this.activity);
 
   const publishedDate = new Date();
   this.activity.published = publishedDate;
 
   const activityId = getId(this.activity);
 
-  assertExists(activityId);
+  assert.exists(activityId);
 
   const actorId = getId(this.activity.actor);
 
-  assertExists(actorId);
+  assert.exists(actorId);
 
   const outboxId = getId(this.actor.outbox);
 
-  assertExists(outboxId);
+  assert.exists(outboxId);
 
   await Promise.all([
     this.core.saveEntity(this.activity),

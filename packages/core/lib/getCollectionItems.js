@@ -29,7 +29,7 @@ const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function getCollectionItems(entity) {
     try {
-        (0, type_utilities_1.assertIsApCollection)(entity);
+        type_utilities_1.assert.isApCollection(entity);
         const collectionItems = entity.orderedItems || entity.items;
         if (!Array.isArray(collectionItems)) {
             return [];

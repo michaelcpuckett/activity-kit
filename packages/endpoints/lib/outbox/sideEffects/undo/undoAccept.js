@@ -28,17 +28,17 @@ const utilities_1 = require("@activity-kit/utilities");
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 async function handleUndoAccept(activity) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.ACCEPT);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.ACCEPT);
     const actorId = (0, utilities_1.getId)(activity.actor);
     const actor = await this.core.findEntityById(actorId);
-    (0, type_utilities_1.assertIsApActor)(actor);
+    type_utilities_1.assert.isApActor(actor);
     const followersId = (0, utilities_1.getId)(actor.followers);
-    (0, type_utilities_1.assertExists)(followersId);
+    type_utilities_1.assert.exists(followersId);
     const followId = (0, utilities_1.getId)(activity.object);
     const follow = await this.core.queryById(followId);
-    (0, type_utilities_1.assertIsApType)(follow, AP.ActivityTypes.FOLLOW);
+    type_utilities_1.assert.isApType(follow, AP.ActivityTypes.FOLLOW);
     const followerId = (0, utilities_1.getId)(follow.actor);
-    (0, type_utilities_1.assertExists)(followerId);
+    type_utilities_1.assert.exists(followerId);
     await this.core.removeItem(followersId, followerId);
 }
 exports.handleUndoAccept = handleUndoAccept;

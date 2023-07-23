@@ -31,7 +31,7 @@ async function shouldForwardActivity() {
     if (!this.activity) {
         return false;
     }
-    if (!(0, type_utilities_1.isTypeOf)(this.activity, AP.ActivityTypes)) {
+    if (!type_utilities_1.guard.isTypeOf(this.activity, AP.ActivityTypes)) {
         return false;
     }
     const activity = this.activity;
@@ -48,8 +48,8 @@ async function shouldForwardActivity() {
         if (!foundItem) {
             continue;
         }
-        if ((0, type_utilities_1.isType)(foundItem, AP.CollectionTypes.COLLECTION) ||
-            (0, type_utilities_1.isType)(foundItem, AP.CollectionTypes.ORDERED_COLLECTION)) {
+        if (type_utilities_1.guard.isType(foundItem, AP.CollectionTypes.COLLECTION) ||
+            type_utilities_1.guard.isType(foundItem, AP.CollectionTypes.ORDERED_COLLECTION)) {
             return true;
         }
     }

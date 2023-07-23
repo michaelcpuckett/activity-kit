@@ -32,9 +32,9 @@ const utilities_3 = require("@activity-kit/utilities");
 const path_to_regexp_1 = require("path-to-regexp");
 const cheerio = __importStar(require("cheerio"));
 async function handleCreate(activity) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.CREATE);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.CREATE);
     const actorId = (0, utilities_3.getId)(activity.actor);
-    (0, type_utilities_1.assertExists)(actorId);
+    type_utilities_1.assert.exists(actorId);
     const object = activity.object;
     if (object instanceof URL) {
         throw new Error('Bad object: URL reference is not allowed for Create.');
@@ -42,7 +42,7 @@ async function handleCreate(activity) {
     if (Array.isArray(object)) {
         throw new Error('Internal error: Object array not supported currently. TODO.');
     }
-    (0, type_utilities_1.assertIsApEntity)(object);
+    type_utilities_1.assert.isApEntity(object);
     const publishedDate = new Date();
     const dateFormatter = new Intl.DateTimeFormat('en-US', {
         year: 'numeric',
@@ -67,8 +67,8 @@ async function handleCreate(activity) {
         slug,
     })}`);
     object.id = objectId;
-    if ((0, type_utilities_1.isTypeOf)(object, AP.ExtendedObjectTypes)) {
-        (0, type_utilities_1.assertIsApExtendedObject)(object);
+    if (type_utilities_1.guard.isTypeOf(object, AP.ExtendedObjectTypes)) {
+        type_utilities_1.assert.isApExtendedObject(object);
         object.url = objectId;
         const entityRoute = objectId.pathname;
         const objectRepliesId = new URL(`${utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.replies, {
@@ -134,8 +134,7 @@ async function handleCreate(activity) {
             const tags = Array.isArray(object.tag) ? object.tag : [object.tag];
             for (const tag of tags) {
                 if (!(tag instanceof URL) &&
-                    (0, type_utilities_1.isType)(tag, AP.ExtendedObjectTypes.HASHTAG)) {
-                    (0, type_utilities_1.assertIsApType)(tag, AP.ExtendedObjectTypes.HASHTAG);
+                    type_utilities_1.guard.isType(tag, AP.ExtendedObjectTypes.HASHTAG)) {
                     const hashtagCollectionUrl = new URL(`${utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.hashtag)({
                         slug: tag.name
                             .replace('#', '')
@@ -162,7 +161,7 @@ async function handleCreate(activity) {
                         const serverActor = await this.core.findOne('entity', {
                             preferredUsername: utilities_1.SERVER_ACTOR_USERNAME,
                         });
-                        (0, type_utilities_1.assertIsApActor)(serverActor);
+                        type_utilities_1.assert.isApActor(serverActor);
                         const serverHashtags = await this.core.getStreamByName(serverActor, 'Hashtags');
                         const serverHashtagsUrl = serverHashtags.id;
                         await this.core.insertItem(serverHashtagsUrl, hashtagCollectionUrl);
@@ -182,7 +181,7 @@ async function handleCreate(activity) {
     else {
         await this.core.saveEntity(object);
     }
-    (0, type_utilities_1.assertIsApType)(this.activity, AP.ActivityTypes.CREATE);
+    type_utilities_1.assert.isApType(this.activity, AP.ActivityTypes.CREATE);
     this.activity.object = object;
 }
 exports.handleCreate = handleCreate;

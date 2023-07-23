@@ -1,11 +1,5 @@
 import * as AP from '@activity-kit/types';
-import {
-  assertExists,
-  assertIsApCollection,
-  assertIsApEntity,
-  assertIsApExtendedObject,
-  assertIsApType,
-} from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '..';
 
@@ -15,30 +9,30 @@ export async function handleLike(
   activity: AP.Entity,
   recipient: AP.Actor,
 ) {
-  assertIsApType<AP.Like>(activity, AP.ActivityTypes.LIKE);
+  assert.isApType<AP.Like>(activity, AP.ActivityTypes.LIKE);
 
   const objectId = getId(activity.object);
 
-  assertExists(objectId);
+  assert.exists(objectId);
 
   const object = await this.core.findEntityById(objectId);
 
-  assertIsApEntity(object);
+  assert.isApEntity(object);
 
   try {
-    assertIsApExtendedObject(object);
+    assert.isApExtendedObject(object);
 
     const likesId = getId(object.likes);
 
-    assertExists(likesId);
+    assert.exists(likesId);
 
     const likes = await this.core.findEntityById(likesId);
 
-    assertIsApCollection(likes);
+    assert.isApCollection(likes);
 
     const attributedToId = getId(likes.attributedTo);
 
-    assertExists(attributedToId);
+    assert.exists(attributedToId);
 
     if (attributedToId.toString() !== getId(recipient)?.toString()) {
       // Not applicable to this Actor.

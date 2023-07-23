@@ -1,0 +1,24 @@
+import * as AP from '@activity-kit/types';
+export declare function isType<T extends AP.Entity>(entity: unknown, type: string): entity is T;
+export declare function isTypeOf<T extends AP.Entity>(entity: unknown, types: Record<string, string>): entity is T;
+export declare function exists(value: unknown): value is string | number | object;
+export declare function isObject(value: unknown): value is object;
+export declare function isString(value: unknown): value is string;
+export declare function isNumber(value: unknown): value is number;
+export declare function isDate(value: unknown): value is Date;
+export declare function isArray(value: unknown): value is Array<unknown>;
+export declare function hasType(value: unknown): value is {
+    type: string | string[];
+};
+export declare function hasApType(value: unknown): value is {
+    type: AP.AnyType | Array<AP.AnyType | string>;
+};
+export declare function isApEntity(value: unknown): value is AP.Entity;
+export declare function isApActivity(value: unknown): value is AP.Activity;
+export declare function isApCoreObject(value: unknown): value is AP.CoreObject;
+export declare function isApExtendedObject(value: unknown): value is AP.ExtendedObject;
+export declare function isApActor(value: unknown): value is AP.Actor;
+export declare function isApCollection(value: unknown): value is AP.Collection | AP.OrderedCollection;
+export declare function isApTransitiveActivity(value: unknown): value is AP.TransitiveActivity<AP.AnyTransitiveActivityType>;
+export declare function isApType<T extends AP.Entity>(value: unknown, type: string): value is T;
+export declare function isApTypeOf<T extends AP.Entity>(value: unknown, comparison: Record<string, string>): value is T;

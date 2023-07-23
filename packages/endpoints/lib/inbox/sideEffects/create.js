@@ -28,32 +28,32 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleCreate(activity, recipient) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.CREATE);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.CREATE);
     const objectId = (0, utilities_1.getId)(activity.object);
-    (0, type_utilities_1.assertExists)(objectId);
+    type_utilities_1.assert.exists(objectId);
     const existingObject = await this.core.findEntityById(objectId);
     if (existingObject) {
         console.log('We have already received this object.');
         return;
     }
     const object = await this.core.queryById(objectId);
-    (0, type_utilities_1.assertIsApEntity)(object);
+    type_utilities_1.assert.isApEntity(object);
     await this.core.saveEntity(object);
     try {
-        (0, type_utilities_1.assertIsApExtendedObject)(object);
+        type_utilities_1.assert.isApExtendedObject(object);
         const inReplyToId = (0, utilities_1.getId)(object.inReplyTo);
         if (!inReplyToId) {
             return;
         }
-        (0, type_utilities_1.assertExists)(inReplyToId);
+        type_utilities_1.assert.exists(inReplyToId);
         const inReplyTo = await this.core.findEntityById(inReplyToId);
-        (0, type_utilities_1.assertIsApExtendedObject)(inReplyTo);
+        type_utilities_1.assert.isApExtendedObject(inReplyTo);
         const repliesCollectionId = (0, utilities_1.getId)(inReplyTo.replies);
-        (0, type_utilities_1.assertExists)(repliesCollectionId);
+        type_utilities_1.assert.exists(repliesCollectionId);
         const repliesCollection = await this.core.findEntityById(repliesCollectionId);
-        (0, type_utilities_1.assertIsApCollection)(repliesCollection);
+        type_utilities_1.assert.isApCollection(repliesCollection);
         const attributedToId = (0, utilities_1.getId)(repliesCollection.attributedTo);
-        (0, type_utilities_1.assertExists)(attributedToId);
+        type_utilities_1.assert.exists(attributedToId);
         console.log(attributedToId.toString(), (0, utilities_1.getId)(recipient)?.toString());
         if (attributedToId.toString() !== (0, utilities_1.getId)(recipient)?.toString()) {
             console.log('Not applicable to this Actor.');

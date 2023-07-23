@@ -5,7 +5,7 @@ const utilities_1 = require("@activity-kit/utilities");
 const type_utilities_1 = require("@activity-kit/type-utilities");
 async function respond() {
     await this.parseBody();
-    (0, type_utilities_1.assertExists)(this.activity);
+    type_utilities_1.assert.exists(this.activity);
     const activityId = (0, utilities_1.getId)(this.activity);
     if (activityId) {
         const existingActivity = await this.core.findEntityById(activityId);

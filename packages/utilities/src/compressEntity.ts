@@ -1,5 +1,5 @@
 import * as AP from '@activity-kit/types';
-import { assertIsApEntity } from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 
 export function compressEntity(entity: AP.Entity): AP.Entity | null {
   const object: Record<string, unknown> = {};
@@ -13,7 +13,7 @@ export function compressEntity(entity: AP.Entity): AP.Entity | null {
   const compressed = compressObject(object);
 
   try {
-    assertIsApEntity(compressed);
+    assert.isApEntity(compressed);
     return compressed;
   } catch (error) {
     return null;

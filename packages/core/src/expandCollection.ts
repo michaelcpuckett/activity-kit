@@ -1,6 +1,6 @@
 import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { isTypeOf } from '@activity-kit/type-utilities';
+import { guard } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export async function expandCollection(
@@ -19,7 +19,7 @@ export async function expandCollection(
     return null;
   }
 
-  if (isTypeOf<AP.EitherCollection>(foundEntity, AP.CollectionTypes)) {
+  if (guard.isTypeOf<AP.EitherCollection>(foundEntity, AP.CollectionTypes)) {
     const items = await this.getCollectionItems(foundEntity);
 
     if (!items) {

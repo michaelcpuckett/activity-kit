@@ -23,7 +23,7 @@ async function fetchEntityById(id) {
     const actor = await this.findOne('entity', {
         preferredUsername: 'bot',
     });
-    (0, type_utilities_1.assertIsApActor)(actor);
+    type_utilities_1.assert.isApActor(actor);
     const { dateHeader, signatureHeader } = await this.getHttpSignature(id, actor.id, await this.getPrivateKey(actor));
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 1250);

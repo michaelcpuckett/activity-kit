@@ -1,12 +1,5 @@
 import * as AP from '@activity-kit/types';
-import {
-  isType,
-  isTypeOf,
-  assertIsApActor,
-  assertIsApEntity,
-  assertIsApCoreObject,
-  assertIsApType,
-} from '@activity-kit/type-utilities';
+import { guard, assert } from '@activity-kit/type-utilities';
 import { LOCAL_DOMAIN, getId } from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
 import { OutboxPostEndpoint } from '..';
@@ -15,12 +8,12 @@ export async function handleUpdate(
   this: OutboxPostEndpoint,
   activity: AP.Entity,
 ) {
-  assertIsApType<AP.Update>(activity, AP.ActivityTypes.UPDATE);
+  assert.isApType<AP.Update>(activity, AP.ActivityTypes.UPDATE);
 
   const actorId = getId(activity.actor);
   const actor = await this.core.findEntityById(actorId);
 
-  assertIsApActor(actor);
+  assert.isApActor(actor);
 
   if (activity.object instanceof URL) {
     throw new Error(
@@ -41,21 +34,21 @@ export async function handleUpdate(
   const objectId = getId(activity.object);
   const existingObject = await this.core.findEntityById(objectId);
 
-  assertIsApEntity(existingObject);
+  assert.isApEntity(existingObject);
 
   const getTags = async () => {
-    if (!isTypeOf<AP.CoreObject>(existingObject, AP.CoreObjectTypes)) {
+    if (!guard.isTypeOf<AP.CoreObject>(existingObject, AP.CoreObjectTypes)) {
       return null;
     }
 
-    assertIsApCoreObject(existingObject);
+    assert.isApCoreObject(existingObject);
 
     const newObject = {
       type: existingObject.type,
       ...activity.object,
     };
 
-    assertIsApCoreObject(newObject);
+    assert.isApCoreObject(newObject);
 
     if (existingObject.tag || newObject.tag) {
       const existingTags = existingObject.tag
@@ -103,9 +96,9 @@ export async function handleUpdate(
       for (const tag of newTags) {
         if (
           !(tag instanceof URL) &&
-          isType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG)
+          guard.isType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG)
         ) {
-          assertIsApType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG);
+          assert.isApType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG);
 
           const index = newTags.indexOf(tag);
 

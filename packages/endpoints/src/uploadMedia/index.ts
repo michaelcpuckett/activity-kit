@@ -7,7 +7,7 @@ import { authenticateActor } from './authenticateActor';
 import { parseBody } from './parseBody';
 import { cleanup } from './cleanup';
 import { saveActivity } from './saveActivity';
-import { assertIsApExtendedObject } from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 
 export class UploadMediaPostEndpoint {
   routes: Routes;
@@ -45,7 +45,7 @@ export class UploadMediaPostEndpoint {
       await this.getActor();
       await this.authenticateActor();
       await this.parseBody();
-      assertIsApExtendedObject(this.activity.object);
+      assert.isApExtendedObject(this.activity.object);
       const url = await this.core.upload(this.file);
       this.activity.object.url = url;
       await this.cleanup();

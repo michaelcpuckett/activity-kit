@@ -1,6 +1,6 @@
 import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { assertIsApActor } from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { deduplicateUrls, getId } from '@activity-kit/utilities';
 
 export async function getRecipientInboxUrls(
@@ -21,7 +21,7 @@ export async function getRecipientInboxUrls(
 
           const foundEntity = await this.fetchEntityById(recipientUrl);
 
-          assertIsApActor(foundEntity);
+          assert.isApActor(foundEntity);
 
           if (!inboxesOnly) {
             if (foundEntity.endpoints) {

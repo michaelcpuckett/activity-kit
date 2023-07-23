@@ -1,6 +1,6 @@
 import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { isType } from '@activity-kit/type-utilities';
+import { guard } from '@activity-kit/type-utilities';
 import { isLocal } from '@activity-kit/utilities';
 
 export async function queryById(
@@ -15,7 +15,7 @@ export async function queryById(
 
   if (
     !fetchedEntity ||
-    isType<AP.Tombstone>(fetchedEntity, AP.ExtendedObjectTypes.TOMBSTONE)
+    guard.isType<AP.Tombstone>(fetchedEntity, AP.ExtendedObjectTypes.TOMBSTONE)
   ) {
     return this.findEntityById(id);
   }

@@ -29,10 +29,10 @@ const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 const path_to_regexp_1 = require("path-to-regexp");
 async function handleUpdate(activity) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.UPDATE);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.UPDATE);
     const actorId = (0, utilities_1.getId)(activity.actor);
     const actor = await this.core.findEntityById(actorId);
-    (0, type_utilities_1.assertIsApActor)(actor);
+    type_utilities_1.assert.isApActor(actor);
     if (activity.object instanceof URL) {
         throw new Error('Bad activity: Providing a URL for the object is not sufficient for Update.');
     }
@@ -44,17 +44,17 @@ async function handleUpdate(activity) {
     }
     const objectId = (0, utilities_1.getId)(activity.object);
     const existingObject = await this.core.findEntityById(objectId);
-    (0, type_utilities_1.assertIsApEntity)(existingObject);
+    type_utilities_1.assert.isApEntity(existingObject);
     const getTags = async () => {
-        if (!(0, type_utilities_1.isTypeOf)(existingObject, AP.CoreObjectTypes)) {
+        if (!type_utilities_1.guard.isTypeOf(existingObject, AP.CoreObjectTypes)) {
             return null;
         }
-        (0, type_utilities_1.assertIsApCoreObject)(existingObject);
+        type_utilities_1.assert.isApCoreObject(existingObject);
         const newObject = {
             type: existingObject.type,
             ...activity.object,
         };
-        (0, type_utilities_1.assertIsApCoreObject)(newObject);
+        type_utilities_1.assert.isApCoreObject(newObject);
         if (existingObject.tag || newObject.tag) {
             const existingTags = existingObject.tag
                 ? Array.isArray(existingObject.tag)
@@ -92,8 +92,8 @@ async function handleUpdate(activity) {
             });
             for (const tag of newTags) {
                 if (!(tag instanceof URL) &&
-                    (0, type_utilities_1.isType)(tag, AP.ExtendedObjectTypes.HASHTAG)) {
-                    (0, type_utilities_1.assertIsApType)(tag, AP.ExtendedObjectTypes.HASHTAG);
+                    type_utilities_1.guard.isType(tag, AP.ExtendedObjectTypes.HASHTAG)) {
+                    type_utilities_1.assert.isApType(tag, AP.ExtendedObjectTypes.HASHTAG);
                     const index = newTags.indexOf(tag);
                     const hashtagCollectionUrl = new URL(newTagIds[index]);
                     tag.id = hashtagCollectionUrl;

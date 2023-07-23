@@ -29,7 +29,7 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const path_to_regexp_1 = require("path-to-regexp");
 async function createUserActor(user, uid) {
-    (0, type_utilities_1.assertIsApActor)(user);
+    type_utilities_1.assert.isApActor(user);
     const { publicKey, privateKey } = await this.core.generateKeyPair();
     const publishedDate = new Date();
     const getRouteUrl = (route, data) => new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(route, {
@@ -217,11 +217,11 @@ async function createUserActor(user, uid) {
             ...userActorProperties,
             type: AP.ActorTypes.PERSON,
         });
-    (0, type_utilities_1.assertIsApActor)(userActor);
+    type_utilities_1.assert.isApActor(userActor);
     const botActor = await this.core.findOne('entity', {
         preferredUsername: utilities_1.SERVER_ACTOR_USERNAME,
     });
-    (0, type_utilities_1.assertIsApActor)(botActor);
+    type_utilities_1.assert.isApActor(botActor);
     const createActorActivityId = getRouteUrl(this.routes.create, {
         guid: await this.core.getGuid(),
     });
@@ -242,7 +242,7 @@ async function createUserActor(user, uid) {
                     activity: createActorActivity,
                     core: this.core,
                 });
-                (0, type_utilities_1.assertIsApActor)(pluginActivity.object);
+                type_utilities_1.assert.isApActor(pluginActivity.object);
                 userActor = pluginActivity.object;
             }
             if ('declareUserActorStreams' in plugin) {

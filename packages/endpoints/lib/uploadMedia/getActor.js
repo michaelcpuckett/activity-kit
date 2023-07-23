@@ -8,7 +8,7 @@ async function getActor() {
     const actor = await this.core.findOne('entity', {
         'endpoints.uploadMedia': url.toString(),
     });
-    (0, type_utilities_1.assertIsApActor)(actor);
+    type_utilities_1.assert.isApActor(actor);
     this.actor = actor;
 }
 exports.getActor = getActor;

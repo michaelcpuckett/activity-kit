@@ -1,5 +1,5 @@
 import * as AP from '@activity-kit/types';
-import { assertIsApEntity } from '@activity-kit/type-utilities';
+import { guard } from '@activity-kit/type-utilities';
 import { PUBLIC_ACTOR } from './globals';
 
 export function convertJsonToEntity(
@@ -7,10 +7,9 @@ export function convertJsonToEntity(
 ): AP.Entity | null {
   const converted = convertObject(object);
 
-  try {
-    assertIsApEntity(converted);
+  if (guard.isApEntity(converted)) {
     return converted;
-  } catch (error) {
+  } else {
     return null;
   }
 }

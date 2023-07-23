@@ -1,5 +1,5 @@
 import * as AP from '@activity-kit/types';
-import { assertIsApActor, assertIsApType } from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import {
   ACTIVITYSTREAMS_CONTENT_TYPE,
   applyContext,
@@ -32,17 +32,17 @@ export const respond = async function (
     return;
   }
 
-  assertIsApActor(actor);
+  assert.isApActor(actor);
 
   const actorInbox = await this.core.findEntityById(getId(actor.inbox));
   const actorOutbox = await this.core.findEntityById(getId(actor.outbox));
 
-  assertIsApType<AP.OrderedCollection>(
+  assert.isApType<AP.OrderedCollection>(
     actorInbox,
     AP.CollectionTypes.ORDERED_COLLECTION,
   );
 
-  assertIsApType<AP.OrderedCollection>(
+  assert.isApType<AP.OrderedCollection>(
     actorOutbox,
     AP.CollectionTypes.ORDERED_COLLECTION,
   );

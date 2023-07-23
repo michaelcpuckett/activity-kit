@@ -62,7 +62,7 @@ async function expandEntity(entity) {
     for (const [key, value] of Object.entries(entity)) {
         expanded[key] = await expandEntry(key, value);
     }
-    if ((0, type_utilities_1.isTypeOf)(expanded, AP.AllTypes)) {
+    if (type_utilities_1.guard.isTypeOf(expanded, AP.AllTypes)) {
         return expanded;
     }
     return null;

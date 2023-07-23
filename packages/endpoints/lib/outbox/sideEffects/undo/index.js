@@ -28,35 +28,35 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleUndo(activity) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.UNDO);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.UNDO);
     const objectId = (0, utilities_1.getId)(activity.object);
     const object = await this.core.findEntityById(objectId);
-    (0, type_utilities_1.assertIsApActivity)(object);
+    type_utilities_1.assert.isApActivity(object);
     if (!isActorAuthorizedToModifyObject(this.actor, activity)) {
         throw new Error('Not authorized to modify object!');
     }
-    if ((0, type_utilities_1.isType)(object, AP.ActivityTypes.CREATE)) {
+    if (type_utilities_1.guard.isType(object, AP.ActivityTypes.CREATE)) {
         await this.handleDelete(object);
     }
-    if ((0, type_utilities_1.isType)(object, AP.ActivityTypes.FOLLOW)) {
+    if (type_utilities_1.guard.isType(object, AP.ActivityTypes.FOLLOW)) {
         await this.handleUndoFollow(object);
     }
-    if ((0, type_utilities_1.isType)(object, AP.ActivityTypes.ACCEPT)) {
+    if (type_utilities_1.guard.isType(object, AP.ActivityTypes.ACCEPT)) {
         await this.handleUndoAccept(object);
     }
-    if ((0, type_utilities_1.isType)(object, AP.ActivityTypes.BLOCK)) {
+    if (type_utilities_1.guard.isType(object, AP.ActivityTypes.BLOCK)) {
         await this.handleUndoBlock(object);
     }
-    if ((0, type_utilities_1.isType)(object, AP.ActivityTypes.LIKE)) {
+    if (type_utilities_1.guard.isType(object, AP.ActivityTypes.LIKE)) {
         await this.handleUndoLike(object);
     }
-    if ((0, type_utilities_1.isType)(object, AP.ActivityTypes.ANNOUNCE)) {
+    if (type_utilities_1.guard.isType(object, AP.ActivityTypes.ANNOUNCE)) {
         await this.handleUndoAnnounce(object);
     }
-    if ((0, type_utilities_1.isType)(object, AP.ActivityTypes.ADD)) {
+    if (type_utilities_1.guard.isType(object, AP.ActivityTypes.ADD)) {
         await this.handleRemove(object);
     }
-    if ((0, type_utilities_1.isType)(object, AP.ActivityTypes.REMOVE)) {
+    if (type_utilities_1.guard.isType(object, AP.ActivityTypes.REMOVE)) {
         await this.handleAdd(object);
     }
 }

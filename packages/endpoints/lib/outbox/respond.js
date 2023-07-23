@@ -29,11 +29,11 @@ const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 const path_to_regexp_1 = require("path-to-regexp");
 async function respond() {
-    (0, type_utilities_1.assertIsApEntity)(this.body);
+    type_utilities_1.assert.isApEntity(this.body);
     await this.getActor();
-    (0, type_utilities_1.assertIsApActor)(this.actor);
-    if ((0, type_utilities_1.isTypeOf)(this.body, AP.ActivityTypes)) {
-        (0, type_utilities_1.assertIsApActivity)(this.body);
+    type_utilities_1.assert.isApActor(this.actor);
+    if (type_utilities_1.guard.isTypeOf(this.body, AP.ActivityTypes)) {
+        type_utilities_1.assert.isApActivity(this.body);
         this.activity = this.body;
         const [type] = (0, utilities_1.getArray)(this.activity.type);
         const activityId = new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()], {
@@ -50,10 +50,10 @@ async function respond() {
         this.activity = await this.wrapInActivity(this.body);
         await this.handleCreate(this.activity);
     }
-    (0, type_utilities_1.assertIsApActivity)(this.activity);
-    (0, type_utilities_1.assertExists)(this.activity.id);
+    type_utilities_1.assert.isApActivity(this.activity);
+    type_utilities_1.assert.exists(this.activity.id);
     await this.saveActivity();
-    (0, type_utilities_1.assertIsApActor)(this.actor);
+    type_utilities_1.assert.isApActor(this.actor);
     this.core.broadcast(this.activity, this.actor);
     return {
         statusCode: 201,

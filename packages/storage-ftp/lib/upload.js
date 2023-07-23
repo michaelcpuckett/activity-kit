@@ -10,10 +10,10 @@ async function upload(file) {
     return await new Promise((resolve, reject) => {
         const client = new ftp_1.default();
         const { host, path = '/', user, password } = this.params;
-        (0, type_utilities_1.assertIsString)(host);
-        (0, type_utilities_1.assertIsString)(user);
-        (0, type_utilities_1.assertIsString)(password);
-        (0, type_utilities_1.assertIsString)(path);
+        type_utilities_1.assert.isString(host);
+        type_utilities_1.assert.isString(user);
+        type_utilities_1.assert.isString(password);
+        type_utilities_1.assert.isString(path);
         client.on('ready', () => {
             client.put(file.filepath, file.newFilename, (error) => {
                 client.end();

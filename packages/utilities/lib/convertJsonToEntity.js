@@ -5,11 +5,10 @@ const type_utilities_1 = require("@activity-kit/type-utilities");
 const globals_1 = require("./globals");
 function convertJsonToEntity(object) {
     const converted = convertObject(object);
-    try {
-        (0, type_utilities_1.assertIsApEntity)(converted);
+    if (type_utilities_1.guard.isApEntity(converted)) {
         return converted;
     }
-    catch (error) {
+    else {
         return null;
     }
 }

@@ -7,7 +7,7 @@ import {
   getId,
 } from '@activity-kit/utilities';
 import * as AP from '@activity-kit/types';
-import { assertIsApActor } from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { UserPostEndpoint, User } from '.';
 import { compile } from 'path-to-regexp';
 
@@ -16,7 +16,7 @@ export async function createUserActor(
   user: User,
   uid: string,
 ) {
-  assertIsApActor(user);
+  assert.isApActor(user);
 
   const { publicKey, privateKey } = await this.core.generateKeyPair();
   const publishedDate = new Date();
@@ -244,13 +244,13 @@ export async function createUserActor(
         },
   );
 
-  assertIsApActor(userActor);
+  assert.isApActor(userActor);
 
   const botActor = await this.core.findOne('entity', {
     preferredUsername: SERVER_ACTOR_USERNAME,
   });
 
-  assertIsApActor(botActor);
+  assert.isApActor(botActor);
 
   const createActorActivityId = getRouteUrl(this.routes.create, {
     guid: await this.core.getGuid(),
@@ -276,7 +276,7 @@ export async function createUserActor(
           core: this.core,
         });
 
-        assertIsApActor(pluginActivity.object);
+        assert.isApActor(pluginActivity.object);
 
         userActor = pluginActivity.object;
       }

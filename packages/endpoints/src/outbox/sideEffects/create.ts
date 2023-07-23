@@ -1,14 +1,6 @@
 import { OutboxPostEndpoint } from '..';
 import * as AP from '@activity-kit/types';
-import {
-  assertExists,
-  assertIsApActor,
-  assertIsApEntity,
-  assertIsApExtendedObject,
-  assertIsApType,
-  isType,
-  isTypeOf,
-} from '@activity-kit/type-utilities';
+import { guard, assert } from '@activity-kit/type-utilities';
 import { SERVER_ACTOR_USERNAME, applyContext } from '@activity-kit/utilities';
 import { LOCAL_DOMAIN } from '@activity-kit/utilities';
 import { getId } from '@activity-kit/utilities';
@@ -19,11 +11,11 @@ export async function handleCreate(
   this: OutboxPostEndpoint,
   activity: AP.Entity,
 ) {
-  assertIsApType<AP.Create>(activity, AP.ActivityTypes.CREATE);
+  assert.isApType<AP.Create>(activity, AP.ActivityTypes.CREATE);
 
   const actorId = getId(activity.actor);
 
-  assertExists(actorId);
+  assert.exists(actorId);
 
   const object = activity.object;
 
@@ -37,7 +29,7 @@ export async function handleCreate(
     );
   }
 
-  assertIsApEntity(object);
+  assert.isApEntity(object);
 
   const publishedDate = new Date();
 
@@ -74,8 +66,8 @@ export async function handleCreate(
 
   object.id = objectId;
 
-  if (isTypeOf<AP.ExtendedObject>(object, AP.ExtendedObjectTypes)) {
-    assertIsApExtendedObject(object);
+  if (guard.isTypeOf<AP.ExtendedObject>(object, AP.ExtendedObjectTypes)) {
+    assert.isApExtendedObject(object);
 
     object.url = objectId;
 
@@ -164,10 +156,8 @@ export async function handleCreate(
       for (const tag of tags) {
         if (
           !(tag instanceof URL) &&
-          isType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG)
+          guard.isType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG)
         ) {
-          assertIsApType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG);
-
           const hashtagCollectionUrl = new URL(
             `${LOCAL_DOMAIN}${compile(this.routes.hashtag)({
               slug: tag.name
@@ -205,7 +195,7 @@ export async function handleCreate(
               preferredUsername: SERVER_ACTOR_USERNAME,
             });
 
-            assertIsApActor(serverActor);
+            assert.isApActor(serverActor);
 
             const serverHashtags = await this.core.getStreamByName(
               serverActor,
@@ -234,7 +224,7 @@ export async function handleCreate(
     await this.core.saveEntity(object);
   }
 
-  assertIsApType<AP.Create>(this.activity, AP.ActivityTypes.CREATE);
+  assert.isApType<AP.Create>(this.activity, AP.ActivityTypes.CREATE);
 
   // Attach the object to the activity that will be saved.
   this.activity.object = object;

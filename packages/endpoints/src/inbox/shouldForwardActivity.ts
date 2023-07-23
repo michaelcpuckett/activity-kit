@@ -1,5 +1,5 @@
 import * as AP from '@activity-kit/types';
-import { isType, isTypeOf } from '@activity-kit/type-utilities';
+import { guard } from '@activity-kit/type-utilities';
 import { getArray, getId } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '.';
 
@@ -10,7 +10,7 @@ export async function shouldForwardActivity(this: InboxPostEndpoint) {
     return false;
   }
 
-  if (!isTypeOf<AP.Activity>(this.activity, AP.ActivityTypes)) {
+  if (!guard.isTypeOf<AP.Activity>(this.activity, AP.ActivityTypes)) {
     return false;
   }
 
@@ -36,8 +36,8 @@ export async function shouldForwardActivity(this: InboxPostEndpoint) {
     }
 
     if (
-      isType<AP.Collection>(foundItem, AP.CollectionTypes.COLLECTION) ||
-      isType<AP.OrderedCollection>(
+      guard.isType<AP.Collection>(foundItem, AP.CollectionTypes.COLLECTION) ||
+      guard.isType<AP.OrderedCollection>(
         foundItem,
         AP.CollectionTypes.ORDERED_COLLECTION,
       )

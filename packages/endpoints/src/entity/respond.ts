@@ -1,11 +1,5 @@
 import * as AP from '@activity-kit/types';
-import {
-  assertIsApCollection,
-  assertIsApEntity,
-  assertIsArray,
-  isType,
-  isTypeOf,
-} from '@activity-kit/type-utilities';
+import { guard, assert } from '@activity-kit/type-utilities';
 
 import { EntityGetEndpoint } from '.';
 
@@ -25,19 +19,19 @@ export async function respond(
   const entity = await this.core.findEntityById(baseUrl);
 
   try {
-    assertIsApEntity(entity);
+    assert.isApEntity(entity);
   } catch (error) {
     return this.handleNotFound();
   }
 
   if (
-    !isTypeOf<AP.EitherCollection>(entity, AP.CollectionTypes) &&
-    !isTypeOf<AP.EitherCollectionPage>(entity, AP.CollectionPageTypes)
+    !guard.isTypeOf<AP.EitherCollection>(entity, AP.CollectionTypes) &&
+    !guard.isTypeOf<AP.EitherCollectionPage>(entity, AP.CollectionPageTypes)
   ) {
     return this.handleFoundEntity(entity, render);
   }
 
-  assertIsApCollection(entity);
+  assert.isApCollection(entity);
 
   const totalItems = Number(entity.totalItems);
 
@@ -46,7 +40,7 @@ export async function respond(
     Math.ceil(totalItems / ITEMS_PER_COLLECTION_PAGE),
   );
 
-  const isOrderedCollection = isType<AP.OrderedCollection>(
+  const isOrderedCollection = guard.isType<AP.OrderedCollection>(
     entity,
     AP.CollectionTypes.ORDERED_COLLECTION,
   );
@@ -65,7 +59,7 @@ export async function respond(
   const startIndex = firstItemIndex + 1;
 
   if (!hasPage) {
-    assertIsApCollection(entity);
+    assert.isApCollection(entity);
 
     delete entity.orderedItems;
     delete entity.items;
@@ -103,7 +97,7 @@ export async function respond(
     }
   })();
 
-  assertIsArray(expandedItems);
+  assert.isArray(expandedItems);
 
   const limitedItems = expandedItems.slice(
     firstItemIndex,
@@ -115,7 +109,7 @@ export async function respond(
   for (const item of limitedItems) {
     if (item && !(item instanceof URL)) {
       if (
-        isTypeOf<AP.Activity>(item, AP.ActivityTypes) &&
+        guard.isTypeOf<AP.Activity>(item, AP.ActivityTypes) &&
         'object' in item &&
         item.object instanceof URL
       ) {

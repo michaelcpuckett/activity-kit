@@ -30,7 +30,7 @@ const utilities_1 = require("@activity-kit/utilities");
 function combineAddresses(activity) {
     if ('object' in activity) {
         const activityObject = activity.object;
-        if ((0, type_utilities_1.isTypeOf)(activityObject, AP.CoreObjectTypes)) {
+        if (type_utilities_1.guard.isTypeOf(activityObject, AP.CoreObjectTypes)) {
             const activityTo = (0, utilities_1.getArray)(activity.to);
             const activityCc = (0, utilities_1.getArray)(activity.cc);
             const activityBto = (0, utilities_1.getArray)(activity.bto);

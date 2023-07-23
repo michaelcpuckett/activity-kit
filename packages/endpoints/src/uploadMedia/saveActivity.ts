@@ -1,17 +1,14 @@
-import { UploadMediaPostEndpoint } from '.';
 import * as AP from '@activity-kit/types';
-import {
-  assertIsApEntity,
-  assertIsApExtendedObject,
-  assertIsApTransitiveActivity,
-} from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { LOCAL_DOMAIN, applyContext, getId } from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
 
+import { UploadMediaPostEndpoint } from '.';
+
 export async function saveActivity(this: UploadMediaPostEndpoint) {
-  assertIsApEntity(this.activity);
-  assertIsApTransitiveActivity(this.activity);
-  assertIsApExtendedObject(this.activity.object);
+  assert.isApEntity(this.activity);
+  assert.isApTransitiveActivity(this.activity);
+  assert.isApExtendedObject(this.activity.object);
 
   const publishedDate = new Date();
 

@@ -11,7 +11,7 @@ async function getRecipientInboxUrls(activity, actor, inboxesOnly) {
                 return [];
             }
             const foundEntity = await this.fetchEntityById(recipientUrl);
-            (0, type_utilities_1.assertIsApActor)(foundEntity);
+            type_utilities_1.assert.isApActor(foundEntity);
             if (!inboxesOnly) {
                 if (foundEntity.endpoints) {
                     if (foundEntity.endpoints.sharedInbox instanceof URL) {

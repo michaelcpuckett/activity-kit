@@ -1,6 +1,6 @@
 import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { assertIsApCollection } from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export async function getCollectionItems(
@@ -8,7 +8,7 @@ export async function getCollectionItems(
   entity: AP.Collection | AP.OrderedCollection,
 ): Promise<AP.EntityReference[]> {
   try {
-    assertIsApCollection(entity);
+    assert.isApCollection(entity);
 
     const collectionItems = entity.orderedItems || entity.items;
 

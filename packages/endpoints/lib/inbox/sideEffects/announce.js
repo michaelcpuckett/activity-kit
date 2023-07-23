@@ -28,17 +28,17 @@ const type_utilities_1 = require("@activity-kit/type-utilities");
 const AP = __importStar(require("@activity-kit/types"));
 const utilities_1 = require("@activity-kit/utilities");
 async function handleAnnounce(activity, recipient) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.ANNOUNCE);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.ANNOUNCE);
     const objectId = (0, utilities_1.getId)(activity.object);
-    (0, type_utilities_1.assertExists)(objectId);
+    type_utilities_1.assert.exists(objectId);
     const object = await this.core.findEntityById(objectId);
     try {
-        (0, type_utilities_1.assertIsApExtendedObject)(object);
+        type_utilities_1.assert.isApExtendedObject(object);
         const sharesId = (0, utilities_1.getId)(object.shares);
         const shares = await this.core.findEntityById(sharesId);
-        (0, type_utilities_1.assertIsApCollection)(shares);
+        type_utilities_1.assert.isApCollection(shares);
         const attributedToId = (0, utilities_1.getId)(shares.attributedTo);
-        (0, type_utilities_1.assertExists)(attributedToId);
+        type_utilities_1.assert.exists(attributedToId);
         if (attributedToId.toString() !== (0, utilities_1.getId)(recipient)?.toString()) {
             return;
         }

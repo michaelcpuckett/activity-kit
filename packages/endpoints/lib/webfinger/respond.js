@@ -7,11 +7,11 @@ const core_1 = require("@activity-kit/core");
 const respond = async function () {
     try {
         this.res.setHeader('Vary', 'Accept');
-        (0, type_utilities_1.assertExists)(this.req.url);
+        type_utilities_1.assert.exists(this.req.url);
         const query = new URL(this.req.url, utilities_1.LOCAL_DOMAIN).searchParams;
-        (0, type_utilities_1.assertExists)(query);
+        type_utilities_1.assert.exists(query);
         const resource = query.get('resource');
-        (0, type_utilities_1.assertExists)(resource);
+        type_utilities_1.assert.exists(resource);
         if (!resource.startsWith('acct:')) {
             throw new Error('Not found.');
         }
@@ -23,9 +23,9 @@ const respond = async function () {
         const actor = await this.core.findOne('entity', {
             preferredUsername: username,
         }, [core_1.DbOptions.CASE_INSENSITIVE]);
-        (0, type_utilities_1.assertIsApActor)(actor);
+        type_utilities_1.assert.isApActor(actor);
         const actorUrl = actor.url;
-        (0, type_utilities_1.assertExists)(actorUrl);
+        type_utilities_1.assert.exists(actorUrl);
         this.res.statusCode = 200;
         if (this.req.headers.accept?.includes(utilities_1.JSON_CONTENT_TYPE) ||
             this.req.headers.accept?.includes(utilities_1.JRD_CONTENT_TYPE)) {

@@ -34,9 +34,9 @@ async function broadcastActivity() {
     const botActor = await this.core.findOne('entity', {
         preferredUsername: utilities_1.SERVER_ACTOR_USERNAME,
     });
-    (0, type_utilities_1.assertIsApActor)(botActor);
+    type_utilities_1.assert.isApActor(botActor);
     if (await this.shouldForwardActivity()) {
-        if ((0, type_utilities_1.isTypeOf)(this.activity, AP.ActivityTypes)) {
+        if (type_utilities_1.guard.isTypeOf(this.activity, AP.ActivityTypes)) {
             await this.core.broadcast(this.activity, botActor);
         }
     }

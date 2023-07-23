@@ -1,11 +1,11 @@
 import { InboxPostEndpoint } from '.';
 import { getId } from '@activity-kit/utilities';
-import { assertExists } from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 
 export async function respond(this: InboxPostEndpoint) {
   await this.parseBody();
 
-  assertExists(this.activity);
+  assert.exists(this.activity);
 
   const activityId = getId(this.activity);
 

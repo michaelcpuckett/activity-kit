@@ -1,3 +1,5 @@
+import * as AP from '@activity-kit/types';
+import { assert } from '@activity-kit/type-utilities';
 import {
   LOCAL_DOMAIN,
   PUBLIC_ACTOR,
@@ -6,8 +8,6 @@ import {
 import * as formidable from 'formidable';
 import { compile } from 'path-to-regexp';
 import { UploadMediaPostEndpoint } from '.';
-import * as AP from '@activity-kit/types';
-import { assertIsApTransitiveActivity } from '@activity-kit/type-utilities';
 
 export async function parseBody(this: UploadMediaPostEndpoint) {
   const form = formidable.default({
@@ -69,7 +69,7 @@ export async function parseBody(this: UploadMediaPostEndpoint) {
       object,
     });
 
-    assertIsApTransitiveActivity(activity);
+    assert.isApTransitiveActivity(activity);
 
     this.activity = activity;
   }

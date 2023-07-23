@@ -1,22 +1,19 @@
 import { OutboxPostEndpoint } from '..';
 import * as AP from '@activity-kit/types';
-import {
-  assertIsApCollection,
-  assertIsApType,
-} from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export async function handleRemove(
   this: OutboxPostEndpoint,
   activity: AP.Entity,
 ) {
-  assertIsApType<AP.Remove>(activity, AP.ActivityTypes.REMOVE);
+  assert.isApType<AP.Remove>(activity, AP.ActivityTypes.REMOVE);
 
   const objectId = getId(activity.object);
   const targetId = getId(activity.target);
   const target = await this.core.findEntityById(targetId);
 
-  assertIsApCollection(target);
+  assert.isApCollection(target);
 
   if (target.attributedTo) {
     const actorId = getId(activity.actor);

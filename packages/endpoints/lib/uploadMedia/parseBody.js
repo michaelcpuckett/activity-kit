@@ -24,11 +24,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseBody = void 0;
+const AP = __importStar(require("@activity-kit/types"));
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 const formidable = __importStar(require("formidable"));
 const path_to_regexp_1 = require("path-to-regexp");
-const AP = __importStar(require("@activity-kit/types"));
-const type_utilities_1 = require("@activity-kit/type-utilities");
 async function parseBody() {
     const form = formidable.default({
         multiples: true,
@@ -72,7 +72,7 @@ async function parseBody() {
             actor: this.actor.id,
             object,
         });
-        (0, type_utilities_1.assertIsApTransitiveActivity)(activity);
+        type_utilities_1.assert.isApTransitiveActivity(activity);
         this.activity = activity;
     }
 }

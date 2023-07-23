@@ -28,15 +28,15 @@ const utilities_1 = require("@activity-kit/utilities");
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 async function handleUndoFollow(activity) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.FOLLOW);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.FOLLOW);
     const actorId = (0, utilities_1.getId)(activity.actor);
     const actor = await this.core.queryById(actorId);
-    (0, type_utilities_1.assertIsApActor)(actor);
+    type_utilities_1.assert.isApActor(actor);
     const followingId = (0, utilities_1.getId)(actor.following);
-    (0, type_utilities_1.assertExists)(followingId);
+    type_utilities_1.assert.exists(followingId);
     const objectId = (0, utilities_1.getId)(activity.object);
     const object = await this.core.queryById(objectId);
-    (0, type_utilities_1.assertIsApActor)(object);
+    type_utilities_1.assert.isApActor(object);
     await this.core.removeItem(followingId, objectId);
 }
 exports.handleUndoFollow = handleUndoFollow;

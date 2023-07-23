@@ -28,37 +28,37 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 async function runSideEffects() {
     try {
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.CREATE)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.CREATE)) {
             await this.handleCreate(this.activity);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.DELETE)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.DELETE)) {
             await this.handleDelete(this.activity);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.ACCEPT)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.ACCEPT)) {
             await this.handleAccept(this.activity);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.BLOCK)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.BLOCK)) {
             await this.handleBlock(this.activity);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.UPDATE)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.UPDATE)) {
             await this.handleUpdate(this.activity);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.LIKE)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.LIKE)) {
             await this.handleLike(this.activity);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.ANNOUNCE)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.ANNOUNCE)) {
             await this.handleAnnounce(this.activity);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.ADD)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.ADD)) {
             await this.handleAdd(this.activity);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.REMOVE)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.REMOVE)) {
             await this.handleRemove(this.activity);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.FOLLOW)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.FOLLOW)) {
             await this.handleFollow(this.activity);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.UNDO)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.UNDO)) {
             await this.handleUndo(this.activity);
         }
     }

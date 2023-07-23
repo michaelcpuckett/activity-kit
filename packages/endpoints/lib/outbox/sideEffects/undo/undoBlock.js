@@ -28,12 +28,12 @@ const utilities_1 = require("@activity-kit/utilities");
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 async function handleUndoBlock(activity) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.BLOCK);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.BLOCK);
     const actorId = (0, utilities_1.getId)(activity.actor);
     const actor = await this.core.queryById(actorId);
-    (0, type_utilities_1.assertIsApActor)(actor);
+    type_utilities_1.assert.isApActor(actor);
     const blocks = await this.core.getStreamByName(actor, 'Blocks');
-    (0, type_utilities_1.assertIsApType)(blocks, AP.CollectionTypes.COLLECTION);
+    type_utilities_1.assert.isApType(blocks, AP.CollectionTypes.COLLECTION);
     await this.core.removeItem(blocks.id, activity.id);
 }
 exports.handleUndoBlock = handleUndoBlock;

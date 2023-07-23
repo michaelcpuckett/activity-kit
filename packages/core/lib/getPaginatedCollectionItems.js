@@ -30,23 +30,23 @@ const utilities_1 = require("@activity-kit/utilities");
 async function getPaginatedCollectionItems(collection) {
     const collectionItems = [];
     try {
-        (0, type_utilities_1.assertIsApCollection)(collection);
+        type_utilities_1.assert.isApCollection(collection);
         const firstCollectionPageId = (0, utilities_1.getId)(collection.first);
         if (firstCollectionPageId) {
             const firstCollectionPage = await this.queryById(firstCollectionPageId);
             try {
-                (0, type_utilities_1.assertIsApTypeOf)(firstCollectionPage, AP.CollectionPageTypes);
+                type_utilities_1.assert.isApTypeOf(firstCollectionPage, AP.CollectionPageTypes);
                 let nextCollectionPage = firstCollectionPage;
                 while (nextCollectionPage) {
                     try {
-                        (0, type_utilities_1.assertIsApTypeOf)(nextCollectionPage, AP.CollectionPageTypes);
+                        type_utilities_1.assert.isApTypeOf(nextCollectionPage, AP.CollectionPageTypes);
                         const collectionPageItems = nextCollectionPage.orderedItems || nextCollectionPage.items;
-                        (0, type_utilities_1.assertIsArray)(collectionPageItems);
+                        type_utilities_1.assert.isArray(collectionPageItems);
                         collectionItems.push(collectionPageItems);
                         const nextCollectionPageId = (0, utilities_1.getId)(nextCollectionPage.next);
-                        (0, type_utilities_1.assertExists)(nextCollectionPageId);
+                        type_utilities_1.assert.exists(nextCollectionPageId);
                         const potentialNextCollectionPage = await this.queryById(nextCollectionPageId);
-                        (0, type_utilities_1.assertIsApTypeOf)(potentialNextCollectionPage, AP.CollectionPageTypes);
+                        type_utilities_1.assert.isApTypeOf(potentialNextCollectionPage, AP.CollectionPageTypes);
                         nextCollectionPage = potentialNextCollectionPage;
                     }
                     catch (error) {

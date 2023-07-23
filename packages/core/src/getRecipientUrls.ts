@@ -1,11 +1,6 @@
 import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import {
-  assertIsApCollection,
-  assertIsApActor,
-  assertExists,
-  assertIsApType,
-} from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import {
   getId,
   PUBLIC_ACTOR,
@@ -23,7 +18,7 @@ export async function getRecipientUrls(
       : []
   ).filter((entity: AP.EntityReference) => {
     try {
-      assertIsApType(entity, AP.LinkTypes.MENTION);
+      assert.isApType(entity, AP.LinkTypes.MENTION);
       return true;
     } catch {
       return false;
@@ -53,7 +48,7 @@ export async function getRecipientUrls(
         }
 
         try {
-          assertIsApActor(foundRecipient);
+          assert.isApActor(foundRecipient);
 
           const actorUrl = getId(foundRecipient);
 
@@ -65,7 +60,7 @@ export async function getRecipientUrls(
         }
 
         try {
-          assertIsApCollection(foundRecipient);
+          assert.isApCollection(foundRecipient);
 
           const collectionItems = await this.getPaginatedCollectionItems(
             foundRecipient,
@@ -79,13 +74,13 @@ export async function getRecipientUrls(
             try {
               const collectionItemId = getId(collectionItem);
 
-              assertExists(collectionItemId);
+              assert.exists(collectionItemId);
 
               const expandedCollectionItem = await this.queryById(
                 collectionItemId,
               );
 
-              assertIsApActor(expandedCollectionItem);
+              assert.isApActor(expandedCollectionItem);
 
               const actorUrl = getId(expandedCollectionItem);
 

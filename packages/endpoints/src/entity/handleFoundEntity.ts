@@ -4,6 +4,7 @@ import {
   cleanProps,
   convertEntityToJson,
 } from '@activity-kit/utilities';
+import { guard } from '@activity-kit/type-utilities';
 
 import { EntityGetEndpoint } from '.';
 
@@ -14,6 +15,19 @@ export async function handleFoundEntity(
 ) {
   if (this.returnHtml) {
     const expandedEntity = await this.core.expandEntity(entity);
+
+    if (guard.isTypeOf<AP.Actor>(expandedEntity, AP.ActorTypes)) {
+      const outbox = await this.core.expandCollection(expandedEntity.outbox);
+
+      if (
+        guard.isApType<AP.OrderedCollection>(
+          outbox,
+          AP.CollectionTypes.ORDERED_COLLECTION,
+        )
+      ) {
+        expandedEntity.outbox = outbox;
+      }
+    }
 
     return {
       statusCode: 200,

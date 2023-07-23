@@ -29,9 +29,9 @@ const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 const path_to_regexp_1 = require("path-to-regexp");
 async function saveActivity() {
-    (0, type_utilities_1.assertIsApEntity)(this.activity);
-    (0, type_utilities_1.assertIsApTransitiveActivity)(this.activity);
-    (0, type_utilities_1.assertIsApExtendedObject)(this.activity.object);
+    type_utilities_1.assert.isApEntity(this.activity);
+    type_utilities_1.assert.isApTransitiveActivity(this.activity);
+    type_utilities_1.assert.isApExtendedObject(this.activity.object);
     const publishedDate = new Date();
     const getRouteUrl = (route, data) => new URL((0, path_to_regexp_1.compile)(route, {
         validate: false,

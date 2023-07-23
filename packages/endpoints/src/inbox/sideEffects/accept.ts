@@ -1,11 +1,4 @@
-import {
-  isType,
-  assertIsApActor,
-  assertIsApEntity,
-  assertIsApType,
-  assertIsArray,
-  assertExists,
-} from '@activity-kit/type-utilities';
+import { guard, assert } from '@activity-kit/type-utilities';
 import * as AP from '@activity-kit/types';
 import { getId } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '..';
@@ -16,27 +9,27 @@ export async function handleAccept(
   activity: AP.Entity,
   recipient: AP.Actor,
 ) {
-  assertIsApType<AP.Accept>(activity, AP.ActivityTypes.ACCEPT);
+  assert.isApType<AP.Accept>(activity, AP.ActivityTypes.ACCEPT);
 
   const objectId = getId(activity.object);
 
-  assertExists(objectId);
+  assert.exists(objectId);
 
   const object = await this.core.queryById(objectId);
 
-  assertIsApEntity(object);
+  assert.isApEntity(object);
 
-  if (!isType<AP.Follow>(object, AP.ActivityTypes.FOLLOW)) {
+  if (!guard.isType<AP.Follow>(object, AP.ActivityTypes.FOLLOW)) {
     return;
   }
 
   const followActivity = object;
 
-  assertIsApType<AP.Follow>(followActivity, AP.ActivityTypes.FOLLOW);
+  assert.isApType<AP.Follow>(followActivity, AP.ActivityTypes.FOLLOW);
 
   const followerId = getId(followActivity.actor);
 
-  assertExists(followerId);
+  assert.exists(followerId);
 
   if (followerId.toString() !== getId(recipient)?.toString()) {
     // Not applicable to this Actor.
@@ -45,24 +38,24 @@ export async function handleAccept(
 
   const follower = await this.core.queryById(followerId);
 
-  assertIsApActor(follower);
+  assert.isApActor(follower);
 
   const followeeId = getId(followActivity.object);
 
-  assertExists(followeeId);
+  assert.exists(followeeId);
 
   const followee = await this.core.queryById(followeeId);
 
-  assertIsApActor(followee);
+  assert.isApActor(followee);
 
   const followingId = getId(follower.following);
 
-  assertExists(followingId);
+  assert.exists(followingId);
 
   const following = await this.core.queryById(followingId);
 
-  assertIsApType<AP.Collection>(following, AP.CollectionTypes.COLLECTION);
-  assertIsArray(following.items);
+  assert.isApType<AP.Collection>(following, AP.CollectionTypes.COLLECTION);
+  assert.isArray(following.items);
 
   // Already following.
   if (

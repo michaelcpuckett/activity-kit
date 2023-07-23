@@ -1,6 +1,6 @@
 import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { isTypeOf } from '@activity-kit/type-utilities';
+import { guard } from '@activity-kit/type-utilities';
 import { PUBLIC_ACTOR } from '@activity-kit/utilities';
 
 export async function expandEntity(
@@ -44,7 +44,7 @@ export async function expandEntity(
     expanded[key] = await expandEntry(key, value);
   }
 
-  if (isTypeOf<AP.Entity>(expanded, AP.AllTypes)) {
+  if (guard.isTypeOf<AP.Entity>(expanded, AP.AllTypes)) {
     return expanded;
   }
 

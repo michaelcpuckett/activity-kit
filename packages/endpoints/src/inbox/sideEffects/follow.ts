@@ -1,12 +1,5 @@
 import * as AP from '@activity-kit/types';
-import {
-  isTypeOf,
-  assertExists,
-  assertIsApActor,
-  assertIsApEntity,
-  assertIsApType,
-  assertIsArray,
-} from '@activity-kit/type-utilities';
+import { guard, assert } from '@activity-kit/type-utilities';
 import {
   LOCAL_DOMAIN,
   PUBLIC_ACTOR,
@@ -22,44 +15,42 @@ export async function handleFollow(
   activity: AP.Entity,
   recipient: AP.Actor,
 ) {
-  assertIsApType<AP.Follow>(activity, AP.ActivityTypes.FOLLOW);
+  assert.isApType<AP.Follow>(activity, AP.ActivityTypes.FOLLOW);
 
   const activityId = getId(activity);
 
-  assertExists(activityId);
+  assert.exists(activityId);
 
   const objectId = getId(activity.object);
 
-  assertExists(objectId);
+  assert.exists(objectId);
 
   const object = await this.core.queryById(objectId);
 
-  assertIsApEntity(object);
+  assert.isApEntity(object);
 
-  if (!isTypeOf<AP.Actor>(object, AP.ActorTypes)) {
+  if (!guard.isApActor(object)) {
     // Not applicable.
     return;
   }
 
-  assertIsApActor(object);
-
   const actorId = getId(activity.actor);
 
-  assertExists(actorId);
+  assert.exists(actorId);
 
   const actor = await this.core.queryById(actorId);
 
-  assertIsApActor(actor);
+  assert.isApActor(actor);
 
   const follower = actor;
   const followerId = getId(follower);
 
-  assertExists(followerId);
+  assert.exists(followerId);
 
   const followee = object;
   const followeeId = getId(followee);
 
-  assertExists(followeeId);
+  assert.exists(followeeId);
 
   if (followeeId.toString() !== getId(recipient)?.toString()) {
     // Not applicable to this Actor.
@@ -68,12 +59,12 @@ export async function handleFollow(
 
   const followersId = getId(followee.followers);
 
-  assertExists(followersId);
+  assert.exists(followersId);
 
   const followers = await this.core.findEntityById(followersId);
 
-  assertIsApType<AP.Collection>(followers, AP.CollectionTypes.COLLECTION);
-  assertIsArray(followers.items);
+  assert.isApType<AP.Collection>(followers, AP.CollectionTypes.COLLECTION);
+  assert.isArray(followers.items);
 
   // Already a follower.
   if (
@@ -88,7 +79,7 @@ export async function handleFollow(
   if (followee.manuallyApprovesFollowers) {
     const requests = await this.core.getStreamByName(followee, 'Requests');
 
-    assertIsApType<AP.Collection>(requests, AP.CollectionTypes.COLLECTION);
+    assert.isApType<AP.Collection>(requests, AP.CollectionTypes.COLLECTION);
 
     const requestsId = getId(requests);
 
@@ -118,7 +109,7 @@ export async function handleFollow(
 
   const followeeOutboxId = getId(followee.outbox);
 
-  assertExists(followeeOutboxId);
+  assert.exists(followeeOutboxId);
 
   await Promise.all([
     this.core.saveEntity(acceptActivity),

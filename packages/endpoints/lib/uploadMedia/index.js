@@ -33,7 +33,7 @@ class UploadMediaPostEndpoint {
             await this.getActor();
             await this.authenticateActor();
             await this.parseBody();
-            (0, type_utilities_1.assertIsApExtendedObject)(this.activity.object);
+            type_utilities_1.assert.isApExtendedObject(this.activity.object);
             const url = await this.core.upload(this.file);
             this.activity.object.url = url;
             await this.cleanup();

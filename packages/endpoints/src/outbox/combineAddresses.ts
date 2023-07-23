@@ -1,6 +1,6 @@
 import { OutboxPostEndpoint } from '.';
 import * as AP from '@activity-kit/types';
-import { isTypeOf } from '@activity-kit/type-utilities';
+import { guard } from '@activity-kit/type-utilities';
 import { getId, getArray } from '@activity-kit/utilities';
 
 export function combineAddresses(
@@ -10,7 +10,7 @@ export function combineAddresses(
   if ('object' in activity) {
     const activityObject = activity.object;
 
-    if (isTypeOf<AP.CoreObject>(activityObject, AP.CoreObjectTypes)) {
+    if (guard.isTypeOf<AP.CoreObject>(activityObject, AP.CoreObjectTypes)) {
       const activityTo = getArray<AP.EntityReference>(activity.to);
       const activityCc = getArray<AP.EntityReference>(activity.cc);
       const activityBto = getArray<AP.EntityReference>(activity.bto);

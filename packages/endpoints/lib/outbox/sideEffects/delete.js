@@ -28,11 +28,11 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleDelete(activity) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.DELETE);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.DELETE);
     const objectId = (0, utilities_1.getId)(activity.object);
-    (0, type_utilities_1.assertExists)(objectId);
+    type_utilities_1.assert.exists(objectId);
     const object = await this.core.findEntityById(objectId);
-    (0, type_utilities_1.assertIsApEntity)(object);
+    type_utilities_1.assert.isApEntity(object);
     activity.object = {
         id: objectId,
         url: objectId,

@@ -28,32 +28,32 @@ const type_utilities_1 = require("@activity-kit/type-utilities");
 const AP = __importStar(require("@activity-kit/types"));
 const utilities_1 = require("@activity-kit/utilities");
 async function handleAccept(activity, recipient) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.ACCEPT);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.ACCEPT);
     const objectId = (0, utilities_1.getId)(activity.object);
-    (0, type_utilities_1.assertExists)(objectId);
+    type_utilities_1.assert.exists(objectId);
     const object = await this.core.queryById(objectId);
-    (0, type_utilities_1.assertIsApEntity)(object);
-    if (!(0, type_utilities_1.isType)(object, AP.ActivityTypes.FOLLOW)) {
+    type_utilities_1.assert.isApEntity(object);
+    if (!type_utilities_1.guard.isType(object, AP.ActivityTypes.FOLLOW)) {
         return;
     }
     const followActivity = object;
-    (0, type_utilities_1.assertIsApType)(followActivity, AP.ActivityTypes.FOLLOW);
+    type_utilities_1.assert.isApType(followActivity, AP.ActivityTypes.FOLLOW);
     const followerId = (0, utilities_1.getId)(followActivity.actor);
-    (0, type_utilities_1.assertExists)(followerId);
+    type_utilities_1.assert.exists(followerId);
     if (followerId.toString() !== (0, utilities_1.getId)(recipient)?.toString()) {
         return;
     }
     const follower = await this.core.queryById(followerId);
-    (0, type_utilities_1.assertIsApActor)(follower);
+    type_utilities_1.assert.isApActor(follower);
     const followeeId = (0, utilities_1.getId)(followActivity.object);
-    (0, type_utilities_1.assertExists)(followeeId);
+    type_utilities_1.assert.exists(followeeId);
     const followee = await this.core.queryById(followeeId);
-    (0, type_utilities_1.assertIsApActor)(followee);
+    type_utilities_1.assert.isApActor(followee);
     const followingId = (0, utilities_1.getId)(follower.following);
-    (0, type_utilities_1.assertExists)(followingId);
+    type_utilities_1.assert.exists(followingId);
     const following = await this.core.queryById(followingId);
-    (0, type_utilities_1.assertIsApType)(following, AP.CollectionTypes.COLLECTION);
-    (0, type_utilities_1.assertIsArray)(following.items);
+    type_utilities_1.assert.isApType(following, AP.CollectionTypes.COLLECTION);
+    type_utilities_1.assert.isArray(following.items);
     if (following.items
         .map((item) => (0, utilities_1.getId)(item)?.toString())
         .includes(followeeId.toString())) {

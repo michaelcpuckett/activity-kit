@@ -1,17 +1,17 @@
 import type { File } from 'formidable';
 import { default as FtpClient } from 'ftp';
 import { FtpStorageAdapter } from '.';
-import { assertIsString } from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 
 export async function upload(this: FtpStorageAdapter, file: File) {
   return await new Promise<URL>((resolve, reject) => {
     const client = new FtpClient();
     const { host, path = '/', user, password } = this.params;
 
-    assertIsString(host);
-    assertIsString(user);
-    assertIsString(password);
-    assertIsString(path);
+    assert.isString(host);
+    assert.isString(user);
+    assert.isString(password);
+    assert.isString(path);
 
     client.on('ready', () => {
       client.put(file.filepath, file.newFilename, (error) => {

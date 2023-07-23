@@ -1,45 +1,41 @@
 import { OutboxPostEndpoint } from '..';
 import * as AP from '@activity-kit/types';
-import {
-  assertExists,
-  assertIsApActor,
-  assertIsApType,
-} from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export async function handleBlock(
   this: OutboxPostEndpoint,
   activity: AP.Entity,
 ) {
-  assertIsApType<AP.Block>(activity, AP.ActivityTypes.BLOCK);
+  assert.isApType<AP.Block>(activity, AP.ActivityTypes.BLOCK);
 
   const actorId = getId(activity.actor);
   const actor = await this.core.queryById(actorId);
 
-  assertIsApActor(actor);
+  assert.isApActor(actor);
 
   const blockedActorId = getId(activity.object);
   const blockedActor = await this.core.queryById(blockedActorId);
 
-  assertIsApActor(blockedActor);
+  assert.isApActor(blockedActor);
 
   const blocks = await this.core.getStreamByName(actor, 'Blocks');
 
-  assertIsApType<AP.Collection>(blocks, AP.CollectionTypes.COLLECTION);
+  assert.isApType<AP.Collection>(blocks, AP.CollectionTypes.COLLECTION);
 
   const blocksId = getId(blocks);
 
-  assertExists(blocksId);
+  assert.exists(blocksId);
 
   await this.core.insertItem(blocksId, activity.id);
 
   const followingId = getId(actor.following);
 
-  assertExists(followingId);
+  assert.exists(followingId);
 
   const followersId = getId(actor.followers);
 
-  assertExists(followersId);
+  assert.exists(followersId);
 
   await Promise.all([
     this.core.removeItem(followingId, blockedActorId),

@@ -11,7 +11,7 @@ function compressEntity(entity) {
     }
     const compressed = compressObject(object);
     try {
-        (0, type_utilities_1.assertIsApEntity)(compressed);
+        type_utilities_1.assert.isApEntity(compressed);
         return compressed;
     }
     catch (error) {

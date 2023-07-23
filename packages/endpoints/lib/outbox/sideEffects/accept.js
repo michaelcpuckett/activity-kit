@@ -28,22 +28,22 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleAccept(activity) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.ACCEPT);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.ACCEPT);
     const actorId = (0, utilities_1.getId)(activity.actor);
-    (0, type_utilities_1.assertExists)(actorId);
+    type_utilities_1.assert.exists(actorId);
     const actor = await this.core.queryById(actorId);
-    (0, type_utilities_1.assertIsApActor)(actor);
+    type_utilities_1.assert.isApActor(actor);
     const followersId = (0, utilities_1.getId)(actor.followers);
-    (0, type_utilities_1.assertExists)(followersId);
+    type_utilities_1.assert.exists(followersId);
     const followActivityId = (0, utilities_1.getId)(activity.object);
     const followActivity = await this.core.queryById(followActivityId);
-    (0, type_utilities_1.assertIsApType)(followActivity, AP.ActivityTypes.FOLLOW);
+    type_utilities_1.assert.isApType(followActivity, AP.ActivityTypes.FOLLOW);
     const followerId = (0, utilities_1.getId)(followActivity.actor);
-    (0, type_utilities_1.assertExists)(followerId);
+    type_utilities_1.assert.exists(followerId);
     const requests = await this.core.getStreamByName(actor, 'Requests');
-    (0, type_utilities_1.assertIsApType)(requests, AP.CollectionTypes.COLLECTION);
+    type_utilities_1.assert.isApType(requests, AP.CollectionTypes.COLLECTION);
     const requestsId = (0, utilities_1.getId)(requests);
-    (0, type_utilities_1.assertExists)(requestsId);
+    type_utilities_1.assert.exists(requestsId);
     await Promise.all([
         this.core.insertItem(followersId, followerId),
         this.core.removeItem(requestsId, followActivityId),

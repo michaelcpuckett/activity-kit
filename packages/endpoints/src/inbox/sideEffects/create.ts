@@ -1,11 +1,5 @@
 import * as AP from '@activity-kit/types';
-import {
-  assertExists,
-  assertIsApCollection,
-  assertIsApEntity,
-  assertIsApExtendedObject,
-  assertIsApType,
-} from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 import { InboxPostEndpoint } from '..';
 
@@ -15,11 +9,11 @@ export async function handleCreate(
   activity: AP.Entity,
   recipient: AP.Actor,
 ) {
-  assertIsApType<AP.Create>(activity, AP.ActivityTypes.CREATE);
+  assert.isApType<AP.Create>(activity, AP.ActivityTypes.CREATE);
 
   const objectId = getId(activity.object);
 
-  assertExists(objectId);
+  assert.exists(objectId);
 
   const existingObject = await this.core.findEntityById(objectId);
 
@@ -30,13 +24,13 @@ export async function handleCreate(
 
   const object = await this.core.queryById(objectId);
 
-  assertIsApEntity(object);
+  assert.isApEntity(object);
 
   // Cache the object for comparison later.
   await this.core.saveEntity(object);
 
   try {
-    assertIsApExtendedObject(object);
+    assert.isApExtendedObject(object);
 
     const inReplyToId = getId(object.inReplyTo);
 
@@ -45,25 +39,25 @@ export async function handleCreate(
       return;
     }
 
-    assertExists(inReplyToId);
+    assert.exists(inReplyToId);
 
     const inReplyTo = await this.core.findEntityById(inReplyToId);
 
-    assertIsApExtendedObject(inReplyTo);
+    assert.isApExtendedObject(inReplyTo);
 
     const repliesCollectionId = getId(inReplyTo.replies);
 
-    assertExists(repliesCollectionId);
+    assert.exists(repliesCollectionId);
 
     const repliesCollection = await this.core.findEntityById(
       repliesCollectionId,
     );
 
-    assertIsApCollection(repliesCollection);
+    assert.isApCollection(repliesCollection);
 
     const attributedToId = getId(repliesCollection.attributedTo);
 
-    assertExists(attributedToId);
+    assert.exists(attributedToId);
 
     console.log(attributedToId.toString(), getId(recipient)?.toString());
 

@@ -1,19 +1,16 @@
 import { OutboxPostEndpoint } from '..';
 import * as AP from '@activity-kit/types';
 import { getId } from '@activity-kit/utilities';
-import {
-  assertIsApCollection,
-  assertIsApType,
-} from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 
 export async function handleAdd(this: OutboxPostEndpoint, activity: AP.Entity) {
-  assertIsApType<AP.Add>(activity, AP.ActivityTypes.ADD);
+  assert.isApType<AP.Add>(activity, AP.ActivityTypes.ADD);
 
   const objectId = getId(activity.object);
   const targetId = getId(activity.target);
   const target = await this.core.findEntityById(targetId);
 
-  assertIsApCollection(target);
+  assert.isApCollection(target);
 
   if (target.attributedTo) {
     const actorId = getId(activity.actor);

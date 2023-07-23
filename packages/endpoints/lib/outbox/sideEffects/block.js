@@ -28,22 +28,22 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleBlock(activity) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.BLOCK);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.BLOCK);
     const actorId = (0, utilities_1.getId)(activity.actor);
     const actor = await this.core.queryById(actorId);
-    (0, type_utilities_1.assertIsApActor)(actor);
+    type_utilities_1.assert.isApActor(actor);
     const blockedActorId = (0, utilities_1.getId)(activity.object);
     const blockedActor = await this.core.queryById(blockedActorId);
-    (0, type_utilities_1.assertIsApActor)(blockedActor);
+    type_utilities_1.assert.isApActor(blockedActor);
     const blocks = await this.core.getStreamByName(actor, 'Blocks');
-    (0, type_utilities_1.assertIsApType)(blocks, AP.CollectionTypes.COLLECTION);
+    type_utilities_1.assert.isApType(blocks, AP.CollectionTypes.COLLECTION);
     const blocksId = (0, utilities_1.getId)(blocks);
-    (0, type_utilities_1.assertExists)(blocksId);
+    type_utilities_1.assert.exists(blocksId);
     await this.core.insertItem(blocksId, activity.id);
     const followingId = (0, utilities_1.getId)(actor.following);
-    (0, type_utilities_1.assertExists)(followingId);
+    type_utilities_1.assert.exists(followingId);
     const followersId = (0, utilities_1.getId)(actor.followers);
-    (0, type_utilities_1.assertExists)(followersId);
+    type_utilities_1.assert.exists(followersId);
     await Promise.all([
         this.core.removeItem(followingId, blockedActorId),
         this.core.removeItem(followersId, blockedActorId),

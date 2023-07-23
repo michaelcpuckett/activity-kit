@@ -40,11 +40,11 @@ const respond = async function (render) {
         this.res.end();
         return;
     }
-    (0, type_utilities_1.assertIsApActor)(actor);
+    type_utilities_1.assert.isApActor(actor);
     const actorInbox = await this.core.findEntityById((0, utilities_1.getId)(actor.inbox));
     const actorOutbox = await this.core.findEntityById((0, utilities_1.getId)(actor.outbox));
-    (0, type_utilities_1.assertIsApType)(actorInbox, AP.CollectionTypes.ORDERED_COLLECTION);
-    (0, type_utilities_1.assertIsApType)(actorOutbox, AP.CollectionTypes.ORDERED_COLLECTION);
+    type_utilities_1.assert.isApType(actorInbox, AP.CollectionTypes.ORDERED_COLLECTION);
+    type_utilities_1.assert.isApType(actorOutbox, AP.CollectionTypes.ORDERED_COLLECTION);
     actor.inbox = actorInbox;
     actor.outbox = actorOutbox;
     this.res.statusCode = 200;

@@ -1,24 +1,18 @@
 import { OutboxPostEndpoint } from '.';
 import * as AP from '@activity-kit/types';
-import {
-  isTypeOf,
-  assertExists,
-  assertIsApActivity,
-  assertIsApActor,
-  assertIsApEntity,
-} from '@activity-kit/type-utilities';
+import { guard, assert } from '@activity-kit/type-utilities';
 import { getArray, LOCAL_DOMAIN } from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
 
 export async function respond(this: OutboxPostEndpoint) {
-  assertIsApEntity(this.body);
+  assert.isApEntity(this.body);
 
   await this.getActor();
 
-  assertIsApActor(this.actor);
+  assert.isApActor(this.actor);
 
-  if (isTypeOf<AP.Activity>(this.body, AP.ActivityTypes)) {
-    assertIsApActivity(this.body);
+  if (guard.isTypeOf<AP.Activity>(this.body, AP.ActivityTypes)) {
+    assert.isApActivity(this.body);
 
     this.activity = this.body;
 
@@ -46,13 +40,13 @@ export async function respond(this: OutboxPostEndpoint) {
     await this.handleCreate(this.activity);
   }
 
-  assertIsApActivity(this.activity);
+  assert.isApActivity(this.activity);
 
-  assertExists(this.activity.id);
+  assert.exists(this.activity.id);
 
   await this.saveActivity();
 
-  assertIsApActor(this.actor);
+  assert.isApActor(this.actor);
 
   // Broadcast to Fediverse.
   this.core.broadcast(this.activity, this.actor);

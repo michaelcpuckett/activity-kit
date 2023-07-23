@@ -38,19 +38,19 @@ async function runSideEffects(recipient) {
         }
     }
     try {
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.CREATE)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.CREATE)) {
             await this.handleCreate(this.activity, recipient);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.FOLLOW)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.FOLLOW)) {
             await this.handleFollow(this.activity, recipient);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.ACCEPT)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.ACCEPT)) {
             await this.handleAccept(this.activity, recipient);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.LIKE)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.LIKE)) {
             await this.handleLike(this.activity, recipient);
         }
-        if ((0, type_utilities_1.isType)(this.activity, AP.ActivityTypes.ANNOUNCE)) {
+        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.ANNOUNCE)) {
             await this.handleAnnounce(this.activity, recipient);
         }
     }

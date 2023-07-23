@@ -28,11 +28,11 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleRemove(activity) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.REMOVE);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.REMOVE);
     const objectId = (0, utilities_1.getId)(activity.object);
     const targetId = (0, utilities_1.getId)(activity.target);
     const target = await this.core.findEntityById(targetId);
-    (0, type_utilities_1.assertIsApCollection)(target);
+    type_utilities_1.assert.isApCollection(target);
     if (target.attributedTo) {
         const actorId = (0, utilities_1.getId)(activity.actor);
         const attributedToId = (0, utilities_1.getId)(target.attributedTo);

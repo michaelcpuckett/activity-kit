@@ -28,19 +28,19 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleLike(activity, recipient) {
-    (0, type_utilities_1.assertIsApType)(activity, AP.ActivityTypes.LIKE);
+    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.LIKE);
     const objectId = (0, utilities_1.getId)(activity.object);
-    (0, type_utilities_1.assertExists)(objectId);
+    type_utilities_1.assert.exists(objectId);
     const object = await this.core.findEntityById(objectId);
-    (0, type_utilities_1.assertIsApEntity)(object);
+    type_utilities_1.assert.isApEntity(object);
     try {
-        (0, type_utilities_1.assertIsApExtendedObject)(object);
+        type_utilities_1.assert.isApExtendedObject(object);
         const likesId = (0, utilities_1.getId)(object.likes);
-        (0, type_utilities_1.assertExists)(likesId);
+        type_utilities_1.assert.exists(likesId);
         const likes = await this.core.findEntityById(likesId);
-        (0, type_utilities_1.assertIsApCollection)(likes);
+        type_utilities_1.assert.isApCollection(likes);
         const attributedToId = (0, utilities_1.getId)(likes.attributedTo);
-        (0, type_utilities_1.assertExists)(attributedToId);
+        type_utilities_1.assert.exists(attributedToId);
         if (attributedToId.toString() !== (0, utilities_1.getId)(recipient)?.toString()) {
             return;
         }

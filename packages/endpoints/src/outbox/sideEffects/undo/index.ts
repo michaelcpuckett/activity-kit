@@ -1,9 +1,5 @@
 import * as AP from '@activity-kit/types';
-import {
-  isType,
-  assertIsApActivity,
-  assertIsApType,
-} from '@activity-kit/type-utilities';
+import { guard, assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 import { OutboxPostEndpoint } from '../..';
 
@@ -11,47 +7,47 @@ export async function handleUndo(
   this: OutboxPostEndpoint,
   activity: AP.Entity,
 ) {
-  assertIsApType<AP.Undo>(activity, AP.ActivityTypes.UNDO);
+  assert.isApType<AP.Undo>(activity, AP.ActivityTypes.UNDO);
 
   const objectId = getId(activity.object);
   const object = await this.core.findEntityById(objectId);
 
-  assertIsApActivity(object);
+  assert.isApActivity(object);
 
   if (!isActorAuthorizedToModifyObject(this.actor, activity)) {
     throw new Error('Not authorized to modify object!');
   }
 
   // Run side effects.
-  if (isType<AP.Create>(object, AP.ActivityTypes.CREATE)) {
+  if (guard.isType<AP.Create>(object, AP.ActivityTypes.CREATE)) {
     await this.handleDelete(object);
   }
 
-  if (isType<AP.Follow>(object, AP.ActivityTypes.FOLLOW)) {
+  if (guard.isType<AP.Follow>(object, AP.ActivityTypes.FOLLOW)) {
     await this.handleUndoFollow(object);
   }
 
-  if (isType<AP.Accept>(object, AP.ActivityTypes.ACCEPT)) {
+  if (guard.isType<AP.Accept>(object, AP.ActivityTypes.ACCEPT)) {
     await this.handleUndoAccept(object);
   }
 
-  if (isType<AP.Block>(object, AP.ActivityTypes.BLOCK)) {
+  if (guard.isType<AP.Block>(object, AP.ActivityTypes.BLOCK)) {
     await this.handleUndoBlock(object);
   }
 
-  if (isType<AP.Like>(object, AP.ActivityTypes.LIKE)) {
+  if (guard.isType<AP.Like>(object, AP.ActivityTypes.LIKE)) {
     await this.handleUndoLike(object);
   }
 
-  if (isType<AP.Announce>(object, AP.ActivityTypes.ANNOUNCE)) {
+  if (guard.isType<AP.Announce>(object, AP.ActivityTypes.ANNOUNCE)) {
     await this.handleUndoAnnounce(object);
   }
 
-  if (isType<AP.Add>(object, AP.ActivityTypes.ADD)) {
+  if (guard.isType<AP.Add>(object, AP.ActivityTypes.ADD)) {
     await this.handleRemove(object);
   }
 
-  if (isType<AP.Remove>(object, AP.ActivityTypes.REMOVE)) {
+  if (guard.isType<AP.Remove>(object, AP.ActivityTypes.REMOVE)) {
     await this.handleAdd(object);
   }
 }

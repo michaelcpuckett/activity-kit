@@ -1,6 +1,6 @@
 import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { assertIsApActor } from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import {
   ACCEPT_HEADER,
   ACTIVITYSTREAMS_CONTENT_TYPE,
@@ -41,7 +41,7 @@ export async function fetchEntityById(
     preferredUsername: 'bot',
   });
 
-  assertIsApActor(actor);
+  assert.isApActor(actor);
 
   const { dateHeader, signatureHeader } = await this.getHttpSignature(
     id,

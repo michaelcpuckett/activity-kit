@@ -9,22 +9,22 @@ import {
   LOCAL_HOSTNAME,
   XRD_CONTENT_TYPE,
 } from '@activity-kit/utilities';
-import { assertExists, assertIsApActor } from '@activity-kit/type-utilities';
+import { assert } from '@activity-kit/type-utilities';
 import { DbOptions } from '@activity-kit/core';
 
 export const respond = async function (this: WebfingerGetEndpoint) {
   try {
     this.res.setHeader('Vary', 'Accept');
 
-    assertExists(this.req.url);
+    assert.exists(this.req.url);
 
     const query = new URL(this.req.url, LOCAL_DOMAIN).searchParams;
 
-    assertExists(query);
+    assert.exists(query);
 
     const resource = query.get('resource');
 
-    assertExists(resource);
+    assert.exists(resource);
 
     if (!resource.startsWith('acct:')) {
       throw new Error('Not found.');
@@ -45,11 +45,11 @@ export const respond = async function (this: WebfingerGetEndpoint) {
       [DbOptions.CASE_INSENSITIVE],
     );
 
-    assertIsApActor(actor);
+    assert.isApActor(actor);
 
     const actorUrl = actor.url;
 
-    assertExists(actorUrl);
+    assert.exists(actorUrl);
 
     this.res.statusCode = 200;
 

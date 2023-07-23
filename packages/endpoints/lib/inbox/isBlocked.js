@@ -5,14 +5,14 @@ const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function isBlocked(actor) {
     try {
-        (0, type_utilities_1.assertIsApActivity)(this.activity);
+        type_utilities_1.assert.isApActivity(this.activity);
         const activityActorId = (0, utilities_1.getId)(this.activity.actor);
-        (0, type_utilities_1.assertExists)(activityActorId);
+        type_utilities_1.assert.exists(activityActorId);
         const activityActor = await this.core.queryById(activityActorId);
-        (0, type_utilities_1.assertIsApActor)(activityActor);
+        type_utilities_1.assert.isApActor(activityActor);
         const blocks = await this.core.getStreamByName(actor, 'Blocks');
-        (0, type_utilities_1.assertIsApCollection)(blocks);
-        (0, type_utilities_1.assertIsArray)(blocks.items);
+        type_utilities_1.assert.isApCollection(blocks);
+        type_utilities_1.assert.isArray(blocks.items);
         const blockedActorIds = await Promise.all(blocks.items
             .map(async (item) => {
             const id = (0, utilities_1.getId)(item);

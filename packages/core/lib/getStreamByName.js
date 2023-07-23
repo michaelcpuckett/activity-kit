@@ -4,7 +4,7 @@ exports.getStreamByName = void 0;
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 const getStreamByName = async function (actor, name) {
-    (0, type_utilities_1.assertIsArray)(actor.streams);
+    type_utilities_1.assert.isArray(actor.streams);
     const streams = await Promise.all(actor.streams.map(async (stream) => {
         const streamId = (0, utilities_1.getId)(stream);
         if (!streamId) {
@@ -14,7 +14,7 @@ const getStreamByName = async function (actor, name) {
     }));
     for (const stream of streams) {
         try {
-            (0, type_utilities_1.assertIsApCollection)(stream);
+            type_utilities_1.assert.isApCollection(stream);
             if (stream.name === name) {
                 return stream;
             }
