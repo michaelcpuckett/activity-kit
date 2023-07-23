@@ -1,6 +1,6 @@
 {
   "name": "@activity-kit/express-middleware",
-  "version": "0.4.53",
+  "version": "0.4.54",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
@@ -28,9 +28,9 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "@activity-kit/endpoints": "^0.4.53",
+    "@activity-kit/endpoints": "^0.4.54",
     "@activity-kit/types": "^0.4.45",
-    "@activity-kit/utilities": "^0.4.53",
+    "@activity-kit/utilities": "^0.4.54",
     "express": "^4.18.2",
     "path-to-regexp": "^6.2.1"
   },

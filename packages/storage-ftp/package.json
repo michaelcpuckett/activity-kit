@@ -1,6 +1,6 @@
 {
   "name": "@activity-kit/storage-ftp",
-  "version": "0.4.53",
+  "version": "0.4.54",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -28,7 +28,7 @@
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
   },
   "dependencies": {
-    "@activity-kit/core": "^0.4.53",
+    "@activity-kit/core": "^0.4.54",
     "@activity-kit/type-utilities": "0.4.45",
     "ftp": "^0.3.10"
   },
