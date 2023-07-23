@@ -10,7 +10,7 @@ const getEntity = (entity) => {
     }
     if (Array.isArray(entity)) {
         if (entity.length === 1) {
-            if (entity[0] instanceof URL) {
+            if (!entity[0] || entity[0] instanceof URL) {
                 return null;
             }
             return entity[0];

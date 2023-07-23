@@ -1,8 +1,8 @@
 import * as AP from '@activity-kit/types';
 
-export const getEntity = (
+export const getEntity = <T extends AP.Entity>(
   entity: undefined | null | AP.EntityReference | AP.EntityReference[],
-): AP.Entity | null => {
+): T | null => {
   if (!entity) {
     return null;
   }
@@ -13,15 +13,15 @@ export const getEntity = (
 
   if (Array.isArray(entity)) {
     if (entity.length === 1) {
-      if (entity[0] instanceof URL) {
+      if (!entity[0] || entity[0] instanceof URL) {
         return null;
       }
 
-      return entity[0];
+      return entity[0] as T;
     }
 
     return null;
   }
 
-  return entity;
+  return entity as T;
 };
