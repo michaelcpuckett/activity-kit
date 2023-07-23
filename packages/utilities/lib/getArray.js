@@ -2,13 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getArray = void 0;
 const getArray = (items) => {
-    return items
-        ? Array.isArray(items)
-            ? items
-            : items[0] instanceof URL
-                ? []
-                : [items]
-        : [];
+    if (!items) {
+        return [];
+    }
+    return Array.isArray(items) ? items : items instanceof URL ? [] : [items];
 };
 exports.getArray = getArray;
 //# sourceMappingURL=getArray.js.map
