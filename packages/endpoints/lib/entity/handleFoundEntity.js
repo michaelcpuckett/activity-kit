@@ -4,10 +4,11 @@ exports.handleFoundEntity = void 0;
 const utilities_1 = require("@activity-kit/utilities");
 async function handleFoundEntity(entity, render) {
     if (this.returnHtml) {
+        const expandedEntity = await this.core.expandEntity(entity);
         return {
             statusCode: 200,
             body: await render({
-                entity,
+                entity: expandedEntity,
             }),
         };
     }

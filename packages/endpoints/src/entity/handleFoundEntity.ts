@@ -13,10 +13,12 @@ export async function handleFoundEntity(
   render: (...args: unknown[]) => Promise<string>,
 ) {
   if (this.returnHtml) {
+    const expandedEntity = await this.core.expandEntity(entity);
+
     return {
       statusCode: 200,
       body: await render({
-        entity,
+        entity: expandedEntity,
       }),
     };
   } else {

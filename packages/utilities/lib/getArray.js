@@ -5,7 +5,7 @@ const getArray = (items) => {
     return items
         ? Array.isArray(items)
             ? items
-            : items instanceof URL
+            : items[0] instanceof URL
                 ? []
                 : [items]
         : [];
