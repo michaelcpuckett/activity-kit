@@ -1,6 +1,6 @@
 {
   "name": "@activity-kit/type-utilities",
-  "version": "0.4.55",
+  "version": "0.4.56",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
@@ -21,7 +21,7 @@
     "lint": "eslint activitypub/**/*.ts"
   },
   "dependencies": {
-    "@activity-kit/types": "^0.4.45"
+    "@activity-kit/types": "^0.4.56"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.40.0",
