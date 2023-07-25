@@ -4,19 +4,17 @@ import {
   LOCAL_DOMAIN,
   PUBLIC_ACTOR,
   applyContext,
+  getId,
 } from '@activity-kit/utilities';
-import { getId } from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
+
 import { InboxPostEndpoint } from '..';
 
-// A Follow request has been made to a local user.
 export async function handleFollow(
   this: InboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Follow,
   recipient: AP.Actor,
 ) {
-  assert.isApType<AP.Follow>(activity, AP.ActivityTypes.FOLLOW);
-
   const activityId = getId(activity);
 
   assert.exists(activityId);
@@ -52,7 +50,7 @@ export async function handleFollow(
 
   assert.exists(followeeId);
 
-  if (followeeId.toString() !== getId(recipient)?.toString()) {
+  if (followeeId.href !== getId(recipient)?.href) {
     // Not applicable to this Actor.
     return;
   }
@@ -82,6 +80,8 @@ export async function handleFollow(
     assert.isApType<AP.Collection>(requests, AP.CollectionTypes.COLLECTION);
 
     const requestsId = getId(requests);
+
+    assert.exists(requestsId);
 
     await this.core.insertItem(requestsId, activityId);
 

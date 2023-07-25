@@ -48,8 +48,8 @@ async function shouldForwardActivity() {
         if (!foundItem) {
             continue;
         }
-        if (type_utilities_1.guard.isType(foundItem, AP.CollectionTypes.COLLECTION) ||
-            type_utilities_1.guard.isType(foundItem, AP.CollectionTypes.ORDERED_COLLECTION)) {
+        if (type_utilities_1.guard.isApType(foundItem, AP.CollectionTypes.COLLECTION) ||
+            type_utilities_1.guard.isApType(foundItem, AP.CollectionTypes.ORDERED_COLLECTION)) {
             return true;
         }
     }

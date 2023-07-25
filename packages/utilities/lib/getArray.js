@@ -5,7 +5,7 @@ const getArray = (items) => {
     if (!items) {
         return [];
     }
-    return Array.isArray(items) ? items : items instanceof URL ? [] : [items];
+    return Array.isArray(items) ? items : [items];
 };
 exports.getArray = getArray;
 //# sourceMappingURL=getArray.js.map

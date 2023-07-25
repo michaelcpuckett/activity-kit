@@ -28,13 +28,17 @@ const utilities_1 = require("@activity-kit/utilities");
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 async function handleUndoBlock(activity) {
-    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.BLOCK);
     const actorId = (0, utilities_1.getId)(activity.actor);
+    type_utilities_1.assert.exists(actorId);
     const actor = await this.core.queryById(actorId);
     type_utilities_1.assert.isApActor(actor);
     const blocks = await this.core.getStreamByName(actor, 'Blocks');
     type_utilities_1.assert.isApType(blocks, AP.CollectionTypes.COLLECTION);
-    await this.core.removeItem(blocks.id, activity.id);
+    const blocksId = (0, utilities_1.getId)(blocks);
+    type_utilities_1.assert.exists(blocksId);
+    const activityId = (0, utilities_1.getId)(activity);
+    type_utilities_1.assert.exists(activityId);
+    await this.core.removeItem(blocksId, activityId);
 }
 exports.handleUndoBlock = handleUndoBlock;
 //# sourceMappingURL=undoBlock.js.map

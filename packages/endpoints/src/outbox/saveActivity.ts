@@ -1,5 +1,5 @@
 import { OutboxPostEndpoint } from '.';
-import { assert } from '@activity-kit/type-utilities';
+import { assert, guard } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
 export async function saveActivity(this: OutboxPostEndpoint) {
@@ -7,6 +7,10 @@ export async function saveActivity(this: OutboxPostEndpoint) {
 
   const publishedDate = new Date();
   this.activity.published = publishedDate;
+
+  if (guard.isApCoreObject(this.activity.object)) {
+    this.activity.object.published = publishedDate;
+  }
 
   const activityId = getId(this.activity);
 

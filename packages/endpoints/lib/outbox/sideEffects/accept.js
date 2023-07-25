@@ -28,7 +28,6 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleAccept(activity) {
-    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.ACCEPT);
     const actorId = (0, utilities_1.getId)(activity.actor);
     type_utilities_1.assert.exists(actorId);
     const actor = await this.core.queryById(actorId);
@@ -36,6 +35,7 @@ async function handleAccept(activity) {
     const followersId = (0, utilities_1.getId)(actor.followers);
     type_utilities_1.assert.exists(followersId);
     const followActivityId = (0, utilities_1.getId)(activity.object);
+    type_utilities_1.assert.exists(followActivityId);
     const followActivity = await this.core.queryById(followActivityId);
     type_utilities_1.assert.isApType(followActivity, AP.ActivityTypes.FOLLOW);
     const followerId = (0, utilities_1.getId)(followActivity.actor);

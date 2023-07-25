@@ -36,8 +36,8 @@ export async function shouldForwardActivity(this: InboxPostEndpoint) {
     }
 
     if (
-      guard.isType<AP.Collection>(foundItem, AP.CollectionTypes.COLLECTION) ||
-      guard.isType<AP.OrderedCollection>(
+      guard.isApType<AP.Collection>(foundItem, AP.CollectionTypes.COLLECTION) ||
+      guard.isApType<AP.OrderedCollection>(
         foundItem,
         AP.CollectionTypes.ORDERED_COLLECTION,
       )

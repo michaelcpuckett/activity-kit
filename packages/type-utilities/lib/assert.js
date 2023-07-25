@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isApTypeOf = exports.isApType = exports.isApTransitiveActivity = exports.isApCollection = exports.isApActor = exports.isApExtendedObject = exports.isApCoreObject = exports.isApActivity = exports.isApEntity = exports.hasApType = exports.hasType = exports.isArray = exports.isDate = exports.isNumber = exports.isString = exports.isObject = exports.exists = void 0;
+exports.isApTypeOf = exports.isApType = exports.isApTransitiveActivity = exports.isApCollection = exports.isApActor = exports.isApExtendedObject = exports.isApCoreObject = exports.isApActivity = exports.isApEntity = exports.hasApType = exports.hasType = exports.isArray = exports.isUrl = exports.isDate = exports.isNumber = exports.isString = exports.isObject = exports.exists = void 0;
 const guard = __importStar(require("./guard"));
 function exists(value) {
     if (!guard.exists(value)) {
@@ -55,6 +55,12 @@ function isDate(value) {
     }
 }
 exports.isDate = isDate;
+function isUrl(value) {
+    if (!guard.isUrl(value)) {
+        throw new Error(`"${value}" is not a URL object.`);
+    }
+}
+exports.isUrl = isUrl;
 function isArray(value) {
     if (!guard.isArray(value)) {
         throw new Error(`"${value}" is not an array.`);
@@ -116,13 +122,13 @@ function isApTransitiveActivity(value) {
 }
 exports.isApTransitiveActivity = isApTransitiveActivity;
 function isApType(value, type) {
-    if (!guard.isType(value, type)) {
+    if (!guard.isApType(value, type)) {
         throw new Error(`"${value}" is not of type ${type}.`);
     }
 }
 exports.isApType = isApType;
 function isApTypeOf(value, comparison) {
-    if (!guard.isTypeOf(value, comparison)) {
+    if (!guard.isApTypeOf(value, comparison)) {
         throw new Error(`"${value}" does not match any provided type.`);
     }
 }

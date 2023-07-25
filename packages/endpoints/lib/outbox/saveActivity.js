@@ -7,6 +7,9 @@ async function saveActivity() {
     type_utilities_1.assert.isApActivity(this.activity);
     const publishedDate = new Date();
     this.activity.published = publishedDate;
+    if (type_utilities_1.guard.isApCoreObject(this.activity.object)) {
+        this.activity.object.published = publishedDate;
+    }
     const activityId = (0, utilities_1.getId)(this.activity);
     type_utilities_1.assert.exists(activityId);
     const actorId = (0, utilities_1.getId)(this.activity.actor);

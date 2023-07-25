@@ -3,5 +3,5 @@ export const getArray = <T>(items: null | undefined | T | T[]): T[] => {
     return [];
   }
 
-  return Array.isArray(items) ? items : items instanceof URL ? [] : [items];
+  return Array.isArray(items) ? items : [items];
 };

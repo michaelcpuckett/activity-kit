@@ -5,11 +5,12 @@ import { OutboxPostEndpoint } from '../..';
 
 export async function handleUndoBlock(
   this: OutboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Block,
 ) {
-  assert.isApType<AP.Block>(activity, AP.ActivityTypes.BLOCK);
+  const actorId = getId(activity.actor);
 
-  const actorId = getId((activity as AP.Activity).actor);
+  assert.exists(actorId);
+
   const actor = await this.core.queryById(actorId);
 
   assert.isApActor(actor);
@@ -18,5 +19,13 @@ export async function handleUndoBlock(
 
   assert.isApType<AP.Collection>(blocks, AP.CollectionTypes.COLLECTION);
 
-  await this.core.removeItem(blocks.id, activity.id);
+  const blocksId = getId(blocks);
+
+  assert.exists(blocksId);
+
+  const activityId = getId(activity);
+
+  assert.exists(activityId);
+
+  await this.core.removeItem(blocksId, activityId);
 }

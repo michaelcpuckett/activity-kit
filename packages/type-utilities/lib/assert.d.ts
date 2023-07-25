@@ -1,15 +1,17 @@
+/// <reference types="node" />
 import * as AP from '@activity-kit/types';
-export declare function exists(value: unknown): asserts value;
+export declare function exists(value: unknown): asserts value is string | number | object;
 export declare function isObject(value: unknown): asserts value is object;
 export declare function isString(value: unknown): asserts value is string;
 export declare function isNumber(value: unknown): asserts value is number;
 export declare function isDate(value: unknown): asserts value is Date;
+export declare function isUrl(value: unknown): asserts value is URL;
 export declare function isArray(value: unknown): asserts value is Array<unknown>;
 export declare function hasType(value: unknown): asserts value is {
     type: string | string[];
 };
 export declare function hasApType(value: unknown): asserts value is {
-    type: AP.AnyType | Array<AP.AnyType | string>;
+    type: AP.AnyType | AP.TypeOrArrayWithType<AP.AnyType>;
 };
 export declare function isApEntity(value: unknown): asserts value is AP.Entity;
 export declare function isApActivity(value: unknown): asserts value is AP.Activity;

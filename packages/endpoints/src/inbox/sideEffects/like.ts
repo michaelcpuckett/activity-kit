@@ -1,16 +1,14 @@
 import * as AP from '@activity-kit/types';
-import { assert } from '@activity-kit/type-utilities';
+import { guard, assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
+
 import { InboxPostEndpoint } from '..';
 
-// A Like has been made to a local object.
 export async function handleLike(
   this: InboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Like,
   recipient: AP.Actor,
 ) {
-  assert.isApType<AP.Like>(activity, AP.ActivityTypes.LIKE);
-
   const objectId = getId(activity.object);
 
   assert.exists(objectId);
@@ -34,23 +32,24 @@ export async function handleLike(
 
     assert.exists(attributedToId);
 
-    if (attributedToId.toString() !== getId(recipient)?.toString()) {
+    if (attributedToId.href !== getId(recipient)?.href) {
       // Not applicable to this Actor.
       return;
     }
 
+    const activityId = getId(activity);
+
+    assert.exists(activityId);
+
     if (
-      Array.isArray(likes.type)
-        ? likes.type.includes(AP.CollectionTypes.COLLECTION)
-        : likes.type === AP.CollectionTypes.COLLECTION
+      guard.isApType<AP.OrderedCollection>(
+        likes,
+        AP.CollectionTypes.ORDERED_COLLECTION,
+      )
     ) {
-      await this.core.insertItem(likesId, activity.id);
-    } else if (
-      Array.isArray(likes.type)
-        ? likes.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
-        : likes.type === AP.CollectionTypes.ORDERED_COLLECTION
-    ) {
-      await this.core.insertOrderedItem(likesId, activity.id);
+      await this.core.insertOrderedItem(likesId, activityId);
+    } else {
+      await this.core.insertItem(likesId, activityId);
     }
   } catch (error) {
     console.log(error);

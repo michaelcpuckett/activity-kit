@@ -1,2 +1,2 @@
 import { InboxPostEndpoint } from '.';
-export declare function shouldForwardActivity(this: InboxPostEndpoint): Promise<boolean>;
+export declare function shouldForwardActivity(this: InboxPostEndpoint): Promise<boolean | undefined>;

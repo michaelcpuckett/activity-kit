@@ -25,10 +25,10 @@ import { handleUndoLike } from './sideEffects/undo/undoLike';
 import { handleUndoAnnounce } from './sideEffects/undo/undoAnnounce';
 export declare class OutboxPostEndpoint {
     readonly core: CoreLibrary;
-    body: Record<string, unknown>;
+    body: AP.Entity | null;
     url: URL;
     routes: Routes;
-    plugins?: Plugin[];
+    plugins: Plugin[];
     actor: AP.Actor;
     activity: AP.Entity | null;
     constructor(core: CoreLibrary, options: {

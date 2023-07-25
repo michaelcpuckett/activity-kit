@@ -27,35 +27,20 @@ exports.runSideEffects = void 0;
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 async function runSideEffects(recipient) {
-    for (const plugin of this.plugins) {
-        if (plugin.handleInboxSideEffect) {
-            try {
-                await plugin.handleInboxSideEffect.call(this, this.activity, recipient);
-            }
-            catch (error) {
-                console.log(error);
-            }
-        }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.CREATE)) {
+        await this.handleCreate(this.activity, recipient);
     }
-    try {
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.CREATE)) {
-            await this.handleCreate(this.activity, recipient);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.FOLLOW)) {
-            await this.handleFollow(this.activity, recipient);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.ACCEPT)) {
-            await this.handleAccept(this.activity, recipient);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.LIKE)) {
-            await this.handleLike(this.activity, recipient);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.ANNOUNCE)) {
-            await this.handleAnnounce(this.activity, recipient);
-        }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.FOLLOW)) {
+        await this.handleFollow(this.activity, recipient);
     }
-    catch (error) {
-        console.log(error);
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.ACCEPT)) {
+        await this.handleAccept(this.activity, recipient);
+    }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.LIKE)) {
+        await this.handleLike(this.activity, recipient);
+    }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.ANNOUNCE)) {
+        await this.handleAnnounce(this.activity, recipient);
     }
 }
 exports.runSideEffects = runSideEffects;

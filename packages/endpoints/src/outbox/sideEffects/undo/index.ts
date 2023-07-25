@@ -10,6 +10,9 @@ export async function handleUndo(
   assert.isApType<AP.Undo>(activity, AP.ActivityTypes.UNDO);
 
   const objectId = getId(activity.object);
+
+  assert.exists(objectId);
+
   const object = await this.core.findEntityById(objectId);
 
   assert.isApActivity(object);
@@ -19,35 +22,35 @@ export async function handleUndo(
   }
 
   // Run side effects.
-  if (guard.isType<AP.Create>(object, AP.ActivityTypes.CREATE)) {
+  if (guard.isApType<AP.Create>(object, AP.ActivityTypes.CREATE)) {
     await this.handleDelete(object);
   }
 
-  if (guard.isType<AP.Follow>(object, AP.ActivityTypes.FOLLOW)) {
+  if (guard.isApType<AP.Follow>(object, AP.ActivityTypes.FOLLOW)) {
     await this.handleUndoFollow(object);
   }
 
-  if (guard.isType<AP.Accept>(object, AP.ActivityTypes.ACCEPT)) {
+  if (guard.isApType<AP.Accept>(object, AP.ActivityTypes.ACCEPT)) {
     await this.handleUndoAccept(object);
   }
 
-  if (guard.isType<AP.Block>(object, AP.ActivityTypes.BLOCK)) {
+  if (guard.isApType<AP.Block>(object, AP.ActivityTypes.BLOCK)) {
     await this.handleUndoBlock(object);
   }
 
-  if (guard.isType<AP.Like>(object, AP.ActivityTypes.LIKE)) {
+  if (guard.isApType<AP.Like>(object, AP.ActivityTypes.LIKE)) {
     await this.handleUndoLike(object);
   }
 
-  if (guard.isType<AP.Announce>(object, AP.ActivityTypes.ANNOUNCE)) {
+  if (guard.isApType<AP.Announce>(object, AP.ActivityTypes.ANNOUNCE)) {
     await this.handleUndoAnnounce(object);
   }
 
-  if (guard.isType<AP.Add>(object, AP.ActivityTypes.ADD)) {
+  if (guard.isApType<AP.Add>(object, AP.ActivityTypes.ADD)) {
     await this.handleRemove(object);
   }
 
-  if (guard.isType<AP.Remove>(object, AP.ActivityTypes.REMOVE)) {
+  if (guard.isApType<AP.Remove>(object, AP.ActivityTypes.REMOVE)) {
     await this.handleAdd(object);
   }
 }

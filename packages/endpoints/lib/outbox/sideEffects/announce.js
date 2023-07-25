@@ -28,13 +28,17 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleAnnounce(activity) {
-    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.ANNOUNCE);
     const actorId = (0, utilities_1.getId)(activity.actor);
+    type_utilities_1.assert.exists(actorId);
     const actor = await this.core.queryById(actorId);
     type_utilities_1.assert.isApActor(actor);
     const shared = await this.core.getStreamByName(actor, 'Shared');
     type_utilities_1.assert.isApType(shared, AP.CollectionTypes.ORDERED_COLLECTION);
-    await this.core.insertOrderedItem(shared.id, activity.id);
+    const sharedId = (0, utilities_1.getId)(shared);
+    type_utilities_1.assert.exists(sharedId);
+    const activityId = (0, utilities_1.getId)(activity);
+    type_utilities_1.assert.exists(activityId);
+    await this.core.insertOrderedItem(sharedId, activityId);
     const objectId = (0, utilities_1.getId)(activity.object);
     type_utilities_1.assert.exists(objectId);
     if ((0, utilities_1.isLocal)(objectId)) {
@@ -47,7 +51,7 @@ async function handleAnnounce(activity) {
         if (!sharesId) {
             throw new Error('Bad shares collection: no ID.');
         }
-        await this.core.insertOrderedItem(sharesId, activity.id);
+        await this.core.insertOrderedItem(sharesId, activityId);
     }
 }
 exports.handleAnnounce = handleAnnounce;

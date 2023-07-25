@@ -28,7 +28,6 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleDelete(activity) {
-    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.DELETE);
     const objectId = (0, utilities_1.getId)(activity.object);
     type_utilities_1.assert.exists(objectId);
     const object = await this.core.findEntityById(objectId);

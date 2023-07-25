@@ -3,7 +3,7 @@ import { OutboxPostEndpoint } from '.';
 
 export async function getActor(this: OutboxPostEndpoint) {
   const actor = await this.core.findOne('entity', {
-    outbox: this.url.toString(),
+    outbox: this.url.href,
   });
 
   assert.isApActor(actor);

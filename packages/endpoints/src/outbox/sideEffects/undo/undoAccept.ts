@@ -5,11 +5,12 @@ import { OutboxPostEndpoint } from '../..';
 
 export async function handleUndoAccept(
   this: OutboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Accept,
 ) {
-  assert.isApType<AP.Accept>(activity, AP.ActivityTypes.ACCEPT);
-
   const actorId = getId(activity.actor);
+
+  assert.exists(actorId);
+
   const actor = await this.core.findEntityById(actorId);
 
   assert.isApActor(actor);
@@ -19,6 +20,9 @@ export async function handleUndoAccept(
   assert.exists(followersId);
 
   const followId = getId(activity.object);
+
+  assert.exists(followId);
+
   const follow = await this.core.queryById(followId);
 
   assert.isApType<AP.Follow>(follow, AP.ActivityTypes.FOLLOW);

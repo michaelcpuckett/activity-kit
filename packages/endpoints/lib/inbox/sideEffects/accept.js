@@ -24,23 +24,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleAccept = void 0;
-const type_utilities_1 = require("@activity-kit/type-utilities");
 const AP = __importStar(require("@activity-kit/types"));
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleAccept(activity, recipient) {
-    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.ACCEPT);
     const objectId = (0, utilities_1.getId)(activity.object);
     type_utilities_1.assert.exists(objectId);
     const object = await this.core.queryById(objectId);
     type_utilities_1.assert.isApEntity(object);
-    if (!type_utilities_1.guard.isType(object, AP.ActivityTypes.FOLLOW)) {
+    if (!type_utilities_1.guard.isApType(object, AP.ActivityTypes.FOLLOW)) {
         return;
     }
     const followActivity = object;
     type_utilities_1.assert.isApType(followActivity, AP.ActivityTypes.FOLLOW);
     const followerId = (0, utilities_1.getId)(followActivity.actor);
     type_utilities_1.assert.exists(followerId);
-    if (followerId.toString() !== (0, utilities_1.getId)(recipient)?.toString()) {
+    if (followerId.href !== (0, utilities_1.getId)(recipient)?.href) {
         return;
     }
     const follower = await this.core.queryById(followerId);
@@ -55,15 +54,19 @@ async function handleAccept(activity, recipient) {
     type_utilities_1.assert.isApType(following, AP.CollectionTypes.COLLECTION);
     type_utilities_1.assert.isArray(following.items);
     if (following.items
-        .map((item) => (0, utilities_1.getId)(item)?.toString())
-        .includes(followeeId.toString())) {
+        .map((item) => (0, utilities_1.getId)(item)?.href)
+        .includes(followeeId.href)) {
         console.log('Already following.');
         return;
     }
     await this.core.insertItem(followingId, followeeId);
     const requests = await this.core.getStreamByName(follower, 'Requests');
+    type_utilities_1.assert.exists(requests);
     const requestsId = (0, utilities_1.getId)(requests);
-    await this.core.removeItem(requestsId, (0, utilities_1.getId)(followActivity));
+    type_utilities_1.assert.exists(requestsId);
+    const followActivityId = (0, utilities_1.getId)(followActivity);
+    type_utilities_1.assert.exists(followActivityId);
+    await this.core.removeItem(requestsId, followActivityId);
 }
 exports.handleAccept = handleAccept;
 //# sourceMappingURL=accept.js.map

@@ -1,7 +1,9 @@
 import * as AP from '@activity-kit/types';
 import * as guard from './guard';
 
-export function exists(value: unknown): asserts value {
+export function exists(
+  value: unknown,
+): asserts value is string | number | object {
   if (!guard.exists(value)) {
     throw new Error(`"${value}" is undefined or null.`);
   }
@@ -31,6 +33,12 @@ export function isDate(value: unknown): asserts value is Date {
   }
 }
 
+export function isUrl(value: unknown): asserts value is URL {
+  if (!guard.isUrl(value)) {
+    throw new Error(`"${value}" is not a URL object.`);
+  }
+}
+
 export function isArray(value: unknown): asserts value is Array<unknown> {
   if (!guard.isArray(value)) {
     throw new Error(`"${value}" is not an array.`);
@@ -47,7 +55,7 @@ export function hasType(
 
 export function hasApType(
   value: unknown,
-): asserts value is { type: AP.AnyType | Array<AP.AnyType | string> } {
+): asserts value is { type: AP.AnyType | AP.TypeOrArrayWithType<AP.AnyType> } {
   if (!guard.hasApType(value)) {
     throw new Error(`"${value}" type is not an ActivityPub type.`);
   }
@@ -105,7 +113,7 @@ export function isApType<T extends AP.Entity>(
   value: unknown,
   type: string,
 ): asserts value is T {
-  if (!guard.isType<T>(value, type)) {
+  if (!guard.isApType<T>(value, type)) {
     throw new Error(`"${value}" is not of type ${type}.`);
   }
 }
@@ -114,7 +122,7 @@ export function isApTypeOf<T extends AP.Entity>(
   value: unknown,
   comparison: Record<string, string>,
 ): asserts value is T {
-  if (!guard.isTypeOf<T>(value, comparison)) {
+  if (!guard.isApTypeOf<T>(value, comparison)) {
     throw new Error(`"${value}" does not match any provided type.`);
   }
 }

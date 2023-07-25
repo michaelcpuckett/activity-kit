@@ -5,26 +5,21 @@ import { getId } from '@activity-kit/utilities';
 
 export async function handleFollow(
   this: OutboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Follow,
 ) {
-  assert.isApType<AP.Follow>(activity, AP.ActivityTypes.FOLLOW);
+  const actorId = getId(activity.actor);
+
+  assert.exists(actorId);
+
+  const actor = await this.core.findEntityById(actorId);
+
+  assert.isApActor(actor);
 
   const objectId = getId(activity.object);
 
   assert.exists(objectId);
 
-  const object = await this.core.findEntityById(objectId);
-
-  assert.isApEntity(object);
-
-  const actorId = getId(activity.actor);
-
-  const actor = await this.core.queryById(actorId);
-
-  assert.isApActor(actor);
-
-  const requests = await this.core.getStreamByName(actor, 'Requests');
-  const requestsId = getId(requests);
-
-  await this.core.insertItem(requestsId, getId(activity));
+  if (objectId.href === actorId.href) {
+    throw new Error('Cannot follow self.');
+  }
 }

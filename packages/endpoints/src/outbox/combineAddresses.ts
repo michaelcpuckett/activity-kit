@@ -1,60 +1,48 @@
 import { OutboxPostEndpoint } from '.';
 import * as AP from '@activity-kit/types';
-import { guard } from '@activity-kit/type-utilities';
+import { assert, guard } from '@activity-kit/type-utilities';
 import { getId, getArray } from '@activity-kit/utilities';
 
 export function combineAddresses(
   this: OutboxPostEndpoint,
   activity: AP.Activity,
 ): AP.Activity {
-  if ('object' in activity) {
-    const activityObject = activity.object;
+  assert.isApTransitiveActivity(activity);
 
-    if (guard.isTypeOf<AP.CoreObject>(activityObject, AP.CoreObjectTypes)) {
-      const activityTo = getArray<AP.EntityReference>(activity.to);
-      const activityCc = getArray<AP.EntityReference>(activity.cc);
-      const activityBto = getArray<AP.EntityReference>(activity.bto);
-      const activityBcc = getArray<AP.EntityReference>(activity.bcc);
-      const activityAudience = getArray<AP.EntityReference>(activity.audience);
-      const objectTo = getArray<AP.EntityReference>(activityObject.to);
-      const objectCc = getArray<AP.EntityReference>(activityObject.cc);
-      const objectBto = getArray<AP.EntityReference>(activityObject.bto);
-      const objectBcc = getArray<AP.EntityReference>(activityObject.bcc);
-      const objectAudience = getArray<AP.EntityReference>(
-        activityObject.audience,
-      );
+  assert.isApCoreObject(activity.object);
 
-      const to = [...new Set([...activityTo, ...objectTo].map(getId))].filter(
-        (item) => !!item,
-      );
-      const bto = [
-        ...new Set([...activityBto, ...objectBto].map(getId)),
-      ].filter((item) => !!item);
-      const cc = [...new Set([...activityCc, ...objectCc].map(getId))].filter(
-        (item) => !!item,
-      );
-      const bcc = [
-        ...new Set([...activityBcc, ...objectBcc].map(getId)),
-      ].filter((item) => !!item);
-      const audience = [
-        ...new Set([...activityAudience, ...objectAudience].map(getId)),
-      ].filter((item) => !!item);
+  const getArrayOfIds = (item: AP.OrArray<AP.EntityReference> | undefined) =>
+    getArray(item).map(getId).filter<URL>(guard.isUrl);
 
-      activity.to = to;
-      activity.bto = bto;
-      activity.cc = cc;
-      activity.bcc = bcc;
-      activity.audience = audience;
+  const activityTo = getArrayOfIds(activity.to);
+  const activityCc = getArrayOfIds(activity.cc);
+  const activityBto = getArrayOfIds(activity.bto);
+  const activityBcc = getArrayOfIds(activity.bcc);
+  const activityAudience = getArrayOfIds(activity.audience);
 
-      activityObject.to = to;
-      activityObject.bto = bto;
-      activityObject.cc = cc;
-      activityObject.bcc = bcc;
-      activityObject.audience = audience;
+  const objectTo = getArrayOfIds(activity.object.to);
+  const objectCc = getArrayOfIds(activity.object.cc);
+  const objectBto = getArrayOfIds(activity.object.bto);
+  const objectBcc = getArrayOfIds(activity.object.bcc);
+  const objectAudience = getArrayOfIds(activity.object.audience);
 
-      activity.object = activityObject;
-    }
-  }
+  const to = [...new Set([...activityTo, ...objectTo])];
+  const bto = [...new Set([...activityBto, ...objectBto])];
+  const cc = [...new Set([...activityCc, ...objectCc])];
+  const bcc = [...new Set([...activityBcc, ...objectBcc])];
+  const audience = [...new Set([...activityAudience, ...objectAudience])];
+
+  activity.to = to;
+  activity.bto = bto;
+  activity.cc = cc;
+  activity.bcc = bcc;
+  activity.audience = audience;
+
+  activity.object.to = to;
+  activity.object.bto = bto;
+  activity.object.cc = cc;
+  activity.object.bcc = bcc;
+  activity.object.audience = audience;
 
   return activity;
 }

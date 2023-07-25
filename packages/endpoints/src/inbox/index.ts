@@ -1,6 +1,8 @@
 import * as AP from '@activity-kit/types';
+import { cast } from '@activity-kit/type-utilities';
+import { convertJsonToEntity } from '@activity-kit/utilities';
 import { CoreLibrary, Plugin, Routes } from '@activity-kit/core';
-import type { IncomingMessage, ServerResponse } from 'http';
+
 import { getActors } from './getActors';
 import { parseBody } from './parseBody';
 import { respond } from './respond';
@@ -15,25 +17,30 @@ import { shouldForwardActivity } from './shouldForwardActivity';
 import { broadcastActivity } from './broadcastActivity';
 
 export class InboxPostEndpoint {
+  activity: AP.Activity;
+  url: URL;
   routes: Routes;
-  req: IncomingMessage;
-  res: ServerResponse;
-  core: CoreLibrary;
   plugins?: Plugin[];
-  activity: AP.Entity | null = null;
 
   constructor(
-    routes: Routes,
-    req: IncomingMessage,
-    res: ServerResponse,
-    core: CoreLibrary,
-    plugins?: Plugin[],
+    readonly core: CoreLibrary,
+    options: {
+      body: Record<string, unknown>;
+      url: URL;
+      routes: Routes;
+      plugins?: Plugin[];
+    },
   ) {
-    this.routes = routes;
-    this.req = req;
-    this.res = res;
-    this.core = core;
-    this.plugins = plugins;
+    const activity = cast.isApActivity(convertJsonToEntity(options.body));
+
+    if (!activity) {
+      throw new Error('Body must be an Activity.');
+    }
+
+    this.activity = activity;
+    this.url = options.url;
+    this.routes = options.routes;
+    this.plugins = [];
   }
 
   protected getActors = getActors;

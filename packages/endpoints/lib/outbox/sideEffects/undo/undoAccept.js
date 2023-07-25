@@ -28,13 +28,14 @@ const utilities_1 = require("@activity-kit/utilities");
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 async function handleUndoAccept(activity) {
-    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.ACCEPT);
     const actorId = (0, utilities_1.getId)(activity.actor);
+    type_utilities_1.assert.exists(actorId);
     const actor = await this.core.findEntityById(actorId);
     type_utilities_1.assert.isApActor(actor);
     const followersId = (0, utilities_1.getId)(actor.followers);
     type_utilities_1.assert.exists(followersId);
     const followId = (0, utilities_1.getId)(activity.object);
+    type_utilities_1.assert.exists(followId);
     const follow = await this.core.queryById(followId);
     type_utilities_1.assert.isApType(follow, AP.ActivityTypes.FOLLOW);
     const followerId = (0, utilities_1.getId)(follow.actor);

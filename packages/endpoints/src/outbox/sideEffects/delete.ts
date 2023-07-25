@@ -5,10 +5,8 @@ import { getId } from '@activity-kit/utilities';
 
 export async function handleDelete(
   this: OutboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Delete | AP.Create,
 ) {
-  assert.isApType<AP.Delete>(activity, AP.ActivityTypes.DELETE);
-
   const objectId = getId(activity.object);
 
   assert.exists(objectId);

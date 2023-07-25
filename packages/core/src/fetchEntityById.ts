@@ -8,6 +8,7 @@ import {
   compressEntity,
   LINKED_DATA_CONTENT_TYPE,
   JSON_CONTENT_TYPE,
+  getId,
 } from '@activity-kit/utilities';
 
 export async function fetchEntityById(
@@ -43,9 +44,13 @@ export async function fetchEntityById(
 
   assert.isApActor(actor);
 
+  const actorId = getId(actor);
+
+  assert.exists(actorId);
+
   const { dateHeader, signatureHeader } = await this.getHttpSignature(
     id,
-    actor.id,
+    actorId,
     await this.getPrivateKey(actor),
   );
 
@@ -54,7 +59,7 @@ export async function fetchEntityById(
 
   // GET requests (eg. to th e inbox) MUST be made with an Accept header of
   // `application/ld+json; profile="https://www.w3.org/ns/activitystreams"`
-  const fetchedEntity: Record<string, unknown> = await this.fetch(
+  const fetchedEntity: Record<string, unknown> | null = await this.fetch(
     id.toString(),
     {
       signal: controller.signal,
@@ -94,9 +99,16 @@ export async function fetchEntityById(
     });
 
   if (fetchedEntity) {
-    const entity = compressEntity(convertJsonToEntity(fetchedEntity));
-    await this.saveEntity(entity);
-    return entity;
+    const convertedEntity = convertJsonToEntity(fetchedEntity);
+
+    if (convertedEntity) {
+      const entity = compressEntity(convertedEntity);
+
+      if (entity) {
+        await this.saveEntity(entity);
+        return entity;
+      }
+    }
   }
 
   return null;

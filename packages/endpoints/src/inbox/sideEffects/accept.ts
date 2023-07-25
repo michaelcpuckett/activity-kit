@@ -1,16 +1,14 @@
-import { guard, assert } from '@activity-kit/type-utilities';
 import * as AP from '@activity-kit/types';
+import { guard, assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
+
 import { InboxPostEndpoint } from '..';
 
-// A Follow request has been accepted.
 export async function handleAccept(
   this: InboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Accept,
   recipient: AP.Actor,
 ) {
-  assert.isApType<AP.Accept>(activity, AP.ActivityTypes.ACCEPT);
-
   const objectId = getId(activity.object);
 
   assert.exists(objectId);
@@ -19,7 +17,7 @@ export async function handleAccept(
 
   assert.isApEntity(object);
 
-  if (!guard.isType<AP.Follow>(object, AP.ActivityTypes.FOLLOW)) {
+  if (!guard.isApType<AP.Follow>(object, AP.ActivityTypes.FOLLOW)) {
     return;
   }
 
@@ -31,7 +29,7 @@ export async function handleAccept(
 
   assert.exists(followerId);
 
-  if (followerId.toString() !== getId(recipient)?.toString()) {
+  if (followerId.href !== getId(recipient)?.href) {
     // Not applicable to this Actor.
     return;
   }
@@ -60,8 +58,8 @@ export async function handleAccept(
   // Already following.
   if (
     following.items
-      .map((item: AP.EntityReference) => getId(item)?.toString())
-      .includes(followeeId.toString())
+      .map((item: AP.EntityReference) => getId(item)?.href)
+      .includes(followeeId.href)
   ) {
     console.log('Already following.');
     return;
@@ -70,7 +68,16 @@ export async function handleAccept(
   await this.core.insertItem(followingId, followeeId);
 
   const requests = await this.core.getStreamByName(follower, 'Requests');
+
+  assert.exists(requests);
+
   const requestsId = getId(requests);
 
-  await this.core.removeItem(requestsId, getId(followActivity));
+  assert.exists(requestsId);
+
+  const followActivityId = getId(followActivity);
+
+  assert.exists(followActivityId);
+
+  await this.core.removeItem(requestsId, followActivityId);
 }

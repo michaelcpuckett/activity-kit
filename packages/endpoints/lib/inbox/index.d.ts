@@ -1,7 +1,6 @@
 /// <reference types="node" />
 import * as AP from '@activity-kit/types';
 import { CoreLibrary, Plugin, Routes } from '@activity-kit/core';
-import type { IncomingMessage, ServerResponse } from 'http';
 import { getActors } from './getActors';
 import { parseBody } from './parseBody';
 import { respond } from './respond';
@@ -15,13 +14,17 @@ import { handleCreate } from './sideEffects/create';
 import { shouldForwardActivity } from './shouldForwardActivity';
 import { broadcastActivity } from './broadcastActivity';
 export declare class InboxPostEndpoint {
+    readonly core: CoreLibrary;
+    activity: AP.Activity;
+    url: URL;
     routes: Routes;
-    req: IncomingMessage;
-    res: ServerResponse;
-    core: CoreLibrary;
     plugins?: Plugin[];
-    activity: AP.Entity | null;
-    constructor(routes: Routes, req: IncomingMessage, res: ServerResponse, core: CoreLibrary, plugins?: Plugin[]);
+    constructor(core: CoreLibrary, options: {
+        body: Record<string, unknown>;
+        url: URL;
+        routes: Routes;
+        plugins?: Plugin[];
+    });
     protected getActors: typeof getActors;
     protected runSideEffects: typeof runSideEffects;
     protected parseBody: typeof parseBody;

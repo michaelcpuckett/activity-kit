@@ -28,7 +28,6 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleLike(activity, recipient) {
-    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.LIKE);
     const objectId = (0, utilities_1.getId)(activity.object);
     type_utilities_1.assert.exists(objectId);
     const object = await this.core.findEntityById(objectId);
@@ -41,18 +40,16 @@ async function handleLike(activity, recipient) {
         type_utilities_1.assert.isApCollection(likes);
         const attributedToId = (0, utilities_1.getId)(likes.attributedTo);
         type_utilities_1.assert.exists(attributedToId);
-        if (attributedToId.toString() !== (0, utilities_1.getId)(recipient)?.toString()) {
+        if (attributedToId.href !== (0, utilities_1.getId)(recipient)?.href) {
             return;
         }
-        if (Array.isArray(likes.type)
-            ? likes.type.includes(AP.CollectionTypes.COLLECTION)
-            : likes.type === AP.CollectionTypes.COLLECTION) {
-            await this.core.insertItem(likesId, activity.id);
+        const activityId = (0, utilities_1.getId)(activity);
+        type_utilities_1.assert.exists(activityId);
+        if (type_utilities_1.guard.isApType(likes, AP.CollectionTypes.ORDERED_COLLECTION)) {
+            await this.core.insertOrderedItem(likesId, activityId);
         }
-        else if (Array.isArray(likes.type)
-            ? likes.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
-            : likes.type === AP.CollectionTypes.ORDERED_COLLECTION) {
-            await this.core.insertOrderedItem(likesId, activity.id);
+        else {
+            await this.core.insertItem(likesId, activityId);
         }
     }
     catch (error) {

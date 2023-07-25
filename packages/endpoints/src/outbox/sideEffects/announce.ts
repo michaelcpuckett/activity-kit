@@ -5,11 +5,12 @@ import { isLocal, getId } from '@activity-kit/utilities';
 
 export async function handleAnnounce(
   this: OutboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Announce,
 ) {
-  assert.isApType<AP.Announce>(activity, AP.ActivityTypes.ANNOUNCE);
-
   const actorId = getId(activity.actor);
+
+  assert.exists(actorId);
+
   const actor = await this.core.queryById(actorId);
 
   assert.isApActor(actor);
@@ -21,7 +22,15 @@ export async function handleAnnounce(
     AP.CollectionTypes.ORDERED_COLLECTION,
   );
 
-  await this.core.insertOrderedItem(shared.id, activity.id);
+  const sharedId = getId(shared);
+
+  assert.exists(sharedId);
+
+  const activityId = getId(activity);
+
+  assert.exists(activityId);
+
+  await this.core.insertOrderedItem(sharedId, activityId);
 
   const objectId = getId(activity.object);
 
@@ -42,6 +51,6 @@ export async function handleAnnounce(
       throw new Error('Bad shares collection: no ID.');
     }
 
-    await this.core.insertOrderedItem(sharesId, activity.id);
+    await this.core.insertOrderedItem(sharesId, activityId);
   }
 }

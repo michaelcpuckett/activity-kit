@@ -24,77 +24,94 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isApTypeOf = exports.isApType = exports.isApTransitiveActivity = exports.isApCollection = exports.isApActor = exports.isApExtendedObject = exports.isApCoreObject = exports.isApActivity = exports.isApEntity = exports.hasApType = exports.hasType = exports.isArray = exports.isUrl = exports.isDate = exports.isNumber = exports.isString = exports.isObject = exports.exists = void 0;
-const guard = __importStar(require("./guard"));
+const AP = __importStar(require("@activity-kit/types"));
+function isType(entity, type) {
+    if (!entity || typeof entity !== 'object') {
+        return false;
+    }
+    const entityType = entity.type;
+    return Array.isArray(entityType)
+        ? entityType.includes(type)
+        : type === entityType;
+}
+function isTypeOf(entity, types) {
+    return Object.values(types).some((type) => isType(entity, type));
+}
 function exists(value) {
-    return guard.exists(value) ? value : undefined;
+    return (['string', 'number', 'object'].includes(typeof value) && value !== null);
 }
 exports.exists = exists;
 function isObject(value) {
-    return guard.isObject(value) ? value : undefined;
+    return typeof value === 'object' && value !== null;
 }
 exports.isObject = isObject;
 function isString(value) {
-    return guard.isString(value) ? value : undefined;
+    return typeof value === 'string';
 }
 exports.isString = isString;
 function isNumber(value) {
-    return guard.isNumber(value) ? value : undefined;
+    return typeof value === 'number' && !isNaN(value);
 }
 exports.isNumber = isNumber;
 function isDate(value) {
-    return guard.isDate(value) ? value : undefined;
+    return value instanceof Date;
 }
 exports.isDate = isDate;
 function isUrl(value) {
-    return guard.isUrl(value) ? value : undefined;
+    return value instanceof URL;
 }
 exports.isUrl = isUrl;
 function isArray(value) {
-    return guard.isArray(value) ? value : undefined;
+    return Array.isArray(value);
 }
 exports.isArray = isArray;
 function hasType(value) {
-    return guard.hasType(value) ? value : undefined;
+    return typeof value === 'object' && value !== null && 'type' in value;
 }
 exports.hasType = hasType;
 function hasApType(value) {
-    return guard.hasApType(value) ? value : undefined;
+    return hasType(value) && isTypeOf(value, AP.AllTypes);
 }
 exports.hasApType = hasApType;
 function isApEntity(value) {
-    return guard.isApEntity(value) ? value : undefined;
+    return hasApType(value);
 }
 exports.isApEntity = isApEntity;
 function isApActivity(value) {
-    return guard.isApActivity(value) ? value : undefined;
+    return isApEntity(value) && isTypeOf(value, AP.ActivityTypes);
 }
 exports.isApActivity = isApActivity;
 function isApCoreObject(value) {
-    return guard.isApCoreObject(value) ? value : undefined;
+    return (isApEntity(value) && isTypeOf(value, AP.CoreObjectTypes));
 }
 exports.isApCoreObject = isApCoreObject;
 function isApExtendedObject(value) {
-    return guard.isApExtendedObject(value) ? value : undefined;
+    return (isApEntity(value) &&
+        isTypeOf(value, AP.ExtendedObjectTypes));
 }
 exports.isApExtendedObject = isApExtendedObject;
 function isApActor(value) {
-    return guard.isApActor(value) ? value : undefined;
+    return isApEntity(value) && isTypeOf(value, AP.ActorTypes);
 }
 exports.isApActor = isApActor;
 function isApCollection(value) {
-    return guard.isApCollection(value) ? value : undefined;
+    return (isApEntity(value) &&
+        isTypeOf(value, AP.CollectionTypes));
 }
 exports.isApCollection = isApCollection;
 function isApTransitiveActivity(value) {
-    return guard.isApTransitiveActivity(value) ? value : undefined;
+    return (typeof value === 'object' &&
+        value !== null &&
+        isApActivity(value) &&
+        'object' in value);
 }
 exports.isApTransitiveActivity = isApTransitiveActivity;
 function isApType(value, type) {
-    return guard.isApType(value, type) ? value : undefined;
+    return isApEntity(value) && isType(value, type);
 }
 exports.isApType = isApType;
 function isApTypeOf(value, comparison) {
-    return guard.isApTypeOf(value, comparison) ? value : undefined;
+    return isApEntity(value) && isTypeOf(value, comparison);
 }
 exports.isApTypeOf = isApTypeOf;
-//# sourceMappingURL=cast.js.map
+//# sourceMappingURL=narrow.js.map

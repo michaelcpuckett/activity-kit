@@ -5,11 +5,12 @@ import { OutboxPostEndpoint } from '../..';
 
 export async function handleUndoAnnounce(
   this: OutboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Announce,
 ) {
-  assert.isApType<AP.Announce>(activity, AP.ActivityTypes.ANNOUNCE);
-
   const actorId = getId(activity.actor);
+
+  assert.exists(actorId);
+
   const actor = await this.core.queryById(actorId);
 
   assert.isApActor(actor);
@@ -21,7 +22,15 @@ export async function handleUndoAnnounce(
     AP.CollectionTypes.ORDERED_COLLECTION,
   );
 
-  await this.core.removeOrderedItem(shared.id, activity.id);
+  const sharedId = getId(shared);
+
+  assert.exists(sharedId);
+
+  const activityId = getId(activity);
+
+  assert.exists(activityId);
+
+  await this.core.removeOrderedItem(sharedId, activityId);
 
   const objectId = getId(activity.object);
 
@@ -38,10 +47,12 @@ export async function handleUndoAnnounce(
 
     const sharesId = getId(object.shares);
 
-    if (!sharesId) {
-      throw new Error('Bad shares collection: no ID.');
-    }
+    assert.exists(sharesId);
 
-    await this.core.removeOrderedItem(sharesId, activity.id);
+    const activityId = getId(activity);
+
+    assert.exists(activityId);
+
+    await this.core.removeOrderedItem(sharesId, activityId);
   }
 }

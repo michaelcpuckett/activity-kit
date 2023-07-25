@@ -27,33 +27,31 @@ exports.handleFollow = void 0;
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
-const utilities_2 = require("@activity-kit/utilities");
 const path_to_regexp_1 = require("path-to-regexp");
 async function handleFollow(activity, recipient) {
-    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.FOLLOW);
-    const activityId = (0, utilities_2.getId)(activity);
+    const activityId = (0, utilities_1.getId)(activity);
     type_utilities_1.assert.exists(activityId);
-    const objectId = (0, utilities_2.getId)(activity.object);
+    const objectId = (0, utilities_1.getId)(activity.object);
     type_utilities_1.assert.exists(objectId);
     const object = await this.core.queryById(objectId);
     type_utilities_1.assert.isApEntity(object);
     if (!type_utilities_1.guard.isApActor(object)) {
         return;
     }
-    const actorId = (0, utilities_2.getId)(activity.actor);
+    const actorId = (0, utilities_1.getId)(activity.actor);
     type_utilities_1.assert.exists(actorId);
     const actor = await this.core.queryById(actorId);
     type_utilities_1.assert.isApActor(actor);
     const follower = actor;
-    const followerId = (0, utilities_2.getId)(follower);
+    const followerId = (0, utilities_1.getId)(follower);
     type_utilities_1.assert.exists(followerId);
     const followee = object;
-    const followeeId = (0, utilities_2.getId)(followee);
+    const followeeId = (0, utilities_1.getId)(followee);
     type_utilities_1.assert.exists(followeeId);
-    if (followeeId.toString() !== (0, utilities_2.getId)(recipient)?.toString()) {
+    if (followeeId.href !== (0, utilities_1.getId)(recipient)?.href) {
         return;
     }
-    const followersId = (0, utilities_2.getId)(followee.followers);
+    const followersId = (0, utilities_1.getId)(followee.followers);
     type_utilities_1.assert.exists(followersId);
     const followers = await this.core.findEntityById(followersId);
     type_utilities_1.assert.isApType(followers, AP.CollectionTypes.COLLECTION);
@@ -67,7 +65,8 @@ async function handleFollow(activity, recipient) {
     if (followee.manuallyApprovesFollowers) {
         const requests = await this.core.getStreamByName(followee, 'Requests');
         type_utilities_1.assert.isApType(requests, AP.CollectionTypes.COLLECTION);
-        const requestsId = (0, utilities_2.getId)(requests);
+        const requestsId = (0, utilities_1.getId)(requests);
+        type_utilities_1.assert.exists(requestsId);
         await this.core.insertItem(requestsId, activityId);
         return;
     }
@@ -84,7 +83,7 @@ async function handleFollow(activity, recipient) {
         object: activityId,
         published: publishedDate,
     });
-    const followeeOutboxId = (0, utilities_2.getId)(followee.outbox);
+    const followeeOutboxId = (0, utilities_1.getId)(followee.outbox);
     type_utilities_1.assert.exists(followeeOutboxId);
     await Promise.all([
         this.core.saveEntity(acceptActivity),

@@ -5,11 +5,12 @@ import { OutboxPostEndpoint } from '../..';
 
 export async function handleUndoLike(
   this: OutboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Like,
 ) {
-  assert.isApType<AP.Like>(activity, AP.ActivityTypes.LIKE);
+  const actorId = getId(activity.actor);
 
-  const actorId = getId((activity as AP.Activity).actor);
+  assert.exists(actorId);
+
   const actor = await this.core.queryById(actorId);
 
   assert.isApActor(actor);
@@ -37,7 +38,11 @@ export async function handleUndoLike(
       throw new Error('Cannot add to remote collection.');
     }
 
-    await this.core.removeOrderedItem(likesId, activity.id);
+    const activityId = getId(activity);
+
+    assert.exists(activityId);
+
+    await this.core.removeOrderedItem(likesId, activityId);
   } catch (error) {
     console.log(error);
   }

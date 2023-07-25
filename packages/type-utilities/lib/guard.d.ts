@@ -1,17 +1,17 @@
+/// <reference types="node" />
 import * as AP from '@activity-kit/types';
-export declare function isType<T extends AP.Entity>(entity: unknown, type: string): entity is T;
-export declare function isTypeOf<T extends AP.Entity>(entity: unknown, types: Record<string, string>): entity is T;
 export declare function exists(value: unknown): value is string | number | object;
 export declare function isObject(value: unknown): value is object;
 export declare function isString(value: unknown): value is string;
 export declare function isNumber(value: unknown): value is number;
 export declare function isDate(value: unknown): value is Date;
+export declare function isUrl(value: unknown): value is URL;
 export declare function isArray(value: unknown): value is Array<unknown>;
 export declare function hasType(value: unknown): value is {
     type: string | string[];
 };
 export declare function hasApType(value: unknown): value is {
-    type: AP.AnyType | Array<AP.AnyType | string>;
+    type: AP.AnyType | AP.TypeOrArrayWithType<AP.AnyType>;
 };
 export declare function isApEntity(value: unknown): value is AP.Entity;
 export declare function isApActivity(value: unknown): value is AP.Activity;

@@ -45,7 +45,7 @@ async function respond(render) {
     type_utilities_1.assert.isApCollection(entity);
     const totalItems = Number(entity.totalItems);
     const lastPageIndex = Math.max(1, Math.ceil(totalItems / ITEMS_PER_COLLECTION_PAGE));
-    const isOrderedCollection = type_utilities_1.guard.isType(entity, AP.CollectionTypes.ORDERED_COLLECTION);
+    const isOrderedCollection = type_utilities_1.guard.isApType(entity, AP.CollectionTypes.ORDERED_COLLECTION);
     const getPageUrl = (page) => new URL(`${this.url.pathname === '/' ? '' : this.url.pathname}/page/${page}`, this.url.origin);
     const page = pageParts[1];
     const currentPage = page ? Number(page) : 1;

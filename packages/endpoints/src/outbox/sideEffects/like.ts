@@ -3,13 +3,11 @@ import * as AP from '@activity-kit/types';
 import { assert } from '@activity-kit/type-utilities';
 import { isLocal, getId } from '@activity-kit/utilities';
 
-export async function handleLike(
-  this: OutboxPostEndpoint,
-  activity: AP.Entity,
-) {
-  assert.isApType<AP.Like>(activity, AP.ActivityTypes.LIKE);
-
+export async function handleLike(this: OutboxPostEndpoint, activity: AP.Like) {
   const actorId = getId(activity.actor);
+
+  assert.exists(actorId);
+
   const actor = await this.core.queryById(actorId);
 
   assert.isApActor(actor);
@@ -39,7 +37,11 @@ export async function handleLike(
       throw new Error('Cannot add to remote collection.');
     }
 
-    await this.core.insertOrderedItem(likesId, activity.id);
+    const activityId = getId(activity);
+
+    assert.exists(activityId);
+
+    await this.core.insertOrderedItem(likesId, activityId);
   } catch (error) {
     console.log(error);
   }

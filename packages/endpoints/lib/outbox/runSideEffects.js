@@ -27,53 +27,38 @@ exports.runSideEffects = void 0;
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 async function runSideEffects() {
-    try {
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.CREATE)) {
-            await this.handleCreate(this.activity);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.DELETE)) {
-            await this.handleDelete(this.activity);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.ACCEPT)) {
-            await this.handleAccept(this.activity);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.BLOCK)) {
-            await this.handleBlock(this.activity);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.UPDATE)) {
-            await this.handleUpdate(this.activity);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.LIKE)) {
-            await this.handleLike(this.activity);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.ANNOUNCE)) {
-            await this.handleAnnounce(this.activity);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.ADD)) {
-            await this.handleAdd(this.activity);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.REMOVE)) {
-            await this.handleRemove(this.activity);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.FOLLOW)) {
-            await this.handleFollow(this.activity);
-        }
-        if (type_utilities_1.guard.isType(this.activity, AP.ActivityTypes.UNDO)) {
-            await this.handleUndo(this.activity);
-        }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.CREATE)) {
+        await this.handleCreate(this.activity);
     }
-    catch (error) {
-        console.log(error);
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.DELETE)) {
+        await this.handleDelete(this.activity);
     }
-    for (const plugin of this.plugins) {
-        if (plugin.handleOutboxSideEffect) {
-            try {
-                await plugin.handleOutboxSideEffect.call(this);
-            }
-            catch (error) {
-                console.log(error);
-            }
-        }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.ACCEPT)) {
+        await this.handleAccept(this.activity);
+    }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.BLOCK)) {
+        await this.handleBlock(this.activity);
+    }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.UPDATE)) {
+        await this.handleUpdate(this.activity);
+    }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.LIKE)) {
+        await this.handleLike(this.activity);
+    }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.ANNOUNCE)) {
+        await this.handleAnnounce(this.activity);
+    }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.ADD)) {
+        await this.handleAdd(this.activity);
+    }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.REMOVE)) {
+        await this.handleRemove(this.activity);
+    }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.FOLLOW)) {
+        await this.handleFollow(this.activity);
+    }
+    if (type_utilities_1.guard.isApType(this.activity, AP.ActivityTypes.UNDO)) {
+        await this.handleUndo(this.activity);
     }
 }
 exports.runSideEffects = runSideEffects;

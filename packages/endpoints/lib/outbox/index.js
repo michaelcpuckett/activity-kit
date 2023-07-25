@@ -35,8 +35,8 @@ class OutboxPostEndpoint {
     constructor(core, options) {
         this.core = core;
         this.core = core;
-        this.actor = options.actor;
         this.body = (0, utilities_1.convertJsonToEntity)(options.body);
+        this.actor = options.actor;
         this.url = options.url;
         this.routes = options.routes;
         this.plugins = options.plugins || [];

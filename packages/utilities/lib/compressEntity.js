@@ -45,6 +45,7 @@ function compressItem(item) {
                 return item.url;
             }
             else if (typeof item.url === 'object' &&
+                item.url !== null &&
                 'href' in item.url &&
                 item.url.href instanceof URL) {
                 return item.url.href;

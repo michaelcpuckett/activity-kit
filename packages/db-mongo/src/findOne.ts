@@ -14,7 +14,7 @@ export async function findOne(
     throw new Error('Bad database.');
   }
 
-  let value: Record<string, unknown> = null;
+  let value: Record<string, unknown> | null = null;
 
   if (options && options.includes(DbOptions.CASE_INSENSITIVE)) {
     const cursor = this.db

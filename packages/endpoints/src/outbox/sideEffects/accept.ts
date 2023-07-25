@@ -5,10 +5,8 @@ import { getId } from '@activity-kit/utilities';
 
 export async function handleAccept(
   this: OutboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Accept,
 ) {
-  assert.isApType<AP.Accept>(activity, AP.ActivityTypes.ACCEPT);
-
   const actorId = getId(activity.actor);
 
   assert.exists(actorId);
@@ -22,6 +20,9 @@ export async function handleAccept(
   assert.exists(followersId);
 
   const followActivityId = getId(activity.object);
+
+  assert.exists(followActivityId);
+
   const followActivity = await this.core.queryById(followActivityId);
 
   assert.isApType<AP.Follow>(followActivity, AP.ActivityTypes.FOLLOW);

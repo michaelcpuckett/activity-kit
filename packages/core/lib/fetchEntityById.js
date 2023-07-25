@@ -24,7 +24,9 @@ async function fetchEntityById(id) {
         preferredUsername: 'bot',
     });
     type_utilities_1.assert.isApActor(actor);
-    const { dateHeader, signatureHeader } = await this.getHttpSignature(id, actor.id, await this.getPrivateKey(actor));
+    const actorId = (0, utilities_1.getId)(actor);
+    type_utilities_1.assert.exists(actorId);
+    const { dateHeader, signatureHeader } = await this.getHttpSignature(id, actorId, await this.getPrivateKey(actor));
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 1250);
     const fetchedEntity = await this.fetch(id.toString(), {
@@ -61,9 +63,14 @@ async function fetchEntityById(id) {
         return null;
     });
     if (fetchedEntity) {
-        const entity = (0, utilities_1.compressEntity)((0, utilities_1.convertJsonToEntity)(fetchedEntity));
-        await this.saveEntity(entity);
-        return entity;
+        const convertedEntity = (0, utilities_1.convertJsonToEntity)(fetchedEntity);
+        if (convertedEntity) {
+            const entity = (0, utilities_1.compressEntity)(convertedEntity);
+            if (entity) {
+                await this.saveEntity(entity);
+                return entity;
+            }
+        }
     }
     return null;
 }

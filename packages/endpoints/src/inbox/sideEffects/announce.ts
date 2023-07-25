@@ -1,26 +1,27 @@
-import { assert } from '@activity-kit/type-utilities';
 import * as AP from '@activity-kit/types';
+import { guard, assert } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
+
 import { InboxPostEndpoint } from '..';
 
-// An announcement has been made to a local object.
 export async function handleAnnounce(
   this: InboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Announce,
   recipient: AP.Actor,
 ) {
-  assert.isApType<AP.Announce>(activity, AP.ActivityTypes.ANNOUNCE);
-
-  const objectId = getId(activity.object);
-
-  assert.exists(objectId);
-
-  const object = await this.core.findEntityById(objectId);
-
   try {
+    const objectId = getId(activity.object);
+
+    assert.exists(objectId);
+
+    const object = await this.core.findEntityById(objectId);
+
     assert.isApExtendedObject(object);
 
     const sharesId = getId(object.shares);
+
+    assert.exists(sharesId);
+
     const shares = await this.core.findEntityById(sharesId);
 
     assert.isApCollection(shares);
@@ -29,23 +30,24 @@ export async function handleAnnounce(
 
     assert.exists(attributedToId);
 
-    if (attributedToId.toString() !== getId(recipient)?.toString()) {
+    if (attributedToId.href !== getId(recipient)?.href) {
       // Not applicable to this Actor.
       return;
     }
 
+    const activityId = getId(activity);
+
+    assert.exists(activityId);
+
     if (
-      Array.isArray(shares.type)
-        ? shares.type.includes(AP.CollectionTypes.COLLECTION)
-        : shares.type === AP.CollectionTypes.COLLECTION
+      guard.isApType<AP.OrderedCollection>(
+        shares,
+        AP.CollectionTypes.ORDERED_COLLECTION,
+      )
     ) {
-      await this.core.insertItem(sharesId, activity.id);
-    } else if (
-      Array.isArray(shares.type)
-        ? shares.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
-        : shares.type === AP.CollectionTypes.ORDERED_COLLECTION
-    ) {
-      await this.core.insertOrderedItem(sharesId, activity.id);
+      await this.core.insertOrderedItem(sharesId, activityId);
+    } else {
+      await this.core.insertItem(sharesId, activityId);
     }
   } catch (error) {
     console.log(error);

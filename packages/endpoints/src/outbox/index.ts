@@ -25,10 +25,10 @@ import { handleUndoLike } from './sideEffects/undo/undoLike';
 import { handleUndoAnnounce } from './sideEffects/undo/undoAnnounce';
 
 export class OutboxPostEndpoint {
-  body: Record<string, unknown>;
+  body: AP.Entity | null;
   url: URL;
   routes: Routes;
-  plugins?: Plugin[];
+  plugins: Plugin[];
   actor: AP.Actor;
 
   activity: AP.Entity | null = null;
@@ -44,8 +44,8 @@ export class OutboxPostEndpoint {
     },
   ) {
     this.core = core;
-    this.actor = options.actor;
     this.body = convertJsonToEntity(options.body);
+    this.actor = options.actor;
     this.url = options.url;
     this.routes = options.routes;
     this.plugins = options.plugins || [];

@@ -5,16 +5,20 @@ import { getId } from '@activity-kit/utilities';
 
 export async function handleBlock(
   this: OutboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Block,
 ) {
-  assert.isApType<AP.Block>(activity, AP.ActivityTypes.BLOCK);
-
   const actorId = getId(activity.actor);
+
+  assert.exists(actorId);
+
   const actor = await this.core.queryById(actorId);
 
   assert.isApActor(actor);
 
   const blockedActorId = getId(activity.object);
+
+  assert.exists(blockedActorId);
+
   const blockedActor = await this.core.queryById(blockedActorId);
 
   assert.isApActor(blockedActor);
@@ -27,7 +31,11 @@ export async function handleBlock(
 
   assert.exists(blocksId);
 
-  await this.core.insertItem(blocksId, activity.id);
+  const activityId = getId(activity);
+
+  assert.exists(activityId);
+
+  await this.core.insertItem(blocksId, activityId);
 
   const followingId = getId(actor.following);
 

@@ -45,7 +45,7 @@ export declare class Core implements CoreLibrary {
     findEntityById: typeof findEntityById;
     getActorByUserId: typeof getActorByUserId;
     getPrivateKey: typeof getPrivateKey;
-    getStreamByName: (this: Core, actor: import("@activity-kit/types").Actor, name: string) => Promise<import("@activity-kit/types").EitherCollection>;
+    getStreamByName: (this: Core, actor: import("@activity-kit/types").Actor, name: string) => Promise<import("@activity-kit/types").EitherCollection | null>;
     fetchEntityById: typeof fetchEntityById;
     queryById: typeof queryById;
     expandEntity: typeof expandEntity;

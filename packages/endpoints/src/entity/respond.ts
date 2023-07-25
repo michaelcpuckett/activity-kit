@@ -40,7 +40,7 @@ export async function respond(
     Math.ceil(totalItems / ITEMS_PER_COLLECTION_PAGE),
   );
 
-  const isOrderedCollection = guard.isType<AP.OrderedCollection>(
+  const isOrderedCollection = guard.isApType<AP.OrderedCollection>(
     entity,
     AP.CollectionTypes.ORDERED_COLLECTION,
   );

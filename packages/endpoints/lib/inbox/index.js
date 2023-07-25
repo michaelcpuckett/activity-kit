@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InboxPostEndpoint = void 0;
+const type_utilities_1 = require("@activity-kit/type-utilities");
+const utilities_1 = require("@activity-kit/utilities");
 const getActors_1 = require("./getActors");
 const parseBody_1 = require("./parseBody");
 const respond_1 = require("./respond");
@@ -14,18 +16,21 @@ const create_1 = require("./sideEffects/create");
 const shouldForwardActivity_1 = require("./shouldForwardActivity");
 const broadcastActivity_1 = require("./broadcastActivity");
 class InboxPostEndpoint {
-    routes;
-    req;
-    res;
     core;
+    activity;
+    url;
+    routes;
     plugins;
-    activity = null;
-    constructor(routes, req, res, core, plugins) {
-        this.routes = routes;
-        this.req = req;
-        this.res = res;
+    constructor(core, options) {
         this.core = core;
-        this.plugins = plugins;
+        const activity = type_utilities_1.cast.isApActivity((0, utilities_1.convertJsonToEntity)(options.body));
+        if (!activity) {
+            throw new Error('Body must be an Activity.');
+        }
+        this.activity = activity;
+        this.url = options.url;
+        this.routes = options.routes;
+        this.plugins = [];
     }
     getActors = getActors_1.getActors;
     runSideEffects = runSideEffects_1.runSideEffects;

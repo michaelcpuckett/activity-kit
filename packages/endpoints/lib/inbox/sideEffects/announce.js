@@ -24,33 +24,31 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleAnnounce = void 0;
-const type_utilities_1 = require("@activity-kit/type-utilities");
 const AP = __importStar(require("@activity-kit/types"));
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function handleAnnounce(activity, recipient) {
-    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.ANNOUNCE);
-    const objectId = (0, utilities_1.getId)(activity.object);
-    type_utilities_1.assert.exists(objectId);
-    const object = await this.core.findEntityById(objectId);
     try {
+        const objectId = (0, utilities_1.getId)(activity.object);
+        type_utilities_1.assert.exists(objectId);
+        const object = await this.core.findEntityById(objectId);
         type_utilities_1.assert.isApExtendedObject(object);
         const sharesId = (0, utilities_1.getId)(object.shares);
+        type_utilities_1.assert.exists(sharesId);
         const shares = await this.core.findEntityById(sharesId);
         type_utilities_1.assert.isApCollection(shares);
         const attributedToId = (0, utilities_1.getId)(shares.attributedTo);
         type_utilities_1.assert.exists(attributedToId);
-        if (attributedToId.toString() !== (0, utilities_1.getId)(recipient)?.toString()) {
+        if (attributedToId.href !== (0, utilities_1.getId)(recipient)?.href) {
             return;
         }
-        if (Array.isArray(shares.type)
-            ? shares.type.includes(AP.CollectionTypes.COLLECTION)
-            : shares.type === AP.CollectionTypes.COLLECTION) {
-            await this.core.insertItem(sharesId, activity.id);
+        const activityId = (0, utilities_1.getId)(activity);
+        type_utilities_1.assert.exists(activityId);
+        if (type_utilities_1.guard.isApType(shares, AP.CollectionTypes.ORDERED_COLLECTION)) {
+            await this.core.insertOrderedItem(sharesId, activityId);
         }
-        else if (Array.isArray(shares.type)
-            ? shares.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
-            : shares.type === AP.CollectionTypes.ORDERED_COLLECTION) {
-            await this.core.insertOrderedItem(sharesId, activity.id);
+        else {
+            await this.core.insertItem(sharesId, activityId);
         }
     }
     catch (error) {

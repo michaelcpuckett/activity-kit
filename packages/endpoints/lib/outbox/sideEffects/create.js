@@ -27,13 +27,9 @@ exports.handleCreate = void 0;
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
-const utilities_2 = require("@activity-kit/utilities");
-const utilities_3 = require("@activity-kit/utilities");
 const path_to_regexp_1 = require("path-to-regexp");
-const cheerio = __importStar(require("cheerio"));
 async function handleCreate(activity) {
-    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.CREATE);
-    const actorId = (0, utilities_3.getId)(activity.actor);
+    const actorId = (0, utilities_1.getId)(activity.actor);
     type_utilities_1.assert.exists(actorId);
     const object = activity.object;
     if (object instanceof URL) {
@@ -50,28 +46,18 @@ async function handleCreate(activity) {
         day: '2-digit',
     });
     const [{ value: month }, , { value: day }, , { value: year }] = dateFormatter.formatToParts(publishedDate);
-    const summary = 'summary' in object ? object.summary ?? '' : '';
-    const slug = cheerio
-        .load(summary, null, false)
-        .text()
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
     const type = Array.isArray(object.type) ? object.type[0] : object.type;
-    const objectId = new URL(`${utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()])({
+    const objectId = new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes[type.toLowerCase()])({
         guid: await this.core.getGuid(),
         year,
         month,
         day,
-        slug,
     })}`);
     object.id = objectId;
-    if (type_utilities_1.guard.isTypeOf(object, AP.ExtendedObjectTypes)) {
-        type_utilities_1.assert.isApExtendedObject(object);
+    if (type_utilities_1.guard.isApExtendedObject(object)) {
         object.url = objectId;
         const entityRoute = objectId.pathname;
-        const objectRepliesId = new URL(`${utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.replies, {
+        const objectRepliesId = new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.replies, {
             validate: false,
         })({
             entityRoute,
@@ -86,7 +72,7 @@ async function handleCreate(activity) {
             published: publishedDate,
             attributedTo: actorId,
         });
-        const objectLikesId = new URL(`${utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.likes, {
+        const objectLikesId = new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.likes, {
             validate: false,
         })({
             entityRoute,
@@ -101,7 +87,7 @@ async function handleCreate(activity) {
             published: publishedDate,
             attributedTo: actorId,
         });
-        const objectSharesId = new URL(`${utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.shares, {
+        const objectSharesId = new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.shares, {
             validate: false,
         })({
             entityRoute,
@@ -122,54 +108,15 @@ async function handleCreate(activity) {
         object.shares = objectSharesId;
         object.published = publishedDate;
         if (object.inReplyTo) {
-            const objectInReplyTo = await this.core.findEntityById((0, utilities_3.getId)(object.inReplyTo));
+            const inReplyToId = (0, utilities_1.getId)(object.inReplyTo);
+            type_utilities_1.assert.exists(inReplyToId);
+            const objectInReplyTo = await this.core.findEntityById(inReplyToId);
             if (objectInReplyTo && 'replies' in objectInReplyTo) {
-                const repliesCollectionId = (0, utilities_3.getId)(objectInReplyTo.replies);
+                const repliesCollectionId = (0, utilities_1.getId)(objectInReplyTo.replies);
                 if (repliesCollectionId) {
                     await this.core.insertOrderedItem(repliesCollectionId, objectId);
                 }
             }
-        }
-        if (object.tag) {
-            const tags = Array.isArray(object.tag) ? object.tag : [object.tag];
-            for (const tag of tags) {
-                if (!(tag instanceof URL) &&
-                    type_utilities_1.guard.isType(tag, AP.ExtendedObjectTypes.HASHTAG)) {
-                    const hashtagCollectionUrl = new URL(`${utilities_2.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.hashtag)({
-                        slug: tag.name
-                            .replace('#', '')
-                            .toLowerCase()
-                            .trim()
-                            .replace(/[^a-z0-9]+/g, '-')
-                            .replace(/^-+|-+$/g, ''),
-                    })}`);
-                    tag.id = hashtagCollectionUrl;
-                    tag.url = hashtagCollectionUrl;
-                    const hashtagCollection = await this.core.findEntityById(hashtagCollectionUrl);
-                    if (!hashtagCollection) {
-                        const hashtagEntity = {
-                            id: hashtagCollectionUrl,
-                            url: hashtagCollectionUrl,
-                            name: tag.name,
-                            type: [
-                                AP.ExtendedObjectTypes.HASHTAG,
-                                AP.CollectionTypes.ORDERED_COLLECTION,
-                            ],
-                            orderedItems: [],
-                        };
-                        await this.core.saveEntity(hashtagEntity);
-                        const serverActor = await this.core.findOne('entity', {
-                            preferredUsername: utilities_1.SERVER_ACTOR_USERNAME,
-                        });
-                        type_utilities_1.assert.isApActor(serverActor);
-                        const serverHashtags = await this.core.getStreamByName(serverActor, 'Hashtags');
-                        const serverHashtagsUrl = serverHashtags.id;
-                        await this.core.insertItem(serverHashtagsUrl, hashtagCollectionUrl);
-                    }
-                    await this.core.insertOrderedItem(hashtagCollectionUrl, objectId);
-                }
-            }
-            object.tag = tags;
         }
         await Promise.all([
             this.core.saveEntity(object),

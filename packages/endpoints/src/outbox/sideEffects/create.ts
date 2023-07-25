@@ -1,18 +1,14 @@
-import { OutboxPostEndpoint } from '..';
 import * as AP from '@activity-kit/types';
 import { guard, assert } from '@activity-kit/type-utilities';
-import { SERVER_ACTOR_USERNAME, applyContext } from '@activity-kit/utilities';
-import { LOCAL_DOMAIN } from '@activity-kit/utilities';
-import { getId } from '@activity-kit/utilities';
+import { LOCAL_DOMAIN, applyContext, getId } from '@activity-kit/utilities';
 import { compile } from 'path-to-regexp';
-import * as cheerio from 'cheerio';
+
+import { OutboxPostEndpoint } from '..';
 
 export async function handleCreate(
   this: OutboxPostEndpoint,
-  activity: AP.Entity,
+  activity: AP.Create,
 ) {
-  assert.isApType<AP.Create>(activity, AP.ActivityTypes.CREATE);
-
   const actorId = getId(activity.actor);
 
   assert.exists(actorId);
@@ -42,16 +38,6 @@ export async function handleCreate(
   const [{ value: month }, , { value: day }, , { value: year }] =
     dateFormatter.formatToParts(publishedDate);
 
-  const summary = 'summary' in object ? object.summary ?? '' : '';
-
-  const slug = cheerio
-    .load(summary, null, false)
-    .text()
-    .toLowerCase()
-    .trim() // Remove whitespace from both ends of the string
-    .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
-    .replace(/^-+|-+$/g, '');
-
   const type = Array.isArray(object.type) ? object.type[0] : object.type;
 
   const objectId = new URL(
@@ -60,15 +46,12 @@ export async function handleCreate(
       year,
       month,
       day,
-      slug,
     })}`,
   );
 
   object.id = objectId;
 
-  if (guard.isTypeOf<AP.ExtendedObject>(object, AP.ExtendedObjectTypes)) {
-    assert.isApExtendedObject(object);
-
+  if (guard.isApExtendedObject(object)) {
     object.url = objectId;
 
     const entityRoute = objectId.pathname;
@@ -137,9 +120,11 @@ export async function handleCreate(
     object.published = publishedDate;
 
     if (object.inReplyTo) {
-      const objectInReplyTo = await this.core.findEntityById(
-        getId(object.inReplyTo),
-      );
+      const inReplyToId = getId(object.inReplyTo);
+
+      assert.exists(inReplyToId);
+
+      const objectInReplyTo = await this.core.findEntityById(inReplyToId);
 
       if (objectInReplyTo && 'replies' in objectInReplyTo) {
         const repliesCollectionId = getId(objectInReplyTo.replies);
@@ -148,70 +133,6 @@ export async function handleCreate(
           await this.core.insertOrderedItem(repliesCollectionId, objectId);
         }
       }
-    }
-
-    if (object.tag) {
-      const tags = Array.isArray(object.tag) ? object.tag : [object.tag];
-
-      for (const tag of tags) {
-        if (
-          !(tag instanceof URL) &&
-          guard.isType<AP.Hashtag>(tag, AP.ExtendedObjectTypes.HASHTAG)
-        ) {
-          const hashtagCollectionUrl = new URL(
-            `${LOCAL_DOMAIN}${compile(this.routes.hashtag)({
-              slug: tag.name
-                .replace('#', '')
-                .toLowerCase()
-                .trim() // Remove whitespace from both ends of the string
-                .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
-                .replace(/^-+|-+$/g, ''),
-            })}`,
-          );
-
-          tag.id = hashtagCollectionUrl;
-          tag.url = hashtagCollectionUrl;
-
-          const hashtagCollection = await this.core.findEntityById(
-            hashtagCollectionUrl,
-          );
-
-          if (!hashtagCollection) {
-            // TODO: Should type be `AP.Hashtag & AP.Collection`?
-            const hashtagEntity: AP.CoreObject = {
-              id: hashtagCollectionUrl,
-              url: hashtagCollectionUrl,
-              name: tag.name,
-              type: [
-                AP.ExtendedObjectTypes.HASHTAG,
-                AP.CollectionTypes.ORDERED_COLLECTION,
-              ],
-              orderedItems: [],
-            };
-
-            await this.core.saveEntity(hashtagEntity);
-
-            const serverActor = await this.core.findOne('entity', {
-              preferredUsername: SERVER_ACTOR_USERNAME,
-            });
-
-            assert.isApActor(serverActor);
-
-            const serverHashtags = await this.core.getStreamByName(
-              serverActor,
-              'Hashtags',
-            );
-
-            const serverHashtagsUrl = serverHashtags.id;
-
-            await this.core.insertItem(serverHashtagsUrl, hashtagCollectionUrl);
-          }
-
-          await this.core.insertOrderedItem(hashtagCollectionUrl, objectId);
-        }
-      }
-
-      object.tag = tags;
     }
 
     await Promise.all([

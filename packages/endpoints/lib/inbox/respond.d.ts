@@ -1,2 +1,4 @@
 import { InboxPostEndpoint } from '.';
-export declare function respond(this: InboxPostEndpoint): Promise<void>;
+export declare function respond(this: InboxPostEndpoint): Promise<{
+    statusCode: number;
+}>;

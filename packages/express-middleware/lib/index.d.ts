@@ -2,7 +2,7 @@ import type { NextFunction } from 'express';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { Adapters, AP, Plugin, Routes } from '@activity-kit/types';
 export declare const activityKitPlugin: (config: {
-    routes?: Routes;
+    routes?: any;
     pages: {
         login: () => Promise<string>;
         home: ({ actor }: {
@@ -10,11 +10,11 @@ export declare const activityKitPlugin: (config: {
         }) => Promise<string>;
         entity: ({ entity, actor, }: {
             entity: AP.Entity;
-            actor?: AP.Actor;
+            actor?: any;
         }) => Promise<string>;
     };
     adapters: Adapters;
-    plugins?: Plugin[];
+    plugins?: Plugin[] | undefined;
 }) => (req: IncomingMessage & {
     params: Record<string, string>;
 }, res: ServerResponse, next: NextFunction) => Promise<void>;

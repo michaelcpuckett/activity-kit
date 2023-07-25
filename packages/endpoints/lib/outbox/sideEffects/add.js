@@ -28,30 +28,26 @@ const AP = __importStar(require("@activity-kit/types"));
 const utilities_1 = require("@activity-kit/utilities");
 const type_utilities_1 = require("@activity-kit/type-utilities");
 async function handleAdd(activity) {
-    type_utilities_1.assert.isApType(activity, AP.ActivityTypes.ADD);
     const objectId = (0, utilities_1.getId)(activity.object);
+    type_utilities_1.assert.exists(objectId);
     const targetId = (0, utilities_1.getId)(activity.target);
+    type_utilities_1.assert.exists(targetId);
     const target = await this.core.findEntityById(targetId);
     type_utilities_1.assert.isApCollection(target);
     if (target.attributedTo) {
         const actorId = (0, utilities_1.getId)(activity.actor);
+        type_utilities_1.assert.exists(actorId);
         const attributedToId = (0, utilities_1.getId)(target.attributedTo);
-        if (attributedToId?.toString() !== actorId?.toString()) {
+        type_utilities_1.assert.exists(attributedToId);
+        if (attributedToId.href !== actorId.href) {
             throw new Error('Not allowed.');
         }
     }
-    if (Array.isArray(target.type)
-        ? target.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
-        : target.type === AP.CollectionTypes.ORDERED_COLLECTION) {
+    if (type_utilities_1.guard.isApType(target, AP.CollectionTypes.ORDERED_COLLECTION)) {
         await this.core.insertOrderedItem(targetId, objectId);
     }
-    else if (Array.isArray(target.type)
-        ? target.type.includes(AP.CollectionTypes.COLLECTION)
-        : target.type === AP.CollectionTypes.COLLECTION) {
-        await this.core.insertItem(targetId, objectId);
-    }
     else {
-        throw new Error('Bad target: Not a collection.');
+        await this.core.insertItem(targetId, objectId);
     }
 }
 exports.handleAdd = handleAdd;
