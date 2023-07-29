@@ -21,12 +21,17 @@ function isTypeOf<T extends AP.Entity>(
 
 export function exists(value: unknown) {
   return (
-    ['string', 'number', 'object'].includes(typeof value) && value !== null
+    ['string', 'number', 'object', 'boolean'].includes(typeof value) &&
+    value !== null
   );
 }
 
 export function isObject(value: unknown) {
   return typeof value === 'object' && value !== null;
+}
+
+export function isPlainObject(value: unknown) {
+  return isObject(value) && Object.getPrototypeOf(value) === Object.prototype;
 }
 
 export function isString(value: unknown) {
@@ -35,6 +40,10 @@ export function isString(value: unknown) {
 
 export function isNumber(value: unknown) {
   return typeof value === 'number' && !isNaN(value);
+}
+
+export function isBoolean(value: unknown) {
+  return typeof value === 'boolean';
 }
 
 export function isDate(value: unknown) {

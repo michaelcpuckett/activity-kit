@@ -1,7 +1,8 @@
-import { Core } from '.';
 import * as AP from '@activity-kit/types';
 
-export async function getPrivateKey(this: Core, actor: AP.Actor) {
+import { CoreLibrary } from './adapters';
+
+export async function getPrivateKey(this: CoreLibrary, actor: AP.Actor) {
   if (!actor.preferredUsername) {
     throw new Error('Actor has no `preferredUsername`.');
   }

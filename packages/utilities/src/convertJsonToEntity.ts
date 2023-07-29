@@ -1,61 +1,59 @@
 import * as AP from '@activity-kit/types';
-import { cast } from '@activity-kit/type-utilities';
+import { cast, guard } from '@activity-kit/type-utilities';
 import { PUBLIC_ACTOR } from './globals';
 
 export function convertJsonToEntity(
   object: Record<string, unknown>,
 ): AP.Entity | null {
-  const converted = convertObject(object);
-
-  return cast.isApEntity(converted) ?? null;
+  return cast.isApEntity(convertObject(object)) ?? null;
 }
 
-function convertObject(object: Record<string, unknown>) {
+function convertObject(
+  object: Record<string, unknown>,
+): Record<string, unknown> {
   const converted: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(object)) {
-    converted[key] = convertItem(value);
+    converted[key] = convertUnknown(value);
   }
 
   return converted;
 }
 
-function convertItem(item: unknown): unknown {
-  if (item instanceof URL || item instanceof Date) {
-    return item;
-  } else if (typeof item === 'string') {
-    if (item === 'as:Public') {
+function convertUnknown(value: unknown): unknown {
+  if (!guard.exists(value)) {
+    return value;
+  }
+
+  if (guard.isArray(value)) {
+    return value.map(convertUnknown);
+  }
+
+  if (guard.isPlainObject(value)) {
+    return convertObject(value);
+  }
+
+  if (guard.isString(value)) {
+    if (value === 'as:Public') {
       return new URL(PUBLIC_ACTOR);
     }
 
     try {
-      if (item.startsWith('http')) {
-        return new URL(item);
+      if (value.startsWith('http')) {
+        return new URL(value);
       } else {
-        const date = Date.parse(item);
+        const date = Date.parse(value);
 
         if (!Number.isNaN(date)) {
           return new Date(date);
         }
 
-        return item;
+        return value;
       }
     } catch (error) {
-      return item;
+      return value;
     }
-  } else if (Array.isArray(item)) {
-    return item.map(convertItem);
-  } else if (item && typeof item === 'object') {
-    const object: Record<string, unknown> = {};
-
-    for (const objectKey of Object.keys(item)) {
-      if (typeof objectKey === 'string') {
-        object[objectKey] = item[objectKey];
-      }
-    }
-
-    return convertObject(object);
-  } else {
-    return item;
   }
+
+  return value;
 }

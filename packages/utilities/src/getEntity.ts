@@ -1,27 +1,26 @@
 import * as AP from '@activity-kit/types';
+import { cast, guard } from '@activity-kit/type-utilities';
 
 export const getEntity = <T extends AP.Entity>(
   entity: undefined | null | AP.EntityReference | AP.EntityReference[],
 ): T | null => {
-  if (!entity) {
+  if (!guard.exists(entity)) {
     return null;
   }
 
-  if (entity instanceof URL) {
+  if (guard.isUrl(entity)) {
     return null;
   }
 
-  if (Array.isArray(entity)) {
+  if (guard.isArray(entity)) {
     if (entity.length === 1) {
-      if (!entity[0] || entity[0] instanceof URL) {
-        return null;
-      }
+      const [item] = entity;
 
-      return entity[0] as T;
+      return cast.isApTypeOf<T & AP.Entity>(item, AP.AllTypes) ?? null;
     }
 
     return null;
   }
 
-  return entity as T;
+  return cast.isApTypeOf<T & AP.Entity>(entity, AP.AllTypes) ?? null;
 };

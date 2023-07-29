@@ -43,12 +43,12 @@ export type CoreLibrary = AuthAdapter &
     queryById: (this: CoreLibrary, id: URL) => Promise<AP.Entity | null>;
     expandEntity: (
       this: CoreLibrary,
-      originalEntity: AP.Entity,
-    ) => Promise<AP.Entity>;
+      entity: AP.Entity,
+    ) => Promise<AP.Entity | null>;
     getCollectionItems: (
       this: CoreLibrary,
       entity: AP.Collection | AP.OrderedCollection,
-    ) => Promise<AP.EntityReference[]>;
+    ) => AP.EntityReference[];
     getPaginatedCollectionItems: (
       this: CoreLibrary,
       collection: AP.Collection | AP.OrderedCollection,

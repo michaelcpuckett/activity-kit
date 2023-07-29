@@ -1,47 +1,55 @@
-import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { assert } from '@activity-kit/type-utilities';
+import { guard } from '@activity-kit/type-utilities';
 import { deduplicateUrls, getId } from '@activity-kit/utilities';
 
+import { CoreLibrary } from './adapters';
+
 export async function getRecipientInboxUrls(
-  this: Core,
+  this: CoreLibrary,
   activity: AP.Activity,
   actor: AP.Actor,
   inboxesOnly?: boolean,
-): Promise<URL[]> {
+) {
   const recipientUrls = await this.getRecipientUrls(activity);
 
-  const recipientInboxUrls = (
-    await Promise.all(
-      recipientUrls.map(async (recipientUrl) => {
-        try {
-          if (recipientUrl.toString() === getId(actor).toString()) {
-            return [];
-          }
+  const recipientInboxUrls = await Promise.all(
+    recipientUrls.map(async (recipientUrl) => {
+      return await mapRecipientUrl.bind(this)(recipientUrl, actor, inboxesOnly);
+    }),
+  );
 
-          const foundEntity = await this.fetchEntityById(recipientUrl);
+  return deduplicateUrls(recipientInboxUrls.flat().filter(guard.isUrl));
+}
 
-          assert.isApActor(foundEntity);
+async function mapRecipientUrl(
+  this: CoreLibrary,
+  recipientUrl: URL,
+  actor: AP.Actor,
+  inboxesOnly?: boolean,
+) {
+  if (recipientUrl.href === getId(actor)?.href) {
+    return [];
+  }
 
-          if (!inboxesOnly) {
-            if (foundEntity.endpoints) {
-              if (foundEntity.endpoints.sharedInbox instanceof URL) {
-                return [foundEntity.endpoints.sharedInbox];
-              }
-            }
-          }
+  const foundEntity = await this.fetchEntityById(recipientUrl);
 
-          const inboxId = getId(foundEntity.inbox);
+  if (!guard.isApActor(foundEntity)) {
+    return [];
+  }
 
-          if (inboxId instanceof URL) {
-            return [inboxId];
-          }
-        } catch (error) {
-          return [];
-        }
-      }),
-    )
-  ).flat();
+  if (!inboxesOnly) {
+    if (foundEntity.endpoints) {
+      if (guard.isUrl(foundEntity.endpoints.sharedInbox)) {
+        return [foundEntity.endpoints.sharedInbox];
+      }
+    }
+  }
 
-  return deduplicateUrls(recipientInboxUrls);
+  const inboxId = getId(foundEntity.inbox);
+
+  if (guard.isUrl(inboxId)) {
+    return [inboxId];
+  }
+
+  return [];
 }

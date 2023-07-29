@@ -1,37 +1,44 @@
 import * as AP from '@activity-kit/types';
+import { cast, guard } from '@activity-kit/type-utilities';
 
 export function convertEntityToJson(
   object: AP.Entity,
 ): Record<string, unknown> {
-  return convertObject(object);
+  return cast.isPlainObject(convertObject(object)) ?? {};
 }
 
-function convertObject(object: AP.Entity | Record<string, unknown>) {
+function convertObject(
+  object: Record<string, unknown>,
+): Record<string, unknown> {
   const converted: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(object)) {
-    converted[key] = convertItem(value);
+    converted[key] = convertUnknown(value);
   }
 
   return converted;
 }
 
-function convertItem(item: unknown): unknown {
-  if (item instanceof URL || item instanceof Date) {
-    return item.toString();
-  } else if (Array.isArray(item)) {
-    return item.map(convertItem);
-  } else if (item && typeof item === 'object') {
-    const object: Record<string, unknown> = {};
-
-    for (const objectKey of Object.keys(item)) {
-      if (typeof objectKey === 'string') {
-        object[objectKey] = item[objectKey];
-      }
-    }
-
-    return convertObject(object);
-  } else {
-    return item;
+function convertUnknown(value: unknown): unknown {
+  if (!guard.exists(value)) {
+    return value;
   }
+
+  if (guard.isArray(value)) {
+    return value.map(convertUnknown);
+  }
+
+  if (guard.isPlainObject(value)) {
+    return convertObject(value);
+  }
+
+  if (guard.isDate(value)) {
+    return value.toISOString();
+  }
+
+  if (guard.isObject(value)) {
+    return value.toString();
+  }
+
+  return value;
 }

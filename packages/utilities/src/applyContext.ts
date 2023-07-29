@@ -1,11 +1,9 @@
 import * as AP from '@activity-kit/types';
-import { guard, assert } from '@activity-kit/type-utilities';
+import { guard } from '@activity-kit/type-utilities';
 import { ACTIVITYSTREAMS_CONTEXT, W3ID_SECURITY_CONTEXT } from './globals';
 
-export function applyContext<T>(entity: AP.Entity): T {
-  assert.isApEntity(entity);
-
-  if (guard.isTypeOf<T & AP.Actor>(entity, AP.ActorTypes)) {
+export function applyContext<T>(entity: AP.Entity): T | undefined {
+  if (guard.isApTypeOf<T & AP.Actor>(entity, AP.ActorTypes)) {
     if (!entity['@context']) {
       entity['@context'] = [
         new URL(ACTIVITYSTREAMS_CONTEXT),
@@ -21,7 +19,7 @@ export function applyContext<T>(entity: AP.Entity): T {
     return entity;
   }
 
-  if (guard.isTypeOf<T & AP.Entity>(entity, AP.AllTypes)) {
+  if (guard.isApTypeOf<T & AP.Entity>(entity, AP.AllTypes)) {
     if (!entity['@context']) {
       entity['@context'] = new URL(ACTIVITYSTREAMS_CONTEXT);
     }

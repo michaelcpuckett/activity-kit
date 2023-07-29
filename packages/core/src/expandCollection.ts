@@ -1,52 +1,41 @@
-import { Core } from '.';
 import * as AP from '@activity-kit/types';
 import { guard } from '@activity-kit/type-utilities';
-import { getId } from '@activity-kit/utilities';
+
+import { CoreLibrary } from './adapters';
 
 export async function expandCollection(
-  this: Core,
+  this: CoreLibrary,
   collection: AP.EitherCollectionReference,
-): Promise<null | AP.EitherCollection> {
-  const id = getId(collection);
-
-  if (!id) {
+): Promise<AP.EitherCollection | null> {
+  if (!guard.isApCollection(collection)) {
     return null;
   }
 
-  const foundEntity = await this.queryById(id);
+  const items = this.getCollectionItems(collection);
 
-  if (!foundEntity) {
-    return null;
-  }
+  const expandedItems = await Promise.all(
+    items.map(async (item) => {
+      if (guard.isApEntity(item)) {
+        return item;
+      }
 
-  if (guard.isTypeOf<AP.EitherCollection>(foundEntity, AP.CollectionTypes)) {
-    const items = await this.getCollectionItems(foundEntity);
+      return (await this.queryById(item)) ?? item;
+    }),
+  );
 
-    if (!items) {
-      return foundEntity;
-    }
-
-    if (
-      Array.isArray(foundEntity.type)
-        ? foundEntity.type.includes(AP.CollectionTypes.ORDERED_COLLECTION)
-        : foundEntity.type === AP.CollectionTypes.ORDERED_COLLECTION
-    ) {
-      return {
-        ...foundEntity,
-        orderedItems: items,
-      };
-    }
-
-    if (
-      Array.isArray(foundEntity.type)
-        ? foundEntity.type.includes(AP.CollectionTypes.COLLECTION)
-        : foundEntity.type === AP.CollectionTypes.COLLECTION
-    ) {
-      return {
-        ...foundEntity,
-        items,
-      };
-    }
+  if (
+    guard.isArray(collection.orderedItems) &&
+    collection.orderedItems.length
+  ) {
+    return {
+      ...collection,
+      orderedItems: expandedItems,
+    };
+  } else if (guard.isArray(collection.items) && collection.items.length) {
+    return {
+      ...collection,
+      items: expandedItems,
+    };
   }
 
   return null;

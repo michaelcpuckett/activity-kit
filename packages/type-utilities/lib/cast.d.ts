@@ -1,8 +1,10 @@
 /// <reference types="node" />
 import * as AP from '@activity-kit/types';
-export declare function exists(value: unknown): string | number | object | undefined;
+export declare function exists(value: unknown): string | number | boolean | object | undefined;
 export declare function isObject(value: unknown): object | undefined;
+export declare function isPlainObject(value: unknown): Record<string, unknown> | undefined;
 export declare function isString(value: unknown): string | undefined;
+export declare function isBoolean(value: unknown): boolean | undefined;
 export declare function isNumber(value: unknown): number | undefined;
 export declare function isDate(value: unknown): Date | undefined;
 export declare function isUrl(value: unknown): URL | undefined;

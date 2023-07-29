@@ -1,52 +1,65 @@
-import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { guard } from '@activity-kit/type-utilities';
-import { PUBLIC_ACTOR } from '@activity-kit/utilities';
+import { cast, guard } from '@activity-kit/type-utilities';
+
+import { CoreLibrary } from './adapters';
+
+const selfReferentialKeys = [
+  '@context',
+  '_id',
+  'id',
+  'type',
+  'url',
+  'href',
+  'publicKey',
+];
 
 export async function expandEntity(
-  this: Core,
+  this: CoreLibrary,
   entity: AP.Entity,
 ): Promise<AP.Entity | null> {
-  const expandEntry = async (key: string, value: unknown) => {
-    if (
-      key === '_id' ||
-      key === 'id' ||
-      key === 'url' ||
-      key === 'type' ||
-      key === '@context' ||
-      key === 'publicKey'
-    ) {
-      return value;
-    } else if (value instanceof URL) {
-      if (value.toString() === PUBLIC_ACTOR) {
-        return value;
-      } else {
-        try {
-          const foundEntity = await this.queryById(value);
+  return cast.isApEntity(await expandObject.bind(this)(entity)) ?? null;
+}
 
-          return foundEntity ?? value;
-        } catch (error) {
-          return value;
-        }
-      }
-    } else if (Array.isArray(value)) {
-      return await Promise.all(
-        value.map(async (item) => await expandEntry('', item)),
-      );
-    } else {
-      return value;
-    }
-  };
-
+async function expandObject(
+  this: CoreLibrary,
+  object: Record<string, unknown>,
+) {
   const expanded: Record<string, unknown> = {};
 
-  for (const [key, value] of Object.entries(entity)) {
-    expanded[key] = await expandEntry(key, value);
+  for (const [key, value] of Object.entries(object)) {
+    expanded[key] = await expandEntry.bind(this)([key, value]);
   }
 
-  if (guard.isTypeOf<AP.Entity>(expanded, AP.AllTypes)) {
-    return expanded;
+  return expanded;
+}
+
+async function expandEntry(
+  this: CoreLibrary,
+  entry: [key: string, value: unknown],
+): Promise<unknown> {
+  const [key, value] = entry;
+
+  if (selfReferentialKeys.includes(key)) {
+    return value;
   }
 
-  return null;
+  if (guard.isArray(value)) {
+    return await Promise.all(
+      value.map(async (item) => await expandEntry.bind(this)([key, item])),
+    );
+  }
+
+  if (guard.isPlainObject(value)) {
+    return await expandObject.bind(this)(value);
+  }
+
+  if (guard.isUrl(value)) {
+    const foundEntity = cast.isApEntity(await this.queryById(value));
+
+    if (foundEntity) {
+      return foundEntity;
+    }
+  }
+
+  return value;
 }

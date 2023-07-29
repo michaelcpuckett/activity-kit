@@ -28,47 +28,40 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 async function getPaginatedCollectionItems(collection) {
-    const collectionItems = [];
-    try {
-        type_utilities_1.assert.isApCollection(collection);
-        const firstCollectionPageId = (0, utilities_1.getId)(collection.first);
-        if (firstCollectionPageId) {
-            const firstCollectionPage = await this.queryById(firstCollectionPageId);
-            try {
-                type_utilities_1.assert.isApTypeOf(firstCollectionPage, AP.CollectionPageTypes);
-                let nextCollectionPage = firstCollectionPage;
-                while (nextCollectionPage) {
-                    try {
-                        type_utilities_1.assert.isApTypeOf(nextCollectionPage, AP.CollectionPageTypes);
-                        const collectionPageItems = nextCollectionPage.orderedItems || nextCollectionPage.items;
-                        type_utilities_1.assert.isArray(collectionPageItems);
-                        collectionItems.push(collectionPageItems);
-                        const nextCollectionPageId = (0, utilities_1.getId)(nextCollectionPage.next);
-                        type_utilities_1.assert.exists(nextCollectionPageId);
-                        const potentialNextCollectionPage = await this.queryById(nextCollectionPageId);
-                        type_utilities_1.assert.isApTypeOf(potentialNextCollectionPage, AP.CollectionPageTypes);
-                        nextCollectionPage = potentialNextCollectionPage;
-                    }
-                    catch (error) {
-                        nextCollectionPage = null;
-                    }
-                }
-            }
-            catch (error) { }
+    const firstCollectionPageId = (0, utilities_1.getId)(collection.first);
+    if (!firstCollectionPageId) {
+        if (type_utilities_1.guard.isArray(collection.orderedItems)) {
+            return collection.orderedItems;
         }
-        else {
-            if (Array.isArray(collection.orderedItems)) {
-                collectionItems.push(collection.orderedItems);
-            }
-            else if (Array.isArray(collection.items)) {
-                collectionItems.push(collection.items);
-            }
+        if (type_utilities_1.guard.isArray(collection.items)) {
+            return collection.items;
         }
-        return collectionItems.flat();
-    }
-    catch (error) {
         return [];
     }
+    const firstCollectionPage = await this.queryById(firstCollectionPageId);
+    if (!type_utilities_1.guard.isApTypeOf(firstCollectionPage, AP.CollectionPageTypes)) {
+        return [];
+    }
+    const collectionItems = [];
+    let nextCollectionPage = firstCollectionPage;
+    while (nextCollectionPage) {
+        if (type_utilities_1.guard.isArray(nextCollectionPage.orderedItems)) {
+            collectionItems.push(nextCollectionPage.orderedItems);
+        }
+        if (type_utilities_1.guard.isArray(nextCollectionPage.items)) {
+            collectionItems.push(nextCollectionPage.items);
+        }
+        const nextPageId = (0, utilities_1.getId)(nextCollectionPage.next);
+        if (!type_utilities_1.guard.exists(nextPageId)) {
+            break;
+        }
+        const nextPage = await this.queryById(nextPageId);
+        if (!type_utilities_1.guard.isApTypeOf(nextPage, AP.CollectionPageTypes)) {
+            break;
+        }
+        nextCollectionPage = nextPage;
+    }
+    return collectionItems.flat();
 }
 exports.getPaginatedCollectionItems = getPaginatedCollectionItems;
 //# sourceMappingURL=getPaginatedCollectionItems.js.map

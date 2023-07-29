@@ -1,8 +1,10 @@
 import * as AP from '@activity-kit/types';
 export declare function exists(value: unknown): boolean;
 export declare function isObject(value: unknown): boolean;
+export declare function isPlainObject(value: unknown): boolean;
 export declare function isString(value: unknown): boolean;
 export declare function isNumber(value: unknown): boolean;
+export declare function isBoolean(value: unknown): boolean;
 export declare function isDate(value: unknown): boolean;
 export declare function isUrl(value: unknown): boolean;
 export declare function isArray(value: unknown): boolean;

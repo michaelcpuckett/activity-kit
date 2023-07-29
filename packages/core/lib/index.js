@@ -20,32 +20,25 @@ const getRecipientUrls_1 = require("./getRecipientUrls");
 const getRecipientInboxUrls_1 = require("./getRecipientInboxUrls");
 const signAndSendToForeignActorInbox_1 = require("./signAndSendToForeignActorInbox");
 class Core {
-    fetch;
-    initializeDb;
-    findAll;
-    findOne;
-    findStringIdByValue;
-    findStringValueById;
-    insertItem;
-    removeItem;
-    insertOrderedItem;
-    removeOrderedItem;
-    saveEntity;
-    saveString;
-    getTokenByUserId;
-    createUser;
-    getUserIdByToken;
-    authenticatePassword;
-    generateKeyPair;
-    getHttpSignature;
-    hashPassword;
-    randomBytes;
-    upload;
-    getGuid;
     constructor(adapters) {
-        this.fetch = adapters.fetch ?? isomorphic_fetch_1.default;
+        var _a;
+        this.findEntityById = findEntityById_1.findEntityById;
+        this.getActorByUserId = getActorByUserId_1.getActorByUserId;
+        this.getPrivateKey = getPrivateKey_1.getPrivateKey;
+        this.getStreamByName = getStreamByName_1.getStreamByName;
+        this.fetchEntityById = fetchEntityById_1.fetchEntityById;
+        this.queryById = queryById_1.queryById;
+        this.expandEntity = expandEntity_1.expandEntity;
+        this.getCollectionItems = getCollectionItems_1.getCollectionItems;
+        this.getPaginatedCollectionItems = getPaginatedCollectionItems_1.getPaginatedCollectionItems;
+        this.expandCollection = expandCollection_1.expandCollection;
+        this.getRecipientInboxUrls = getRecipientInboxUrls_1.getRecipientInboxUrls;
+        this.getRecipientUrls = getRecipientUrls_1.getRecipientUrls;
+        this.broadcast = broadcast_1.broadcast;
+        this.signAndSendToForeignActorInbox = signAndSendToForeignActorInbox_1.signAndSendToForeignActorInbox;
+        this.fetch = (_a = adapters.fetch) !== null && _a !== void 0 ? _a : isomorphic_fetch_1.default;
         if (adapters.db.initializeDb) {
-            this.initializeDb = async () => await adapters.db.initializeDb?.();
+            this.initializeDb = async () => { var _a, _b; return await ((_b = (_a = adapters.db).initializeDb) === null || _b === void 0 ? void 0 : _b.call(_a)); };
         }
         this.findAll = async (collection, matchingObject) => await adapters.db.findAll(collection, matchingObject);
         this.findOne = async (collection, matchingObject, options) => await adapters.db.findOne(collection, matchingObject, options);
@@ -72,20 +65,6 @@ class Core {
         this.authenticatePassword = async (email, password) => await adapters.auth.authenticatePassword(email, password);
         this.upload = async (file) => await adapters.storage.upload(file);
     }
-    findEntityById = findEntityById_1.findEntityById;
-    getActorByUserId = getActorByUserId_1.getActorByUserId;
-    getPrivateKey = getPrivateKey_1.getPrivateKey;
-    getStreamByName = getStreamByName_1.getStreamByName;
-    fetchEntityById = fetchEntityById_1.fetchEntityById;
-    queryById = queryById_1.queryById;
-    expandEntity = expandEntity_1.expandEntity;
-    getCollectionItems = getCollectionItems_1.getCollectionItems;
-    getPaginatedCollectionItems = getPaginatedCollectionItems_1.getPaginatedCollectionItems;
-    expandCollection = expandCollection_1.expandCollection;
-    getRecipientInboxUrls = getRecipientInboxUrls_1.getRecipientInboxUrls;
-    getRecipientUrls = getRecipientUrls_1.getRecipientUrls;
-    broadcast = broadcast_1.broadcast;
-    signAndSendToForeignActorInbox = signAndSendToForeignActorInbox_1.signAndSendToForeignActorInbox;
 }
 exports.Core = Core;
 var adapters_1 = require("./adapters");

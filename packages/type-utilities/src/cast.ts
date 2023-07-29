@@ -9,8 +9,16 @@ export function isObject(value: unknown) {
   return guard.isObject(value) ? value : undefined;
 }
 
+export function isPlainObject(value: unknown) {
+  return guard.isPlainObject(value) ? value : undefined;
+}
+
 export function isString(value: unknown) {
   return guard.isString(value) ? value : undefined;
+}
+
+export function isBoolean(value: unknown) {
+  return guard.isBoolean(value) ? value : undefined;
 }
 
 export function isNumber(value: unknown) {

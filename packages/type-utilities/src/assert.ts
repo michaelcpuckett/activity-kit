@@ -3,7 +3,7 @@ import * as guard from './guard';
 
 export function exists(
   value: unknown,
-): asserts value is string | number | object {
+): asserts value is string | number | object | boolean {
   if (!guard.exists(value)) {
     throw new Error(`"${value}" is undefined or null.`);
   }
@@ -12,6 +12,14 @@ export function exists(
 export function isObject(value: unknown): asserts value is object {
   if (!guard.isObject(value)) {
     throw new Error(`"${value}" is not an object.`);
+  }
+}
+
+export function isPlainObject(
+  value: unknown,
+): asserts value is Record<string, unknown> {
+  if (!guard.isPlainObject(value)) {
+    throw new Error(`"${value}" is not a plain object.`);
   }
 }
 
@@ -24,6 +32,12 @@ export function isString(value: unknown): asserts value is string {
 export function isNumber(value: unknown): asserts value is number {
   if (!guard.isNumber(value)) {
     throw new Error(`"${value}" is not a number.`);
+  }
+}
+
+export function isBoolean(value: unknown): asserts value is boolean {
+  if (!guard.isBoolean(value)) {
+    throw new Error(`"${value}" is not a boolean.`);
   }
 }
 

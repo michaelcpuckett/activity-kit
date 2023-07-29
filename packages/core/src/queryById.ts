@@ -1,10 +1,11 @@
-import { Core } from '.';
 import * as AP from '@activity-kit/types';
 import { guard } from '@activity-kit/type-utilities';
 import { isLocal } from '@activity-kit/utilities';
 
+import { CoreLibrary } from './adapters';
+
 export async function queryById(
-  this: Core,
+  this: CoreLibrary,
   id: URL,
 ): Promise<AP.Entity | null> {
   if (isLocal(id)) {
@@ -20,7 +21,11 @@ export async function queryById(
       AP.ExtendedObjectTypes.TOMBSTONE,
     )
   ) {
-    return this.findEntityById(id);
+    const foundEntity = await this.findEntityById(id);
+
+    if (foundEntity) {
+      return foundEntity;
+    }
   }
 
   return fetchedEntity;

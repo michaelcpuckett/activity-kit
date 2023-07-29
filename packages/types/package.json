@@ -1,7 +1,7 @@
 {
   "name": "@activity-kit/types",
   "version": "0.4.56",
-  "description": "> TODO: description",
+  "description": "Types representing the ActivityPub data model",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
   "license": "MIT",
@@ -16,9 +16,9 @@
     "access": "public"
   },
   "scripts": {
+    "lint": "eslint src/**/*.ts",
     "build": "node .build.js",
-    "format": "prettier --config .prettierrc \"**/*.ts\" --write",
-    "lint": "eslint activitypub/**/*.ts"
+    "build:bundle": "tsc-bundle tsconfig.json --outFile dist/bundle.js"
   },
   "devDependencies": {
     "@types/jsonld": "^1.5.9",
@@ -26,10 +26,8 @@
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0",
     "prettier": "^2.7.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "typescript-bundle": "^1.0.18"
   },
-  "gitHead": "94cd24962ff1406bc137c1ac244f960286d6cac0",
-  "dependencies": {
-    "formidable": "^2.1.1"
-  }
+  "gitHead": "94cd24962ff1406bc137c1ac244f960286d6cac0"
 }

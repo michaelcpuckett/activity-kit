@@ -1,9 +1,11 @@
 /// <reference types="node" />
 import * as AP from '@activity-kit/types';
-export declare function exists(value: unknown): asserts value is string | number | object;
+export declare function exists(value: unknown): asserts value is string | number | object | boolean;
 export declare function isObject(value: unknown): asserts value is object;
+export declare function isPlainObject(value: unknown): asserts value is Record<string, unknown>;
 export declare function isString(value: unknown): asserts value is string;
 export declare function isNumber(value: unknown): asserts value is number;
+export declare function isBoolean(value: unknown): asserts value is boolean;
 export declare function isDate(value: unknown): asserts value is Date;
 export declare function isUrl(value: unknown): asserts value is URL;
 export declare function isArray(value: unknown): asserts value is Array<unknown>;

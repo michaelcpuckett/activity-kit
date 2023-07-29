@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isApTypeOf = exports.isApType = exports.isApTransitiveActivity = exports.isApCollection = exports.isApActor = exports.isApExtendedObject = exports.isApCoreObject = exports.isApActivity = exports.isApEntity = exports.hasApType = exports.hasType = exports.isArray = exports.isUrl = exports.isDate = exports.isNumber = exports.isString = exports.isObject = exports.exists = void 0;
+exports.isApTypeOf = exports.isApType = exports.isApTransitiveActivity = exports.isApCollection = exports.isApActor = exports.isApExtendedObject = exports.isApCoreObject = exports.isApActivity = exports.isApEntity = exports.hasApType = exports.hasType = exports.isArray = exports.isUrl = exports.isDate = exports.isNumber = exports.isBoolean = exports.isString = exports.isPlainObject = exports.isObject = exports.exists = void 0;
 const guard = __importStar(require("./guard"));
 function exists(value) {
     return guard.exists(value) ? value : undefined;
@@ -33,10 +33,18 @@ function isObject(value) {
     return guard.isObject(value) ? value : undefined;
 }
 exports.isObject = isObject;
+function isPlainObject(value) {
+    return guard.isPlainObject(value) ? value : undefined;
+}
+exports.isPlainObject = isPlainObject;
 function isString(value) {
     return guard.isString(value) ? value : undefined;
 }
 exports.isString = isString;
+function isBoolean(value) {
+    return guard.isBoolean(value) ? value : undefined;
+}
+exports.isBoolean = isBoolean;
 function isNumber(value) {
     return guard.isNumber(value) ? value : undefined;
 }

@@ -4,55 +4,47 @@ exports.convertJsonToEntity = void 0;
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const globals_1 = require("./globals");
 function convertJsonToEntity(object) {
-    const converted = convertObject(object);
-    return type_utilities_1.cast.isApEntity(converted) ?? null;
+    var _a;
+    return (_a = type_utilities_1.cast.isApEntity(convertObject(object))) !== null && _a !== void 0 ? _a : null;
 }
 exports.convertJsonToEntity = convertJsonToEntity;
 function convertObject(object) {
     const converted = {};
     for (const [key, value] of Object.entries(object)) {
-        converted[key] = convertItem(value);
+        converted[key] = convertUnknown(value);
     }
     return converted;
 }
-function convertItem(item) {
-    if (item instanceof URL || item instanceof Date) {
-        return item;
+function convertUnknown(value) {
+    if (!type_utilities_1.guard.exists(value)) {
+        return value;
     }
-    else if (typeof item === 'string') {
-        if (item === 'as:Public') {
+    if (type_utilities_1.guard.isArray(value)) {
+        return value.map(convertUnknown);
+    }
+    if (type_utilities_1.guard.isPlainObject(value)) {
+        return convertObject(value);
+    }
+    if (type_utilities_1.guard.isString(value)) {
+        if (value === 'as:Public') {
             return new URL(globals_1.PUBLIC_ACTOR);
         }
         try {
-            if (item.startsWith('http')) {
-                return new URL(item);
+            if (value.startsWith('http')) {
+                return new URL(value);
             }
             else {
-                const date = Date.parse(item);
+                const date = Date.parse(value);
                 if (!Number.isNaN(date)) {
                     return new Date(date);
                 }
-                return item;
+                return value;
             }
         }
         catch (error) {
-            return item;
+            return value;
         }
     }
-    else if (Array.isArray(item)) {
-        return item.map(convertItem);
-    }
-    else if (item && typeof item === 'object') {
-        const object = {};
-        for (const objectKey of Object.keys(item)) {
-            if (typeof objectKey === 'string') {
-                object[objectKey] = item[objectKey];
-            }
-        }
-        return convertObject(object);
-    }
-    else {
-        return item;
-    }
+    return value;
 }
 //# sourceMappingURL=convertJsonToEntity.js.map

@@ -1,7 +1,7 @@
 import * as jsonld from 'jsonld';
+// See types/jsonldDocumentLoader.d.ts
 import getNodeDocumentLoader from 'jsonld/lib/documentLoaders/node';
 import { RemoteDocument } from 'jsonld/jsonld-spec';
-
 import * as AP from '@activity-kit/types';
 import {
   ACTIVITYSTREAMS_CONTEXT,
@@ -12,8 +12,7 @@ import {
 import { convertJsonToEntity } from './convertJsonToEntity';
 import { applyContext } from './applyContext';
 
-type DocumentLoader = jsonld.Options.DocLoader['documentLoader'];
-const nodeDocumentLoader: DocumentLoader = getNodeDocumentLoader();
+const nodeDocumentLoader = getNodeDocumentLoader();
 
 const CONTEXT_DEFINITIONS: Record<string, jsonld.ContextDefinition> = {
   [ACTIVITYSTREAMS_CONTEXT]: {
@@ -3834,17 +3833,21 @@ const CONTEXT_DEFINITIONS: Record<string, jsonld.ContextDefinition> = {
   },
 };
 
-const customLoader: DocumentLoader = async (
+const customLoader = async (
   url: string,
   callback: (err: Error, remoteDoc: RemoteDocument) => void,
-): Promise<RemoteDocument> | undefined => {
+): Promise<RemoteDocument> => {
+  if (!nodeDocumentLoader) {
+    throw new Error('nodeDocumentLoader is not defined');
+  }
+
   const contextUrl = Object.keys(CONTEXT_DEFINITIONS).find(
     (key) => key === url,
   );
 
   if (contextUrl) {
     return {
-      contextUrl: null,
+      contextUrl: undefined,
       document: {
         '@context': CONTEXT_DEFINITIONS[contextUrl],
       },
@@ -3876,5 +3879,5 @@ export const convertJsonLdToEntity = async (
     return null;
   }
 
-  return applyContext<AP.Entity>(converted);
+  return applyContext<AP.Entity>(converted) ?? null;
 };

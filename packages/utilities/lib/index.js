@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getArray = exports.isLocal = exports.deduplicateUrls = exports.streamToString = exports.parseStream = exports.getEntity = exports.getId = exports.getCollectionNameByUrl = exports.convertEntityToJson = exports.convertJsonToEntity = exports.convertJsonLdToEntity = exports.compressEntity = exports.cleanProps = exports.applyContext = void 0;
+exports.isLocal = exports.deduplicateUrls = exports.streamToString = exports.parseStream = exports.getEntity = exports.getId = exports.getCollectionNameByUrl = exports.convertEntityToJson = exports.convertJsonToEntity = exports.convertJsonLdToEntity = exports.compressEntity = exports.cleanProps = exports.applyContext = void 0;
 __exportStar(require("./globals"), exports);
 var applyContext_1 = require("./applyContext");
 Object.defineProperty(exports, "applyContext", { enumerable: true, get: function () { return applyContext_1.applyContext; } });
@@ -42,6 +42,4 @@ var deduplicateUrls_1 = require("./deduplicateUrls");
 Object.defineProperty(exports, "deduplicateUrls", { enumerable: true, get: function () { return deduplicateUrls_1.deduplicateUrls; } });
 var isLocal_1 = require("./isLocal");
 Object.defineProperty(exports, "isLocal", { enumerable: true, get: function () { return isLocal_1.isLocal; } });
-var getArray_1 = require("./getArray");
-Object.defineProperty(exports, "getArray", { enumerable: true, get: function () { return getArray_1.getArray; } });
 //# sourceMappingURL=index.js.map

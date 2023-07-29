@@ -1,34 +1,29 @@
 import * as AP from '@activity-kit/types';
+import { guard } from '@activity-kit/type-utilities';
 
 export const getId = (
   entity?: undefined | null | AP.EntityReference | AP.EntityReference[],
 ): URL | null => {
-  if (!entity || Array.isArray(entity)) {
+  if (!guard.exists(entity)) {
     return null;
   }
 
-  if (entity instanceof URL) {
+  if (guard.isUrl(entity)) {
     return entity;
   }
 
-  if ('id' in entity) {
-    return entity.id ?? null;
-  }
+  if (guard.isPlainObject(entity)) {
+    if ('id' in entity && guard.isUrl(entity.id)) {
+      return entity.id;
+    }
 
-  if ('url' in entity) {
-    if (entity.url instanceof URL) {
+    if ('url' in entity && guard.isUrl(entity.url)) {
       return entity.url;
     }
 
-    if (Array.isArray(entity.url)) {
-      return null;
+    if ('href' in entity && guard.isUrl(entity.href)) {
+      return entity.href;
     }
-
-    return entity.url.href ?? null;
-  }
-
-  if ('href' in entity) {
-    return entity.href ?? null;
   }
 
   return null;

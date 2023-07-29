@@ -1,33 +1,41 @@
 import * as AP from '@activity-kit/types';
+import { assert } from '@activity-kit/type-utilities';
 import {
   CONTENT_TYPE_HEADER,
   ACTIVITYSTREAMS_CONTENT_TYPE,
   ACCEPT_HEADER,
   convertEntityToJson,
+  getId,
 } from '@activity-kit/utilities';
-import { Core } from '.';
+
+import { CoreLibrary } from '.';
 
 export async function signAndSendToForeignActorInbox(
-  this: Core,
+  this: CoreLibrary,
   foreignActorInbox: URL,
   actor: AP.Actor,
   activity: AP.Activity,
 ): Promise<unknown> {
-  console.log('SENDING TO...', foreignActorInbox.toString());
+  console.log('SENDING TO...', foreignActorInbox.href);
 
-  const convertedActivity = convertEntityToJson(activity);
+  const actorId = getId(actor);
+
+  assert.exists(actorId);
+
+  const plainActivity = convertEntityToJson(activity);
+
   const { dateHeader, digestHeader, signatureHeader } =
     await this.getHttpSignature(
       foreignActorInbox,
-      actor.id,
+      actorId,
       await this.getPrivateKey(actor),
-      convertedActivity,
+      plainActivity,
     );
 
   // send
-  return await this.fetch(foreignActorInbox.toString(), {
+  return await this.fetch(foreignActorInbox.href, {
     method: 'post',
-    body: JSON.stringify(convertedActivity),
+    body: JSON.stringify(plainActivity),
     headers: {
       [CONTENT_TYPE_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
       [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
@@ -35,7 +43,7 @@ export async function signAndSendToForeignActorInbox(
       Date: dateHeader,
       Digest: digestHeader,
       Signature: signatureHeader,
-    },
+    } as Record<string, string>,
   }).catch((error) => {
     console.log(error);
   });

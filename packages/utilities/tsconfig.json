@@ -3,25 +3,29 @@
     "strict": true,
     "module": "commonjs",
     "declaration": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "removeComments": true,
     "noLib": false,
     "esModuleInterop": true,
-    "target": "ESNext",
-    "jsx": "react",
+    "target": "ES2018",
     "skipLibCheck": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "lib": [
-      "ESNext"
+    "typeRoots": [
+      "./types",
+      "../../node_modules/@types"
     ],
-    "outDir": "./lib"
+    "lib": [
+      "ES2018"
+    ],
+    "outDir": "./lib/"
   },
   "exclude": [
     "./node_modules",
     "../../node_modules"
   ],
   "include": [
-    "src/index.ts"
+    "./src/",
+    "./types/"
   ]
 }

@@ -12,4 +12,3 @@ export { parseStream } from './parseStream';
 export { streamToString } from './streamToString';
 export { deduplicateUrls } from './deduplicateUrls';
 export { isLocal } from './isLocal';
-export { getArray } from './getArray';

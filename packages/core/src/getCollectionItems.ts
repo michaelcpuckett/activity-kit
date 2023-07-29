@@ -1,45 +1,27 @@
-import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { assert } from '@activity-kit/type-utilities';
-import { getId } from '@activity-kit/utilities';
+import { guard } from '@activity-kit/type-utilities';
 
-export async function getCollectionItems(
-  this: Core,
+import { CoreLibrary } from './adapters';
+
+export function getCollectionItems(
+  this: CoreLibrary,
   entity: AP.Collection | AP.OrderedCollection,
-): Promise<AP.EntityReference[]> {
-  try {
-    assert.isApCollection(entity);
+): AP.EntityReference[] {
+  const collectionItems: AP.EntityReference[] = [];
 
-    const collectionItems = entity.orderedItems || entity.items;
+  if (guard.isArray(entity.orderedItems) && entity.orderedItems.length) {
+    const orderedItems = entity.orderedItems.filter((item) => {
+      return guard.isApEntity(item) || guard.isUrl(item);
+    });
 
-    if (!Array.isArray(collectionItems)) {
-      return [];
-    }
+    collectionItems.push(...orderedItems);
+  } else if (guard.isArray(entity.items) && entity.items.length) {
+    const items = entity.items.filter((item) => {
+      return guard.isApEntity(item) || guard.isUrl(item);
+    });
 
-    const result: AP.EntityReference[] = [];
-
-    for (const item of collectionItems) {
-      if (item instanceof URL) {
-        const foundItem = await this.queryById(item);
-
-        result.push(
-          foundItem
-            ? await this.expandEntity(foundItem)
-            : {
-                id: item,
-                type: AP.CoreObjectTypes.TOMBSTONE,
-                content: 'Not found',
-              },
-        );
-      } else if (!Array.isArray(item)) {
-        const foundItem = await this.queryById(getId(item));
-
-        result.push(foundItem ?? item);
-      }
-    }
-
-    return result;
-  } catch (error) {
-    return [];
+    collectionItems.push(...items);
   }
+
+  return collectionItems;
 }

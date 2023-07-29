@@ -1,17 +1,20 @@
-import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { assert } from '@activity-kit/type-utilities';
+import { guard } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
+import { CoreLibrary } from './adapters';
+
 export const getStreamByName = async function (
-  this: Core,
+  this: CoreLibrary,
   actor: AP.Actor,
   name: string,
 ): Promise<AP.EitherCollection | null> {
-  assert.isArray(actor.streams);
+  if (!actor.streams) {
+    return null;
+  }
 
   const streams = await Promise.all(
-    actor.streams.map(async (stream: AP.Entity | URL) => {
+    actor.streams.map(async (stream: AP.EntityReference) => {
       const streamId = getId(stream);
 
       if (!streamId) {
@@ -23,14 +26,10 @@ export const getStreamByName = async function (
   );
 
   for (const stream of streams) {
-    try {
-      assert.isApCollection(stream);
-
+    if (guard.isApCollection(stream)) {
       if (stream.name === name) {
         return stream;
       }
-    } catch (error) {
-      break;
     }
   }
 

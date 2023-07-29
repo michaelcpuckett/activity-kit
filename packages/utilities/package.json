@@ -3,7 +3,6 @@
   "version": "0.4.56",
   "description": "> TODO: description",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
-  "homepage": "https://github.com/michaelcpuckett/activitypub-core#readme",
   "license": "MIT",
   "main": "lib/index.js",
   "directories": {
@@ -15,17 +14,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/michaelcpuckett/activitypub-core.git"
-  },
   "scripts": {
     "build": "node .build.js",
-    "format": "prettier --config .prettierrc \"**/*.ts\" --write",
-    "lint": "eslint src/**/*.ts"
-  },
-  "bugs": {
-    "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
+    "build:bundle": "tsc-bundle tsconfig.json --outFile dist/bundle.js"
   },
   "dependencies": {
     "@activity-kit/type-utilities": "^0.4.56",
@@ -38,7 +29,8 @@
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0",
     "prettier": "^2.7.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "typescript-bundle": "^1.0.18"
   },
   "gitHead": "94cd24962ff1406bc137c1ac244f960286d6cac0"
 }

@@ -21,8 +21,7 @@
   },
   "scripts": {
     "build": "node .build.js",
-    "format": "prettier --config .prettierrc \"**/*.ts\" --write",
-    "lint": "eslint src/**/*.ts"
+    "build:bundle": "tsc-bundle tsconfig.json --outFile dist/bundle.js"
   },
   "bugs": {
     "url": "https://github.com/michaelcpuckett/activitypub-core/issues"
@@ -35,11 +34,13 @@
   },
   "devDependencies": {
     "@types/formidable": "^2.0.5",
+    "@types/isomorphic-fetch": "^0.0.36",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0",
     "prettier": "^2.7.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "typescript-bundle": "^1.0.18"
   },
   "gitHead": "94cd24962ff1406bc137c1ac244f960286d6cac0"
 }

@@ -28,8 +28,7 @@ const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const globals_1 = require("./globals");
 function applyContext(entity) {
-    type_utilities_1.assert.isApEntity(entity);
-    if (type_utilities_1.guard.isTypeOf(entity, AP.ActorTypes)) {
+    if (type_utilities_1.guard.isApTypeOf(entity, AP.ActorTypes)) {
         if (!entity['@context']) {
             entity['@context'] = [
                 new URL(globals_1.ACTIVITYSTREAMS_CONTEXT),
@@ -43,7 +42,7 @@ function applyContext(entity) {
         }
         return entity;
     }
-    if (type_utilities_1.guard.isTypeOf(entity, AP.AllTypes)) {
+    if (type_utilities_1.guard.isApTypeOf(entity, AP.AllTypes)) {
         if (!entity['@context']) {
             entity['@context'] = new URL(globals_1.ACTIVITYSTREAMS_CONTEXT);
         }

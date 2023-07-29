@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isApTypeOf = exports.isApType = exports.isApTransitiveActivity = exports.isApCollection = exports.isApActor = exports.isApExtendedObject = exports.isApCoreObject = exports.isApActivity = exports.isApEntity = exports.hasApType = exports.hasType = exports.isArray = exports.isUrl = exports.isDate = exports.isNumber = exports.isString = exports.isObject = exports.exists = void 0;
+exports.isApTypeOf = exports.isApType = exports.isApTransitiveActivity = exports.isApCollection = exports.isApActor = exports.isApExtendedObject = exports.isApCoreObject = exports.isApActivity = exports.isApEntity = exports.hasApType = exports.hasType = exports.isArray = exports.isUrl = exports.isDate = exports.isBoolean = exports.isNumber = exports.isString = exports.isPlainObject = exports.isObject = exports.exists = void 0;
 const guard = __importStar(require("./guard"));
 function exists(value) {
     if (!guard.exists(value)) {
@@ -37,6 +37,12 @@ function isObject(value) {
     }
 }
 exports.isObject = isObject;
+function isPlainObject(value) {
+    if (!guard.isPlainObject(value)) {
+        throw new Error(`"${value}" is not a plain object.`);
+    }
+}
+exports.isPlainObject = isPlainObject;
 function isString(value) {
     if (!guard.isString(value)) {
         throw new Error(`"${value}" is not a string.`);
@@ -49,6 +55,12 @@ function isNumber(value) {
     }
 }
 exports.isNumber = isNumber;
+function isBoolean(value) {
+    if (!guard.isBoolean(value)) {
+        throw new Error(`"${value}" is not a boolean.`);
+    }
+}
+exports.isBoolean = isBoolean;
 function isDate(value) {
     if (!guard.isDate(value)) {
         throw new Error(`"${value}" is not a Date object.`);

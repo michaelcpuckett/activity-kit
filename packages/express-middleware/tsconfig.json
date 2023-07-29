@@ -3,7 +3,7 @@
     "strict": true,
     "module": "commonjs",
     "declaration": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "removeComments": true,
     "noLib": false,
     "esModuleInterop": true,

@@ -1,8 +1,7 @@
 /// <reference types="node" />
-import { TypeOrArrayWithType, AnyType } from '../util/const';
-import { ContextDefinition } from 'jsonld';
+import { TypeOrArrayWithType, AnyType, OrArray } from '../util';
 export type BaseEntity<T extends AnyType> = {
-    '@context'?: URL | URL[] | ContextDefinition;
+    '@context'?: OrArray<URL | Record<string, URL>>;
     id?: URL | null;
     type: T | TypeOrArrayWithType<T>;
 };

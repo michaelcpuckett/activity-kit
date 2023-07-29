@@ -8,7 +8,7 @@ export async function createUser(
     preferredUsername,
   }: {
     email: string;
-    password?: string;
+    password: string;
     preferredUsername: string;
   },
 ) {

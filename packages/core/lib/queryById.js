@@ -34,7 +34,10 @@ async function queryById(id) {
     const fetchedEntity = await this.fetchEntityById(id);
     if (!fetchedEntity ||
         type_utilities_1.guard.isApType(fetchedEntity, AP.ExtendedObjectTypes.TOMBSTONE)) {
-        return this.findEntityById(id);
+        const foundEntity = await this.findEntityById(id);
+        if (foundEntity) {
+            return foundEntity;
+        }
     }
     return fetchedEntity;
 }

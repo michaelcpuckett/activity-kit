@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isApTypeOf = exports.isApType = exports.isApTransitiveActivity = exports.isApCollection = exports.isApActor = exports.isApExtendedObject = exports.isApCoreObject = exports.isApActivity = exports.isApEntity = exports.hasApType = exports.hasType = exports.isArray = exports.isUrl = exports.isDate = exports.isNumber = exports.isString = exports.isObject = exports.exists = void 0;
+exports.isApTypeOf = exports.isApType = exports.isApTransitiveActivity = exports.isApCollection = exports.isApActor = exports.isApExtendedObject = exports.isApCoreObject = exports.isApActivity = exports.isApEntity = exports.hasApType = exports.hasType = exports.isArray = exports.isUrl = exports.isDate = exports.isBoolean = exports.isNumber = exports.isString = exports.isPlainObject = exports.isObject = exports.exists = void 0;
 const AP = __importStar(require("@activity-kit/types"));
 function isType(entity, type) {
     if (!entity || typeof entity !== 'object') {
@@ -38,13 +38,18 @@ function isTypeOf(entity, types) {
     return Object.values(types).some((type) => isType(entity, type));
 }
 function exists(value) {
-    return (['string', 'number', 'object'].includes(typeof value) && value !== null);
+    return (['string', 'number', 'object', 'boolean'].includes(typeof value) &&
+        value !== null);
 }
 exports.exists = exists;
 function isObject(value) {
     return typeof value === 'object' && value !== null;
 }
 exports.isObject = isObject;
+function isPlainObject(value) {
+    return isObject(value) && Object.getPrototypeOf(value) === Object.prototype;
+}
+exports.isPlainObject = isPlainObject;
 function isString(value) {
     return typeof value === 'string';
 }
@@ -53,6 +58,10 @@ function isNumber(value) {
     return typeof value === 'number' && !isNaN(value);
 }
 exports.isNumber = isNumber;
+function isBoolean(value) {
+    return typeof value === 'boolean';
+}
+exports.isBoolean = isBoolean;
 function isDate(value) {
     return value instanceof Date;
 }

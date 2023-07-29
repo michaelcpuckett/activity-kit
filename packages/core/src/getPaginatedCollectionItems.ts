@@ -1,76 +1,69 @@
-import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { assert } from '@activity-kit/type-utilities';
+import { guard } from '@activity-kit/type-utilities';
 import { getId } from '@activity-kit/utilities';
 
+import { CoreLibrary } from './adapters';
+
 export async function getPaginatedCollectionItems(
-  this: Core,
+  this: CoreLibrary,
   collection: AP.Collection | AP.OrderedCollection,
 ): Promise<AP.EntityReference[]> {
-  const collectionItems: AP.EntityReference[][] = [];
+  const firstCollectionPageId = getId(collection.first);
 
-  try {
-    assert.isApCollection(collection);
+  if (!firstCollectionPageId) {
+    // TODO .getArray()
 
-    const firstCollectionPageId = getId(collection.first);
-
-    if (firstCollectionPageId) {
-      const firstCollectionPage = await this.queryById(firstCollectionPageId);
-
-      try {
-        assert.isApTypeOf<AP.EitherCollectionPage>(
-          firstCollectionPage,
-          AP.CollectionPageTypes,
-        );
-
-        let nextCollectionPage: AP.EitherCollectionPage | null =
-          firstCollectionPage;
-
-        while (nextCollectionPage) {
-          try {
-            assert.isApTypeOf<AP.EitherCollectionPage>(
-              nextCollectionPage,
-              AP.CollectionPageTypes,
-            );
-
-            const collectionPageItems =
-              nextCollectionPage.orderedItems || nextCollectionPage.items;
-
-            assert.isArray(collectionPageItems);
-
-            collectionItems.push(collectionPageItems);
-
-            const nextCollectionPageId = getId(nextCollectionPage.next);
-
-            assert.exists(nextCollectionPageId);
-
-            const potentialNextCollectionPage = await this.queryById(
-              nextCollectionPageId,
-            );
-
-            assert.isApTypeOf<AP.EitherCollectionPage>(
-              potentialNextCollectionPage,
-              AP.CollectionPageTypes,
-            );
-
-            nextCollectionPage = potentialNextCollectionPage;
-          } catch (error) {
-            nextCollectionPage = null;
-          }
-        }
-      } catch (error) {}
-    } else {
-      if (Array.isArray(collection.orderedItems)) {
-        collectionItems.push(collection.orderedItems);
-      } else if (Array.isArray(collection.items)) {
-        collectionItems.push(collection.items);
-      }
+    if (guard.isArray(collection.orderedItems)) {
+      return collection.orderedItems;
     }
 
-    return collectionItems.flat();
-  } catch (error) {
-    // Not a Collection.
+    if (guard.isArray(collection.items)) {
+      return collection.items;
+    }
 
     return [];
   }
+
+  const firstCollectionPage = await this.queryById(firstCollectionPageId);
+
+  if (
+    !guard.isApTypeOf<AP.CollectionPage>(
+      firstCollectionPage,
+      AP.CollectionPageTypes,
+    )
+  ) {
+    return [];
+  }
+
+  const collectionItems: AP.EntityReference[][] = [];
+
+  let nextCollectionPage = firstCollectionPage;
+
+  while (nextCollectionPage) {
+    if (guard.isArray(nextCollectionPage.orderedItems)) {
+      collectionItems.push(nextCollectionPage.orderedItems);
+    }
+
+    if (guard.isArray(nextCollectionPage.items)) {
+      collectionItems.push(nextCollectionPage.items);
+    }
+
+    const nextPageId = getId(nextCollectionPage.next);
+
+    if (!guard.exists(nextPageId)) {
+      break;
+    }
+
+    const nextPage = await this.queryById(nextPageId);
+
+    if (
+      !guard.isApTypeOf<AP.CollectionPage>(nextPage, AP.CollectionPageTypes)
+    ) {
+      break;
+    }
+
+    nextCollectionPage = nextPage;
+  }
+
+  return collectionItems.flat();
 }

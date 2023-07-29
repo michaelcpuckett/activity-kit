@@ -3848,10 +3848,13 @@ const CONTEXT_DEFINITIONS = {
     },
 };
 const customLoader = async (url, callback) => {
+    if (!nodeDocumentLoader) {
+        throw new Error('nodeDocumentLoader is not defined');
+    }
     const contextUrl = Object.keys(CONTEXT_DEFINITIONS).find((key) => key === url);
     if (contextUrl) {
         return {
-            contextUrl: null,
+            contextUrl: undefined,
             document: {
                 '@context': CONTEXT_DEFINITIONS[contextUrl],
             },
@@ -3862,6 +3865,7 @@ const customLoader = async (url, callback) => {
 };
 const ctx = CONTEXT_DEFINITIONS[globals_1.ACTIVITYSTREAMS_CONTEXT];
 const convertJsonLdToEntity = async (document) => {
+    var _a;
     const result = await jsonld.compact(document, ctx, {
         documentLoader: customLoader,
     });
@@ -3873,7 +3877,7 @@ const convertJsonLdToEntity = async (document) => {
     if (!converted) {
         return null;
     }
-    return (0, applyContext_1.applyContext)(converted);
+    return (_a = (0, applyContext_1.applyContext)(converted)) !== null && _a !== void 0 ? _a : null;
 };
 exports.convertJsonLdToEntity = convertJsonLdToEntity;
 //# sourceMappingURL=convertJsonLdToEntity.js.map

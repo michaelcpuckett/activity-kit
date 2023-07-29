@@ -1,3 +1,4 @@
+import * as AP from '@activity-kit/types';
 import fetch from 'isomorphic-fetch';
 
 import {

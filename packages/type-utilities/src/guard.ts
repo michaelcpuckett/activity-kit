@@ -1,12 +1,20 @@
 import * as AP from '@activity-kit/types';
 import * as narrow from './narrow';
 
-export function exists(value: unknown): value is string | number | object {
+export function exists(
+  value: unknown,
+): value is string | number | object | boolean {
   return narrow.exists(value);
 }
 
 export function isObject(value: unknown): value is object {
   return narrow.isObject(value);
+}
+
+export function isPlainObject(
+  value: unknown,
+): value is Record<string, unknown> {
+  return narrow.isPlainObject(value);
 }
 
 export function isString(value: unknown): value is string {
@@ -15,6 +23,10 @@ export function isString(value: unknown): value is string {
 
 export function isNumber(value: unknown): value is number {
   return narrow.isNumber(value);
+}
+
+export function isBoolean(value: unknown): value is boolean {
+  return narrow.isBoolean(value);
 }
 
 export function isDate(value: unknown): value is Date {

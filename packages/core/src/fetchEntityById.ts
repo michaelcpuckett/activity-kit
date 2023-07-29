@@ -1,6 +1,5 @@
-import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { assert } from '@activity-kit/type-utilities';
+import { cast, assert } from '@activity-kit/type-utilities';
 import {
   ACCEPT_HEADER,
   ACTIVITYSTREAMS_CONTENT_TYPE,
@@ -9,97 +8,45 @@ import {
   LINKED_DATA_CONTENT_TYPE,
   JSON_CONTENT_TYPE,
   getId,
+  SERVER_ACTOR_USERNAME,
+  ACTIVITYSTREAMS_CONTEXT,
 } from '@activity-kit/utilities';
 
+import { CoreLibrary } from './adapters';
+
 export async function fetchEntityById(
-  this: Core,
+  this: CoreLibrary,
   id: URL,
 ): Promise<AP.Entity | null> {
-  const getContentType = async (url: URL): Promise<string | null> => {
-    const response = await this.fetch(url.toString(), { method: 'HEAD' });
-    return response.headers.get('Content-Type');
-  };
+  const isJsonLdContentType = await getIsJsonLdContentType.bind(this)(id);
 
-  const isJsonLdContentType = async (url: URL): Promise<boolean> => {
-    const contentType = await getContentType(url);
-    if (!contentType) {
-      return false;
-    }
-
-    return (
-      contentType.includes(ACTIVITYSTREAMS_CONTENT_TYPE) ||
-      contentType.includes(LINKED_DATA_CONTENT_TYPE) ||
-      contentType.includes(JSON_CONTENT_TYPE)
-    );
-  };
-
-  if (!(await isJsonLdContentType(id))) {
+  if (!isJsonLdContentType) {
     return null;
   }
 
-  // Send HTTP Signature for Mastodon in secure mode.
-  const actor = await this.findOne('entity', {
-    preferredUsername: 'bot',
-  });
+  const botActor = await getBotActor.bind(this)();
 
-  assert.isApActor(actor);
+  assert.exists(botActor);
 
-  const actorId = getId(actor);
+  const botActorId = getId(botActor);
 
-  assert.exists(actorId);
+  assert.exists(botActorId);
 
   const { dateHeader, signatureHeader } = await this.getHttpSignature(
     id,
-    actorId,
-    await this.getPrivateKey(actor),
+    botActorId,
+    await this.getPrivateKey(botActor),
   );
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 1250);
+  const headers = {
+    date: dateHeader,
+    signature: signatureHeader,
+  };
 
-  // GET requests (eg. to th e inbox) MUST be made with an Accept header of
-  // `application/ld+json; profile="https://www.w3.org/ns/activitystreams"`
-  const fetchedEntity: Record<string, unknown> | null = await this.fetch(
-    id.toString(),
-    {
-      signal: controller.signal,
-      headers: {
-        [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
-        date: dateHeader,
-        signature: signatureHeader,
-      },
-    },
-  )
-    .then(async (response) => {
-      clearTimeout(timeout);
-      if (response.status === 200) {
-        return await response.json();
-      } else if (response.status === 410) {
-        const data = await response.json();
+  const fetchedJson = await fetchJsonByUrl.bind(this)(id, headers);
 
-        if ('@context' in data) {
-          console.log('Likely a Tombstone?');
-          return data;
-        } else {
-          throw new Error('Not found, but not a tombstone.');
-        }
-      } else {
-        console.log(
-          'Found but not 200 or 404.',
-          response.status,
-          id.toString(),
-        );
-        throw new Error(`Unexpected status code ${response.status}`);
-      }
-    })
-    .catch((error: unknown) => {
-      clearTimeout(timeout);
-      console.log(String(error));
-      return null;
-    });
-
-  if (fetchedEntity) {
-    const convertedEntity = convertJsonToEntity(fetchedEntity);
+  if (fetchedJson) {
+    const convertedEntity = convertJsonToEntity(fetchedJson);
 
     if (convertedEntity) {
       const entity = compressEntity(convertedEntity);
@@ -112,4 +59,101 @@ export async function fetchEntityById(
   }
 
   return null;
+}
+
+async function fetchJsonByUrl(
+  this: CoreLibrary,
+  url: URL,
+  headers: Record<string, string>,
+): Promise<Record<string, unknown> | null> {
+  type Response = Awaited<ReturnType<(typeof this)['fetch']>>;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 1250);
+  const config = {
+    signal: controller.signal,
+    headers: {
+      ...headers,
+      // GET requests (eg. to the inbox) MUST be made with an Accept header of
+      // `application/ld+json; profile="https://www.w3.org/ns/activitystreams"`
+      [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
+    },
+  };
+
+  async function handleResponse(response: Response) {
+    clearTimeout(timeout);
+
+    const data = await response.json();
+
+    if (response.status === 200) {
+      return data;
+    }
+
+    if (response.status === 400 || response.status === 410) {
+      if ('@context' in data) {
+        // Likely a tombstone
+        return data;
+      } else {
+        // Return a tombstone
+        return {
+          '@context': ACTIVITYSTREAMS_CONTEXT,
+          type: AP.ExtendedObjectTypes.TOMBSTONE,
+          id: url.href,
+          url: url.href,
+        };
+      }
+    }
+
+    if (response.status >= 500) {
+      console.log('Server error.', response.status, url.href);
+      return null;
+    }
+
+    console.log('Unexpected status code.', response.status, url.href);
+
+    return data;
+  }
+
+  async function handleError(error: Error) {
+    clearTimeout(timeout);
+    console.log(`${error}`);
+    return null;
+  }
+
+  return await this.fetch(url.href, config)
+    .then(handleResponse)
+    .catch(handleError);
+}
+
+async function getContentType(
+  this: CoreLibrary,
+  url: URL,
+): Promise<string | null> {
+  const { headers } = await this.fetch(url.toString(), { method: 'HEAD' });
+  return headers.get('Content-Type');
+}
+
+async function getIsJsonLdContentType(
+  this: CoreLibrary,
+  url: URL,
+): Promise<boolean> {
+  const contentType = await getContentType.bind(this)(url);
+
+  if (!contentType) {
+    return false;
+  }
+
+  return (
+    contentType.includes(ACTIVITYSTREAMS_CONTENT_TYPE) ||
+    contentType.includes(LINKED_DATA_CONTENT_TYPE) ||
+    contentType.includes(JSON_CONTENT_TYPE)
+  );
+}
+
+async function getBotActor(this: CoreLibrary) {
+  const botActor = await this.findOne('entity', {
+    preferredUsername: SERVER_ACTOR_USERNAME,
+  });
+
+  return cast.isApActor(botActor) ?? null;
 }

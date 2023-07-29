@@ -1,106 +1,101 @@
-import { Core } from '.';
 import * as AP from '@activity-kit/types';
-import { assert } from '@activity-kit/type-utilities';
-import {
-  getId,
-  PUBLIC_ACTOR,
-  deduplicateUrls,
-  getArray,
-} from '@activity-kit/utilities';
+import { guard } from '@activity-kit/type-utilities';
+import { getId, PUBLIC_ACTOR, deduplicateUrls } from '@activity-kit/utilities';
+
+import { CoreLibrary } from './adapters';
 
 export async function getRecipientUrls(
-  this: Core,
+  this: CoreLibrary,
   activity: AP.Activity,
 ): Promise<URL[]> {
-  const mentions = (
-    'object' in activity && 'tag' in activity.object
-      ? getArray<AP.EntityReference>(activity.object.tag)
-      : []
-  ).filter((entity: AP.EntityReference) => {
-    try {
-      assert.isApType(entity, AP.LinkTypes.MENTION);
-      return true;
-    } catch {
-      return false;
-    }
-  });
+  const tags =
+    guard.isApCoreObject(activity.object) && activity.object.tag
+      ? getArray(activity.object.tag)
+      : [];
+  const mentions = tags.map(getId).filter(guard.isUrl);
 
   const recipients = [
-    ...getArray<AP.EntityReference>(activity.to),
-    ...getArray<AP.EntityReference>(activity.cc),
-    ...getArray<AP.EntityReference>(activity.bto),
-    ...getArray<AP.EntityReference>(activity.bcc),
-    ...getArray<AP.EntityReference>(activity.audience),
+    ...getArray(activity.to),
+    ...getArray(activity.cc),
+    ...getArray(activity.bto),
+    ...getArray(activity.bcc),
+    ...getArray(activity.audience),
     ...mentions,
   ].flat();
 
   const recipientIds = recipients
-    .map((recipient) => getId(recipient))
-    .filter((recipientUrl) => `${recipientUrl}` !== PUBLIC_ACTOR);
+    .map(getId)
+    .filter(guard.isUrl)
+    .filter((recipientUrl) => recipientUrl.href !== PUBLIC_ACTOR);
 
-  const actorUrls = (
-    await Promise.all<URL[]>(
-      recipientIds.map(async (recipientId) => {
-        const foundRecipient = await this.queryById(recipientId);
+  const actorUrls = await Promise.all(recipientIds.map(getActorIds.bind(this)));
 
-        if (!foundRecipient) {
-          return [];
-        }
+  return deduplicateUrls(actorUrls.flat());
+}
 
-        try {
-          assert.isApActor(foundRecipient);
+async function getActorIds(
+  this: CoreLibrary,
+  recipientId: URL,
+): Promise<URL[]> {
+  const foundRecipient = await this.queryById(recipientId);
 
-          const actorUrl = getId(foundRecipient);
+  if (!foundRecipient) {
+    return [];
+  }
 
-          if (actorUrl instanceof URL) {
-            return [actorUrl];
-          }
-        } catch (error) {
-          // Not an Actor.
-        }
+  if (guard.isApActor(foundRecipient)) {
+    const actorUrl = getId(foundRecipient);
 
-        try {
-          assert.isApCollection(foundRecipient);
+    if (guard.isUrl(actorUrl)) {
+      return [actorUrl];
+    }
+  }
 
-          const collectionItems = await this.getPaginatedCollectionItems(
-            foundRecipient,
-          );
+  if (guard.isApCollection(foundRecipient)) {
+    const collectionItems = await this.getPaginatedCollectionItems(
+      foundRecipient,
+    );
 
-          console.log([collectionItems]);
+    const actorsInCollection: URL[] = [];
 
-          const actorsInCollection = [];
+    for (const collectionItem of collectionItems) {
+      const collectionItemId = getId(collectionItem);
 
-          for (const collectionItem of collectionItems) {
-            try {
-              const collectionItemId = getId(collectionItem);
+      if (!guard.isUrl(collectionItemId)) {
+        continue;
+      }
 
-              assert.exists(collectionItemId);
+      const expandedCollectionItem = await this.queryById(collectionItemId);
 
-              const expandedCollectionItem = await this.queryById(
-                collectionItemId,
-              );
+      if (!guard.isApActor(expandedCollectionItem)) {
+        continue;
+      }
 
-              assert.isApActor(expandedCollectionItem);
+      const actorUrl = getId(expandedCollectionItem);
 
-              const actorUrl = getId(expandedCollectionItem);
+      if (!guard.isUrl(actorUrl)) {
+        continue;
+      }
 
-              if (actorUrl instanceof URL) {
-                actorsInCollection.push(actorUrl);
-              }
-            } catch (error) {
-              // Not an Actor.
-            }
-          }
+      actorsInCollection.push(actorUrl);
+    }
 
-          return actorsInCollection;
-        } catch (error) {
-          // Not a Collection.
-        }
+    return actorsInCollection;
+  }
 
-        return [];
-      }),
-    )
-  ).flat();
+  return [];
+}
 
-  return deduplicateUrls(actorUrls);
+function getArray(
+  items: null | undefined | AP.OrArray<AP.EntityReference>,
+): AP.EntityReference[] {
+  if (!items) {
+    return [];
+  }
+
+  const array = guard.isArray(items) ? items : [items];
+
+  return array.filter((item) => {
+    return guard.isApEntity(item) || guard.isUrl(item);
+  });
 }

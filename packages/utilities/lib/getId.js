@@ -1,27 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getId = void 0;
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const getId = (entity) => {
-    if (!entity || Array.isArray(entity)) {
+    if (!type_utilities_1.guard.exists(entity)) {
         return null;
     }
-    if (entity instanceof URL) {
+    if (type_utilities_1.guard.isUrl(entity)) {
         return entity;
     }
-    if ('id' in entity) {
-        return entity.id ?? null;
-    }
-    if ('url' in entity) {
-        if (entity.url instanceof URL) {
+    if (type_utilities_1.guard.isPlainObject(entity)) {
+        if ('id' in entity && type_utilities_1.guard.isUrl(entity.id)) {
+            return entity.id;
+        }
+        if ('url' in entity && type_utilities_1.guard.isUrl(entity.url)) {
             return entity.url;
         }
-        if (Array.isArray(entity.url)) {
-            return null;
+        if ('href' in entity && type_utilities_1.guard.isUrl(entity.href)) {
+            return entity.href;
         }
-        return entity.url.href ?? null;
-    }
-    if ('href' in entity) {
-        return entity.href ?? null;
     }
     return null;
 };
