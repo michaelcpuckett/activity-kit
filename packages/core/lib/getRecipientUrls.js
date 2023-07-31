@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRecipientUrls = void 0;
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
-async function getRecipientUrls(activity) {
+const getRecipientUrls = async function getRecipientUrls(activity) {
     const tags = type_utilities_1.guard.isApCoreObject(activity.object) && activity.object.tag
         ? getArray(activity.object.tag)
         : [];
@@ -22,7 +22,7 @@ async function getRecipientUrls(activity) {
         .filter((recipientUrl) => recipientUrl.href !== utilities_1.PUBLIC_ACTOR);
     const actorUrls = await Promise.all(recipientIds.map(getActorIds.bind(this)));
     return (0, utilities_1.deduplicateUrls)(actorUrls.flat());
-}
+};
 exports.getRecipientUrls = getRecipientUrls;
 async function getActorIds(recipientId) {
     const foundRecipient = await this.queryById(recipientId);

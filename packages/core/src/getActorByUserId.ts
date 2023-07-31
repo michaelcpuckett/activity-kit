@@ -3,17 +3,21 @@ import { guard } from '@activity-kit/type-utilities';
 
 import { CoreLibrary } from './adapters';
 
-export async function getActorByUserId(
-  this: CoreLibrary,
-  userId: string,
-): Promise<AP.Actor | null> {
-  const preferredUsername = await this.findStringValueById('username', userId);
+export const getActorByUserId: CoreLibrary['getActorByUserId'] =
+  async function getActorByUserId(
+    this: CoreLibrary,
+    userId: string,
+  ): Promise<AP.Actor | null> {
+    const preferredUsername = await this.findStringValueById(
+      'username',
+      userId,
+    );
 
-  const user = await this.findOne('entity', { preferredUsername });
+    const user = await this.findOne('entity', { preferredUsername });
 
-  if (!guard.isApActor(user)) {
-    return null;
-  }
+    if (!guard.isApActor(user)) {
+      return null;
+    }
 
-  return user;
-}
+    return user;
+  };

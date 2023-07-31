@@ -18,9 +18,9 @@ export async function wrapInActivity(
 
   const actorId = getId(this.actor);
 
-  assert.exists(actorId);
+  assert.isUrl(actorId);
 
-  return applyContext<AP.Create>(
+  return applyContext(
     this.combineAddresses({
       id,
       url: id,

@@ -33,7 +33,6 @@ export type CoreLibrary = AuthAdapter &
       this: CoreLibrary,
       userId: string,
     ) => Promise<AP.Actor | null>;
-    getPrivateKey: (this: CoreLibrary, actor: AP.Actor) => Promise<string>;
     getStreamByName: (
       this: CoreLibrary,
       actor: AP.Actor,
@@ -41,28 +40,15 @@ export type CoreLibrary = AuthAdapter &
     ) => Promise<AP.EitherCollection | null>;
     fetchEntityById: (this: CoreLibrary, id: URL) => Promise<AP.Entity | null>;
     queryById: (this: CoreLibrary, id: URL) => Promise<AP.Entity | null>;
-    expandEntity: (
-      this: CoreLibrary,
-      entity: AP.Entity,
-    ) => Promise<AP.Entity | null>;
-    getCollectionItems: (
-      this: CoreLibrary,
-      entity: AP.Collection | AP.OrderedCollection,
-    ) => AP.EntityReference[];
+    expandEntity: (this: CoreLibrary, entity: AP.Entity) => Promise<AP.Entity>;
     getPaginatedCollectionItems: (
       this: CoreLibrary,
       collection: AP.Collection | AP.OrderedCollection,
     ) => Promise<AP.EntityReference[]>;
     expandCollection: (
       this: CoreLibrary,
-      collection: AP.EitherCollectionReference,
-    ) => Promise<null | AP.EitherCollection>;
-    getRecipientInboxUrls: (
-      this: CoreLibrary,
-      activity: AP.Activity,
-      actor: AP.Actor,
-      inboxesOnly?: boolean,
-    ) => Promise<URL[]>;
+      collection: AP.EitherCollection,
+    ) => Promise<AP.EitherCollection>;
     getRecipientUrls: (
       this: CoreLibrary,
       activity: AP.Activity,
@@ -71,11 +57,5 @@ export type CoreLibrary = AuthAdapter &
       this: CoreLibrary,
       activity: AP.Activity,
       actor: AP.Actor,
-    ) => Promise<unknown>;
-    signAndSendToForeignActorInbox: (
-      this: CoreLibrary,
-      foreignActorInbox: URL,
-      actor: AP.Actor,
-      activity: AP.Activity,
     ) => Promise<unknown>;
   };

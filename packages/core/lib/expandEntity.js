@@ -11,10 +11,10 @@ const selfReferentialKeys = [
     'href',
     'publicKey',
 ];
-async function expandEntity(entity) {
+const expandEntity = async function expandEntity(entity) {
     var _a;
-    return (_a = type_utilities_1.cast.isApEntity(await expandObject.bind(this)(entity))) !== null && _a !== void 0 ? _a : null;
-}
+    return (_a = type_utilities_1.cast.isApEntity(await expandObject.bind(this)(entity))) !== null && _a !== void 0 ? _a : entity;
+};
 exports.expandEntity = expandEntity;
 async function expandObject(object) {
     const expanded = {};

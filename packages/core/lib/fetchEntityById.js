@@ -27,7 +27,7 @@ exports.fetchEntityById = void 0;
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
-async function fetchEntityById(id) {
+const fetchEntityById = async function fetchEntityById(id) {
     const isJsonLdContentType = await getIsJsonLdContentType.bind(this)(id);
     if (!isJsonLdContentType) {
         return null;
@@ -53,7 +53,7 @@ async function fetchEntityById(id) {
         }
     }
     return null;
-}
+};
 exports.fetchEntityById = fetchEntityById;
 async function fetchJsonByUrl(url, headers) {
     const controller = new AbortController();

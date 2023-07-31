@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isApTypeOf = exports.isApType = exports.isApTransitiveActivity = exports.isApCollection = exports.isApActor = exports.isApExtendedObject = exports.isApCoreObject = exports.isApActivity = exports.isApEntity = exports.hasApType = exports.hasType = exports.isArray = exports.isUrl = exports.isDate = exports.isBoolean = exports.isNumber = exports.isString = exports.isPlainObject = exports.isObject = exports.exists = void 0;
+exports.isApTypeOf = exports.isApType = exports.isApTransitiveActivity = exports.isApCollectionPage = exports.isApCollection = exports.isApActor = exports.isApExtendedObject = exports.isApCoreObject = exports.isApActivity = exports.isApEntity = exports.hasApType = exports.hasType = exports.isArray = exports.isUrl = exports.isDate = exports.isBoolean = exports.isNumber = exports.isString = exports.isPlainObject = exports.isObject = exports.exists = void 0;
 const guard = __importStar(require("./guard"));
 function exists(value) {
     if (!guard.exists(value)) {
@@ -127,6 +127,12 @@ function isApCollection(value) {
     }
 }
 exports.isApCollection = isApCollection;
+function isApCollectionPage(value) {
+    if (!guard.isApCollectionPage(value)) {
+        throw new Error(`"${value}" is not a CollectionPage`);
+    }
+}
+exports.isApCollectionPage = isApCollectionPage;
 function isApTransitiveActivity(value) {
     if (!guard.isApTransitiveActivity(value)) {
         throw new Error(`"${value}" is not a Transitive Activity`);

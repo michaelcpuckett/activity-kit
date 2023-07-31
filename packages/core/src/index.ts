@@ -15,16 +15,12 @@ import { findEntityById } from './findEntityById';
 import { fetchEntityById } from './fetchEntityById';
 import { queryById } from './queryById';
 import { expandEntity } from './expandEntity';
-import { getPrivateKey } from './getPrivateKey';
-import { getCollectionItems } from './getCollectionItems';
 import { getPaginatedCollectionItems } from './getPaginatedCollectionItems';
 import { expandCollection } from './expandCollection';
 import { getActorByUserId } from './getActorByUserId';
 import { getStreamByName } from './getStreamByName';
 import { broadcast } from './broadcast';
 import { getRecipientUrls } from './getRecipientUrls';
-import { getRecipientInboxUrls } from './getRecipientInboxUrls';
-import { signAndSendToForeignActorInbox } from './signAndSendToForeignActorInbox';
 
 export class Core implements CoreLibrary {
   fetch: FetchPolyfill;
@@ -160,7 +156,6 @@ export class Core implements CoreLibrary {
 
   public findEntityById = findEntityById;
   public getActorByUserId = getActorByUserId;
-  public getPrivateKey = getPrivateKey;
   public getStreamByName = getStreamByName;
 
   // Fetch.
@@ -171,16 +166,13 @@ export class Core implements CoreLibrary {
   // Expand.
 
   public expandEntity = expandEntity;
-  public getCollectionItems = getCollectionItems;
   public getPaginatedCollectionItems = getPaginatedCollectionItems;
   public expandCollection = expandCollection;
 
   // Broadcast Server-to-Server.
 
-  public getRecipientInboxUrls = getRecipientInboxUrls;
-  public getRecipientUrls = getRecipientUrls;
   public broadcast = broadcast;
-  public signAndSendToForeignActorInbox = signAndSendToForeignActorInbox;
+  public getRecipientUrls = getRecipientUrls;
 }
 
 export {

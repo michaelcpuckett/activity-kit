@@ -31,7 +31,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     entityRoute,
   });
 
-  const botInbox = applyContext<AP.OrderedCollection>({
+  const botInbox = applyContext({
     id: inboxId,
     url: inboxId,
     type: AP.CollectionTypes.ORDERED_COLLECTION,
@@ -45,7 +45,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     entityRoute,
   });
 
-  const botOutbox = applyContext<AP.OrderedCollection>({
+  const botOutbox = applyContext({
     id: outboxId,
     url: outboxId,
     type: AP.CollectionTypes.ORDERED_COLLECTION,
@@ -59,7 +59,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     entityRoute,
   });
 
-  const botFollowers = applyContext<AP.Collection>({
+  const botFollowers = applyContext({
     id: followersId,
     url: followersId,
     name: 'Followers',
@@ -74,7 +74,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     entityRoute,
   });
 
-  const botFollowing = applyContext<AP.Collection>({
+  const botFollowing = applyContext({
     id: followingId,
     url: followingId,
     name: 'Following',
@@ -89,7 +89,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     entityRoute,
   });
 
-  const botHashtags = applyContext<AP.Collection>({
+  const botHashtags = applyContext({
     id: hashtagsId,
     url: hashtagsId,
     name: 'Hashtags',
@@ -100,7 +100,7 @@ export async function createServerActor(this: UserPostEndpoint) {
     published: publishedDate,
   });
 
-  const botActor = applyContext<AP.Actor>({
+  const botActor = applyContext({
     id: userId,
     url: userId,
     type: AP.ActorTypes.APPLICATION,

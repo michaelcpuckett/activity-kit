@@ -97,7 +97,7 @@ export async function handleFollow(
   )}`;
   const publishedDate = new Date();
 
-  const acceptActivity = applyContext<AP.Accept>({
+  const acceptActivity = applyContext({
     id: new URL(acceptActivityId),
     url: new URL(acceptActivityId),
     type: AP.ActivityTypes.ACCEPT,

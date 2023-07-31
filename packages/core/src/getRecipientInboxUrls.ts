@@ -4,22 +4,27 @@ import { deduplicateUrls, getId } from '@activity-kit/utilities';
 
 import { CoreLibrary } from './adapters';
 
-export async function getRecipientInboxUrls(
-  this: CoreLibrary,
-  activity: AP.Activity,
-  actor: AP.Actor,
-  inboxesOnly?: boolean,
-) {
-  const recipientUrls = await this.getRecipientUrls(activity);
+export const getRecipientInboxUrls: CoreLibrary['getRecipientInboxUrls'] =
+  async function getRecipientInboxUrls(
+    this: CoreLibrary,
+    activity: AP.Activity,
+    actor: AP.Actor,
+    inboxesOnly?: boolean,
+  ): Promise<URL[]> {
+    const recipientUrls = await this.getRecipientUrls(activity);
 
-  const recipientInboxUrls = await Promise.all(
-    recipientUrls.map(async (recipientUrl) => {
-      return await mapRecipientUrl.bind(this)(recipientUrl, actor, inboxesOnly);
-    }),
-  );
+    const recipientInboxUrls = await Promise.all(
+      recipientUrls.map(async (recipientUrl) => {
+        return await mapRecipientUrl.bind(this)(
+          recipientUrl,
+          actor,
+          inboxesOnly,
+        );
+      }),
+    );
 
-  return deduplicateUrls(recipientInboxUrls.flat().filter(guard.isUrl));
-}
+    return deduplicateUrls(recipientInboxUrls.flat().filter(guard.isUrl));
+  };
 
 async function mapRecipientUrl(
   this: CoreLibrary,

@@ -98,6 +98,13 @@ export function isApCollection(value: unknown) {
   );
 }
 
+export function isApCollectionPage(value: unknown) {
+  return (
+    isApEntity(value) &&
+    isTypeOf<AP.EitherCollectionPage>(value, AP.CollectionPageTypes)
+  );
+}
+
 export function isApTransitiveActivity(value: unknown) {
   return (
     typeof value === 'object' &&

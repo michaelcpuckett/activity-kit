@@ -2,10 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.expandCollection = void 0;
 const type_utilities_1 = require("@activity-kit/type-utilities");
-async function expandCollection(collection) {
-    if (!type_utilities_1.guard.isApCollection(collection)) {
-        return null;
-    }
+const expandCollection = async function expandCollection(collection) {
     const items = this.getCollectionItems(collection);
     const expandedItems = await Promise.all(items.map(async (item) => {
         var _a;
@@ -27,7 +24,7 @@ async function expandCollection(collection) {
             items: expandedItems,
         };
     }
-    return null;
-}
+    return collection;
+};
 exports.expandCollection = expandCollection;
 //# sourceMappingURL=expandCollection.js.map

@@ -16,6 +16,7 @@ export declare function isApCoreObject(value: unknown): boolean;
 export declare function isApExtendedObject(value: unknown): boolean;
 export declare function isApActor(value: unknown): boolean;
 export declare function isApCollection(value: unknown): boolean;
+export declare function isApCollectionPage(value: unknown): boolean;
 export declare function isApTransitiveActivity(value: unknown): boolean;
 export declare function isApType<T extends AP.Entity>(value: unknown, type: string): boolean;
 export declare function isApTypeOf<T extends AP.Entity>(value: unknown, comparison: Record<string, string>): boolean;

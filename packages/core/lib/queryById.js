@@ -27,7 +27,7 @@ exports.queryById = void 0;
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
-async function queryById(id) {
+const queryById = async function queryById(id) {
     if ((0, utilities_1.isLocal)(id)) {
         return await this.findEntityById(id);
     }
@@ -40,6 +40,6 @@ async function queryById(id) {
         }
     }
     return fetchedEntity;
-}
+};
 exports.queryById = queryById;
 //# sourceMappingURL=queryById.js.map

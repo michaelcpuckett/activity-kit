@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isApTypeOf = exports.isApType = exports.isApTransitiveActivity = exports.isApCollection = exports.isApActor = exports.isApExtendedObject = exports.isApCoreObject = exports.isApActivity = exports.isApEntity = exports.hasApType = exports.hasType = exports.isArray = exports.isUrl = exports.isDate = exports.isBoolean = exports.isNumber = exports.isString = exports.isPlainObject = exports.isObject = exports.exists = void 0;
+exports.isApTypeOf = exports.isApType = exports.isApTransitiveActivity = exports.isApCollectionPage = exports.isApCollection = exports.isApActor = exports.isApExtendedObject = exports.isApCoreObject = exports.isApActivity = exports.isApEntity = exports.hasApType = exports.hasType = exports.isArray = exports.isUrl = exports.isDate = exports.isBoolean = exports.isNumber = exports.isString = exports.isPlainObject = exports.isObject = exports.exists = void 0;
 const AP = __importStar(require("@activity-kit/types"));
 function isType(entity, type) {
     if (!entity || typeof entity !== 'object') {
@@ -108,6 +108,11 @@ function isApCollection(value) {
         isTypeOf(value, AP.CollectionTypes));
 }
 exports.isApCollection = isApCollection;
+function isApCollectionPage(value) {
+    return (isApEntity(value) &&
+        isTypeOf(value, AP.CollectionPageTypes));
+}
+exports.isApCollectionPage = isApCollectionPage;
 function isApTransitiveActivity(value) {
     return (typeof value === 'object' &&
         value !== null &&

@@ -21,6 +21,7 @@ export declare function isApCoreObject(value: unknown): AP.CoreObject | undefine
 export declare function isApExtendedObject(value: unknown): AP.ExtendedObject | undefined;
 export declare function isApActor(value: unknown): AP.Actor | undefined;
 export declare function isApCollection(value: unknown): AP.EitherCollection | undefined;
+export declare function isApCollectionPage(value: unknown): AP.EitherCollectionPage | undefined;
 export declare function isApTransitiveActivity(value: unknown): AP.TransitiveActivity<AP.AnyTransitiveActivityType> | undefined;
 export declare function isApType<T extends AP.Entity>(value: unknown, type: string): T | undefined;
 export declare function isApTypeOf<T extends AP.Entity>(value: unknown, comparison: Record<string, string>): T | undefined;

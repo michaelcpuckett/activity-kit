@@ -71,10 +71,14 @@ export function isApActor(value: unknown): value is AP.Actor {
   return narrow.isApActor(value);
 }
 
-export function isApCollection(
-  value: unknown,
-): value is AP.Collection | AP.OrderedCollection {
+export function isApCollection(value: unknown): value is AP.EitherCollection {
   return narrow.isApCollection(value);
+}
+
+export function isApCollectionPage(
+  value: unknown,
+): value is AP.EitherCollectionPage {
+  return narrow.isApCollectionPage(value);
 }
 
 export function isApTransitiveActivity(

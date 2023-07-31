@@ -77,6 +77,12 @@ export function isApCollection(
   return guard.isApCollection(value) ? value : undefined;
 }
 
+export function isApCollectionPage(
+  value: unknown,
+): AP.EitherCollectionPage | undefined {
+  return guard.isApCollectionPage(value) ? value : undefined;
+}
+
 export function isApTransitiveActivity(
   value: unknown,
 ): AP.TransitiveActivity<AP.AnyTransitiveActivityType> | undefined {

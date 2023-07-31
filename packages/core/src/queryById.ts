@@ -4,7 +4,7 @@ import { isLocal } from '@activity-kit/utilities';
 
 import { CoreLibrary } from './adapters';
 
-export async function queryById(
+export const queryById: CoreLibrary['queryById'] = async function queryById(
   this: CoreLibrary,
   id: URL,
 ): Promise<AP.Entity | null> {
@@ -29,4 +29,4 @@ export async function queryById(
   }
 
   return fetchedEntity;
-}
+};

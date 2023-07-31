@@ -64,7 +64,7 @@ export async function handleCreate(
       })}`,
     );
 
-    const objectReplies = applyContext<AP.OrderedCollection>({
+    const objectReplies = applyContext({
       id: objectRepliesId,
       url: objectRepliesId,
       name: 'Replies',
@@ -83,7 +83,7 @@ export async function handleCreate(
       })}`,
     );
 
-    const objectLikes = applyContext<AP.OrderedCollection>({
+    const objectLikes = applyContext({
       id: objectLikesId,
       url: objectLikesId,
       name: 'Likes',
@@ -102,7 +102,7 @@ export async function handleCreate(
       })}`,
     );
 
-    const objectShares = applyContext<AP.OrderedCollection>({
+    const objectShares = applyContext({
       id: objectSharesId,
       url: objectSharesId,
       name: 'Shares',

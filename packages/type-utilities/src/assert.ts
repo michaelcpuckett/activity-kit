@@ -109,9 +109,17 @@ export function isApActor(value: unknown): asserts value is AP.Actor {
 
 export function isApCollection(
   value: unknown,
-): asserts value is AP.Collection | AP.OrderedCollection {
+): asserts value is AP.EitherCollection {
   if (!guard.isApCollection(value)) {
     throw new Error(`"${value}" is not a Collection`);
+  }
+}
+
+export function isApCollectionPage(
+  value: unknown,
+): asserts value is AP.EitherCollectionPage {
+  if (!guard.isApCollectionPage(value)) {
+    throw new Error(`"${value}" is not a CollectionPage`);
   }
 }
 

@@ -60,9 +60,7 @@ export const respond = async function (
   ) {
     this.res.setHeader(CONTENT_TYPE_HEADER, ACTIVITYSTREAMS_CONTENT_TYPE);
     this.res.write(
-      JSON.stringify(
-        convertEntityToJson(cleanProps(applyContext<AP.Actor>(actor))),
-      ),
+      JSON.stringify(convertEntityToJson(cleanProps(applyContext(actor)))),
     );
   } else {
     this.res.setHeader(CONTENT_TYPE_HEADER, HTML_CONTENT_TYPE);

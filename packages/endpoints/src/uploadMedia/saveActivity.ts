@@ -26,7 +26,7 @@ export async function saveActivity(this: UploadMediaPostEndpoint) {
     entityRoute,
   });
 
-  const objectReplies = applyContext<AP.Collection>({
+  const objectReplies = applyContext({
     id: objectRepliesId,
     url: objectRepliesId,
     name: 'Replies',
@@ -40,7 +40,7 @@ export async function saveActivity(this: UploadMediaPostEndpoint) {
     entityRoute,
   });
 
-  const objectLikes = applyContext<AP.OrderedCollection>({
+  const objectLikes = applyContext({
     id: objectLikesId,
     url: objectLikesId,
     name: 'Likes',
@@ -54,7 +54,7 @@ export async function saveActivity(this: UploadMediaPostEndpoint) {
     entityRoute,
   });
 
-  const objectShares = applyContext<AP.OrderedCollection>({
+  const objectShares = applyContext({
     id: objectSharesId,
     url: objectSharesId,
     name: 'Shares',

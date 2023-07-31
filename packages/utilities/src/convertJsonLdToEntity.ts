@@ -1,8 +1,8 @@
+import * as AP from '@activity-kit/types';
 import * as jsonld from 'jsonld';
 // See types/jsonldDocumentLoader.d.ts
 import getNodeDocumentLoader from 'jsonld/lib/documentLoaders/node';
 import { RemoteDocument } from 'jsonld/jsonld-spec';
-import * as AP from '@activity-kit/types';
 import {
   ACTIVITYSTREAMS_CONTEXT,
   LDP_CONTEXT,
@@ -3879,5 +3879,5 @@ export const convertJsonLdToEntity = async (
     return null;
   }
 
-  return applyContext<AP.Entity>(converted) ?? null;
+  return applyContext(converted) ?? null;
 };

@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cleanProps = void 0;
 function cleanProps(entity) {
-    const result = { ...entity };
-    if ('bto' in result) {
-        delete result.bto;
+    const cleanedEntity = { ...entity };
+    if ('bto' in cleanedEntity) {
+        delete cleanedEntity.bto;
     }
-    if ('bcc' in result) {
-        delete result.bcc;
+    if ('bcc' in cleanedEntity) {
+        delete cleanedEntity.bcc;
     }
-    return result;
+    return cleanedEntity;
 }
 exports.cleanProps = cleanProps;
 //# sourceMappingURL=cleanProps.js.map

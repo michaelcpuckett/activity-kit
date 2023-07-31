@@ -17,8 +17,6 @@ const getActorByUserId_1 = require("./getActorByUserId");
 const getStreamByName_1 = require("./getStreamByName");
 const broadcast_1 = require("./broadcast");
 const getRecipientUrls_1 = require("./getRecipientUrls");
-const getRecipientInboxUrls_1 = require("./getRecipientInboxUrls");
-const signAndSendToForeignActorInbox_1 = require("./signAndSendToForeignActorInbox");
 class Core {
     constructor(adapters) {
         var _a;
@@ -32,10 +30,8 @@ class Core {
         this.getCollectionItems = getCollectionItems_1.getCollectionItems;
         this.getPaginatedCollectionItems = getPaginatedCollectionItems_1.getPaginatedCollectionItems;
         this.expandCollection = expandCollection_1.expandCollection;
-        this.getRecipientInboxUrls = getRecipientInboxUrls_1.getRecipientInboxUrls;
-        this.getRecipientUrls = getRecipientUrls_1.getRecipientUrls;
         this.broadcast = broadcast_1.broadcast;
-        this.signAndSendToForeignActorInbox = signAndSendToForeignActorInbox_1.signAndSendToForeignActorInbox;
+        this.getRecipientUrls = getRecipientUrls_1.getRecipientUrls;
         this.fetch = (_a = adapters.fetch) !== null && _a !== void 0 ? _a : isomorphic_fetch_1.default;
         if (adapters.db.initializeDb) {
             this.initializeDb = async () => { var _a, _b; return await ((_b = (_a = adapters.db).initializeDb) === null || _b === void 0 ? void 0 : _b.call(_a)); };

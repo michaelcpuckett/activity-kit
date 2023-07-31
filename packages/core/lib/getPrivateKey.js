@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPrivateKey = void 0;
-async function getPrivateKey(actor) {
+const getPrivateKey = async function getPrivateKey(actor) {
     if (!actor.preferredUsername) {
         throw new Error('Actor has no `preferredUsername`.');
     }
@@ -11,6 +11,6 @@ async function getPrivateKey(actor) {
         throw new Error('Private key not found for this Actor.');
     }
     return privateKey;
-}
+};
 exports.getPrivateKey = getPrivateKey;
 //# sourceMappingURL=getPrivateKey.js.map

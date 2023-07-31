@@ -51,7 +51,7 @@ export async function parseBody(this: UploadMediaPostEndpoint) {
       })}`,
     );
 
-    const object = applyContext<AP.ExtendedObject>({
+    const object = applyContext({
       to: new URL(PUBLIC_ACTOR),
       type: getType(this.file.mimetype),
       mediaType: this.file.mimetype,
@@ -60,7 +60,7 @@ export async function parseBody(this: UploadMediaPostEndpoint) {
       attributedTo: this.actor.id,
     });
 
-    const activity = applyContext<AP.Create>({
+    const activity = applyContext({
       to: new URL(PUBLIC_ACTOR),
       type: AP.ActivityTypes.CREATE,
       id: activityId,

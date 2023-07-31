@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCollectionItems = void 0;
 const type_utilities_1 = require("@activity-kit/type-utilities");
-function getCollectionItems(entity) {
+const getCollectionItems = function getCollectionItems(entity) {
     const collectionItems = [];
     if (type_utilities_1.guard.isArray(entity.orderedItems) && entity.orderedItems.length) {
         const orderedItems = entity.orderedItems.filter((item) => {
@@ -17,6 +17,6 @@ function getCollectionItems(entity) {
         collectionItems.push(...items);
     }
     return collectionItems;
-}
+};
 exports.getCollectionItems = getCollectionItems;
 //# sourceMappingURL=getCollectionItems.js.map

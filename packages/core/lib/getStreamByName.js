@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getStreamByName = void 0;
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
-const getStreamByName = async function (actor, name) {
+const getStreamByName = async function getStreamByName(actor, name) {
     if (!actor.streams) {
         return null;
     }

@@ -1,5 +1,8 @@
 import { CoreLibrary } from '@activity-kit/core';
+import { handleNotFound } from './handleNotFound';
 import { handleFoundEntity } from './handleFoundEntity';
+import { handleFoundCollection } from './handleFoundCollection';
+import { handleFoundCollectionPage } from './handleFoundCollectionPage';
 import { respond } from './respond';
 
 export class EntityGetEndpoint {
@@ -14,28 +17,13 @@ export class EntityGetEndpoint {
     },
   ) {
     this.url = options.url;
-    this.returnHtml = options.returnHtml;
+    this.returnHtml = options.returnHtml ?? false;
   }
 
+  protected handleNotFound = handleNotFound;
   protected handleFoundEntity = handleFoundEntity;
-
-  protected handleBadRequest() {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        error: 'Bad request',
-      }),
-    };
-  }
-
-  protected handleNotFound() {
-    return {
-      statusCode: 404,
-      body: JSON.stringify({
-        error: 'Not found',
-      }),
-    };
-  }
+  protected handleFoundCollection = handleFoundCollection;
+  protected handleFoundCollectionPage = handleFoundCollectionPage;
 
   public respond = respond;
 }

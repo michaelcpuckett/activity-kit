@@ -1,4 +1,2 @@
-/// <reference types="node" />
-import { Core } from '.';
-import * as AP from '@activity-kit/types';
-export declare function getRecipientUrls(this: Core, activity: AP.Activity): Promise<URL[]>;
+import { CoreLibrary } from './adapters';
+export declare const getRecipientUrls: CoreLibrary['getRecipientUrls'];

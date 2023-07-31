@@ -27,7 +27,7 @@ exports.getPaginatedCollectionItems = void 0;
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
-async function getPaginatedCollectionItems(collection) {
+const getPaginatedCollectionItems = async function getPaginatedCollectionItems(collection) {
     const firstCollectionPageId = (0, utilities_1.getId)(collection.first);
     if (!firstCollectionPageId) {
         if (type_utilities_1.guard.isArray(collection.orderedItems)) {
@@ -62,6 +62,6 @@ async function getPaginatedCollectionItems(collection) {
         nextCollectionPage = nextPage;
     }
     return collectionItems.flat();
-}
+};
 exports.getPaginatedCollectionItems = getPaginatedCollectionItems;
 //# sourceMappingURL=getPaginatedCollectionItems.js.map

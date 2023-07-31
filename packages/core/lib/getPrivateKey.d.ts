@@ -1,3 +1,2 @@
-import { Core } from '.';
-import * as AP from '@activity-kit/types';
-export declare function getPrivateKey(this: Core, actor: AP.Actor): Promise<string>;
+import { CoreLibrary } from './adapters';
+export declare const getPrivateKey: CoreLibrary['getPrivateKey'];

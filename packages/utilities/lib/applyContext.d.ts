@@ -1,2 +1,2 @@
 import * as AP from '@activity-kit/types';
-export declare function applyContext<T>(entity: AP.Entity): T | undefined;
+export declare function applyContext(entity: AP.Entity): AP.Entity;

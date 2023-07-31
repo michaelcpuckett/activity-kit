@@ -3,6 +3,9 @@ import { cast, guard } from '@activity-kit/type-utilities';
 
 import { CoreLibrary } from './adapters';
 
+/**
+ * Keys that should not be expanded.
+ */
 const selfReferentialKeys = [
   '@context',
   '_id',
@@ -13,17 +16,27 @@ const selfReferentialKeys = [
   'publicKey',
 ];
 
-export async function expandEntity(
-  this: CoreLibrary,
-  entity: AP.Entity,
-): Promise<AP.Entity | null> {
-  return cast.isApEntity(await expandObject.bind(this)(entity)) ?? null;
-}
+/**
+ * Convert an Entity to a full object, expanding any references to other
+ * Entities.
+ *
+ * @returns A Promise that resolves to the expanded Entity.
+ */
+export const expandEntity: CoreLibrary['expandEntity'] =
+  async function expandEntity(
+    this: CoreLibrary,
+    entity: AP.Entity,
+  ): Promise<AP.Entity> {
+    return cast.isApEntity(await expandObject.bind(this)(entity)) ?? entity;
+  };
 
+/**
+ * Expand all references in an object.
+ */
 async function expandObject(
   this: CoreLibrary,
   object: Record<string, unknown>,
-) {
+): Promise<Record<string, unknown>> {
   const expanded: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(object)) {
@@ -33,6 +46,10 @@ async function expandObject(
   return expanded;
 }
 
+/**
+ * Expand a single entry in an object, which may be a reference to another
+ * Entity.
+ */
 async function expandEntry(
   this: CoreLibrary,
   entry: [key: string, value: unknown],

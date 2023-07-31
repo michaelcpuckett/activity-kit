@@ -42,7 +42,7 @@ export async function createUserActor(
     entityRoute,
   });
 
-  const userInbox = applyContext<AP.OrderedCollection>({
+  const userInbox = applyContext({
     id: inboxId,
     url: inboxId,
     name: 'Inbox',
@@ -57,7 +57,7 @@ export async function createUserActor(
     entityRoute,
   });
 
-  const userOutbox = applyContext<AP.OrderedCollection>({
+  const userOutbox = applyContext({
     id: outboxId,
     url: outboxId,
     name: 'Outbox',
@@ -72,7 +72,7 @@ export async function createUserActor(
     entityRoute,
   });
 
-  const userFollowers = applyContext<AP.Collection>({
+  const userFollowers = applyContext({
     id: followersId,
     url: followersId,
     name: 'Followers',
@@ -87,7 +87,7 @@ export async function createUserActor(
     entityRoute,
   });
 
-  const userFollowing = applyContext<AP.Collection>({
+  const userFollowing = applyContext({
     id: followingId,
     url: followingId,
     name: 'Following',
@@ -102,7 +102,7 @@ export async function createUserActor(
     entityRoute,
   });
 
-  const userLiked = applyContext<AP.OrderedCollection>({
+  const userLiked = applyContext({
     id: likedId,
     url: likedId,
     name: 'Liked',
@@ -118,7 +118,7 @@ export async function createUserActor(
     slug: 'shared',
   });
 
-  const userShared = applyContext<AP.OrderedCollection>({
+  const userShared = applyContext({
     id: sharedId,
     url: sharedId,
     name: 'Shared',
@@ -134,7 +134,7 @@ export async function createUserActor(
     slug: 'blocks',
   });
 
-  const userBlocks = applyContext<AP.Collection>({
+  const userBlocks = applyContext({
     id: blocksId,
     url: blocksId,
     name: 'Blocks',
@@ -150,7 +150,7 @@ export async function createUserActor(
     slug: 'requests',
   });
 
-  const userRequests = applyContext<AP.Collection>({
+  const userRequests = applyContext({
     id: userRequestsId,
     url: userRequestsId,
     name: 'Requests',
@@ -166,7 +166,7 @@ export async function createUserActor(
     slug: 'lists',
   });
 
-  const userLists = applyContext<AP.Collection>({
+  const userLists = applyContext({
     id: userListsId,
     url: userListsId,
     name: 'Lists',
@@ -184,7 +184,7 @@ export async function createUserActor(
     slug: 'bookmarks',
   });
 
-  const userBookmarks = applyContext<AP.OrderedCollection>({
+  const userBookmarks = applyContext({
     id: userBookmarksId,
     url: userBookmarksId,
     name: 'Bookmarks',
@@ -256,7 +256,7 @@ export async function createUserActor(
     guid: await this.core.getGuid(),
   });
 
-  const createActorActivity = applyContext<AP.Create>({
+  const createActorActivity = applyContext({
     id: createActorActivityId,
     url: createActorActivityId,
     type: AP.ActivityTypes.CREATE,
@@ -299,7 +299,7 @@ export async function createUserActor(
 
             declaredStreams.push(
               this.core.saveEntity(
-                applyContext<AP.OrderedCollection>({
+                applyContext({
                   type: AP.CollectionTypes.ORDERED_COLLECTION,
                   totalItems: 0,
                   attributedTo: userId,

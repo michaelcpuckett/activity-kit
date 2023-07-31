@@ -1,3 +1,2 @@
-import * as AP from '@activity-kit/types';
-import { Core } from '.';
-export declare function getCollectionItems(this: Core, entity: AP.Collection | AP.OrderedCollection): AP.EntityReference[];
+import { CoreLibrary } from './adapters';
+export declare const getCollectionItems: CoreLibrary['getCollectionItems'];

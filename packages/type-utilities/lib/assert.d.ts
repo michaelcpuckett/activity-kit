@@ -20,7 +20,8 @@ export declare function isApActivity(value: unknown): asserts value is AP.Activi
 export declare function isApCoreObject(value: unknown): asserts value is AP.CoreObject;
 export declare function isApExtendedObject(value: unknown): asserts value is AP.ExtendedObject;
 export declare function isApActor(value: unknown): asserts value is AP.Actor;
-export declare function isApCollection(value: unknown): asserts value is AP.Collection | AP.OrderedCollection;
+export declare function isApCollection(value: unknown): asserts value is AP.EitherCollection;
+export declare function isApCollectionPage(value: unknown): asserts value is AP.EitherCollectionPage;
 export declare function isApTransitiveActivity(value: unknown): asserts value is AP.TransitiveActivity<AP.AnyTransitiveActivityType>;
 export declare function isApType<T extends AP.Entity>(value: unknown, type: string): asserts value is T;
 export declare function isApTypeOf<T extends AP.Entity>(value: unknown, comparison: Record<string, string>): asserts value is T;

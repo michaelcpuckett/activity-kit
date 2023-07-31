@@ -4,34 +4,37 @@ import { getId, PUBLIC_ACTOR, deduplicateUrls } from '@activity-kit/utilities';
 
 import { CoreLibrary } from './adapters';
 
-export async function getRecipientUrls(
-  this: CoreLibrary,
-  activity: AP.Activity,
-): Promise<URL[]> {
-  const tags =
-    guard.isApCoreObject(activity.object) && activity.object.tag
-      ? getArray(activity.object.tag)
-      : [];
-  const mentions = tags.map(getId).filter(guard.isUrl);
+export const getRecipientUrls: CoreLibrary['getRecipientUrls'] =
+  async function getRecipientUrls(
+    this: CoreLibrary,
+    activity: AP.Activity,
+  ): Promise<URL[]> {
+    const tags =
+      guard.isApCoreObject(activity.object) && activity.object.tag
+        ? getArray(activity.object.tag)
+        : [];
+    const mentions = tags.map(getId).filter(guard.isUrl);
 
-  const recipients = [
-    ...getArray(activity.to),
-    ...getArray(activity.cc),
-    ...getArray(activity.bto),
-    ...getArray(activity.bcc),
-    ...getArray(activity.audience),
-    ...mentions,
-  ].flat();
+    const recipients = [
+      ...getArray(activity.to),
+      ...getArray(activity.cc),
+      ...getArray(activity.bto),
+      ...getArray(activity.bcc),
+      ...getArray(activity.audience),
+      ...mentions,
+    ].flat();
 
-  const recipientIds = recipients
-    .map(getId)
-    .filter(guard.isUrl)
-    .filter((recipientUrl) => recipientUrl.href !== PUBLIC_ACTOR);
+    const recipientIds = recipients
+      .map(getId)
+      .filter(guard.isUrl)
+      .filter((recipientUrl) => recipientUrl.href !== PUBLIC_ACTOR);
 
-  const actorUrls = await Promise.all(recipientIds.map(getActorIds.bind(this)));
+    const actorUrls = await Promise.all(
+      recipientIds.map(getActorIds.bind(this)),
+    );
 
-  return deduplicateUrls(actorUrls.flat());
-}
+    return deduplicateUrls(actorUrls.flat());
+  };
 
 async function getActorIds(
   this: CoreLibrary,
