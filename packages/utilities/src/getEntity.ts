@@ -1,6 +1,11 @@
 import * as AP from '@activity-kit/types';
 import { cast, guard } from '@activity-kit/type-utilities';
 
+/**
+ *  Get the Entity from an EntityReference, if the EntityReference is an Entity.
+ *
+ * @returns The Entity, or null if not an Entity.
+ */
 export const getEntity = <T extends AP.Entity>(
   entity: undefined | null | AP.EntityReference | AP.EntityReference[],
 ): T | null => {

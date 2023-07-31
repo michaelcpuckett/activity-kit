@@ -1,41 +1,49 @@
 import * as AP from '@activity-kit/types';
 import { guard } from '@activity-kit/type-utilities';
-import { getId, PUBLIC_ACTOR, deduplicateUrls } from '@activity-kit/utilities';
+import { deduplicateUrls, PUBLIC_ACTOR, getId } from '@activity-kit/utilities';
 
-import { CoreLibrary } from './adapters';
+import { CoreLibrary } from '.';
 
-export const getRecipientUrls: CoreLibrary['getRecipientUrls'] =
-  async function getRecipientUrls(
-    this: CoreLibrary,
-    activity: AP.Activity,
-  ): Promise<URL[]> {
-    const tags =
-      guard.isApCoreObject(activity.object) && activity.object.tag
-        ? getArray(activity.object.tag)
-        : [];
-    const mentions = tags.map(getId).filter(guard.isUrl);
+/**
+ * Given an Activity, get the URLs of all recipients.
+ *
+ * @returns An array of recipient URLs.
+ */
+export async function getRecipientUrls(
+  this: CoreLibrary,
+  activity: AP.Activity,
+): Promise<URL[]> {
+  const tags =
+    guard.isApCoreObject(activity.object) && activity.object.tag
+      ? getArray(activity.object.tag)
+      : [];
+  const mentions = tags.map(getId).filter(guard.isUrl);
 
-    const recipients = [
-      ...getArray(activity.to),
-      ...getArray(activity.cc),
-      ...getArray(activity.bto),
-      ...getArray(activity.bcc),
-      ...getArray(activity.audience),
-      ...mentions,
-    ].flat();
+  const recipients = [
+    ...getArray(activity.to),
+    ...getArray(activity.cc),
+    ...getArray(activity.bto),
+    ...getArray(activity.bcc),
+    ...getArray(activity.audience),
+    ...mentions,
+  ].flat();
 
-    const recipientIds = recipients
-      .map(getId)
-      .filter(guard.isUrl)
-      .filter((recipientUrl) => recipientUrl.href !== PUBLIC_ACTOR);
+  const recipientIds = recipients
+    .map(getId)
+    .filter(guard.isUrl)
+    .filter((recipientUrl) => recipientUrl.href !== PUBLIC_ACTOR);
 
-    const actorUrls = await Promise.all(
-      recipientIds.map(getActorIds.bind(this)),
-    );
+  const actorUrls = await Promise.all(recipientIds.map(getActorIds.bind(this)));
 
-    return deduplicateUrls(actorUrls.flat());
-  };
+  return deduplicateUrls(actorUrls.flat());
+}
 
+/**
+ * Given a recipient URL, get all of the Actor URLs that it represents, as it
+ * may be a Collection.
+ *
+ * @returns An array of Actor URLs.
+ */
 async function getActorIds(
   this: CoreLibrary,
   recipientId: URL,
@@ -89,8 +97,16 @@ async function getActorIds(
   return [];
 }
 
+/**
+ * Get an array of EntityReferences.
+ *
+ * Collection items can be either an EntityReference or an array of
+ * EntityReferences.
+ *
+ * @returns An array of EntityReferences.
+ */
 function getArray(
-  items: null | undefined | AP.OrArray<AP.EntityReference>,
+  items: AP.Collection['items'] | AP.Collection['orderedItems'] | undefined,
 ): AP.EntityReference[] {
   if (!items) {
     return [];

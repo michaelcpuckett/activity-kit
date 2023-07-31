@@ -3,31 +3,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.broadcast = void 0;
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
-const broadcast = async function broadcast(activity, actor) {
-    const publicActivity = (0, utilities_1.convertEntityToJson)((0, utilities_1.cleanProps)((0, utilities_1.applyContext)(activity)));
-    const recipients = await getRecipientInboxUrls.bind(this)(activity, actor);
-    const send = async (recipient) => {
-        return await signAndSendToForeignActorInbox.bind(this)(recipient, actor, publicActivity);
-    };
-    return Object.fromEntries(await Promise.all(recipients.map(send.bind(this))));
-};
+const getPrivateKey_1 = require("./util/getPrivateKey");
+async function broadcast(activity, actor) {
+    const activityWithContext = (0, utilities_1.applyContext)(activity);
+    const cleanedActivity = (0, utilities_1.cleanProps)(activityWithContext);
+    const plainEntity = (0, utilities_1.convertEntityToJson)(cleanedActivity);
+    const recipientInboxUrls = await getRecipientInboxUrls.bind(this)(activity, actor);
+    const sendToRecipient = (recipientInboxUrl) => signAndSendToInboxUrl.call(this, recipientInboxUrl, actor, plainEntity);
+    const promises = recipientInboxUrls.map(sendToRecipient);
+    const resultEntries = await Promise.all(promises);
+    return Object.fromEntries(resultEntries);
+}
 exports.broadcast = broadcast;
-async function signAndSendToForeignActorInbox(foreignActorInbox, actor, plainEntity) {
-    const actorId = (0, utilities_1.getId)(actor);
-    type_utilities_1.assert.exists(actorId);
-    const privateKey = await this.getPrivateKey(actor);
-    const { dateHeader, digestHeader, signatureHeader } = await this.getHttpSignature(foreignActorInbox, actorId, privateKey, plainEntity);
-    if (!digestHeader || !dateHeader || !signatureHeader) {
-        throw new Error('Failed to sign Activity');
-    }
-    const headers = {
-        [utilities_1.CONTENT_TYPE_HEADER]: utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE,
-        [utilities_1.ACCEPT_HEADER]: utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE,
-        Host: foreignActorInbox.hostname,
-        Date: dateHeader,
-        Digest: digestHeader,
-        Signature: signatureHeader,
-    };
+async function signAndSendToInboxUrl(foreignActorInbox, actor, plainEntity) {
+    const headers = await getHeaders.bind(this)(actor, foreignActorInbox, plainEntity);
     const statusCode = await this.fetch(foreignActorInbox.href, {
         method: 'post',
         body: JSON.stringify(plainEntity),
@@ -41,6 +30,23 @@ async function signAndSendToForeignActorInbox(foreignActorInbox, actor, plainEnt
     });
     return [foreignActorInbox.href, statusCode];
 }
+async function getHeaders(actor, foreignActorInbox, plainEntity) {
+    const actorId = (0, utilities_1.getId)(actor);
+    type_utilities_1.assert.exists(actorId);
+    const privateKey = await getPrivateKey_1.getPrivateKey.bind(this)(actor);
+    const { dateHeader, digestHeader, signatureHeader } = await this.getHttpSignature(foreignActorInbox, actorId, privateKey, plainEntity);
+    if (!digestHeader || !dateHeader || !signatureHeader) {
+        throw new Error('Failed to sign Activity');
+    }
+    return {
+        [utilities_1.CONTENT_TYPE_HEADER]: utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE,
+        [utilities_1.ACCEPT_HEADER]: utilities_1.ACTIVITYSTREAMS_CONTENT_TYPE,
+        Host: foreignActorInbox.hostname,
+        Date: dateHeader,
+        Digest: digestHeader,
+        Signature: signatureHeader,
+    };
+}
 async function getRecipientInboxUrls(activity, actor) {
     const recipientUrls = await this.getRecipientUrls(activity);
     const extractUrl = async (recipientUrl) => {
@@ -48,7 +54,7 @@ async function getRecipientInboxUrls(activity, actor) {
         if (recipientUrl.href === ((_a = (0, utilities_1.getId)(actor)) === null || _a === void 0 ? void 0 : _a.href)) {
             return null;
         }
-        const foundEntity = await this.fetchEntityById(recipientUrl);
+        const foundEntity = await this.queryById(recipientUrl);
         if (!type_utilities_1.guard.isApActor(foundEntity)) {
             return null;
         }

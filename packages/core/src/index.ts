@@ -1,18 +1,14 @@
-import * as AP from '@activity-kit/types';
 import fetch from 'isomorphic-fetch';
 
 import {
   AuthAdapter,
   CryptoAdapter,
   DbAdapter,
-  DbOptions,
   FetchPolyfill,
   StorageAdapter,
-  CoreLibrary,
 } from './adapters';
 
 import { findEntityById } from './findEntityById';
-import { fetchEntityById } from './fetchEntityById';
 import { queryById } from './queryById';
 import { expandEntity } from './expandEntity';
 import { getPaginatedCollectionItems } from './getPaginatedCollectionItems';
@@ -22,7 +18,27 @@ import { getStreamByName } from './getStreamByName';
 import { broadcast } from './broadcast';
 import { getRecipientUrls } from './getRecipientUrls';
 
-export class Core implements CoreLibrary {
+class CoreFunctions {
+  // Find.
+  public findEntityById = findEntityById;
+  public queryById = queryById;
+  public getActorByUserId = getActorByUserId;
+  public getStreamByName = getStreamByName;
+
+  // Expand.
+  public expandEntity = expandEntity;
+  public getPaginatedCollectionItems = getPaginatedCollectionItems;
+  public expandCollection = expandCollection;
+
+  // Server-to-Server.
+  public broadcast = broadcast;
+  public getRecipientUrls = getRecipientUrls;
+}
+
+export class CoreLibrary
+  extends CoreFunctions
+  implements AuthAdapter, DbAdapter, StorageAdapter, CryptoAdapter
+{
   fetch: FetchPolyfill;
 
   initializeDb?: DbAdapter['initializeDb'];
@@ -58,121 +74,64 @@ export class Core implements CoreLibrary {
     db: DbAdapter;
     fetch?: FetchPolyfill;
   }) {
+    super();
+
     this.fetch = adapters.fetch ?? fetch;
 
     if (adapters.db.initializeDb) {
-      this.initializeDb = async () => await adapters.db.initializeDb?.();
+      this.initializeDb = adapters.db.initializeDb.bind(adapters.db);
     }
 
-    this.findAll = async (
-      collection: string,
-      matchingObject: Record<string, unknown>,
-    ) => await adapters.db.findAll(collection, matchingObject);
+    this.findAll = adapters.db.findAll.bind(adapters.db);
 
-    this.findOne = async (
-      collection: string,
-      matchingObject: Record<string, unknown>,
-      options?: Array<keyof typeof DbOptions>,
-    ) => await adapters.db.findOne(collection, matchingObject, options);
+    this.findOne = adapters.db.findOne.bind(adapters.db);
 
-    this.findStringIdByValue = async (dbCollection: string, value: string) =>
-      await adapters.db.findStringIdByValue(dbCollection, value);
+    this.findStringIdByValue = adapters.db.findStringIdByValue.bind(
+      adapters.db,
+    );
 
-    this.findStringValueById = async (dbCollection: string, _id: string) =>
-      await adapters.db.findStringValueById(dbCollection, _id);
+    this.findStringValueById = adapters.db.findStringValueById.bind(
+      adapters.db,
+    );
 
-    this.insertItem = async (path: URL, url: URL) =>
-      await adapters.db.insertItem(path, url);
+    this.insertItem = adapters.db.insertItem.bind(adapters.db);
 
-    this.removeItem = async (path: URL, url: URL) =>
-      await adapters.db.removeItem(path, url);
+    this.removeItem = adapters.db.removeItem.bind(adapters.db);
 
-    this.insertOrderedItem = async (path: URL, url: URL) =>
-      await adapters.db.insertOrderedItem(path, url);
+    this.insertOrderedItem = adapters.db.insertOrderedItem.bind(adapters.db);
 
-    this.removeOrderedItem = async (path: URL, url: URL) =>
-      await adapters.db.removeOrderedItem(path, url);
+    this.removeOrderedItem = adapters.db.removeOrderedItem.bind(adapters.db);
 
-    this.saveEntity = async (entity: AP.Entity) =>
-      await adapters.db.saveEntity(entity);
+    this.saveEntity = adapters.db.saveEntity.bind(adapters.db);
 
-    this.saveString = async (
-      dbCollection: string,
-      _id: string,
-      value: string,
-    ) => await adapters.db.saveString(dbCollection, _id, value);
+    this.saveString = adapters.db.saveString.bind(adapters.db);
 
-    this.getHttpSignature = async (
-      foreignTarget: URL,
-      actorId: URL,
-      privateKey: string,
-      entity?: Record<string, unknown>,
-    ) =>
-      await adapters.crypto.getHttpSignature(
-        foreignTarget,
-        actorId,
-        privateKey,
-        entity,
-      );
+    this.getHttpSignature = adapters.crypto.getHttpSignature.bind(
+      adapters.crypto,
+    );
 
-    this.generateKeyPair = async () => await adapters.crypto.generateKeyPair();
+    this.generateKeyPair = adapters.crypto.generateKeyPair.bind(
+      adapters.crypto,
+    );
 
-    this.hashPassword = async (password: string, salt: string) =>
-      await adapters.crypto.hashPassword(password, salt);
+    this.hashPassword = adapters.crypto.hashPassword.bind(adapters.crypto);
 
-    this.randomBytes = async (numberOfBytes: number) =>
-      await adapters.crypto.randomBytes(numberOfBytes);
+    this.randomBytes = adapters.crypto.randomBytes.bind(adapters.crypto);
 
     this.getGuid = async () => await adapters.crypto.randomBytes(16);
 
-    this.getTokenByUserId = async (userId) =>
-      await adapters.auth.getTokenByUserId(userId);
+    this.getTokenByUserId = adapters.auth.getTokenByUserId.bind(adapters.auth);
 
-    this.createUser = async ({
-      email,
-      password,
-      preferredUsername,
-    }: {
-      email: string;
-      password?: string;
-      preferredUsername: string;
-    }) =>
-      await adapters.auth.createUser({
-        email,
-        password,
-        preferredUsername,
-      });
+    this.createUser = adapters.auth.createUser.bind(adapters.auth);
 
-    this.getUserIdByToken = async (token) =>
-      await adapters.auth.getUserIdByToken(token);
+    this.getUserIdByToken = adapters.auth.getUserIdByToken.bind(adapters.auth);
 
-    this.authenticatePassword = async (email: string, password: string) =>
-      await adapters.auth.authenticatePassword(email, password);
+    this.authenticatePassword = adapters.auth.authenticatePassword.bind(
+      adapters.auth,
+    );
 
-    this.upload = async (file) => await adapters.storage.upload(file);
+    this.upload = adapters.storage.upload.bind(adapters.storage);
   }
-
-  // Find.
-
-  public findEntityById = findEntityById;
-  public getActorByUserId = getActorByUserId;
-  public getStreamByName = getStreamByName;
-
-  // Fetch.
-
-  public fetchEntityById = fetchEntityById;
-  public queryById = queryById;
-
-  // Expand.
-
-  public expandEntity = expandEntity;
-  public getPaginatedCollectionItems = getPaginatedCollectionItems;
-  public expandCollection = expandCollection;
-
-  // Broadcast Server-to-Server.
-
-  public broadcast = broadcast;
-  public getRecipientUrls = getRecipientUrls;
 }
 
 export {
@@ -182,7 +141,6 @@ export {
   DbOptions,
   FetchPolyfill,
   StorageAdapter,
-  CoreLibrary,
   Plugin,
   Routes,
 } from './adapters';

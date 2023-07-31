@@ -2,6 +2,11 @@ import * as AP from '@activity-kit/types';
 import { cast, guard } from '@activity-kit/type-utilities';
 import { PUBLIC_ACTOR } from './globals';
 
+/**
+ * Converts a JSON object to an Entity.
+ *
+ * @returns The Entity, or null if not an Entity.
+ */
 export function convertJsonToEntity(
   object: Record<string, unknown>,
 ): AP.Entity | null {

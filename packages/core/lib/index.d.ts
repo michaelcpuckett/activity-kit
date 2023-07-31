@@ -1,7 +1,25 @@
-/// <reference types="node" />
-import * as AP from '@activity-kit/types';
-import { AuthAdapter, CryptoAdapter, DbAdapter, FetchPolyfill, StorageAdapter, CoreLibrary } from './adapters';
-export declare class Core implements CoreLibrary {
+import { AuthAdapter, CryptoAdapter, DbAdapter, FetchPolyfill, StorageAdapter } from './adapters';
+import { findEntityById } from './findEntityById';
+import { queryById } from './queryById';
+import { expandEntity } from './expandEntity';
+import { getPaginatedCollectionItems } from './getPaginatedCollectionItems';
+import { expandCollection } from './expandCollection';
+import { getActorByUserId } from './getActorByUserId';
+import { getStreamByName } from './getStreamByName';
+import { broadcast } from './broadcast';
+import { getRecipientUrls } from './getRecipientUrls';
+declare class CoreFunctions {
+    findEntityById: typeof findEntityById;
+    queryById: typeof queryById;
+    getActorByUserId: typeof getActorByUserId;
+    getStreamByName: typeof getStreamByName;
+    expandEntity: typeof expandEntity;
+    getPaginatedCollectionItems: typeof getPaginatedCollectionItems;
+    expandCollection: typeof expandCollection;
+    broadcast: typeof broadcast;
+    getRecipientUrls: typeof getRecipientUrls;
+}
+export declare class CoreLibrary extends CoreFunctions implements AuthAdapter, DbAdapter, StorageAdapter, CryptoAdapter {
     fetch: FetchPolyfill;
     initializeDb?: DbAdapter['initializeDb'];
     findAll: DbAdapter['findAll'];
@@ -31,17 +49,5 @@ export declare class Core implements CoreLibrary {
         db: DbAdapter;
         fetch?: FetchPolyfill;
     });
-    findEntityById: (this: CoreLibrary, id: URL) => Promise<AP.Entity | null>;
-    getActorByUserId: (this: CoreLibrary, userId: string) => Promise<AP.Actor | null>;
-    getPrivateKey: (this: CoreLibrary, actor: AP.Actor) => Promise<string>;
-    getStreamByName: (this: CoreLibrary, actor: AP.Actor, name: string) => Promise<AP.EitherCollection | null>;
-    fetchEntityById: (this: CoreLibrary, id: URL) => Promise<AP.Entity | null>;
-    queryById: (this: CoreLibrary, id: URL) => Promise<AP.Entity | null>;
-    expandEntity: (this: CoreLibrary, entity: AP.Entity) => Promise<AP.Entity>;
-    getCollectionItems: (this: CoreLibrary, entity: AP.Collection | AP.OrderedCollection) => AP.EntityReference[];
-    getPaginatedCollectionItems: (this: CoreLibrary, collection: AP.Collection | AP.OrderedCollection) => Promise<AP.EntityReference[]>;
-    expandCollection: (this: CoreLibrary, collection: AP.EitherCollection) => Promise<AP.EitherCollection>;
-    broadcast: (this: CoreLibrary, activity: AP.Activity, actor: AP.Actor) => Promise<unknown>;
-    getRecipientUrls: (this: CoreLibrary, activity: AP.Activity) => Promise<URL[]>;
 }
-export { AuthAdapter, CryptoAdapter, DbAdapter, DbOptions, FetchPolyfill, StorageAdapter, CoreLibrary, Plugin, Routes, } from './adapters';
+export { AuthAdapter, CryptoAdapter, DbAdapter, DbOptions, FetchPolyfill, StorageAdapter, Plugin, Routes, } from './adapters';

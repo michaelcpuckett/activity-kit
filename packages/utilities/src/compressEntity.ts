@@ -1,6 +1,11 @@
 import * as AP from '@activity-kit/types';
 import { cast, guard } from '@activity-kit/type-utilities';
 
+/**
+ * Compresses an Entity by replacing all nested Entities with their URLs.
+ *
+ * @returns The compressed Entity, or null if not an Entity.
+ */
 export function compressEntity(entity: AP.Entity): AP.Entity | null {
   return cast.isApEntity(compressObject(entity)) ?? null;
 }

@@ -12,69 +12,62 @@ export async function handleFoundCollectionPage(
   entity: AP.EitherCollectionPage,
   render: (entity: AP.Entity) => Promise<string>,
 ): Promise<Result> {
-  
- 
-  // Treat as CollectionPage.
+  const pageParts = this.url.href.split('/page/');
+  const getPageUrl = (page: number) =>
+    new URL(
+      `${this.url.pathname === '/' ? '' : this.url.pathname}/page/${page}`,
+      this.url.origin,
+    );
+  const page = pageParts[1];
+  const currentPage = page ? Number(page) : 1;
+  const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE;
+  const startIndex = firstItemIndex + 1;
 
-const hasPage = this.url.href.includes('/page/');
-const pageParts = this.url.href.split('/page/');
-const getPageUrl = (page: number) =>
-  new URL(
-    `${this.url.pathname === '/' ? '' : this.url.pathname}/page/${page}`,
-    this.url.origin,
+  const limitedItems = getCollectionItems(entity).slice(
+    firstItemIndex,
+    firstItemIndex + ITEMS_PER_COLLECTION_PAGE,
   );
-const page = pageParts[1];
-const currentPage = page ? Number(page) : 1;
-const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE;
-const startIndex = firstItemIndex + 1;
 
-if (!hasPage) {
-const limitedItems = getCollectionItems(entity).slice(
-  firstItemIndex,
-  firstItemIndex + ITEMS_PER_COLLECTION_PAGE,
-);
+  const items = expandItems(limitedItems);
 
-const items = expandItems(limitedItems);
-
-const collectionPage = {
-  ...entity,
-  id: getPageUrl(currentPage),
-  url: getPageUrl(currentPage),
-  partOf: baseUrl,
-  first: getPageUrl(1),
-  last: getPageUrl(lastPageIndex),
-  ...(currentPage > 1
-    ? {
-        prev: getPageUrl(currentPage - 1),
-      }
-    : null),
-  ...(currentPage < lastPageIndex
-    ? {
-        next: getPageUrl(currentPage + 1),
-      }
-    : null),
-};
-
-if (isOrderedCollection) {
-  const orderedCollectionPageEntity: AP.OrderedCollectionPage = {
-    ...collectionPage,
-    type: AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE,
-    orderedItems: items,
-    startIndex,
+  const collectionPage = {
+    ...entity,
+    id: getPageUrl(currentPage),
+    url: getPageUrl(currentPage),
+    partOf: baseUrl,
+    first: getPageUrl(1),
+    last: getPageUrl(lastPageIndex),
+    ...(currentPage > 1
+      ? {
+          prev: getPageUrl(currentPage - 1),
+        }
+      : null),
+    ...(currentPage < lastPageIndex
+      ? {
+          next: getPageUrl(currentPage + 1),
+        }
+      : null),
   };
 
-  return this.handleFoundEntity(orderedCollectionPageEntity, render);
+  if (isOrderedCollection) {
+    const orderedCollectionPageEntity: AP.OrderedCollectionPage = {
+      ...collectionPage,
+      type: AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE,
+      orderedItems: items,
+      startIndex,
+    };
+
+    return this.handleFoundEntity(orderedCollectionPageEntity, render);
+  }
+
+  const collectionPageEntity: AP.CollectionPage = {
+    ...collectionPage,
+    type: AP.CollectionPageTypes.COLLECTION_PAGE,
+    items: items,
+  };
+
+  return this.handleFoundEntity(collectionPageEntity, render);
 }
-
-const collectionPageEntity: AP.CollectionPage = {
-  ...collectionPage,
-  type: AP.CollectionPageTypes.COLLECTION_PAGE,
-  items: items,
-};
-
-return this.handleFoundEntity(collectionPageEntity, render);
-}
-
 
 function expandItems(
   objects: Array<unknown>,

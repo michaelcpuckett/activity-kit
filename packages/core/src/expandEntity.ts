@@ -1,7 +1,7 @@
 import * as AP from '@activity-kit/types';
 import { cast, guard } from '@activity-kit/type-utilities';
 
-import { CoreLibrary } from './adapters';
+import { CoreLibrary } from '.';
 
 /**
  * Keys that should not be expanded.
@@ -22,16 +22,17 @@ const selfReferentialKeys = [
  *
  * @returns A Promise that resolves to the expanded Entity.
  */
-export const expandEntity: CoreLibrary['expandEntity'] =
-  async function expandEntity(
-    this: CoreLibrary,
-    entity: AP.Entity,
-  ): Promise<AP.Entity> {
-    return cast.isApEntity(await expandObject.bind(this)(entity)) ?? entity;
-  };
+export async function expandEntity(
+  this: CoreLibrary,
+  entity: AP.Entity,
+): Promise<AP.Entity> {
+  return cast.isApEntity(await expandObject.bind(this)(entity)) ?? entity;
+}
 
 /**
  * Expand all references in an object.
+ *
+ * @returns A Promise that resolves to an object with all references expanded.
  */
 async function expandObject(
   this: CoreLibrary,
@@ -49,6 +50,8 @@ async function expandObject(
 /**
  * Expand a single entry in an object, which may be a reference to another
  * Entity.
+ *
+ * @returns A Promise that resolves to the expanded entry in the object.
  */
 async function expandEntry(
   this: CoreLibrary,

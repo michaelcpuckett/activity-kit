@@ -18,8 +18,10 @@ declare class Headers {
 }
 declare type BodyInit = Blob | ArrayBufferView | ArrayBuffer | string;
 declare type ResponseBodyInit = BodyInit;
-interface Body {
+export interface Body {
     readonly bodyUsed: boolean;
+    readonly status: number;
+    readonly url: string;
     arrayBuffer(): Promise<ArrayBuffer>;
     blob(): Promise<Blob>;
     json(): Promise<JSON>;

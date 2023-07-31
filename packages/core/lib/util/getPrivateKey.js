@@ -1,16 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPrivateKey = void 0;
-const getPrivateKey = async function getPrivateKey(actor) {
+async function getPrivateKey(actor) {
     if (!actor.preferredUsername) {
-        throw new Error('Actor has no `preferredUsername`.');
+        return '';
     }
     const userId = await this.findStringIdByValue('username', actor.preferredUsername);
-    const privateKey = await this.findStringValueById('privateKey', userId);
-    if (!privateKey) {
-        throw new Error('Private key not found for this Actor.');
+    if (!userId) {
+        return '';
     }
-    return privateKey;
-};
+    return await this.findStringValueById('privateKey', userId);
+}
 exports.getPrivateKey = getPrivateKey;
 //# sourceMappingURL=getPrivateKey.js.map

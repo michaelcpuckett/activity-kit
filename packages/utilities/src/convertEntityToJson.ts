@@ -1,6 +1,11 @@
 import * as AP from '@activity-kit/types';
 import { cast, guard } from '@activity-kit/type-utilities';
 
+/**
+ * Converts an Entity to a plain JSON object.
+ *
+ * @returns The plain object.
+ */
 export function convertEntityToJson(
   object: AP.Entity,
 ): Record<string, unknown> {

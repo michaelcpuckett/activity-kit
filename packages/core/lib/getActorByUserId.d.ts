@@ -1,2 +1,3 @@
-import { CoreLibrary } from './adapters';
-export declare const getActorByUserId: CoreLibrary['getActorByUserId'];
+import * as AP from '@activity-kit/types';
+import { CoreLibrary } from '.';
+export declare function getActorByUserId(this: CoreLibrary, userId: string): Promise<AP.Actor | null>;

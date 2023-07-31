@@ -11,14 +11,15 @@ import {
   getId,
 } from '@activity-kit/utilities';
 
-import { CoreLibrary } from './adapters';
+import { CoreLibrary } from '.';
+import { getPrivateKey } from './util/getPrivateKey';
 
 /**
  * Send an Activity to all of its recipients on behalf of an Actor.
  *
  * @returns A record of each URL and the HTTP status code of the response.
  */
-export const broadcast: CoreLibrary['broadcast'] = async function broadcast(
+export async function broadcast(
   this: CoreLibrary,
   activity: AP.Activity,
   actor: AP.Actor,
@@ -26,17 +27,19 @@ export const broadcast: CoreLibrary['broadcast'] = async function broadcast(
   const activityWithContext = applyContext(activity);
   const cleanedActivity = cleanProps(activityWithContext);
   const plainEntity = convertEntityToJson(cleanedActivity);
+
   const recipientInboxUrls = await getRecipientInboxUrls.bind(this)(
     activity,
     actor,
   );
+
   const sendToRecipient = (recipientInboxUrl: URL) =>
     signAndSendToInboxUrl.call(this, recipientInboxUrl, actor, plainEntity);
   const promises = recipientInboxUrls.map(sendToRecipient);
   const resultEntries = await Promise.all(promises);
 
   return Object.fromEntries(resultEntries);
-};
+}
 
 /**
  * Send to a single recipient on behalf of an Actor.
@@ -50,6 +53,37 @@ async function signAndSendToInboxUrl(
   actor: AP.Actor,
   plainEntity: Record<string, unknown>,
 ): Promise<[string, number]> {
+  const headers = await getHeaders.bind(this)(
+    actor,
+    foreignActorInbox,
+    plainEntity,
+  );
+
+  const statusCode = await this.fetch(foreignActorInbox.href, {
+    method: 'post',
+    body: JSON.stringify(plainEntity),
+    headers,
+  })
+    .then(async (res) => {
+      return res.status;
+    })
+    .catch(() => {
+      return 0;
+    });
+
+  return [foreignActorInbox.href, statusCode];
+}
+
+/**
+ * Get the headers for an Activity.
+ * @returns A record of headers.
+ */
+async function getHeaders(
+  this: CoreLibrary,
+  actor: AP.Actor,
+  foreignActorInbox: URL,
+  plainEntity: Record<string, unknown>,
+): Promise<Record<string, string>> {
   const actorId = getId(actor);
 
   assert.exists(actorId);
@@ -68,7 +102,7 @@ async function signAndSendToInboxUrl(
     throw new Error('Failed to sign Activity');
   }
 
-  const headers = {
+  return {
     [CONTENT_TYPE_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
     [ACCEPT_HEADER]: ACTIVITYSTREAMS_CONTENT_TYPE,
     Host: foreignActorInbox.hostname,
@@ -76,24 +110,12 @@ async function signAndSendToInboxUrl(
     Digest: digestHeader,
     Signature: signatureHeader,
   };
-
-  const statusCode = await this.fetch(foreignActorInbox.href, {
-    method: 'post',
-    body: JSON.stringify(plainEntity),
-    headers,
-  })
-    .then(async (res) => {
-      return res.status;
-    })
-    .catch(() => {
-      return 0;
-    });
-
-  return [foreignActorInbox.href, statusCode];
 }
 
 /**
  * Get the inbox URLs of all recipients of an Activity.
+ *
+ * @returns An array of inbox URLs.
  */
 async function getRecipientInboxUrls(
   this: CoreLibrary,
@@ -107,7 +129,7 @@ async function getRecipientInboxUrls(
       return null;
     }
 
-    const foundEntity = await this.fetchEntityById(recipientUrl);
+    const foundEntity = await this.queryById(recipientUrl);
 
     if (!guard.isApActor(foundEntity)) {
       return null;
@@ -127,27 +149,4 @@ async function getRecipientInboxUrls(
   const filteredUrls = recipientInboxUrls.filter(guard.isUrl);
 
   return deduplicateUrls(filteredUrls);
-}
-
-/**
- * Get the private key of an Actor.
- */
-async function getPrivateKey(
-  this: CoreLibrary,
-  actor: AP.Actor,
-): Promise<string> {
-  if (!actor.preferredUsername) {
-    return '';
-  }
-
-  const userId = await this.findStringIdByValue(
-    'username',
-    actor.preferredUsername,
-  );
-
-  if (!userId) {
-    return '';
-  }
-
-  return await this.findStringValueById('privateKey', userId);
 }
