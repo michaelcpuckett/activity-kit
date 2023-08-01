@@ -1,53 +1,35 @@
 import { Link, Mention } from './Link';
 import { Actor } from '../Extended/Actor';
 import { Activity } from '../Extended/Activity';
-import { Collection, OrderedCollection } from '../Extended/Collection';
-import { CollectionPage, OrderedCollectionPage } from '../Extended/Collection';
+import { AnyCollectionOrCollectionPage } from '../Extended/Collection';
 import { ExtendedObject } from '../Extended';
 export { CoreObjectProperties } from './CoreObject';
 export type { Link, LinkReference, Mention } from './Link';
 
 /**
- * Per the spec:
+ * The base type for all ActivityPub Objects (including Extended Objects).
  *
- * > The Object is the primary base type for the Activity Streams vocabulary.
- *
- * > In addition to having a global identifier (expressed as an absolute IRI
- * > using the id property) and an "object type" (expressed using the type
- * > property), all instances of the Object type share a common set of
- * > properties normatively defined by the Activity Vocabulary.
- *
- * > All properties are optional (including the id ~and the type~).
- *
- * @note The spec allows the type to be optional, but it is required by this
- * library.
+ * @note This type is named `CoreObject` instead of `Object` because of the
+ * following concerns:
+ * - All ActivityPub Objects are objects, but not all objects are
+ *   ActivityPub Objects. In particular, Links are not ActivityPub Objects.
+ * - There are a set of Extended Objects that inherit from this type.
+ * - `Object` is a reserved keyword in JavaScript.
  *
  * @see https://www.w3.org/TR/activitystreams-core/#object
  *
- * @note All ActivityPub Objects are objects, but not all objects are
- * ActivityPub Objects. For example, a Link is an object, but not an
- * ActivityPub Object. For this reason, it is referred to as a "Core Object".
- *
  * @extends BaseEntity
- * @extends CoreObjectProperties
  *
  * @instance ExtendedObject
  * @instance Actor
  * @instance Activity
  * @instance Collection
- * @instance OrderedCollection
- * @instance CollectionPage
- * @instance OrderedCollectionPage
- *
  */
 export type CoreObject =
   | ExtendedObject
   | Actor
   | Activity
-  | Collection
-  | OrderedCollection
-  | CollectionPage
-  | OrderedCollectionPage;
+  | AnyCollectionOrCollectionPage;
 
 /**
  * Either a CoreObject or a URL reference to a CoreObject.
@@ -55,15 +37,13 @@ export type CoreObject =
 export type CoreObjectReference = URL | CoreObject;
 
 /**
- * The base type for all ActivityPub entities.
+ * The base type for all ActivityPub Entities, including Object and Link types.
  *
- * The ActivityPub spec does not specify a base type, but this library does
- * for convenience.
+ * @note The spec does not specify a base type, but this library does for
+ * convenience and easier type checking.
  *
  * @note The spec allows the type to be optional, but it is required by this
- * library.
- *
- * @extends BaseEntity
+ * library in order to differentiate between different types of Entities.
  *
  * @instance CoreObject
  * @instance Link

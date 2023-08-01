@@ -67,7 +67,7 @@ export type BaseCollection<T extends AnyCollectionOrCollectionPageType> =
  *
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection
  *
- * @extends BaseCollection
+ * @type Collection
  */
 export type Collection = BaseCollection<typeof CollectionTypes.COLLECTION>;
 
@@ -79,7 +79,7 @@ export type Collection = BaseCollection<typeof CollectionTypes.COLLECTION>;
  *
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection
  *
- * @extends BaseCollection
+ * @extends Collection
  */
 export type OrderedCollection = BaseCollection<
   typeof CollectionTypes.ORDERED_COLLECTION
@@ -97,8 +97,7 @@ type CollectionPageProperties = {
 /**
  * The base type for all CollectionPage entities.
  *
- * @extends BaseCollection
- * @extends CollectionPageProperties
+ * @extends Collection
  *
  * @instance CollectionPage
  * @instance OrderedCollectionPage
@@ -123,12 +122,7 @@ type BaseCollectionPage<T extends AnyCollectionPageType> = BaseCollection<T> &
  * > property of the Activity MAY be used to represent a subset of those
  * > likes from a single page.
  *
- * > A CollectionPage that has a `prev` property with a CollectionPage
- * > value describes a time ordered subset of items from a Collection. The
- * > items in the subset are ordered by their `published` property such
- * > that earliest items have the lowest `published` timestamps.
- *
- * @extends BaseCollectionPage
+ * @extends Collection
  *
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collectionpage
  * @see https://www.w3.org/TR/activitystreams-core/#collectionpage
@@ -149,7 +143,7 @@ export type CollectionPage = BaseCollectionPage<
  * This is typically used to represent pages of items in a collection that
  * maintain a specific order.
  *
- * @extends BaseCollectionPage
+ * @extends CollectionPage
  *
  * @see CollectionPage
  *
@@ -206,3 +200,23 @@ export type EitherCollectionReference = URL | EitherCollection;
  * reference to a CollectionPage or OrderedCollectionPage object.
  */
 export type EitherCollectionPageReference = URL | EitherCollectionPage;
+
+/**
+ * Any among a Collection, OrderedCollection, CollectionPage, or
+ * OrderedCollectionPage object.
+ *
+ * @note This is useful for functions that accept any type that descends
+ * from BaseCollection.
+ */
+export type AnyCollectionOrCollectionPage =
+  | EitherCollection
+  | EitherCollectionPage;
+
+/**
+ * Any among a Collection, OrderedCollection, CollectionPage, or
+ * OrderedCollectionPage object or a URL reference to a Collection,
+ * OrderedCollection, CollectionPage, or OrderedCollectionPage object.
+ */
+export type AnyCollectionOrCollectionPageReference =
+  | URL
+  | AnyCollectionOrCollectionPage;

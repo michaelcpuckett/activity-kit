@@ -16,13 +16,13 @@ export type AnyActorType = (typeof ActorTypes)[keyof typeof ActorTypes];
 /**
  * Properties common to all Actor types.
  *
- * @note All properties come from the ActivityPub spec.
- *
- * @see https://www.w3.org/TR/activitystreams-vocabulary/#actors
  * @see https://www.w3.org/TR/activitypub/#actors
+ *
+ * @note The `manuallyApprovesFollowers` property is not included in the spec,
+ * but it is included because it is common to all ActivityPub objects in
+ * practice by way of an extension to the spec.
  */
 export type ActorProperties = {
-  // Activity Pub properties.
   inbox: OrderedCollectionReference;
   outbox: OrderedCollectionReference;
   following?: CollectionReference;
@@ -52,8 +52,6 @@ export type ActorProperties = {
  * The base type for all Actor entities.
  *
  * @extends BaseEntity
- * @extends CoreObjectProperties
- * @extends ActorProperties
  *
  * @instance Application
  * @instance Group
@@ -70,7 +68,7 @@ type BaseActor<T extends AnyActorType> = BaseEntity<T> &
  *
  * > Describes a software application.
  *
- * @extends BaseActor
+ * @type Actor
  */
 export type Application = BaseActor<typeof ActorTypes.APPLICATION>;
 
@@ -79,7 +77,7 @@ export type Application = BaseActor<typeof ActorTypes.APPLICATION>;
  *
  * > Represents an individual person.
  *
- * @extends BaseActor
+ * @type Actor
  */
 export type Person = BaseActor<typeof ActorTypes.PERSON>;
 
@@ -88,7 +86,7 @@ export type Person = BaseActor<typeof ActorTypes.PERSON>;
  *
  * > Represents a formal or informal collective of Actors.
  *
- * @extends BaseActor
+ * @type Actor
  */
 export type Group = BaseActor<typeof ActorTypes.GROUP>;
 
@@ -97,7 +95,7 @@ export type Group = BaseActor<typeof ActorTypes.GROUP>;
  *
  * > Represents a service of any kind.
  *
- * @extends BaseActor
+ * @type Actor
  */
 export type Service = BaseActor<typeof ActorTypes.SERVICE>;
 
@@ -106,7 +104,7 @@ export type Service = BaseActor<typeof ActorTypes.SERVICE>;
  *
  * > Represents an organization.
  *
- * @extends BaseActor
+ * @type Actor
  */
 export type Organization = BaseActor<typeof ActorTypes.ORGANIZATION>;
 
@@ -117,9 +115,7 @@ export type Organization = BaseActor<typeof ActorTypes.ORGANIZATION>;
  *
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-actor
  *
- * @extends BaseEntity
- * @extends BaseExtendedObject
- * @extends BaseActor
+ * @extends CoreObject
  *
  * @instance Application
  * @instance Group

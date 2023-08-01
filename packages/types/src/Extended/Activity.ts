@@ -39,6 +39,8 @@ export type ActivityProperties = {
 
 /**
  * The base type for all Activity entities.
+ *
+ * @extends CoreObject
  */
 type BaseActivity<T extends AnyActivityType> = BaseEntity<T> &
   CoreObjectProperties &
@@ -52,7 +54,8 @@ type TransitiveActivityProperties = {
 };
 
 /**
- * The base type for all TransitiveActivity entities.
+ * The base type for all TransitiveActivity entities, meaning those that have an
+ * `object` property.
  *
  * @note This is not in the spec, but it is useful for type checking.
  *
@@ -60,20 +63,25 @@ type TransitiveActivityProperties = {
  * Vocabulary spec:
  *
  * > Instances of TransitiveActivity are a subtype of Activity representing
- * > transitive actions. The object property is therefore appropriate for
- * > for these activities.
+ * > transitive actions. The object property is therefore required for these
+ * > activities.
+ *
+ * @extends Activity
  */
 export type TransitiveActivity<T extends AnyTransitiveActivityType> =
   BaseActivity<T> & TransitiveActivityProperties;
 
 /**
- * The base type for all IntransitiveActivity entities.
+ * The base type for all IntransitiveActivity entities, meaning those that do
+ * not have an `object` property.
  *
  * Per the ActivityStreams Vocabulary spec:
  *
  * > Instances of IntransitiveActivity are a subtype of Activity representing
  * > intransitive actions. The object property is therefore inappropriate for
  * > these activities.
+ *
+ * @extends Activity
  */
 export type IntransitiveActivity<T extends AnyIntransitiveActivityType> =
   BaseActivity<T>;
@@ -459,9 +467,7 @@ export type Question = IntransitiveActivity<typeof ActivityTypes.QUESTION> & {
  *
  * @see https://www.w3.org/TR/activitystreams-core/#activities
  *
- * @type BaseEntity
- * @type CoreObjectProperties
- * @type ActivityProperties
+ * @extends CoreObject
  *
  * @instance Accept
  * @instance TentativeAccept

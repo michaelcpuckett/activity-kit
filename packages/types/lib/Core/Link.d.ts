@@ -15,8 +15,7 @@ export type LinkProperties = {
     width?: number;
 };
 export type BaseLink<T extends AnyLinkType> = BaseEntity<T> & LinkProperties;
-type LinkEntity = BaseLink<typeof LinkTypes.LINK>;
+export type LinkEntity = BaseLink<typeof LinkTypes.LINK>;
 export type Mention = BaseLink<typeof LinkTypes.MENTION>;
 export type Link = LinkEntity | Mention;
 export type LinkReference = URL | Link;
-export {};

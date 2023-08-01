@@ -10,6 +10,7 @@ export type AnyCollectionOrCollectionPageType = AnyCollectionType | AnyCollectio
 type CollectionProperties = {
     totalItems?: number;
     items?: OrArray<EntityReference>;
+    startIndex?: number;
     orderedItems?: OrArray<EntityReference>;
     current?: URL | CollectionPage | Link;
     first?: URL | CollectionPage | Link;
@@ -25,11 +26,7 @@ type CollectionPageProperties = {
 };
 type BaseCollectionPage<T extends AnyCollectionPageType> = BaseCollection<T> & CollectionPageProperties;
 export type CollectionPage = BaseCollectionPage<typeof CollectionPageTypes.COLLECTION_PAGE>;
-type OrderedCollectionPageProperties = {
-    startIndex?: number;
-    orderedItems?: OrArray<EntityReference>;
-};
-export type OrderedCollectionPage = BaseCollectionPage<typeof CollectionPageTypes.ORDERED_COLLECTION_PAGE> & OrderedCollectionPageProperties;
+export type OrderedCollectionPage = BaseCollectionPage<typeof CollectionPageTypes.ORDERED_COLLECTION_PAGE>;
 export type CollectionReference = URL | Collection;
 export type OrderedCollectionReference = URL | OrderedCollection;
 export type CollectionPageReference = URL | CollectionPage;
@@ -38,4 +35,6 @@ export type EitherCollection = Collection | OrderedCollection;
 export type EitherCollectionPage = CollectionPage | OrderedCollectionPage;
 export type EitherCollectionReference = URL | EitherCollection;
 export type EitherCollectionPageReference = URL | EitherCollectionPage;
+export type AnyCollectionOrCollectionPage = EitherCollection | EitherCollectionPage;
+export type AnyCollectionOrCollectionPageReference = URL | AnyCollectionOrCollectionPage;
 export {};

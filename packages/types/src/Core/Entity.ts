@@ -1,12 +1,10 @@
 import { TypeOrArrayWithType, AnyType, OrArray } from '../util';
 
 /**
- * A base ActivityStreams entity is a plain object that has at least a `type`.
+ * A base ActivityStreams Entity is a plain object that has at least a `type`
+ * property.
  *
- * @note Technically all properties are optional, but this library requires a
- * `type` as a way to differentiate between different types of Entities.
- *
- * @todo Add better support for `@context`.
+ * @todo Add better support for the `@context` property.
  */
 export type BaseEntity<T extends AnyType> = {
   '@context'?: OrArray<URL | Record<string, URL>>;

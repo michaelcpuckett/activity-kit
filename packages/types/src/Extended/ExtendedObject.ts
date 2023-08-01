@@ -46,7 +46,7 @@ export type BaseExtendedObject<T extends AnyExtendedObjectType> =
  * > that has been deleted. It can be used in Collections to signify that there
  * > used to be an object at this position, but it has been deleted.
  *
- * @extends BaseExtendedObject
+ * @type ExtendedObject
  *
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-tombstone
  */
@@ -64,7 +64,7 @@ export type Tombstone = BaseExtendedObject<
  * > two individuals. The subject and object properties are used to identify the
  * > connected individuals.
  *
- * @extends BaseExtendedObject
+ * @type ExtendedObject
  *
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-relationship
  */
@@ -83,7 +83,7 @@ export type Relationship = BaseExtendedObject<
  * > to describe Actor Type objects. The describes property is used to reference
  * > the object being described by the profile.
  *
- * @extends BaseExtendedObject
+ * @type ExtendedObject
  *
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-profile
  */
@@ -95,7 +95,7 @@ export type Article = BaseExtendedObject<typeof ExtendedObjectTypes.ARTICLE>;
  * > Represents a short written work typically less than a single paragraph in
  * > length.
  *
- * @extends BaseExtendedObject
+ * @type ExtendedObject
  *
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-note
  */
@@ -106,7 +106,7 @@ export type Note = BaseExtendedObject<typeof ExtendedObjectTypes.NOTE>;
  *
  * > Represents a Web Page.
  *
- * @extends BaseExtendedObject
+ * @type ExtendedObject
  *
  * @note Technically this extends Document, but Document has no special
  * properties.
@@ -120,7 +120,7 @@ export type Page = BaseExtendedObject<typeof ExtendedObjectTypes.PAGE>;
  *
  * > Represents any kind of event.
  *
- * @extends BaseExtendedObject
+ * @type ExtendedObject
  *
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-event
  */
@@ -142,7 +142,7 @@ export type Event = BaseExtendedObject<typeof ExtendedObjectTypes.EVENT>;
  * > describing locations consistently across Activity Streams 2.0
  * > implementations.
  *
- * @extends BaseExtendedObject
+ * @type ExtendedObject
  *
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-place
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#places
@@ -163,7 +163,7 @@ export type Place = BaseExtendedObject<typeof ExtendedObjectTypes.PLACE> & {
  * > used to describe things that are capable of being embedded or attached to
  * > other content.
  *
- * @extends BaseExtendedObject
+ * @type ExtendedObject
  *
  * @note Technically several other types extend Document, but Document has no
  * special properties. The types include: Image, Audio, Video, and Profile.
@@ -177,7 +177,7 @@ export type Document = BaseExtendedObject<typeof ExtendedObjectTypes.DOCUMENT>;
  *
  * > An image document of any kind.
  *
- * @extends BaseExtendedObject
+ * @type ExtendedObject
  *
  * @note Technically this extends Document, but Document has no special
  * properties.
@@ -191,7 +191,7 @@ export type Image = BaseExtendedObject<typeof ExtendedObjectTypes.IMAGE>;
  *
  * > Represents an audio document of any kind.
  *
- * @extends BaseExtendedObject
+ * @type ExtendedObject
  *
  * @note Technically this extends Document, but Document has no special
  * properties.
@@ -205,7 +205,7 @@ export type Audio = BaseExtendedObject<typeof ExtendedObjectTypes.AUDIO>;
  *
  * > Represents a video document of any kind.
  *
- * @extends BaseExtendedObject
+ * @type ExtendedObject
  *
  * @note Technically this extends Document, but Document has no special
  * properties.
@@ -221,7 +221,7 @@ export type Video = BaseExtendedObject<typeof ExtendedObjectTypes.VIDEO>;
  * > to describe Actor Type objects. The describes property is used to reference
  * > the object being described by the profile.
  *
- * @extends BaseExtendedObject
+ * @type ExtendedObject
  *
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-profile
  */
@@ -230,9 +230,9 @@ export type Profile = BaseExtendedObject<typeof ExtendedObjectTypes.PROFILE> & {
 };
 
 /**
- * A hashtag.
+ * A Hashtag.
  *
- * @extends BaseExtendedObject
+ * @type ExtendedObject
  *
  * @note This is not part of the ActivityPub spec, but it is common in practice
  * by way of extensions to the spec.
@@ -244,8 +244,7 @@ export type Hashtag = BaseExtendedObject<typeof ExtendedObjectTypes.HASHTAG>;
 /**
  * A union of all Extended Object types.
  *
- * @extends BaseEntity
- * @extends BaseExtendedObject
+ * @extends CoreObject
  *
  * @see https://www.w3.org/TR/activitystreams-vocabulary/#extendedtypes
  */
@@ -263,5 +262,13 @@ export type ExtendedObject =
   | Audio
   | Image
   | Hashtag;
+
+/**
+ * An Extended Object or a URL reference to an Extended Object.
+ */
 export type ExtendedObjectReference = URL | ExtendedObject;
+
+/**
+ * An Image or a URL reference to an Image.
+ */
 export type ImageReference = URL | Image;

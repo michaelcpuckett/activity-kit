@@ -18,8 +18,8 @@ export type CoreObjectProperties = {
     duration?: string;
     endTime?: Date;
     generator?: OrArray<EntityReference>;
-    icon?: ImageReference | LinkReference | Array<ImageReference | LinkReference>;
-    image?: ImageReference | LinkReference | Array<ImageReference | LinkReference>;
+    icon?: OrArray<ImageReference | LinkReference>;
+    image?: OrArray<ImageReference | LinkReference>;
     inReplyTo?: OrArray<EntityReference>;
     location?: OrArray<EntityReference>;
     mediaType?: string;
