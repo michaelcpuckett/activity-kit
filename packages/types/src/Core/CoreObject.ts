@@ -8,19 +8,21 @@ import type {
   OrderedCollectionReference,
 } from '../Extended/Collection';
 
+/**
+ * A union of all Core Object types.
+ */
 export type AnyCoreObjectType =
   (typeof CoreObjectTypes)[keyof typeof CoreObjectTypes];
 
 /**
- * Objects are the core concept around which both ActivityStreams and ActivityPub
- * are built. Objects are often wrapped in Activities and are contained in streams
- * of Collections, which are themselves subclasses of Objects. See the
- * Activity-Vocabulary document, particularly the Core Classes; ActivityPub follows
- * the mapping of this vocabulary very closely.
+ * Properties common to all Core Objects.
  *
- * ActivityPub defines some terms in addition to those provided by ActivityStreams.
+ * @see https://www.w3.org/TR/activitystreams-core/#object
+ *
+ * @note The `sensitive` property is not included in the spec, but it is
+ * included because it is common to all ActivityPub objects in practice
+ * by way of an extension to the spec.
  */
-
 export type CoreObjectProperties = {
   // Activity Streams properties.
   attachment?: OrArray<EntityReference>;
@@ -35,11 +37,8 @@ export type CoreObjectProperties = {
   duration?: string;
   endTime?: Date;
   generator?: OrArray<EntityReference>;
-  icon?: ImageReference | LinkReference | Array<ImageReference | LinkReference>;
-  image?:
-    | ImageReference
-    | LinkReference
-    | Array<ImageReference | LinkReference>;
+  icon?: OrArray<ImageReference | LinkReference>;
+  image?: OrArray<ImageReference | LinkReference>;
   inReplyTo?: OrArray<EntityReference>;
   location?: OrArray<EntityReference>;
   mediaType?: string;

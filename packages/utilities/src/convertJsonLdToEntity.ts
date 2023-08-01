@@ -31,6 +31,16 @@ export async function convertJsonLdToEntity(
   return applyContext(converted);
 }
 
+/**
+ * Custom document loader for JSON-LD that uses cached contexts.
+ *
+ * Bundling the contexts saves on the number of requests made when parsing
+ * received JSON-LD documents.
+ *
+ * Based on the JSON-LD library's node document loader.
+ *
+ * @returns The remote JSON-LD document.
+ */
 async function customLoader(
   url: string,
   callback: (err: Error, remoteDoc: RemoteDocument) => void,

@@ -10,6 +10,11 @@ export function compressEntity(entity: AP.Entity): AP.Entity | null {
   return cast.isApEntity(compressObject(entity)) ?? null;
 }
 
+/**
+ * Compresses an object by replacing all nested Entities with their URLs.
+ *
+ * @returns The compressed object.
+ */
 function compressObject(
   object: Record<string, unknown>,
 ): Record<string, unknown> {
@@ -22,6 +27,12 @@ function compressObject(
   return compressed;
 }
 
+/**
+ * Compresses an unknown value by replacing all nested Entities with their
+ * URLs.
+ *
+ * @returns The compressed value.
+ */
 function compressUnknown(item: unknown): unknown {
   if (!guard.exists(item)) {
     return item;

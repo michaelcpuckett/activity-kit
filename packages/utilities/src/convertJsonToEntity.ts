@@ -3,7 +3,7 @@ import { cast, guard } from '@activity-kit/type-utilities';
 import { PUBLIC_ACTOR } from './globals';
 
 /**
- * Converts a JSON object to an Entity.
+ * Converts a JSON object to an Entity with deserialized values.
  *
  * @returns The Entity, or null if not an Entity.
  */
@@ -13,6 +13,11 @@ export function convertJsonToEntity(
   return cast.isApEntity(convertObject(object)) ?? null;
 }
 
+/**
+ * Deserializes serialized values in an object into their proper types.
+ *
+ * @returns The object with deserialized values.
+ */
 function convertObject(
   object: Record<string, unknown>,
 ): Record<string, unknown> {
@@ -25,6 +30,11 @@ function convertObject(
   return converted;
 }
 
+/**
+ * Deserializes an unknown value into a known type.
+ *
+ * @returns The deserialized value.
+ */
 function convertUnknown(value: unknown): unknown {
   if (!guard.exists(value)) {
     return value;

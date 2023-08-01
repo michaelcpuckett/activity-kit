@@ -2,12 +2,12 @@ import * as AP from '@activity-kit/types';
 import { guard } from '@activity-kit/type-utilities';
 
 /**
- * Get the URL from an EntityReference, if the EntityReference is a URL.
+ * Get the URL from an EntityReference.
  *
  * @returns The URL, or null if not a URL.
  */
 export const getId = (
-  entity?: undefined | null | AP.EntityReference | AP.EntityReference[],
+  entity: undefined | null | AP.EntityReference | AP.EntityReference[],
 ): URL | null => {
   if (!guard.exists(entity)) {
     return null;

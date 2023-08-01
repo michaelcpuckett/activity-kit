@@ -8,8 +8,19 @@ import {
 } from './Collection';
 import { StringReferenceMap } from '../util';
 
+/**
+ * A union of all Actor types.
+ */
 export type AnyActorType = (typeof ActorTypes)[keyof typeof ActorTypes];
 
+/**
+ * Properties common to all Actor types.
+ *
+ * @note All properties come from the ActivityPub spec.
+ *
+ * @see https://www.w3.org/TR/activitystreams-vocabulary/#actors
+ * @see https://www.w3.org/TR/activitypub/#actors
+ */
 export type ActorProperties = {
   // Activity Pub properties.
   inbox: OrderedCollectionReference;
@@ -38,30 +49,87 @@ export type ActorProperties = {
 };
 
 /**
- * In ActivityPub, a user is represented by "actors" via the user's accounts
- * on servers. User's accounts on different servers correspond to different actors.
+ * The base type for all Actor entities.
  *
- * Every Actor has:
- * An inbox: How they get messages from the world
- * An outbox: How they send messages to others
+ * @extends BaseEntity
+ * @extends CoreObjectProperties
+ * @extends ActorProperties
  *
- * These are endpoints, or really, just URLs which are listed in the ActivityPub
- * actor's ActivityStreams description.
+ * @instance Application
+ * @instance Group
+ * @instance Organization
+ * @instance Person
+ * @instance Service
  */
-
 type BaseActor<T extends AnyActorType> = BaseEntity<T> &
   CoreObjectProperties &
   ActorProperties;
 
+/**
+ * Per the ActivitySteams spec:
+ *
+ * > Describes a software application.
+ *
+ * @extends BaseActor
+ */
 export type Application = BaseActor<typeof ActorTypes.APPLICATION>;
 
+/**
+ * Per the ActivityStreams spec:
+ *
+ * > Represents an individual person.
+ *
+ * @extends BaseActor
+ */
 export type Person = BaseActor<typeof ActorTypes.PERSON>;
 
+/**
+ * Per the ActivityStreams spec:
+ *
+ * > Represents a formal or informal collective of Actors.
+ *
+ * @extends BaseActor
+ */
 export type Group = BaseActor<typeof ActorTypes.GROUP>;
 
+/**
+ * Per the ActivityStreams spec:
+ *
+ * > Represents a service of any kind.
+ *
+ * @extends BaseActor
+ */
 export type Service = BaseActor<typeof ActorTypes.SERVICE>;
 
+/**
+ * Per the ActivityStreams spec:
+ *
+ * > Represents an organization.
+ *
+ * @extends BaseActor
+ */
 export type Organization = BaseActor<typeof ActorTypes.ORGANIZATION>;
 
+/**
+ * Per the ActivityStreams Vocabulary spec:
+ *
+ * > An Entity that either performed or is expected to perform an Activity.
+ *
+ * @see https://www.w3.org/TR/activitystreams-vocabulary/#dfn-actor
+ *
+ * @extends BaseEntity
+ * @extends BaseExtendedObject
+ * @extends BaseActor
+ *
+ * @instance Application
+ * @instance Group
+ * @instance Organization
+ * @instance Person
+ * @instance Service
+ */
 export type Actor = Application | Service | Group | Organization | Person;
+
+/**
+ * Either an Actor or a URL reference to an Actor.
+ */
 export type ActorReference = URL | Actor;

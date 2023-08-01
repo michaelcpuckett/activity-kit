@@ -12,6 +12,11 @@ export function convertEntityToJson(
   return cast.isPlainObject(convertObject(object)) ?? {};
 }
 
+/**
+ * Converts an object to a plain JSON object.
+ *
+ * @returns The plain object.
+ */
 function convertObject(
   object: Record<string, unknown>,
 ): Record<string, unknown> {
@@ -24,6 +29,11 @@ function convertObject(
   return converted;
 }
 
+/**
+ * Converts an unknown value to a plain JSON value.
+ *
+ * @returns The plain value.
+ */
 function convertUnknown(value: unknown): unknown {
   if (!guard.exists(value)) {
     return value;
