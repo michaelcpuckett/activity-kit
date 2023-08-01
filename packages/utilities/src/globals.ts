@@ -70,10 +70,6 @@ export const W3ID_SECURITY_CONTEXT = 'https://w3id.org/security/v1';
 /**
  * The JSON-LD context for the Schema.org vocabulary.
  *
- * Used to provide additional information about an Entity via its `@type`,
- * however some servers do not accept multiple types, so this is not used
- * by default.
- *
  * @see https://schema.org/
  */
 export const SCHEMA_ORG_CONTEXT = 'https://schema.org/';
@@ -200,6 +196,19 @@ export const HTML_CONTENT_TYPE = 'text/html';
  * Regular Expression for a valid username.
  */
 export const USERNAME_REGEXP = /^[\w\d]{3,12}$/;
+
+/**
+ * The default JSON-LD context for ActivityPub Entities.
+ */
+export const DEFAULT_CONTEXT = {
+  '@vocab': ACTIVITYSTREAMS_CONTEXT,
+  sec: W3ID_SECURITY_CONTEXT,
+  schema: SCHEMA_ORG_CONTEXT,
+};
+
+export const DEFAULT_CONTEXT_AS_URLS = Object.fromEntries(
+  Object.entries(DEFAULT_CONTEXT).map(([key, value]) => [key, new URL(value)]),
+);
 
 /**
  * Express-style route parameters.
