@@ -204,22 +204,25 @@ export const USERNAME_REGEXP = /^[\w\d]{3,12}$/;
  * @see {@link W3ID_SECURITY_CONTEXT}
  * @see {@link SCHEMA_ORG_CONTEXT}
  */
-export const DEFAULT_ACTOR_CONTEXT = {
-  '@vocab': ACTIVITYSTREAMS_CONTEXT,
-  sec: W3ID_SECURITY_CONTEXT,
-  schema: SCHEMA_ORG_CONTEXT,
-};
+export const DEFAULT_ACTOR_CONTEXT = [
+  W3ID_SECURITY_CONTEXT,
+  ACTIVITYSTREAMS_CONTEXT,
+  {
+    schema: SCHEMA_ORG_CONTEXT,
+  },
+];
 
 /**
  * The default JSON-LD context for ActivityPub Actors, with instances of URL in
  * place of strings.
- */
+ *
 export const DEFAULT_ACTOR_CONTEXT_AS_URLS = Object.fromEntries(
   Object.entries(DEFAULT_ACTOR_CONTEXT).map(([key, value]) => [
     key,
     new URL(value),
   ]),
 );
+*/
 
 /**
  * Express-style route parameters.
