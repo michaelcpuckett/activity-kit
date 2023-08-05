@@ -2,6 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getId = void 0;
 const type_utilities_1 = require("@activity-kit/type-utilities");
+/**
+ * Get the URL from an EntityReference.
+ *
+ * @returns The URL, or null if not a URL.
+ */
 const getId = (entity) => {
     if (!type_utilities_1.guard.exists(entity)) {
         return null;

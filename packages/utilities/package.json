@@ -16,7 +16,8 @@
   },
   "scripts": {
     "build": "node .build.js",
-    "build:bundle": "tsc-bundle tsconfig.json --outFile dist/bundle.js"
+    "build:bundle": "tsc-bundle tsconfig.json --outFile dist/bundle.js",
+    "test": "ts-node --project tsconfig.json node_modules/jasmine/bin/jasmine.js ./tests/**/*.test.ts"
   },
   "dependencies": {
     "@activity-kit/type-utilities": "^0.4.56",
@@ -24,11 +25,15 @@
     "jsonld": "^8.1.0"
   },
   "devDependencies": {
+    "@types/jasmine": "^4.3.5",
     "@types/jsonld": "^1.5.6",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0",
+    "jasmine": "^5.1.0",
     "prettier": "^2.7.1",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.0.4",
     "typescript-bundle": "^1.0.18"
   },

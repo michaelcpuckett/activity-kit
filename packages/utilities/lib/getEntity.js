@@ -26,6 +26,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getEntity = void 0;
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
+/**
+ *  Get the Entity from an EntityReference, if the EntityReference is an Entity.
+ *
+ * @returns The Entity, or null if not an Entity.
+ */
 const getEntity = (entity) => {
     var _a, _b;
     if (!type_utilities_1.guard.exists(entity)) {

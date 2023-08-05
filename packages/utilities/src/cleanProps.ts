@@ -1,8 +1,12 @@
 import * as AP from '@activity-kit/types';
+import { guard } from '@activity-kit/type-utilities';
 
 /**
- * Removes the private `bto` and `bcc` properties from Entities so they don't
- * leak out upon delivery.
+ * Removes the private `bto` and `bcc` properties from an {@link AP.Entity}
+ * so they don't leak out upon delivery.
+ *
+ * If the Entity is a {@link AP.TransitiveActivity}, the `object` property will
+ * also be cleaned.
  *
  * From the ActivityPub spec:
  *
@@ -25,6 +29,13 @@ export function cleanProps(entity: AP.Entity): AP.Entity {
 
   if ('bcc' in cleanedEntity) {
     delete cleanedEntity.bcc;
+  }
+
+  if (
+    guard.isApTransitiveActivity(cleanedEntity) &&
+    guard.isApEntity(cleanedEntity.object)
+  ) {
+    cleanedEntity.object = cleanProps(cleanedEntity.object);
   }
 
   return cleanedEntity;

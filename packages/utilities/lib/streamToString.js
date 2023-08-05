@@ -1,6 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.streamToString = void 0;
+/**
+ * Converts an HTTP stream to a string.
+ *
+ * @returns The string.
+ *
+ * @todo This is being depricated in favor of having adapters handle this.
+ */
 async function streamToString(stream) {
     if (stream) {
         const chunks = [];

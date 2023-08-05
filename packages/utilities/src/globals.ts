@@ -47,14 +47,14 @@ export const LOCAL_DOMAIN = `${PROTOCOL}//${LOCAL_HOSTNAME}${
 }`;
 
 /**
- * The JSON-LD context key.
+ * The JSON-LD context property key.
+ *
+ * @see https://www.w3.org/TR/json-ld11/#the-context
  */
 export const CONTEXT_KEY = '@context';
 
 /**
  * The JSON-LD context for ActivityPub.
- *
- * @see https://www.w3.org/TR/activitypub/#jsonld-context
  */
 export const ACTIVITYSTREAMS_CONTEXT = 'https://www.w3.org/ns/activitystreams';
 
@@ -63,7 +63,7 @@ export const ACTIVITYSTREAMS_CONTEXT = 'https://www.w3.org/ns/activitystreams';
  *
  * Used for signing and verifying signatures.
  *
- * @see https://w3id.org/security/v1
+ * @see https://w3c.github.io/vc-data-integrity/vocab/security/vocabulary.html
  */
 export const W3ID_SECURITY_CONTEXT = 'https://w3id.org/security/v1';
 
@@ -198,16 +198,27 @@ export const HTML_CONTENT_TYPE = 'text/html';
 export const USERNAME_REGEXP = /^[\w\d]{3,12}$/;
 
 /**
- * The default JSON-LD context for ActivityPub Entities.
+ * The default JSON-LD context for ActivityPub Actors.
+ *
+ * @see {@link ACTIVITYSTREAMS_CONTEXT}
+ * @see {@link W3ID_SECURITY_CONTEXT}
+ * @see {@link SCHEMA_ORG_CONTEXT}
  */
-export const DEFAULT_CONTEXT = {
+export const DEFAULT_ACTOR_CONTEXT = {
   '@vocab': ACTIVITYSTREAMS_CONTEXT,
   sec: W3ID_SECURITY_CONTEXT,
   schema: SCHEMA_ORG_CONTEXT,
 };
 
-export const DEFAULT_CONTEXT_AS_URLS = Object.fromEntries(
-  Object.entries(DEFAULT_CONTEXT).map(([key, value]) => [key, new URL(value)]),
+/**
+ * The default JSON-LD context for ActivityPub Actors, with instances of URL in
+ * place of strings.
+ */
+export const DEFAULT_ACTOR_CONTEXT_AS_URLS = Object.fromEntries(
+  Object.entries(DEFAULT_ACTOR_CONTEXT).map(([key, value]) => [
+    key,
+    new URL(value),
+  ]),
 );
 
 /**
