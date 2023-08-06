@@ -56,7 +56,7 @@ export const CONTEXT_KEY = '@context';
 /**
  * The JSON-LD context for ActivityPub.
  */
-export const ACTIVITYSTREAMS_CONTEXT = 'https://www.w3.org/ns/activitystreams';
+export const ACTIVITYSTREAMS_CONTEXT = 'https://www.w3.org/ns/activitystreams#';
 
 /**
  * The JSON-LD context for the W3ID security vocabulary.
@@ -343,7 +343,7 @@ export const CONTEXT_DEFINITIONS: Record<string, jsonld.ContextDefinition> = {
   [ACTIVITYSTREAMS_CONTEXT]: {
     '@vocab': ACTIVITYSTREAMS_CONTEXT,
     xsd: 'http://www.w3.org/2001/XMLSchema#',
-    as: `${ACTIVITYSTREAMS_CONTEXT}#`,
+    as: ACTIVITYSTREAMS_CONTEXT,
     ldp: LDP_CONTEXT,
     vcard: 'http://www.w3.org/2006/vcard/ns#',
     id: '@id',

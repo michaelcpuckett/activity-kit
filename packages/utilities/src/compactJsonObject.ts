@@ -2,13 +2,13 @@
 /// <reference path="../types/jsonldDocumentLoader.d.ts" />
 import getNodeDocumentLoader from 'jsonld/lib/documentLoaders/node';
 import * as jsonld from 'jsonld';
-import * as AP from '@activity-kit/types';
 import { cast } from '@activity-kit/type-utilities';
 import { RemoteDocument } from 'jsonld/jsonld-spec';
 import {
   ACTIVITYSTREAMS_CONTEXT,
   CONTEXT_DEFINITIONS,
-  DEFAULT_ACTOR_CONTEXT,
+  SCHEMA_ORG_CONTEXT,
+  W3ID_SECURITY_CONTEXT,
 } from './globals';
 
 /**
@@ -23,16 +23,32 @@ import {
 export async function compactJsonObject(
   object: Record<string, unknown>,
 ): Promise<Record<string, unknown> | null> {
-  const document = { ...object };
+  let document = { ...object };
 
-  if (!('@context' in document)) {
-    document['@context'] = DEFAULT_ACTOR_CONTEXT;
+  if ('@context' in document) {
+    const [expanded] = await jsonld.expand(document, {
+      documentLoader: customLoader,
+    });
+
+    document = expanded;
+  } else {
+    document['@context'] = {
+      '@vocab': ACTIVITYSTREAMS_CONTEXT,
+      sec: W3ID_SECURITY_CONTEXT,
+      schema: SCHEMA_ORG_CONTEXT,
+      id: '@id',
+      type: '@type',
+    };
   }
 
   const result = await jsonld.compact(
     document,
     {
-      '@context': ACTIVITYSTREAMS_CONTEXT,
+      '@vocab': ACTIVITYSTREAMS_CONTEXT,
+      sec: W3ID_SECURITY_CONTEXT,
+      schema: SCHEMA_ORG_CONTEXT,
+      id: '@id',
+      type: '@type',
     },
     {
       documentLoader: customLoader,
