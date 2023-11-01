@@ -36,6 +36,7 @@ async function handleFollow(activity, recipient) {
     const object = await this.core.queryById(objectId);
     type_utilities_1.assert.isApEntity(object);
     if (!type_utilities_1.guard.isApActor(object)) {
+        // Not applicable.
         return;
     }
     const actorId = (0, utilities_1.getId)(activity.actor);
@@ -45,31 +46,35 @@ async function handleFollow(activity, recipient) {
     const follower = actor;
     const followerId = (0, utilities_1.getId)(follower);
     type_utilities_1.assert.exists(followerId);
-    const followee = object;
-    const followeeId = (0, utilities_1.getId)(followee);
-    type_utilities_1.assert.exists(followeeId);
-    if (followeeId.href !== (0, utilities_1.getId)(recipient)?.href) {
+    const user = object;
+    const userId = (0, utilities_1.getId)(user);
+    type_utilities_1.assert.exists(userId);
+    if (userId.href !== (0, utilities_1.getId)(recipient)?.href) {
+        // Not applicable to this Actor.
         return;
     }
-    const followersId = (0, utilities_1.getId)(followee.followers);
+    const followersId = (0, utilities_1.getId)(user.followers);
     type_utilities_1.assert.exists(followersId);
     const followers = await this.core.findEntityById(followersId);
     type_utilities_1.assert.isApType(followers, AP.CollectionTypes.COLLECTION);
+    console.log({ followers });
     type_utilities_1.assert.isArray(followers.items);
+    // Already a follower.
     if (followers.items
         .map((id) => id?.toString())
         .includes(followerId.toString())) {
         console.log('Already a follower.');
         return;
     }
-    if (followee.manuallyApprovesFollowers) {
-        const requests = await this.core.getStreamByName(followee, 'Requests');
+    if (user.manuallyApprovesFollowers) {
+        const requests = await this.core.getStreamByName(user, 'Requests');
         type_utilities_1.assert.isApType(requests, AP.CollectionTypes.COLLECTION);
         const requestsId = (0, utilities_1.getId)(requests);
         type_utilities_1.assert.exists(requestsId);
         await this.core.insertItem(requestsId, activityId);
         return;
     }
+    // Now we're in outbox, because this is auto-generated:
     const acceptActivityId = `${new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.accept)({
         guid: await this.core.getGuid(),
     })}`)}`;
@@ -79,18 +84,18 @@ async function handleFollow(activity, recipient) {
         url: new URL(acceptActivityId),
         type: AP.ActivityTypes.ACCEPT,
         to: [new URL(utilities_1.PUBLIC_ACTOR), followerId],
-        actor: followeeId,
+        actor: userId,
         object: activityId,
         published: publishedDate,
     });
-    const followeeOutboxId = (0, utilities_1.getId)(followee.outbox);
-    type_utilities_1.assert.exists(followeeOutboxId);
+    const userOutboxId = (0, utilities_1.getId)(user.outbox);
+    type_utilities_1.assert.exists(userOutboxId);
     await Promise.all([
         this.core.saveEntity(acceptActivity),
-        this.core.insertOrderedItem(followeeOutboxId, new URL(acceptActivityId)),
+        this.core.insertOrderedItem(userOutboxId, new URL(acceptActivityId)),
         this.core.insertItem(followersId, followerId),
     ]);
-    await this.core.broadcast(acceptActivity, followee);
+    await this.core.broadcast(acceptActivity, user);
 }
 exports.handleFollow = handleFollow;
 //# sourceMappingURL=follow.js.map

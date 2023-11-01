@@ -16,13 +16,16 @@ const broadcast_1 = require("./broadcast");
 const getRecipientUrls_1 = require("./getRecipientUrls");
 class CoreFunctions {
     constructor() {
+        // Find.
         this.findEntityById = findEntityById_1.findEntityById;
         this.queryById = queryById_1.queryById;
         this.getActorByUserId = getActorByUserId_1.getActorByUserId;
         this.getStreamByName = getStreamByName_1.getStreamByName;
+        // Expand.
         this.expandEntity = expandEntity_1.expandEntity;
         this.getPaginatedCollectionItems = getPaginatedCollectionItems_1.getPaginatedCollectionItems;
         this.expandCollection = expandCollection_1.expandCollection;
+        // Server-to-Server.
         this.broadcast = broadcast_1.broadcast;
         this.getRecipientUrls = getRecipientUrls_1.getRecipientUrls;
     }

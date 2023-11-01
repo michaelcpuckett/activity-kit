@@ -29,6 +29,7 @@ const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 const cheerio = __importStar(require("cheerio"));
 const path_to_regexp_1 = require("path-to-regexp");
+// Groups automatically announce activities addressed to them if sent from non-blocked followers.
 function GroupsPlugin() {
     const groupsPlugin = {
         async handleInboxSideEffect(activity, recipient) {
@@ -96,8 +97,10 @@ function GroupsPlugin() {
             if (!followersCollection.items
                 .map((id) => id.toString())
                 .includes(actorId.toString())) {
+                // The actor is not a follower.
                 return;
             }
+            // We're in outbox, because this is auto-generated:
             const publishedDate = new Date();
             const announceActivityId = new URL(`${utilities_1.LOCAL_DOMAIN}${(0, path_to_regexp_1.compile)(this.routes.announce, {
                 validate: false,

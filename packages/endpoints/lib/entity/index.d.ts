@@ -1,6 +1,8 @@
 /// <reference types="node" />
 import { CoreLibrary } from '@activity-kit/core';
+import { handleNotFound } from './handleNotFound';
 import { handleFoundEntity } from './handleFoundEntity';
+import { handleFoundCollectionPage } from './handleFoundCollectionPage';
 import { respond } from './respond';
 export declare class EntityGetEndpoint {
     protected readonly core: CoreLibrary;
@@ -10,14 +12,9 @@ export declare class EntityGetEndpoint {
         url: URL;
         returnHtml?: boolean;
     });
+    protected handleNotFound: typeof handleNotFound;
     protected handleFoundEntity: typeof handleFoundEntity;
-    protected handleBadRequest(): {
-        statusCode: number;
-        body: string;
-    };
-    protected handleNotFound(): {
-        statusCode: number;
-        body: string;
-    };
+    protected handleFoundCollection: any;
+    protected handleFoundCollectionPage: typeof handleFoundCollectionPage;
     respond: typeof respond;
 }

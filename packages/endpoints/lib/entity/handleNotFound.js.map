@@ -1,0 +1,1 @@
+{"version":3,"file":"handleNotFound.js","sourceRoot":"","sources":["../../src/entity/handleNotFound.ts"],"names":[],"mappings":";;;AAAO,KAAK,UAAU,cAAc;IAClC,OAAO;QACL,UAAU,EAAE,GAAG;QACf,IAAI,EAAE,IAAI,CAAC,SAAS,CAAC;YACnB,KAAK,EAAE,YAAY;SACpB,CAAC;KACH,CAAC;AACJ,CAAC;AAPD,wCAOC"}

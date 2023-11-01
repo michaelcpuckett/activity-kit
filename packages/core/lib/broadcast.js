@@ -4,6 +4,11 @@ exports.broadcast = void 0;
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
 const getPrivateKey_1 = require("./util/getPrivateKey");
+/**
+ * Send an Activity to all of its recipients on behalf of an Actor.
+ *
+ * @returns A record of each URL and the HTTP status code of the response.
+ */
 async function broadcast(activity, actor) {
     const activityWithContext = (0, utilities_1.applyContext)(activity);
     const cleanedActivity = (0, utilities_1.cleanProps)(activityWithContext);
@@ -15,6 +20,12 @@ async function broadcast(activity, actor) {
     return Object.fromEntries(resultEntries);
 }
 exports.broadcast = broadcast;
+/**
+ * Send to a single recipient on behalf of an Actor.
+ *
+ * @returns A tuple of the recipient's inbox URL and the HTTP status code of the
+ * response.
+ */
 async function signAndSendToInboxUrl(foreignActorInbox, actor, plainEntity) {
     const headers = await getHeaders.bind(this)(actor, foreignActorInbox, plainEntity);
     const statusCode = await this.fetch(foreignActorInbox.href, {
@@ -30,6 +41,10 @@ async function signAndSendToInboxUrl(foreignActorInbox, actor, plainEntity) {
     });
     return [foreignActorInbox.href, statusCode];
 }
+/**
+ * Get the headers for an Activity.
+ * @returns A record of headers.
+ */
 async function getHeaders(actor, foreignActorInbox, plainEntity) {
     const actorId = (0, utilities_1.getId)(actor);
     type_utilities_1.assert.exists(actorId);
@@ -47,6 +62,11 @@ async function getHeaders(actor, foreignActorInbox, plainEntity) {
         Signature: signatureHeader,
     };
 }
+/**
+ * Get the inbox URLs of all recipients of an Activity.
+ *
+ * @returns An array of inbox URLs.
+ */
 async function getRecipientInboxUrls(activity, actor) {
     const recipientUrls = await this.getRecipientUrls(activity);
     const extractUrl = async (recipientUrl) => {

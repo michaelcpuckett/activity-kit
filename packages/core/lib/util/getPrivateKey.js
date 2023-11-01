@@ -1,6 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPrivateKey = void 0;
+/**
+ * Get the private key of an Actor.
+ *
+ * @returns The private key as a string.
+ */
 async function getPrivateKey(actor) {
     if (!actor.preferredUsername) {
         return '';

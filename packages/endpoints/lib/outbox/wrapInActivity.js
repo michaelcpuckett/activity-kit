@@ -35,7 +35,7 @@ async function wrapInActivity(body) {
         guid: await this.core.getGuid(),
     })}`);
     const actorId = (0, utilities_1.getId)(this.actor);
-    type_utilities_1.assert.exists(actorId);
+    type_utilities_1.assert.isUrl(actorId);
     return (0, utilities_1.applyContext)(this.combineAddresses({
         id,
         url: id,

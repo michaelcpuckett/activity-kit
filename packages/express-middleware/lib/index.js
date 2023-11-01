@@ -72,6 +72,7 @@ const activityKitPlugin = (config) => async (req, res, next) => {
                 return;
             }
             if (matchesRoute(routes.endpoint)) {
+                // TODO route endpoint
                 await new endpoints_1.UploadMediaPostEndpoint(routes, req, res, core, config.plugins).respond();
                 next();
                 return;

@@ -36,6 +36,7 @@ async function handleUndo(activity) {
     if (!isActorAuthorizedToModifyObject(this.actor, activity)) {
         throw new Error('Not authorized to modify object!');
     }
+    // Run side effects.
     if (type_utilities_1.guard.isApType(object, AP.ActivityTypes.CREATE)) {
         await this.handleDelete(object);
     }

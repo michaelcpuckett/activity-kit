@@ -129,6 +129,7 @@ async function handleCreate(activity) {
         await this.core.saveEntity(object);
     }
     type_utilities_1.assert.isApType(this.activity, AP.ActivityTypes.CREATE);
+    // Attach the object to the activity that will be saved.
     this.activity.object = object;
 }
 exports.handleCreate = handleCreate;

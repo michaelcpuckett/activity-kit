@@ -1,7 +1,7 @@
 "use strict";
 var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CONTEXT_DEFINITIONS = exports.RESERVED_USERNAMES = exports.DEFAULT_ROUTES = exports.DEFAULT_ACTOR_CONTEXT_AS_URLS = exports.DEFAULT_ACTOR_CONTEXT = exports.USERNAME_REGEXP = exports.HTML_CONTENT_TYPE = exports.JSON_CONTENT_TYPE = exports.JRD_CONTENT_TYPE = exports.XRD_CONTENT_TYPE = exports.ACTIVITYSTREAMS_CONTENT_TYPE = exports.ACTIVITYSTREAMS_CONTENT_TYPE_WITH_PROFILE = exports.LINKED_DATA_CONTENT_TYPE = exports.CONTENT_TYPE_HEADER = exports.ACCEPT_HEADER = exports.SHARED_INBOX_ID = exports.SERVER_ACTOR_USERNAME = exports.PUBLIC_ACTOR = exports.CHANGESET_CONTEXT = exports.RELATIONSHIP_CONTEXT = exports.LDP_CONTEXT = exports.SCHEMA_ORG_CONTEXT = exports.W3ID_SECURITY_CONTEXT = exports.ACTIVITYSTREAMS_CONTEXT = exports.CONTEXT_KEY = exports.LOCAL_DOMAIN = exports.DB_NAME = exports.PROTOCOL = exports.LOCAL_HOSTNAME = exports.PORT = void 0;
+exports.CONTEXT_DEFINITIONS = exports.RESERVED_USERNAMES = exports.DEFAULT_ROUTES = exports.DEFAULT_ACTOR_CONTEXT = exports.USERNAME_REGEXP = exports.HTML_CONTENT_TYPE = exports.JSON_CONTENT_TYPE = exports.JRD_CONTENT_TYPE = exports.XRD_CONTENT_TYPE = exports.ACTIVITYSTREAMS_CONTENT_TYPE = exports.ACTIVITYSTREAMS_CONTENT_TYPE_WITH_PROFILE = exports.LINKED_DATA_CONTENT_TYPE = exports.CONTENT_TYPE_HEADER = exports.ACCEPT_HEADER = exports.SHARED_INBOX_ID = exports.SERVER_ACTOR_USERNAME = exports.PUBLIC_ACTOR = exports.CHANGESET_CONTEXT = exports.RELATIONSHIP_CONTEXT = exports.LDP_CONTEXT = exports.SCHEMA_ORG_CONTEXT = exports.W3ID_SECURITY_CONTEXT = exports.ACTIVITYSTREAMS_CONTEXT = exports.CONTEXT_KEY = exports.LOCAL_DOMAIN = exports.DB_NAME = exports.PROTOCOL = exports.LOCAL_HOSTNAME = exports.PORT = void 0;
 /**
  * The port the server will listen on.
  *
@@ -50,7 +50,7 @@ exports.CONTEXT_KEY = '@context';
 /**
  * The JSON-LD context for ActivityPub.
  */
-exports.ACTIVITYSTREAMS_CONTEXT = 'https://www.w3.org/ns/activitystreams';
+exports.ACTIVITYSTREAMS_CONTEXT = 'https://www.w3.org/ns/activitystreams#';
 /**
  * The JSON-LD context for the W3ID security vocabulary.
  *
@@ -179,19 +179,24 @@ exports.USERNAME_REGEXP = /^[\w\d]{3,12}$/;
  * @see {@link W3ID_SECURITY_CONTEXT}
  * @see {@link SCHEMA_ORG_CONTEXT}
  */
-exports.DEFAULT_ACTOR_CONTEXT = {
-    '@vocab': exports.ACTIVITYSTREAMS_CONTEXT,
-    sec: exports.W3ID_SECURITY_CONTEXT,
-    schema: exports.SCHEMA_ORG_CONTEXT,
-};
+exports.DEFAULT_ACTOR_CONTEXT = [
+    exports.W3ID_SECURITY_CONTEXT,
+    exports.ACTIVITYSTREAMS_CONTEXT,
+    {
+        schema: exports.SCHEMA_ORG_CONTEXT,
+    },
+];
 /**
  * The default JSON-LD context for ActivityPub Actors, with instances of URL in
  * place of strings.
- */
-exports.DEFAULT_ACTOR_CONTEXT_AS_URLS = Object.fromEntries(Object.entries(exports.DEFAULT_ACTOR_CONTEXT).map(([key, value]) => [
+ *
+export const DEFAULT_ACTOR_CONTEXT_AS_URLS = Object.fromEntries(
+  Object.entries(DEFAULT_ACTOR_CONTEXT).map(([key, value]) => [
     key,
     new URL(value),
-]));
+  ]),
+);
+*/
 /**
  * Express-style route parameters.
  */
@@ -304,7 +309,7 @@ exports.CONTEXT_DEFINITIONS = {
     [exports.ACTIVITYSTREAMS_CONTEXT]: {
         '@vocab': exports.ACTIVITYSTREAMS_CONTEXT,
         xsd: 'http://www.w3.org/2001/XMLSchema#',
-        as: `${exports.ACTIVITYSTREAMS_CONTEXT}#`,
+        as: exports.ACTIVITYSTREAMS_CONTEXT,
         ldp: exports.LDP_CONTEXT,
         vcard: 'http://www.w3.org/2006/vcard/ns#',
         id: '@id',

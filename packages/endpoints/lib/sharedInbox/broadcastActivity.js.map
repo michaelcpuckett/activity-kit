@@ -1,1 +1,1 @@
-{"version":3,"file":"broadcastActivity.js","sourceRoot":"","sources":["../../src/sharedInbox/broadcastActivity.ts"],"names":[],"mappings":";;;AAGO,KAAK,UAAU,iBAAiB;AAIvC,CAAC;AAJD,8CAIC"}
+{"version":3,"file":"broadcastActivity.js","sourceRoot":"","sources":["../../src/sharedInbox/broadcastActivity.ts"],"names":[],"mappings":";;;AAGO,KAAK,UAAU,iBAAiB;IAGrC,QAAQ;AACV,CAAC;AAJD,8CAIC"}

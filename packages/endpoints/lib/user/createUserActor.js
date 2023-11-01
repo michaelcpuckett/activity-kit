@@ -295,6 +295,7 @@ async function createUserActor(user, uid) {
             this.core.insertOrderedItem(userInbox.id, createActorActivity.id),
         ]);
     }
+    // Broadcast to Fediverse.
     this.core.broadcast(createActorActivity, botActor);
 }
 exports.createUserActor = createUserActor;

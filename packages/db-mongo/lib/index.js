@@ -13,14 +13,18 @@ class MongoDbAdapter {
     constructor(db) {
         this.db = db;
     }
+    // Find.
     findOne = findOne_1.findOne;
     findAll = findAll_1.findAll;
     findStringValueById = findStringValueById_1.findStringValueById;
     findStringIdByValue = findStringIdByValue_1.findStringIdByValue;
+    // Save.
     saveEntity = saveEntity_1.saveEntity;
     saveString = saveString_1.saveString;
+    // Insert.
     insertItem = insert_1.insertItem;
     insertOrderedItem = insert_1.insertOrderedItem;
+    // Remove.
     removeItem = insert_1.removeItem;
     removeOrderedItem = insert_1.removeOrderedItem;
 }

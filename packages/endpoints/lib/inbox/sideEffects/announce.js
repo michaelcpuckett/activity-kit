@@ -40,6 +40,7 @@ async function handleAnnounce(activity, recipient) {
         const attributedToId = (0, utilities_1.getId)(shares.attributedTo);
         type_utilities_1.assert.exists(attributedToId);
         if (attributedToId.href !== (0, utilities_1.getId)(recipient)?.href) {
+            // Not applicable to this Actor.
             return;
         }
         const activityId = (0, utilities_1.getId)(activity);

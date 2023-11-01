@@ -40,6 +40,7 @@ async function handleAccept(activity, recipient) {
     const followerId = (0, utilities_1.getId)(followActivity.actor);
     type_utilities_1.assert.exists(followerId);
     if (followerId.href !== (0, utilities_1.getId)(recipient)?.href) {
+        // Not applicable to this Actor.
         return;
     }
     const follower = await this.core.queryById(followerId);
@@ -53,6 +54,7 @@ async function handleAccept(activity, recipient) {
     const following = await this.core.queryById(followingId);
     type_utilities_1.assert.isApType(following, AP.CollectionTypes.COLLECTION);
     type_utilities_1.assert.isArray(following.items);
+    // Already following.
     if (following.items
         .map((item) => (0, utilities_1.getId)(item)?.href)
         .includes(followeeId.href)) {

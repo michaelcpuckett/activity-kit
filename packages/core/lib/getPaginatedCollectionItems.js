@@ -27,9 +27,19 @@ exports.getPaginatedCollectionItems = void 0;
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
+/**
+ * Given a Collection or OrderedCollection, traverse its pages and return all
+ * items.
+ *
+ * This is useful for getting all items in a foreign Collection, which may be
+ * paginated.
+ *
+ * @returns A Promise that resolves to an array of all items in the Collection.
+ */
 async function getPaginatedCollectionItems(collection) {
     const firstCollectionPageId = (0, utilities_1.getId)(collection.first);
     if (!firstCollectionPageId) {
+        // TODO .getArray()
         if (type_utilities_1.guard.isArray(collection.orderedItems)) {
             return collection.orderedItems;
         }

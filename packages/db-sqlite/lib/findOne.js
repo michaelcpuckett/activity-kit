@@ -16,14 +16,17 @@ async function findOne(collection, matchingObject, options) {
         delete value._id;
     }
     for (const key of Object.keys(value)) {
+        // All fields come back, even if they are null.
         if (value[key] === null) {
             delete value[key];
         }
         else if (['manuallyApprovesFollowers', 'sensitive'].includes(key)) {
+            // Convert from number (INTEGER) to boolean.
             value[key] = value[key] === 1 ? true : false;
         }
         else if (typeof value[key] === 'string' &&
             value[key].startsWith('JSON:')) {
+            // Convert to object when prefixed with 'JSON:'.
             value[key] = JSON.parse(value[key].slice('JSON:'.length));
         }
     }

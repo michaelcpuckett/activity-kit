@@ -3,6 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRecipientUrls = void 0;
 const type_utilities_1 = require("@activity-kit/type-utilities");
 const utilities_1 = require("@activity-kit/utilities");
+/**
+ * Given an Activity, get the URLs of all recipients.
+ *
+ * @returns An array of recipient URLs.
+ */
 async function getRecipientUrls(activity) {
     const tags = type_utilities_1.guard.isApCoreObject(activity.object) && activity.object.tag
         ? getArray(activity.object.tag)
@@ -24,6 +29,12 @@ async function getRecipientUrls(activity) {
     return (0, utilities_1.deduplicateUrls)(actorUrls.flat());
 }
 exports.getRecipientUrls = getRecipientUrls;
+/**
+ * Given a recipient URL, get all of the Actor URLs that it represents, as it
+ * may be a Collection.
+ *
+ * @returns An array of Actor URLs.
+ */
 async function getActorIds(recipientId) {
     const foundRecipient = await this.queryById(recipientId);
     if (!foundRecipient) {
@@ -57,6 +68,14 @@ async function getActorIds(recipientId) {
     }
     return [];
 }
+/**
+ * Get an array of EntityReferences.
+ *
+ * Collection items can be either an EntityReference or an array of
+ * EntityReferences.
+ *
+ * @returns An array of EntityReferences.
+ */
 function getArray(items) {
     if (!items) {
         return [];

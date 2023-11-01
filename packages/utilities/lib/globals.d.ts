@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import * as jsonld from 'jsonld';
 /**
  * The port the server will listen on.
@@ -48,7 +47,7 @@ export declare const CONTEXT_KEY = "@context";
 /**
  * The JSON-LD context for ActivityPub.
  */
-export declare const ACTIVITYSTREAMS_CONTEXT = "https://www.w3.org/ns/activitystreams";
+export declare const ACTIVITYSTREAMS_CONTEXT = "https://www.w3.org/ns/activitystreams#";
 /**
  * The JSON-LD context for the W3ID security vocabulary.
  *
@@ -177,18 +176,20 @@ export declare const USERNAME_REGEXP: RegExp;
  * @see {@link W3ID_SECURITY_CONTEXT}
  * @see {@link SCHEMA_ORG_CONTEXT}
  */
-export declare const DEFAULT_ACTOR_CONTEXT: {
-    '@vocab': string;
-    sec: string;
+export declare const DEFAULT_ACTOR_CONTEXT: (string | {
     schema: string;
-};
+})[];
 /**
  * The default JSON-LD context for ActivityPub Actors, with instances of URL in
  * place of strings.
- */
-export declare const DEFAULT_ACTOR_CONTEXT_AS_URLS: {
-    [k: string]: import("url").URL;
-};
+ *
+export const DEFAULT_ACTOR_CONTEXT_AS_URLS = Object.fromEntries(
+  Object.entries(DEFAULT_ACTOR_CONTEXT).map(([key, value]) => [
+    key,
+    new URL(value),
+  ]),
+);
+*/
 /**
  * Express-style route parameters.
  */

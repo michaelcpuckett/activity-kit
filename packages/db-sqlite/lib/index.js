@@ -14,13 +14,17 @@ class SqliteDbAdapter {
     constructor(db) {
         this.db = db;
     }
+    // Initialize.
     initializeDb = initializeDb_1.initializeDb;
+    // Find.
     findOne = findOne_1.findOne;
     findAll = findAll_1.findAll;
     findStringValueById = findStringValueById_1.findStringValueById;
     findStringIdByValue = findStringIdByValue_1.findStringIdByValue;
+    // Save.
     saveEntity = saveEntity_1.saveEntity;
     saveString = saveString_1.saveString;
+    // Insert/Remove
     insertItem = insert_1.insertItem;
     removeItem = insert_1.removeItem;
     insertOrderedItem = insert_1.insertOrderedItem;

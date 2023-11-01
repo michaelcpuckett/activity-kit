@@ -16,8 +16,9 @@ async function respond() {
         })({
             guid: await this.core.getGuid(),
         })}`);
-        this.activity.id = activityId;
+        this.activity.id = activityId; // Overwrite ID
         this.activity.url = activityId;
+        // Address activity and object the same way.
         this.activity = this.combineAddresses(this.activity);
         try {
             await this.runSideEffects();
@@ -52,6 +53,7 @@ async function respond() {
     type_utilities_1.assert.exists(activityId);
     await this.saveActivity();
     type_utilities_1.assert.isApActor(this.actor);
+    // Broadcast to Fediverse.
     this.core.broadcast(this.activity, this.actor);
     return {
         statusCode: 201,

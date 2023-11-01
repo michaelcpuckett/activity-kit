@@ -26,43 +26,52 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.convertJsonLdToEntity = void 0;
-const jsonld = __importStar(require("jsonld"));
-// See types/jsonldDocumentLoader.d.ts
+exports.compactJsonObject = void 0;
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../types/jsonldDocumentLoader.d.ts" />
 const node_1 = __importDefault(require("jsonld/lib/documentLoaders/node"));
+const jsonld = __importStar(require("jsonld"));
+const type_utilities_1 = require("@activity-kit/type-utilities");
 const globals_1 = require("./globals");
-const convertJsonToEntity_1 = require("./convertJsonToEntity");
-const applyContext_1 = require("./applyContext");
 /**
- * Converts a JSON-LD object to a compacted ActivityPub Entity.
+ * Compact a plain JSON object using known JSON-LD contexts, utilizing the
+ * {@link jsonld} library. If the JSON object does not have a context, a
+ * default context with the known contexts will be applied.
  *
- * First, the JSON-LD object is compacted using the `jsonld` library. It uses
- * the ActivityPub context as the base context and adds the following contexts
- * to it:
- *
- * - https://w3id.org/security/v1 for encryption/signatures
- * - https://schema.org for Mastodon's profile metadata
- *
- * Then, the compacted object is converted to an ActivityPub Entity.
- *
- * @todo An updated context
- * will be applied to the Entity, unless it already has one.
- *
- * @returns The ActivityPub Entity.
+ * @returns The compacted JSON-LD object.
  *
  * @see https://www.w3.org/TR/json-ld11/#compacted-document-form
  */
-async function convertJsonLdToEntity(document) {
-    const result = await jsonld.compact(document, globals_1.DEFAULT_ACTOR_CONTEXT, {
+async function compactJsonObject(object) {
+    var _a;
+    let document = { ...object };
+    if ('@context' in document) {
+        const [expanded] = await jsonld.expand(document, {
+            documentLoader: customLoader,
+        });
+        document = expanded;
+    }
+    else {
+        document['@context'] = {
+            '@vocab': globals_1.ACTIVITYSTREAMS_CONTEXT,
+            sec: globals_1.W3ID_SECURITY_CONTEXT,
+            schema: globals_1.SCHEMA_ORG_CONTEXT,
+            id: '@id',
+            type: '@type',
+        };
+    }
+    const result = await jsonld.compact(document, {
+        '@vocab': globals_1.ACTIVITYSTREAMS_CONTEXT,
+        sec: globals_1.W3ID_SECURITY_CONTEXT,
+        schema: globals_1.SCHEMA_ORG_CONTEXT,
+        id: '@id',
+        type: '@type',
+    }, {
         documentLoader: customLoader,
     });
-    const converted = (0, convertJsonToEntity_1.convertJsonToEntity)(result);
-    if (!converted) {
-        return null;
-    }
-    return (0, applyContext_1.applyContext)(converted);
+    return (_a = type_utilities_1.cast.isPlainObject(result)) !== null && _a !== void 0 ? _a : null;
 }
-exports.convertJsonLdToEntity = convertJsonLdToEntity;
+exports.compactJsonObject = compactJsonObject;
 /**
  * Custom document loader for JSON-LD that uses cached contexts.
  *
@@ -90,4 +99,4 @@ async function customLoader(url, callback) {
     }
     return nodeDocumentLoader(url, callback);
 }
-//# sourceMappingURL=convertJsonLdToEntity.js.map
+//# sourceMappingURL=compactJsonObject.js.map
