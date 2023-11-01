@@ -45,23 +45,24 @@ export async function handleFollow(
 
   assert.exists(followerId);
 
-  const followee = object;
-  const followeeId = getId(followee);
+  const user = object;
+  const userId = getId(user);
 
-  assert.exists(followeeId);
+  assert.exists(userId);
 
-  if (followeeId.href !== getId(recipient)?.href) {
+  if (userId.href !== getId(recipient)?.href) {
     // Not applicable to this Actor.
     return;
   }
 
-  const followersId = getId(followee.followers);
+  const followersId = getId(user.followers);
 
   assert.exists(followersId);
 
   const followers = await this.core.findEntityById(followersId);
 
   assert.isApType<AP.Collection>(followers, AP.CollectionTypes.COLLECTION);
+  console.log({ followers });
   assert.isArray(followers.items);
 
   // Already a follower.
@@ -74,8 +75,8 @@ export async function handleFollow(
     return;
   }
 
-  if (followee.manuallyApprovesFollowers) {
-    const requests = await this.core.getStreamByName(followee, 'Requests');
+  if (user.manuallyApprovesFollowers) {
+    const requests = await this.core.getStreamByName(user, 'Requests');
 
     assert.isApType<AP.Collection>(requests, AP.CollectionTypes.COLLECTION);
 
@@ -102,20 +103,20 @@ export async function handleFollow(
     url: new URL(acceptActivityId),
     type: AP.ActivityTypes.ACCEPT,
     to: [new URL(PUBLIC_ACTOR), followerId],
-    actor: followeeId,
+    actor: userId,
     object: activityId,
     published: publishedDate,
   });
 
-  const followeeOutboxId = getId(followee.outbox);
+  const userOutboxId = getId(user.outbox);
 
-  assert.exists(followeeOutboxId);
+  assert.exists(userOutboxId);
 
   await Promise.all([
     this.core.saveEntity(acceptActivity),
-    this.core.insertOrderedItem(followeeOutboxId, new URL(acceptActivityId)),
+    this.core.insertOrderedItem(userOutboxId, new URL(acceptActivityId)),
     this.core.insertItem(followersId, followerId),
   ]);
 
-  await this.core.broadcast(acceptActivity, followee);
+  await this.core.broadcast(acceptActivity, user);
 }
