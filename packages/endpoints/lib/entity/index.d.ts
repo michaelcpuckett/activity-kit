@@ -2,6 +2,7 @@
 import { CoreLibrary } from '@activity-kit/core';
 import { handleNotFound } from './handleNotFound';
 import { handleFoundEntity } from './handleFoundEntity';
+import { handleFoundCollection } from './handleFoundCollection';
 import { handleFoundCollectionPage } from './handleFoundCollectionPage';
 import { respond } from './respond';
 export declare class EntityGetEndpoint {
@@ -14,7 +15,7 @@ export declare class EntityGetEndpoint {
     });
     protected handleNotFound: typeof handleNotFound;
     protected handleFoundEntity: typeof handleFoundEntity;
-    protected handleFoundCollection: any;
+    protected handleFoundCollection: typeof handleFoundCollection;
     protected handleFoundCollectionPage: typeof handleFoundCollectionPage;
     respond: typeof respond;
 }

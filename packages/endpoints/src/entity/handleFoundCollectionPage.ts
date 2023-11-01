@@ -1,5 +1,6 @@
 import * as AP from '@activity-kit/types';
-import { guard } from '@activity-kit/type-utilities';
+import { assert, guard } from '@activity-kit/type-utilities';
+import { getId } from '@activity-kit/utilities';
 
 import { Result } from '../types';
 import { EntityGetEndpoint } from '.';
@@ -23,18 +24,31 @@ export async function handleFoundCollectionPage(
   const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE;
   const startIndex = firstItemIndex + 1;
 
-  const limitedItems = getCollectionItems(entity).slice(
+  const collection = await this.core.queryById(new URL(pageParts[0]));
+
+  assert.isApCollection(collection);
+
+  const collectionItems = getCollectionItems(collection);
+
+  const lastPageIndex = Math.ceil(
+    collectionItems.length / ITEMS_PER_COLLECTION_PAGE,
+  );
+
+  const limitedItems = collectionItems.slice(
     firstItemIndex,
     firstItemIndex + ITEMS_PER_COLLECTION_PAGE,
   );
 
   const items = expandItems(limitedItems);
+  const collectionId = getId(collection);
+
+  assert.exists(collectionId);
 
   const collectionPage = {
     ...entity,
     id: getPageUrl(currentPage),
     url: getPageUrl(currentPage),
-    partOf: baseUrl,
+    partOf: collectionId,
     first: getPageUrl(1),
     last: getPageUrl(lastPageIndex),
     ...(currentPage > 1
@@ -49,7 +63,12 @@ export async function handleFoundCollectionPage(
       : null),
   };
 
-  if (isOrderedCollection) {
+  if (
+    guard.isApType<AP.OrderedCollection>(
+      collection,
+      AP.CollectionTypes.ORDERED_COLLECTION,
+    )
+  ) {
     const orderedCollectionPageEntity: AP.OrderedCollectionPage = {
       ...collectionPage,
       type: AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE,
@@ -71,26 +90,32 @@ export async function handleFoundCollectionPage(
 
 function expandItems(
   objects: Array<unknown>,
-): Array<AP.Object | AP.Link | AP.Mention> {
-  return objects.map((object) => {
-    if (guard.isApLink(object)) {
+): Array<AP.CoreObject | AP.Link | AP.Mention> {
+  return objects
+    .map((object) => {
+      if (guard.isApType<AP.Link>(object, AP.LinkTypes.LINK)) {
+        return object;
+      }
+
+      if (guard.isApType<AP.Mention>(object, AP.LinkTypes.MENTION)) {
+        return object;
+      }
+
+      if (guard.isApCoreObject(object)) {
+        const id = getId(object);
+
+        if (guard.exists(id)) {
+          return {
+            ...object,
+            id,
+            url: id,
+          };
+        }
+      }
+
       return object;
-    }
-
-    if (guard.isApMention(object)) {
-      return object;
-    }
-
-    if (guard.isApObject(object)) {
-      return {
-        ...object,
-        id: getId(object),
-        url: new URL(getId(object)),
-      };
-    }
-
-    return object;
-  });
+    })
+    .filter(guard.isApEntity);
 }
 
 function getCollectionItems(collection: AP.EitherCollection) {
@@ -103,28 +128,4 @@ function getCollectionItems(collection: AP.EitherCollection) {
   }
 
   return [];
-}
-
-function foo() {
-  const items: AP.Entity[] = [];
-
-  for (const item of limitedItems) {
-    if (guard.isApTransitiveActivity(item)) {
-      const objectId = getId(item.object);
-
-      if (objectId) {
-        const object = await this.core.findEntityById(objectId);
-
-        if (object) {
-          item.object = object;
-        }
-      }
-    }
-
-    if (guard.isApEntity(item)) {
-      items.push(item);
-    }
-  }
-
-  return items;
 }

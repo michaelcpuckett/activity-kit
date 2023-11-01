@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleFoundCollectionPage = void 0;
 const AP = __importStar(require("@activity-kit/types"));
 const type_utilities_1 = require("@activity-kit/type-utilities");
+const utilities_1 = require("@activity-kit/utilities");
 // TODO: Move to config.
 const ITEMS_PER_COLLECTION_PAGE = 50;
 async function handleFoundCollectionPage(entity, render) {
@@ -35,13 +36,19 @@ async function handleFoundCollectionPage(entity, render) {
     const currentPage = page ? Number(page) : 1;
     const firstItemIndex = (currentPage - 1) * ITEMS_PER_COLLECTION_PAGE;
     const startIndex = firstItemIndex + 1;
-    const limitedItems = getCollectionItems(entity).slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE);
+    const collection = await this.core.queryById(new URL(pageParts[0]));
+    type_utilities_1.assert.isApCollection(collection);
+    const collectionItems = getCollectionItems(collection);
+    const lastPageIndex = Math.ceil(collectionItems.length / ITEMS_PER_COLLECTION_PAGE);
+    const limitedItems = collectionItems.slice(firstItemIndex, firstItemIndex + ITEMS_PER_COLLECTION_PAGE);
     const items = expandItems(limitedItems);
+    const collectionId = (0, utilities_1.getId)(collection);
+    type_utilities_1.assert.exists(collectionId);
     const collectionPage = {
         ...entity,
         id: getPageUrl(currentPage),
         url: getPageUrl(currentPage),
-        partOf: baseUrl,
+        partOf: collectionId,
         first: getPageUrl(1),
         last: getPageUrl(lastPageIndex),
         ...(currentPage > 1
@@ -55,7 +62,7 @@ async function handleFoundCollectionPage(entity, render) {
             }
             : null),
     };
-    if (isOrderedCollection) {
+    if (type_utilities_1.guard.isApType(collection, AP.CollectionTypes.ORDERED_COLLECTION)) {
         const orderedCollectionPageEntity = {
             ...collectionPage,
             type: AP.CollectionPageTypes.ORDERED_COLLECTION_PAGE,
@@ -73,22 +80,27 @@ async function handleFoundCollectionPage(entity, render) {
 }
 exports.handleFoundCollectionPage = handleFoundCollectionPage;
 function expandItems(objects) {
-    return objects.map((object) => {
-        if (type_utilities_1.guard.isApLink(object)) {
+    return objects
+        .map((object) => {
+        if (type_utilities_1.guard.isApType(object, AP.LinkTypes.LINK)) {
             return object;
         }
-        if (type_utilities_1.guard.isApMention(object)) {
+        if (type_utilities_1.guard.isApType(object, AP.LinkTypes.MENTION)) {
             return object;
         }
-        if (type_utilities_1.guard.isApObject(object)) {
-            return {
-                ...object,
-                id: getId(object),
-                url: new URL(getId(object)),
-            };
+        if (type_utilities_1.guard.isApCoreObject(object)) {
+            const id = (0, utilities_1.getId)(object);
+            if (type_utilities_1.guard.exists(id)) {
+                return {
+                    ...object,
+                    id,
+                    url: id,
+                };
+            }
         }
         return object;
-    });
+    })
+        .filter(type_utilities_1.guard.isApEntity);
 }
 function getCollectionItems(collection) {
     if (type_utilities_1.guard.isArray(collection.orderedItems)) {
@@ -98,23 +110,5 @@ function getCollectionItems(collection) {
         return collection.items;
     }
     return [];
-}
-function foo() {
-    const items = [];
-    for (const item of limitedItems) {
-        if (type_utilities_1.guard.isApTransitiveActivity(item)) {
-            const objectId = getId(item.object);
-            if (objectId) {
-                const object = await this.core.findEntityById(objectId);
-                if (object) {
-                    item.object = object;
-                }
-            }
-        }
-        if (type_utilities_1.guard.isApEntity(item)) {
-            items.push(item);
-        }
-    }
-    return items;
 }
 //# sourceMappingURL=handleFoundCollectionPage.js.map
