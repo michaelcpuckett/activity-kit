@@ -1,6 +1,6 @@
 {
   "name": "@activity-kit/types",
-  "version": "0.4.56",
+  "version": "0.4.57",
   "description": "Types representing the ActivityPub data model",
   "author": "Michael Puckett <michaelcpuckett@gmail.com>",
   "homepage": "",
